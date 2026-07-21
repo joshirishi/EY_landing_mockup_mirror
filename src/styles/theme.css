@@ -78,6 +78,34 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* ── EY Brand dark module tokens ──────────────────────────────────────────── */
+:root {
+  --ey-body-gradient: linear-gradient(135deg, #0d0d1a, #12122a 55%, #1a1a2e);
+  --ey-bg-body: #0d0d1a;
+  --ey-bg-body-alt: #12122a;
+  --ey-bg-raised: #1a1a2e;
+  --ey-bg-card: #1c1f36;
+  --ey-bg-card-alt: #262b4f;
+  --ey-bg-nav: rgba(10, 10, 10, 0.94);
+  --ey-bg-surface: rgba(255, 255, 255, 0.06);
+  --ey-brand-yellow: #ffe600;
+  --ey-brand-yellow-pale: #fff8b8;
+  --ey-brand-yellow-warm: #ffd36a;
+  --ey-brand-yellow-alpha-12: rgba(255, 230, 0, 0.12);
+  --ey-brand-yellow-alpha-28: rgba(255, 230, 0, 0.28);
+  --ey-on-dark: #ffffff;
+  --ey-on-dark-72: rgba(255, 255, 255, 0.72);
+  --ey-on-dark-55: rgba(255, 255, 255, 0.55);
+  --ey-on-dark-20: rgba(255, 255, 255, 0.20);
+  --ey-on-dark-12: rgba(255, 255, 255, 0.12);
+  --ey-on-dark-08: rgba(255, 255, 255, 0.08);
+  --ey-app-word: #185abd;
+  --ey-app-excel: #107c41;
+  --ey-app-ppt: #c43e1c;
+  --ey-app-outlook: #0078d4;
+  --ey-app-copilot: #6b5cff;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -117,6 +145,18 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* EY brand dark module colors */
+  --color-ey-bg-body: var(--ey-bg-body);
+  --color-ey-bg-card: var(--ey-bg-card);
+  --color-ey-bg-card-alt: var(--ey-bg-card-alt);
+  --color-ey-bg-surface: var(--ey-bg-surface);
+  --color-ey-brand-yellow: var(--ey-brand-yellow);
+  --color-ey-on-dark: var(--ey-on-dark);
+  --color-ey-app-word: var(--ey-app-word);
+  --color-ey-app-excel: var(--ey-app-excel);
+  --color-ey-app-ppt: var(--ey-app-ppt);
+  --color-ey-app-outlook: var(--ey-app-outlook);
+  --color-ey-app-copilot: var(--ey-app-copilot);
 }
 
 @layer base {

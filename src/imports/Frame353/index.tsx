@@ -1877,7 +1877,10 @@ function Hero() {
 function Frame6() {
   return (
     <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#1a1a2e] text-[20px] whitespace-nowrap">🧠</p>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+      </svg>
     </div>
   );
 }
@@ -1908,11 +1911,17 @@ function Frame8() {
   );
 }
 
-function CourseCard() {
+function CourseCard({ onOpen }: { onOpen?: () => void }) {
   return (
     <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]" data-name="Course Card">
       <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[8px]" />
-      <div className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full">
+      <div
+        className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full cursor-pointer"
+        onClick={onOpen}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => (e.key === "Enter" || e.key === " ") && onOpen?.()}
+      >
         <Header />
         <Frame8 />
       </div>
@@ -1922,16 +1931,18 @@ function CourseCard() {
 
 function Frame9() {
   return (
-    <div className="bg-[#e5e7eb] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#9ca3af] text-[20px] whitespace-nowrap">💬</p>
+    <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
     </div>
   );
 }
 
 function Frame10() {
   return (
-    <div className="bg-[#f3f4f6] content-stretch flex items-start px-[12px] py-[4px] relative rounded-[4px] shrink-0" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#9ca3af] text-[12px] whitespace-nowrap">Locked</p>
+    <div className="bg-[#ffe600] content-stretch flex items-start px-[12px] py-[4px] relative rounded-[4px] shrink-0" data-name="Frame">
+      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#1a1a2e] text-[12px] whitespace-nowrap">Begin</p>
     </div>
   );
 }
@@ -1956,7 +1967,7 @@ function Frame11() {
 
 function CourseCardLocked() {
   return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px opacity-60 relative rounded-[8px]" data-name="Course Card Locked">
+    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]" data-name="Course Card Locked">
       <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[8px]" />
       <div className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full">
         <Header1 />
@@ -1968,16 +1979,18 @@ function CourseCardLocked() {
 
 function Frame12() {
   return (
-    <div className="bg-[#e5e7eb] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#9ca3af] text-[20px] whitespace-nowrap">📊</p>
+    <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+      </svg>
     </div>
   );
 }
 
 function Frame13() {
   return (
-    <div className="bg-[#f3f4f6] content-stretch flex items-start px-[12px] py-[4px] relative rounded-[4px] shrink-0" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#9ca3af] text-[12px] whitespace-nowrap">Locked</p>
+    <div className="bg-[#ffe600] content-stretch flex items-start px-[12px] py-[4px] relative rounded-[4px] shrink-0" data-name="Frame">
+      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#1a1a2e] text-[12px] whitespace-nowrap">Begin</p>
     </div>
   );
 }
@@ -2000,11 +2013,17 @@ function Frame14() {
   );
 }
 
-function CourseCardLocked1() {
+function CourseCardLocked1({ onOpen }: { onOpen?: () => void }) {
   return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px opacity-60 relative rounded-[8px]" data-name="Course Card Locked">
+    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]" data-name="Course Card Locked">
       <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[8px]" />
-      <div className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full">
+      <div
+        className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full cursor-pointer"
+        onClick={onOpen}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => (e.key === "Enter" || e.key === " ") && onOpen?.()}
+      >
         <Header2 />
         <Frame14 />
       </div>
@@ -2012,22 +2031,22 @@ function CourseCardLocked1() {
   );
 }
 
-function CourseGrid() {
+function CourseGrid({ onOpenFoundational, onOpenModule1 }: { onOpenFoundational?: () => void; onOpenModule1?: () => void }) {
   return (
     <div className="content-stretch flex gap-[24px] items-start relative shrink-0 w-full" data-name="Course Grid">
-      <CourseCard />
+      <CourseCard onOpen={onOpenFoundational} />
       <CourseCardLocked />
-      <CourseCardLocked1 />
+      <CourseCardLocked1 onOpen={onOpenModule1} />
     </div>
   );
 }
 
-function ContentArea1() {
+function ContentArea1({ onOpenFoundational, onOpenModule1 }: { onOpenFoundational?: () => void; onOpenModule1?: () => void }) {
   return (
     <div className="relative shrink-0 w-full" data-name="Content Area">
       <div className="content-stretch flex flex-col gap-[48px] items-start px-[64px] py-[80px] relative size-full">
         <Hero />
-        <CourseGrid />
+        <CourseGrid onOpenFoundational={onOpenFoundational} onOpenModule1={onOpenModule1} />
       </div>
     </div>
   );
@@ -2488,12 +2507,12 @@ export function PhasedEngagementView({ onNavigateToPhase1 }: { onNavigateToPhase
   );
 }
 
-export function Phase1View() {
+export function Phase1View({ onNavigateToModule1, onNavigateToFoundational }: { onNavigateToModule1?: () => void; onNavigateToFoundational?: () => void } = {}) {
   return (
     <div className="relative bg-white content-stretch flex flex-col items-start overflow-clip w-[1720px]" data-name="EY.ai Tax Labs - Phase 1">
       <BackgroundMotif />
       <Navigation />
-      <ContentArea1 />
+      <ContentArea1 onOpenFoundational={onNavigateToFoundational} onOpenModule1={onNavigateToModule1} />
       <div className="bg-white h-[326px] relative shrink-0 w-full" data-name="Footer Final">
         <div className="flex flex-col items-center justify-center size-full">
           <div className="content-stretch flex flex-col items-center justify-center px-[64px] relative size-full">

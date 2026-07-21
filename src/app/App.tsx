@@ -1,16 +1,18 @@
 import { useState } from "react";
 import Home from "../imports/Home2/index";
 import { PhasedEngagementView, Phase1View } from "../imports/Frame353/index";
+import Module1 from "../pages/Module1";
+import FoundationalConcepts from "../pages/FoundationalConcepts";
 
-type Page = "home" | "phased" | "phase1";
+type Page = "home" | "phased" | "phase1" | "module1" | "foundational";
 
 export default function App() {
   const [page, setPage] = useState<Page>("home");
 
   return (
     <div className="size-full overflow-auto bg-white">
-      {/* Back button — visible on all pages except home */}
-      {page !== "home" && (
+      {/* Back button — visible on non-home pages except module1 (it has its own nav) */}
+      {page !== "home" && page !== "module1" && page !== "foundational" && (
         <button
           onClick={() => setPage(page === "phase1" ? "phased" : "home")}
           style={{
@@ -78,7 +80,24 @@ export default function App() {
       {/* ── PAGE 3: Phase 1 detail ── */}
       {page === "phase1" && (
         <div style={{ width: 1720 }}>
-          <Phase1View />
+          <Phase1View
+            onNavigateToModule1={() => setPage("module1")}
+            onNavigateToFoundational={() => setPage("foundational")}
+          />
+        </div>
+      )}
+
+      {/* ── PAGE 4: Module 1 — M365 Copilot interactive experience ── */}
+      {page === "module1" && (
+        <div className="size-full">
+          <Module1 onBack={() => setPage("phase1")} />
+        </div>
+      )}
+
+      {/* ── PAGE 5: Foundational Concepts of AI ── */}
+      {page === "foundational" && (
+        <div className="size-full">
+          <FoundationalConcepts onBack={() => setPage("phase1")} />
         </div>
       )}
     </div>
