@@ -73,36 +73,70 @@ const COPILOT_PROMPTS: Record<string, [string, string][]> = {
   ],
 };
 
-const TAX_USE_CASES: Record<string, [string, string, string][]> = {
+const TAX_USE_CASES: Record<string, [string, string][]> = {
   Word: [
-    ["📄", "Draft Position Notes", "Create first-cut tax research memos, issue notes, legal summaries and client-ready position papers."],
-    ["🔍", "Summarise Case Laws", "Condense lengthy rulings, circulars, notifications or tribunal orders into crisp facts and implications."],
-    ["✍️", "Refine Legal Language", "Rewrite tax submissions and opinion drafts into a sharper, review-ready tone."],
-    ["📌", "Track Review Points", "Convert comments and inputs into action points, open items and next-step trackers."],
+    ["Draft Position Notes", "Create first-cut tax research memos, issue notes, legal summaries and client-ready position papers."],
+    ["Summarise Case Laws", "Condense lengthy rulings, circulars, notifications or tribunal orders into crisp facts and implications."],
+    ["Refine Legal Language", "Rewrite tax submissions and opinion drafts into a sharper, review-ready tone."],
+    ["Track Review Points", "Convert comments and inputs into action points, open items and next-step trackers."],
   ],
   Excel: [
-    ["📊", "Analyse Tax Data", "Summarise large datasets and identify key trends, gaps, mismatches and exceptions."],
-    ["🧮", "Build Reconciliations", "Create formulas and logic checks to compare books, returns and working papers."],
-    ["⚠️", "Spot Exceptions", "Detect anomalies such as missing details, rate mismatches or duplicates."],
-    ["📈", "Visualise Compliance", "Create dashboards to show status, exposures, ageing and risk movement."],
+    ["Analyse Tax Data", "Summarise large datasets and identify key trends, gaps, mismatches and exceptions."],
+    ["Build Reconciliations", "Create formulas and logic checks to compare books, returns and working papers."],
+    ["Spot Exceptions", "Detect anomalies such as missing details, rate mismatches or duplicates."],
+    ["Visualise Compliance", "Create dashboards to show status, exposures, ageing and risk movement."],
   ],
   PowerPoint: [
-    ["🎯", "Create Client Decks", "Convert tax analysis into structured, visually clean, client-ready presentations."],
-    ["🧭", "Tell the Tax Story", "Organise complex positions into context, issue, risk, recommendation and next steps."],
-    ["📣", "Prepare Leadership Updates", "Generate concise leadership slides on exposures, updates and decisions required."],
-    ["🗂️", "Summarise Case Strategy", "Build crisp hearing briefs, timelines and argument maps."],
+    ["Create Client Decks", "Convert tax analysis into structured, visually clean, client-ready presentations."],
+    ["Tell the Tax Story", "Organise complex positions into context, issue, risk, recommendation and next steps."],
+    ["Prepare Leadership Updates", "Generate concise leadership slides on exposures, updates and decisions required."],
+    ["Summarise Case Strategy", "Build crisp hearing briefs, timelines and argument maps."],
   ],
   Outlook: [
-    ["✉️", "Draft Client Emails", "Prepare clear professional emails for data requests, updates and follow-ups."],
-    ["🧵", "Summarise Threads", "Extract decisions, pending inputs, responsibilities and deadlines from long chains."],
-    ["⏱️", "Manage Follow-ups", "Convert email conversations into action-oriented follow-ups."],
-    ["🪄", "Polish Tone Instantly", "Rewrite responses to sound concise, client-sensitive and executive-ready."],
+    ["Draft Client Emails", "Prepare clear professional emails for data requests, updates and follow-ups."],
+    ["Summarise Threads", "Extract decisions, pending inputs, responsibilities and deadlines from long chains."],
+    ["Manage Follow-ups", "Convert email conversations into action-oriented follow-ups."],
+    ["Polish Tone Instantly", "Rewrite responses to sound concise, client-sensitive and executive-ready."],
   ],
   "M365 Chat": [
-    ["🌐", "Search Across Work", "Find tax-related discussions, documents, emails and files across Microsoft 365."],
-    ["🧾", "Prepare Matter Briefs", "Generate briefing notes before client calls or internal reviews."],
-    ["🧠", "Connect Tax Context", "Connect compliance data, research notes, email trails and presentation inputs."],
-    ["🚀", "Accelerate First Drafts", "Create starting drafts for emails, memos, decks, trackers and meeting prep."],
+    ["Search Across Work", "Find tax-related discussions, documents, emails and files across Microsoft 365."],
+    ["Prepare Matter Briefs", "Generate briefing notes before client calls or internal reviews."],
+    ["Connect Tax Context", "Connect compliance data, research notes, email trails and presentation inputs."],
+    ["Accelerate First Drafts", "Create starting drafts for emails, memos, decks, trackers and meeting prep."],
+  ],
+};
+
+// SVG line icon paths per app, per use-case (index-matched to TAX_USE_CASES)
+const USE_CASE_ICONS: Record<string, React.ReactNode[]> = {
+  Word: [
+    <svg key="w0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
+    <svg key="w1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+    <svg key="w2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+    <svg key="w3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>,
+  ],
+  Excel: [
+    <svg key="e0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+    <svg key="e1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
+    <svg key="e2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+    <svg key="e3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+  ],
+  PowerPoint: [
+    <svg key="p0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
+    <svg key="p1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>,
+    <svg key="p2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>,
+    <svg key="p3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
+  ],
+  Outlook: [
+    <svg key="o0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
+    <svg key="o1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
+    <svg key="o2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+    <svg key="o3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M5 17l.8 2.2L8 20l-2.2.8L5 23l-.8-2.2L2 20l2.2-.8L5 17z"/></svg>,
+  ],
+  "M365 Chat": [
+    <svg key="m0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+    <svg key="m1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>,
+    <svg key="m2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
+    <svg key="m3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
   ],
 };
 
@@ -173,6 +207,10 @@ export default function Module1({ onBack }: { onBack: () => void }) {
   const [secOpen, setSecOpen] = useState(false);
   const [secIdx, setSecIdx] = useState(0);
   const [scrollPct, setScrollPct] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const [secErrors, setSecErrors] = useState<Record<number, boolean>>({});
+  const [promptReady, setPromptReady] = useState(false);
+  const [readyLabel, setReadyLabel] = useState(false);
   const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -204,12 +242,31 @@ export default function Module1({ onBack }: { onBack: () => void }) {
     const text = COPILOT_PROMPTS[app][index][1];
     setActivePromptIdx(prev => ({ ...prev, [app]: index }));
     setPromptTexts(prev => ({ ...prev, [app]: "" }));
+    setCopied(false);
+    setPromptReady(false);
+    setReadyLabel(false);
     let i = 0;
     typingRef.current = setInterval(() => {
       i++;
       setPromptTexts(prev => ({ ...prev, [app]: text.slice(0, i) }));
-      if (i >= text.length && typingRef.current) clearInterval(typingRef.current);
+      if (i >= text.length && typingRef.current) {
+        clearInterval(typingRef.current);
+        // Fire peak-moment delight on completion
+        setPromptReady(true);
+        setReadyLabel(true);
+        setTimeout(() => setReadyLabel(false), 1800);
+      }
     }, 12);
+  };
+
+  const handleCopy = () => {
+    if (!activeApp) return;
+    const idx = activePromptIdx[activeApp] ?? 0;
+    const fullText = COPILOT_PROMPTS[activeApp][idx][1];
+    navigator.clipboard.writeText(fullText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   const openApp = (app: string) => {
@@ -266,7 +323,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
             {["Home", "Useful Links", "Security"].map((label, i) => {
               const hrefs = ["#homeSection", "#usefulLinks", "#security"];
               return (
-                <a key={label} href={hrefs[i]} style={{ color: "var(--ey-on-dark-55)", fontSize: 12, fontFamily: "'EYInterstate:Regular', sans-serif", textDecoration: "none" }}>{label}</a>
+                <a key={label} href={hrefs[i]} style={{ color: "var(--ey-on-dark-72)", fontSize: 12, fontFamily: "'EYInterstate:Regular', sans-serif", textDecoration: "none" }}>{label}</a>
               );
             })}
           </div>
@@ -289,7 +346,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
               Explore M365 Copilot prompts in a{" "}
               <span style={{ color: "var(--ey-brand-yellow)" }}>new-age workspace</span>
             </h1>
-            <p style={{ fontSize: 18, lineHeight: 1.6, color: "var(--ey-on-dark-72)", maxWidth: 580, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
+            <p style={{ fontSize: 18, lineHeight: 1.6, color: "var(--ey-on-dark)", maxWidth: 580, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
               Step into an interactive M365 learning space where you can find what wonders the age-old MS apps can do just by adding a magical element called M365.
             </p>
           </div>
@@ -339,7 +396,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
             <div style={{ fontSize: 17, fontFamily: "'EYInterstate:Bold', sans-serif" }}>
               Explore <span style={{ color: "var(--ey-brand-yellow)" }}>M365 Copilot possibilities in Tax</span>
             </div>
-            <div style={{ fontSize: 14, color: "var(--ey-on-dark-72)", fontFamily: "'EYInterstate:Regular', sans-serif" }}>Click each app to find sample prompts in respective MS Apps</div>
+            <div style={{ fontSize: 14, color: "var(--ey-on-dark)", fontFamily: "'EYInterstate:Regular', sans-serif" }}>Click each app to find sample prompts in respective MS Apps</div>
           </div>
           <div style={{ display: "flex", gap: 14, flexWrap: "nowrap", justifyContent: "flex-start", alignItems: "center" }}>
             {CORE_APPS.map(app => (
@@ -396,15 +453,49 @@ export default function Module1({ onBack }: { onBack: () => void }) {
                       <div key={i} style={{ height: 10, borderRadius: 999, background: "#e7e7e7", marginBottom: 14, width: `${w}%` }} />
                     ))}
                     <div style={{ marginTop: 16, background: "linear-gradient(160deg, #fffef2, #fff)", border: "1px solid var(--ey-brand-yellow)", borderRadius: 14, padding: 16 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", color: "#8a7300", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 8 }}>
-                        <div style={{ width: 9, height: 9, borderRadius: "50%", background: "linear-gradient(135deg, #36C5F0, #A24FE0, #FFB900)", flexShrink: 0 }} />
-                        Copilot
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", color: "#7a6500", textTransform: "uppercase", letterSpacing: "0.8px" }}>
+                          <div style={{ width: 9, height: 9, borderRadius: "50%", background: "linear-gradient(135deg, #36C5F0, #A24FE0, #FFB900)", flexShrink: 0 }} />
+                          Copilot
+                        </div>
+                        {promptTexts[activeApp] && (
+                          <button
+                            onClick={handleCopy}
+                            style={{
+                              display: "flex", alignItems: "center", gap: 5,
+                              padding: "4px 12px", borderRadius: 999, fontSize: 11,
+                              fontFamily: "'EYInterstate:Bold', sans-serif",
+                              border: copied ? "1px solid #107c41" : "1px solid var(--ey-brand-yellow)",
+                              background: copied ? "rgba(16,124,65,0.18)" : "var(--ey-brand-yellow)",
+                              color: copied ? "#107c41" : "#111",
+                              cursor: "pointer", transition: "all 0.2s",
+                              animation: promptReady && !copied ? "copyBtnEnter 200ms cubic-bezier(0.34,1.56,0.64,1) both" : "none",
+                            }}
+                          >
+                            {copied ? (
+                              <><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" width={12} height={12}><polyline points="20 6 9 17 4 12"/></svg> Copied!</>
+                            ) : readyLabel ? (
+                              <>Prompt ready — copy it →</>
+                            ) : (
+                              <><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width={12} height={12}><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy prompt</>
+                            )}
+                          </button>
+                        )}
                       </div>
                       <textarea
                         readOnly
                         value={promptTexts[activeApp] ?? ""}
                         placeholder="Choose a prompt on the right to see Copilot respond →"
-                        style={{ width: "100%", minHeight: 160, border: "1px solid rgba(107,92,255,0.24)", resize: "none", outline: "none", fontSize: 15, lineHeight: 1.72, color: "#161620", fontFamily: "'EYInterstate:Regular', sans-serif", background: "transparent", borderRadius: 12, padding: "12px 16px" }}
+                        style={{
+                          width: "100%", minHeight: 160,
+                          border: `1px solid ${promptReady ? "var(--ey-brand-yellow)" : "rgba(107,92,255,0.24)"}`,
+                          resize: "none", outline: "none", fontSize: 15, lineHeight: 1.72,
+                          color: "#111",
+                          fontFamily: "'EYInterstate:Regular', sans-serif",
+                          background: "transparent", borderRadius: 12, padding: "12px 16px",
+                          animation: promptReady ? "promptBorderPulse 400ms ease-in-out" : "none",
+                          transition: "border-color 0.3s",
+                        }}
                       />
                     </div>
                   </div>
@@ -413,10 +504,17 @@ export default function Module1({ onBack }: { onBack: () => void }) {
 
               {/* Prompt panel */}
               <aside style={{ background: "linear-gradient(160deg, var(--ey-bg-surface), rgba(255,255,255,0.02))", border: "1px solid var(--ey-on-dark-12)", borderRadius: 26, padding: 24, display: "flex", flexDirection: "column", boxShadow: "0 20px 60px rgba(0,0,0,0.28)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 17, fontFamily: "'EYInterstate:Bold', sans-serif", color: "var(--ey-on-dark)", marginBottom: 4 }}>
-                  ✨ Ask Copilot in {activeApp}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 17, fontFamily: "'EYInterstate:Bold', sans-serif", color: "var(--ey-on-dark)" }}>
+                    ✨ Ask Copilot in {activeApp}
+                  </div>
+                  {activePromptIdx[activeApp] !== undefined && (
+                    <span style={{ fontSize: 11, fontFamily: "'EYInterstate:Regular', sans-serif", color: "var(--ey-on-dark-72)", whiteSpace: "nowrap" }}>
+                      Prompt {(activePromptIdx[activeApp] ?? 0) + 1} of {COPILOT_PROMPTS[activeApp].length} — click to cycle
+                    </span>
+                  )}
                 </div>
-                <p style={{ fontSize: 12, color: "var(--ey-on-dark-55)", marginBottom: 18, lineHeight: 1.5, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{APP_SUBTITLES[activeApp]}</p>
+                <p style={{ fontSize: 12, color: "var(--ey-on-dark-72)", marginBottom: 18, lineHeight: 1.5, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{APP_SUBTITLES[activeApp]}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {COPILOT_PROMPTS[activeApp].map(([title, body], i) => {
                     const isActive = activePromptIdx[activeApp] === i;
@@ -438,7 +536,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <strong style={{ display: "block", fontSize: 13, color: "var(--ey-on-dark)", marginBottom: 2, fontFamily: "'EYInterstate:Bold', sans-serif" }}>{title}</strong>
-                          <p style={{ fontSize: 11, color: "var(--ey-on-dark-55)", lineHeight: 1.4, margin: 0, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{body.slice(0, 72)}…</p>
+                          <p style={{ fontSize: 11, color: "var(--ey-on-dark-72)", lineHeight: 1.4, margin: 0, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{body.slice(0, 72)}…</p>
                         </div>
                         <span style={{ color: isActive ? "var(--ey-brand-yellow)" : "var(--ey-on-dark-55)", fontSize: 14, flexShrink: 0, transform: isActive ? "translateX(2px)" : "none", transition: "all 0.25s" }}>→</span>
                       </button>
@@ -462,18 +560,20 @@ export default function Module1({ onBack }: { onBack: () => void }) {
                 <AppLogo app={app} size={58} />
                 <div>
                   <h2 style={{ fontSize: "clamp(30px, 3vw, 46px)", marginBottom: 5, color: "var(--ey-on-dark)", fontFamily: "'EYInterstate:Bold', sans-serif" }}>{app}</h2>
-                  <p style={{ color: "var(--ey-on-dark-72)", fontSize: 15, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{APP_SUBTITLES[app]}</p>
+                  <p style={{ color: "var(--ey-on-dark)", fontSize: 15, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{APP_SUBTITLES[app]}</p>
                 </div>
               </div>
               {/* Use case grid */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(260px, 1fr))", gap: 20 }}>
-                {TAX_USE_CASES[app].map(([icon, title, desc]) => (
+                {TAX_USE_CASES[app].map(([title, desc], i) => (
                   <article key={title} style={{ position: "relative", borderRadius: 22, padding: "26px 26px 26px 28px", background: "linear-gradient(140deg, var(--ey-bg-surface), rgba(255,255,255,0.02))", border: "1px solid var(--ey-on-dark-12)", overflow: "hidden", display: "flex", gap: 20, alignItems: "flex-start" }}>
                     <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: APP_ACCENT[app] }} />
-                    <div style={{ width: 56, height: 56, minWidth: 56, borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 27, background: "var(--ey-on-dark-08)", border: "1px solid var(--ey-on-dark-12)" }}>{icon}</div>
+                    <div style={{ width: 56, height: 56, minWidth: 56, borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--ey-brand-yellow)", border: "none", flexShrink: 0 }}>
+                      {USE_CASE_ICONS[app][i]}
+                    </div>
                     <div style={{ flex: 1 }}>
                       <h3 style={{ color: "var(--ey-on-dark)", fontSize: 19, fontFamily: "'EYInterstate:Bold', sans-serif", marginBottom: 7, lineHeight: 1.15 }}>{title}</h3>
-                      <p style={{ color: "var(--ey-on-dark-55)", fontSize: 13.5, lineHeight: 1.55, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{desc}</p>
+                      <p style={{ color: "var(--ey-on-dark-72)", fontSize: 13.5, lineHeight: 1.55, fontFamily: "'EYInterstate:Regular', sans-serif" }}>{desc}</p>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 12, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", letterSpacing: "0.4px", textTransform: "uppercase", color: APP_ACCENT[app] }}>✦ {app} + Copilot</span>
                     </div>
                   </article>
@@ -488,7 +588,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
           <h2 style={{ fontSize: "clamp(34px, 4vw, 58px)", lineHeight: 1.02, letterSpacing: -1.5, margin: "0 auto 12px", textAlign: "center", color: "var(--ey-brand-yellow)", fontFamily: "'EYInterstate:Bold', sans-serif" }}>
             Useful Links
           </h2>
-          <p style={{ textAlign: "center", color: "var(--ey-on-dark-72)", fontSize: 16, maxWidth: 720, margin: "0 auto 30px", lineHeight: 1.6, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
+          <p style={{ textAlign: "center", color: "var(--ey-on-dark)", fontSize: 16, maxWidth: 720, margin: "0 auto 30px", lineHeight: 1.6, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
             Handy EY resources to check your access, find prompts, and use Copilot safely.
           </p>
           <div style={{ border: "1px dashed var(--ey-brand-yellow-alpha-28)", borderRadius: 34, background: "radial-gradient(circle at top left, var(--ey-brand-yellow-alpha-12), transparent 35%), linear-gradient(135deg, var(--ey-bg-surface), rgba(255,255,255,0.03))", padding: 46, boxShadow: "0 28px 80px rgba(0,0,0,0.32)" }}>
@@ -501,7 +601,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width={28} height={28}>{link.icon}</svg>
                   </div>
                   <h3 style={{ fontSize: 16, lineHeight: 1.28, marginBottom: 8, fontFamily: "'EYInterstate:Bold', sans-serif" }}>{link.title}</h3>
-                  <p style={{ fontSize: 12, lineHeight: 1.5, color: "var(--ey-on-dark-55)", fontFamily: "'EYInterstate:Regular', sans-serif", flex: 1 }}>{link.desc}</p>
+                  <p style={{ fontSize: 12, lineHeight: 1.5, color: "var(--ey-on-dark-72)", fontFamily: "'EYInterstate:Regular', sans-serif", flex: 1 }}>{link.desc}</p>
                   <span style={{ marginTop: "auto", paddingTop: 16, display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12, fontFamily: "'EYInterstate:Bold', sans-serif", letterSpacing: "0.3px", textTransform: "uppercase", color: link.accent }}>
                     {link.cta} <ArrowUpRightIcon />
                   </span>
@@ -516,7 +616,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
           <h2 style={{ fontSize: "clamp(34px, 4vw, 58px)", lineHeight: 1.02, letterSpacing: -1.5, margin: "0 auto 12px", textAlign: "center", color: "var(--ey-brand-yellow)", fontFamily: "'EYInterstate:Bold', sans-serif" }}>
             Security
           </h2>
-          <p style={{ textAlign: "center", color: "var(--ey-on-dark-72)", fontSize: 16, maxWidth: 720, margin: "0 auto 40px", lineHeight: 1.6, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
+          <p style={{ textAlign: "center", color: "var(--ey-on-dark)", fontSize: 16, maxWidth: 720, margin: "0 auto 40px", lineHeight: 1.6, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
             Before you let Copilot loose on tax data, know the ground rules. Tap any card to view it full-size.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 26, maxWidth: 1150, margin: "0 auto" }}>
@@ -527,8 +627,20 @@ export default function Module1({ onBack }: { onBack: () => void }) {
                 <div style={{ position: "absolute", top: 16, left: 18, zIndex: 4, width: 42, height: 42, borderRadius: 14, background: sec.accent, color: "#0d0d1a", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'EYInterstate:Bold', sans-serif", fontSize: 16, boxShadow: "0 10px 24px rgba(0,0,0,0.35)" }}>
                   {String(i + 1).padStart(2, "0")}
                 </div>
-                <div style={{ width: "100%", background: "#0d0d16", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", maxHeight: 420 }}>
-                  <img src={sec.src} alt={sec.caption} style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                <div style={{ width: "100%", background: "#0d0d16", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", minHeight: 220, maxHeight: 420 }}>
+                  {secErrors[i] ? (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, padding: "40px 32px", textAlign: "center" }}>
+                      <div style={{ width: 56, height: 56, borderRadius: 16, background: sec.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>{sec.icon}</div>
+                      <p style={{ color: "var(--ey-on-dark-72)", fontSize: 14, lineHeight: 1.5, fontFamily: "'EYInterstate:Regular', sans-serif", maxWidth: 280 }}>{sec.caption}</p>
+                    </div>
+                  ) : (
+                    <img
+                      src={sec.src}
+                      alt={sec.caption}
+                      style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }}
+                      onError={() => setSecErrors(prev => ({ ...prev, [i]: true }))}
+                    />
+                  )}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "18px 22px", fontSize: 17, fontFamily: "'EYInterstate:Bold', sans-serif", color: "var(--ey-on-dark)", background: "linear-gradient(180deg, var(--ey-bg-surface), transparent)" }}>
                   <span>{sec.icon}</span> {sec.caption}
@@ -550,11 +662,19 @@ export default function Module1({ onBack }: { onBack: () => void }) {
         </div>
       )}
 
-      {/* Float keyframe */}
       <style>{`
         @keyframes floatAnim {
           0%, 100% { translate: 0 0; }
           50% { translate: 0 -18px; }
+        }
+        @keyframes promptBorderPulse {
+          0%   { box-shadow: 0 0 0 0 rgba(255,230,0,0); }
+          40%  { box-shadow: 0 0 0 4px rgba(255,230,0,0.35); }
+          100% { box-shadow: 0 0 0 0 rgba(255,230,0,0); }
+        }
+        @keyframes copyBtnEnter {
+          from { transform: scale(0.82); opacity: 0.4; }
+          to   { transform: scale(1);    opacity: 1; }
         }
       `}</style>
     </div>
