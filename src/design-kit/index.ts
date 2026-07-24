@@ -25,9 +25,11 @@ export { EYWhatsNext, EYWhatsNextHighlight } from './EYWhatsNext';
 export {
   MODULES,
   PHASE_LABEL,
+  PHASE_NUMBER,
   PHASE_PATH,
   BRAND_LABEL,
   TOTAL_MODULES,
+  TOTAL_PHASES,
   getModule,
   getAdjacentModules,
   getSubModuleGroups,

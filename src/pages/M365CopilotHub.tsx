@@ -504,8 +504,35 @@ export default function M365CopilotHub({
       )}
 
       {/* ── Hero — "M365 COPILOT HUB IS LIVE" (Figma: HeroSection) ─────────── */}
-      <section id="module-content" style={{ background: C.dark, display: "flex", alignItems: "center", padding: "88px 80px", gap: 64 }}>
-        <div style={{ flex: 1, maxWidth: 676 }}>
+      {/* Spectrum: Frame 9 — EY-yellow beam, darkest left for copy readability */}
+      <section
+        id="module-content"
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          padding: "88px 80px",
+          gap: 64,
+          overflow: "hidden",
+          backgroundColor: C.dark,
+          backgroundImage: "url('/spectrum/hero-frame-9.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "72% center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Soft left scrim so white type stays readable over the bloom */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(90deg, rgba(26,26,36,0.92) 0%, rgba(26,26,36,0.72) 42%, rgba(26,26,36,0.28) 70%, rgba(26,26,36,0.15) 100%)",
+            pointerEvents: "none",
+          }}
+        />
+        <div style={{ position: "relative", zIndex: 1, flex: 1, maxWidth: 676 }}>
           {/* Badge row — green active dot + label */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.frameGreen }} />
@@ -519,7 +546,7 @@ export default function M365CopilotHub({
           </p>
         </div>
         {/* Video placeholder (Figma: VideoPlaceholder 540×269) */}
-        <div style={{ width: 540, height: 269, background: C.gray01, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <div style={{ position: "relative", zIndex: 1, width: 540, height: 269, background: "rgba(46,46,56,0.55)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ width: 0, height: 0, borderLeft: "22px solid #FFFFFF", borderTop: "13px solid transparent", borderBottom: "13px solid transparent", marginLeft: 5 }} />
           </div>

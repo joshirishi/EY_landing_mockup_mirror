@@ -34,6 +34,12 @@ export interface CurriculumModule {
 
 export const PHASE_LABEL = "Phase 1: Foundational Training Workshops";
 export const PHASE_PATH = "/phase1";
+/**
+ * Current top-level unit in the Tax Labs journey (user-facing label: "Module").
+ * Internal code still says PHASE_* for routes; chip copy uses Module / Sub-module.
+ */
+export const PHASE_NUMBER = 1;
+export const TOTAL_PHASES = 4;
 export const BRAND_LABEL = "EY.ai Tax Labs";
 
 export const MODULES: CurriculumModule[] = [

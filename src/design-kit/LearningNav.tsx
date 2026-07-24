@@ -18,13 +18,15 @@
  * Sections reachable from Row B must set `style={{ scrollMarginTop: SUBNAV_SCROLL_OFFSET }}`.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { colors, fonts } from "./tokens";
 import {
   MODULES,
   PHASE_LABEL,
+  PHASE_NUMBER,
   PHASE_PATH,
   TOTAL_MODULES,
+  TOTAL_PHASES,
   getAdjacentModules,
   getModule,
   getSubModuleGroups,
@@ -54,6 +56,7 @@ type ModuleHeaderProps =
       onBack: () => void;
       /** Override for iframe-based modules — scroll inside the embedded document. */
       onSectionClick?: (sectionId: string) => void;
+      /** Optional secondary status — only show when real (never invent "Section N Completed"). */
       sectionStatus?: string;
     }
   | {
@@ -73,8 +76,15 @@ export function ModuleHeader(props: ModuleHeaderProps) {
 
   const current = currentModuleId ? getModule(currentModuleId) : null;
   const pageTitle = isPhaseOverview ? "Foundational AI Training" : current!.title;
-  const progressLabel = isPhaseOverview ? "Phase 1 of 4" : `Module ${current!.order} of ${TOTAL_MODULES}`;
-  const statusText = sectionStatus ?? (isPhaseOverview ? undefined : "Section 1 of 4 Completed");
+  // User-facing: Phase → Module, Module → Sub-module.
+  // Split into two chips so Module (context) ≠ Sub-module (you are here).
+  const progressChips = isPhaseOverview
+    ? { module: `Module ${PHASE_NUMBER} of ${TOTAL_PHASES}`, subModule: null as string | null }
+    : {
+        module: `Module ${PHASE_NUMBER}`,
+        subModule: `Sub-module ${current!.order} of ${TOTAL_MODULES}`,
+      };
+  const statusText = sectionStatus;
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -193,7 +203,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                 }}
               >
                 <PickerItem
-                  label="Phase 1 Overview"
+                  label={`Module ${PHASE_NUMBER} Overview`}
                   isCurrent={isPhaseOverview}
                   order={null}
                   onClick={() => {
@@ -235,19 +245,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
         </div>
 
         <div className="flex items-center gap-3 md:gap-5 shrink-0">
-          <div
-            style={{
-              background: colors.yellow,
-              borderRadius: 12,
-              padding: "6px 12px",
-              fontFamily: fonts.bold,
-              fontSize: 12,
-              color: colors.confidentBlack,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {progressLabel}
-          </div>
+          <ProgressChipGroup moduleLabel={progressChips.module} subModuleLabel={progressChips.subModule} />
           {statusText && (
             <div className="hidden md:flex items-center gap-2">
               <span
@@ -287,6 +285,123 @@ export function ModuleHeader(props: ModuleHeaderProps) {
             <TabCluster label="Apply" items={apply} activeSectionId={activeSectionId} onSectionClick={onSectionClick} />
           )}
         </nav>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Orientation chip group — Module (quiet context) + Sub-module (yellow = here).
+ * Pulses once when labels change. Respects prefers-reduced-motion.
+ */
+function ProgressChipGroup({
+  moduleLabel,
+  subModuleLabel,
+}: {
+  moduleLabel: string;
+  subModuleLabel: string | null;
+}) {
+  const liveKey = subModuleLabel ? `${moduleLabel}|${subModuleLabel}` : moduleLabel;
+  const [displayModule, setDisplayModule] = useState(moduleLabel);
+  const [displaySub, setDisplaySub] = useState(subModuleLabel);
+  const [pulse, setPulse] = useState(false);
+  const [fade, setFade] = useState(false);
+  const prevKey = useRef(liveKey);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    return () => timers.current.forEach(clearTimeout);
+  }, []);
+
+  useEffect(() => {
+    if (liveKey === prevKey.current) return;
+    prevKey.current = liveKey;
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+
+    if (reduceMotion) {
+      setDisplayModule(moduleLabel);
+      setDisplaySub(subModuleLabel);
+      setPulse(false);
+      setFade(false);
+      return;
+    }
+
+    setFade(true);
+    timers.current.push(
+      setTimeout(() => {
+        setDisplayModule(moduleLabel);
+        setDisplaySub(subModuleLabel);
+        setFade(false);
+        setPulse(true);
+        timers.current.push(setTimeout(() => setPulse(false), 200));
+      }, 100),
+    );
+  }, [liveKey, moduleLabel, subModuleLabel]);
+
+  const chipBase: CSSProperties = {
+    borderRadius: 12,
+    padding: "6px 12px",
+    fontSize: 12,
+    whiteSpace: "nowrap",
+    lineHeight: 1.2,
+  };
+
+  const announce = displaySub ? `${displayModule}, ${displaySub}` : displayModule;
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label={announce}
+      className="flex items-center shrink-0"
+      style={{
+        gap: 6,
+        transform: pulse ? "scale(1.03)" : "scale(1)",
+        opacity: fade ? 0.4 : 1,
+        transition: "transform 200ms ease, opacity 100ms ease",
+        transformOrigin: "right center",
+      }}
+    >
+      {/* Context — quieter on dark bar so it doesn't fight the yellow chip */}
+      <span
+        style={{
+          ...chipBase,
+          background: displaySub ? "rgba(255,255,255,0.08)" : colors.yellow,
+          border: displaySub ? `1px solid ${colors.borderOnDark}` : "none",
+          color: displaySub ? colors.gray02 : colors.confidentBlack,
+          fontFamily: displaySub ? fonts.regular : fonts.bold,
+        }}
+      >
+        {displayModule}
+      </span>
+      {displaySub && (
+        <>
+          <span
+            aria-hidden="true"
+            style={{ color: colors.gray01, fontSize: 11, fontFamily: fonts.regular, userSelect: "none" }}
+          >
+            ›
+          </span>
+          {/* You-are-here — EY Yellow owns the primary read */}
+          <span
+            style={{
+              ...chipBase,
+              background: colors.yellow,
+              color: colors.confidentBlack,
+              fontFamily: fonts.bold,
+              boxShadow: "0 0 0 1px rgba(255,230,0,0.35)",
+            }}
+          >
+            {displaySub}
+          </span>
+        </>
       )}
     </div>
   );
@@ -539,12 +654,12 @@ export function ModulePrevNext({
       {prev ? (
         <PrevNextButton direction="prev" title={prev.title} onClick={() => onNavigate(prev.path)} />
       ) : (
-        <PrevNextButton direction="prev" title="Phase 1 Overview" onClick={onBack} />
+        <PrevNextButton direction="prev" title={`Module ${PHASE_NUMBER} Overview`} onClick={onBack} />
       )}
       {next ? (
         <PrevNextButton direction="next" title={next.title} onClick={() => onNavigate(next.path)} />
       ) : (
-        <PrevNextButton direction="next" title="Back to Phase 1" onClick={onBack} />
+        <PrevNextButton direction="next" title={`Back to Module ${PHASE_NUMBER}`} onClick={onBack} />
       )}
     </nav>
   );
