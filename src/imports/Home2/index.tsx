@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { SiteHeader } from "../../design-kit/SiteHeader";
 import svgPaths from "./svg-9qo006nmu4";
 import imgIndianTaxLady1 from "./cf830df8acc30d2ebe5a2c08149d39333d1079bd.png";
 import imgResearchLitigation1 from "./c47d9607a0edbab8c4595b79a2b7a480058303f1.png";
@@ -8,10 +9,10 @@ import { imgGroup, imgBackground, imgBackground1, imgBackground2, imgBackground3
 
 function Container() {
   return (
-    <div className="absolute bg-gradient-to-r from-[#2e2e38] h-[631.586px] left-0 to-[rgba(0,0,0,0)] top-0 via-[62.981%] via-[rgba(46,46,56,0.7)] w-[1416px]" data-name="Container">
-      <div className="absolute h-[632px] left-[-103px] top-0 w-[1520px]" data-name="IndianTaxLady 1">
+    <div className="absolute inset-0 bg-gradient-to-r from-[#2e2e38] to-[rgba(0,0,0,0)] via-[62.981%] via-[rgba(46,46,56,0.7)] w-full" data-name="Container">
+      <div className="absolute inset-0 w-full h-full" data-name="IndianTaxLady 1">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
-          <img alt="" className="absolute max-w-none object-cover size-full" src={imgIndianTaxLady1} />
+          <img alt="" className="absolute max-w-none object-cover object-[70%_center] size-full" src={imgIndianTaxLady1} />
           <div className="absolute bg-[rgba(0,0,0,0.25)] inset-0" />
         </div>
       </div>
@@ -19,103 +20,38 @@ function Container() {
   );
 }
 
-function Div1() {
-  return (
-    <div className="absolute h-[631.586px] left-0 overflow-clip top-0 w-[1416px]" data-name="div">
-      <Container />
-    </div>
-  );
-}
-
-function Div2() {
-  return <div className="absolute bg-[#ffe600] h-[4px] left-0 top-[627.59px] w-[1416px]" data-name="div" />;
-}
-
-function H() {
-  return (
-    <div className="absolute h-[109px] left-0 top-[26px] w-[576px]" data-name="h1">
-      <p className="[word-break:break-word] absolute font-['EYInterstate:Bold',sans-serif] leading-[70px] left-0 not-italic text-[#ffe600] text-[58.002px] top-[50px] tracking-[-1.16px] w-[539px]">EY India AI Tax Hub</p>
-    </div>
-  );
-}
-
-function P() {
-  return (
-    <div className="absolute content-stretch flex items-center justify-center left-0 px-[4px] top-[160px]" data-name="p">
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[30.002px] not-italic relative shrink-0 text-[20px] text-[rgba(255,255,255,0.85)] w-[466px]">A program offering suite of AI Agents for deep research, compliance, litigation and AI led bespoke tax function transformation capabilities. It is backed by trusted tax databases and sharpest tax minds in India.</p>
-    </div>
-  );
-}
-
-function Button() {
-  return (
-    <div className="absolute bg-[#ffe600] h-[50.5px] left-0 top-0 w-[137.023px]" data-name="button">
-      <p className="-translate-x-1/2 [word-break:break-word] absolute font-['EYInterstate:Regular',sans-serif] leading-[23.996px] left-[69.5px] not-italic text-[#2e2e38] text-[16.002px] text-center top-[13px] whitespace-nowrap">Know More</p>
-    </div>
-  );
-}
-
-function Container1() {
-  return (
-    <div className="absolute h-[50.5px] left-0 top-[336px] w-[576px]" data-name="Container">
-      <Button />
-    </div>
-  );
-}
-
-function Div3() {
-  return (
-    <div className="absolute h-[434px] left-[40px] top-[134px] w-[576px]" data-name="div">
-      <H />
-      <P />
-      <Container1 />
-    </div>
-  );
-}
-
 function Section() {
   return (
-    <div className="h-[631.586px] relative shrink-0 w-full" data-name="section">
-      <Div1 />
-      <Div2 />
-      <Div3 />
-    </div>
-  );
-}
-
-function H1() {
-  return (
-    <div className="relative shrink-0 w-full" data-name="h2">
-      <div className="flex flex-row items-center justify-center size-full">
-        <div className="content-stretch flex items-center justify-center px-[389px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[39.998px] not-italic relative shrink-0 text-[#2e2e38] text-[32.004px] text-center tracking-[-0.6401px] whitespace-nowrap">{`Discover what's happening on the Hub`}</p>
-        </div>
+    <section className="relative shrink-0 w-full min-h-[420px] md:min-h-[560px] lg:min-h-[632px] overflow-hidden" data-name="section">
+      <Container />
+      <div className="absolute bottom-0 left-0 right-0 h-[4px] bg-[#ffe600]" />
+      <div className="relative z-[1] flex flex-col gap-5 md:gap-6 max-w-[640px] px-5 sm:px-8 md:px-10 pt-24 pb-16 md:pt-32 md:pb-20">
+        <h1 className="font-['EYInterstate:Bold',sans-serif] leading-[1.1] not-italic text-[#ffe600] text-[36px] sm:text-[48px] md:text-[58px] tracking-[-0.02em] m-0">
+          EY India AI Tax Hub
+        </h1>
+        <p className="font-['EYInterstate:Bold',sans-serif] leading-[1.45] not-italic m-0 text-[16px] sm:text-[18px] md:text-[20px] text-[rgba(255,255,255,0.85)]">
+          A program offering suite of AI Agents for deep research, compliance, litigation and AI led bespoke tax function transformation capabilities. It is backed by trusted tax databases and sharpest tax minds in India.
+        </p>
+        <button
+          type="button"
+          className="bg-[#ffe600] border-0 cursor-pointer font-['EYInterstate:Regular',sans-serif] text-[#2e2e38] text-[16px] px-6 py-3 w-fit"
+        >
+          Know More
+        </button>
       </div>
-    </div>
-  );
-}
-
-function P1() {
-  return (
-    <div className="content-stretch flex items-center justify-center relative shrink-0" data-name="p">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[23.996px] not-italic relative shrink-0 text-[#747480] text-[16.002px] text-center whitespace-nowrap">The three foundational pillars of the EY India AI Tax Hub, designed to revolutionize your end-to-end tax operations.</p>
-    </div>
-  );
-}
-
-function Frame23() {
-  return (
-    <div className="absolute content-stretch flex flex-col gap-[8px] items-center left-0 top-0 w-[1335px]">
-      <H1 />
-      <P1 />
-    </div>
+    </section>
   );
 }
 
 function Container2() {
   return (
-    <div className="h-[108px] relative shrink-0 w-full" data-name="Container">
-      <Frame23 />
+    <div className="relative shrink-0 w-full flex flex-col gap-2 items-center text-center px-2" data-name="Container">
+      <h2 className="font-['EYInterstate:Bold',sans-serif] leading-[1.25] not-italic m-0 text-[#2e2e38] text-[24px] sm:text-[28px] md:text-[32px] tracking-[-0.02em]">
+        Discover what&apos;s happening on the Hub
+      </h2>
+      <p className="font-['EYInterstate:Regular',sans-serif] leading-[1.5] not-italic m-0 text-[#747480] text-[15px] md:text-[16px] max-w-[720px]">
+        The three foundational pillars of the EY India AI Tax Hub, designed to revolutionize your end-to-end tax operations.
+      </p>
     </div>
   );
 }
@@ -145,7 +81,7 @@ function FileSearchCorner() {
 
 function Container5() {
   return (
-    <div className="absolute bg-gradient-to-t from-[61.538%] from-[rgba(46,46,56,0)] h-[192px] left-0 to-[rgba(0,0,0,0)] top-[0.41px] w-[427.328px]" data-name="Container">
+    <div className="absolute bg-gradient-to-t from-[61.538%] from-[rgba(46,46,56,0)] h-[192px] left-0 to-[rgba(0,0,0,0)] top-[0.41px] w-full" data-name="Container">
       <div className="absolute h-[284px] left-[-7px] top-[-48px] w-[502px]" data-name="ResearchLitigation 1">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <img alt="" className="absolute max-w-none object-cover size-full" src={imgResearchLitigation1} />
@@ -158,7 +94,7 @@ function Container5() {
 }
 
 function H2() {
-  return <div className="absolute h-[27px] left-[16px] top-[149px] w-[395.328px]" data-name="h3" />;
+  return <div className="absolute h-[27px] left-[16px] top-[149px] w-full max-w-full" data-name="h3" />;
 }
 
 function Container4() {
@@ -176,8 +112,8 @@ function Container4() {
 
 function P2() {
   return (
-    <div className="h-[67.195px] relative shrink-0 w-[387.328px]" data-name="p">
-      <p className="[word-break:break-word] absolute font-['EYInterstate:Bold',sans-serif] leading-[23.996px] left-0 not-italic text-[#747480] text-[16.002px] top-[0.5px] w-[384px]">Platform for research and litigation with deeply embedded agentic capabilities.</p>
+    <div className="h-[67.195px] relative shrink-0 w-full" data-name="p">
+      <p className="[word-break:break-word] absolute font-['EYInterstate:Bold',sans-serif] leading-[23.996px] left-0 not-italic text-[#747480] text-[16.002px] top-[0.5px] w-full">Platform for research and litigation with deeply embedded agentic capabilities.</p>
     </div>
   );
 }
@@ -223,7 +159,7 @@ function Container3() {
 
 function Frame16() {
   return (
-    <div className="content-stretch flex flex-col h-full items-center relative shrink-0 w-[429px]">
+    <div className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px]">
       <div aria-hidden className="absolute border border-[#bfbfc8] border-solid inset-[-1px] pointer-events-none" />
       <Frame20 />
       <Container3 />
@@ -257,7 +193,7 @@ function ListChecks() {
 
 function Container9() {
   return (
-    <div className="absolute bg-[#2e2e38] h-[192px] left-0 top-0 w-[427.336px]" data-name="Container">
+    <div className="absolute bg-[#2e2e38] h-[192px] left-0 top-0 w-full" data-name="Container">
       <div className="absolute h-[247px] left-[-27.33px] top-[-35.59px] w-[500px]" data-name="Compliance 1">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <img alt="" className="absolute max-w-none object-cover size-full" src={imgCompliance1} />
@@ -270,7 +206,7 @@ function Container9() {
 }
 
 function H3() {
-  return <div className="absolute h-[27px] left-[16px] top-[149px] w-[395.336px]" data-name="h3" />;
+  return <div className="absolute h-[27px] left-[16px] top-[149px] w-full max-w-full" data-name="h3" />;
 }
 
 function Container8() {
@@ -332,7 +268,7 @@ function Container7() {
 
 function Frame17() {
   return (
-    <div className="content-stretch flex flex-col h-full items-start justify-between relative shrink-0 w-[429px]">
+    <div className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px]">
       <div aria-hidden className="absolute border border-[#bfbfc8] border-solid inset-[-1px] pointer-events-none" />
       <Frame22 />
       <Container7 />
@@ -364,7 +300,7 @@ function FlaskConical() {
 
 function Container13() {
   return (
-    <div className="absolute bg-gradient-to-t from-1/2 from-[rgba(46,46,56,0.6)] h-[192px] left-0 to-[rgba(0,0,0,0)] top-0 w-[427.336px]" data-name="Container">
+    <div className="absolute bg-gradient-to-t from-1/2 from-[rgba(46,46,56,0.6)] h-[192px] left-0 to-[rgba(0,0,0,0)] top-0 w-full" data-name="Container">
       <div className="absolute h-[261px] left-[-14.66px] top-[-13.59px] w-[456px]" data-name="Tax lab 1">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 overflow-hidden">
@@ -379,7 +315,7 @@ function Container13() {
 }
 
 function H4() {
-  return <div className="h-[27px] relative shrink-0 w-[395.336px]" data-name="h3" />;
+  return <div className="h-[27px] relative shrink-0 w-full max-w-full" data-name="h3" />;
 }
 
 function Container12() {
@@ -398,7 +334,7 @@ function Container12() {
 function P4() {
   return (
     <div className="content-stretch flex items-center justify-center relative shrink-0" data-name="p">
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[23.996px] not-italic relative shrink-0 text-[#747480] text-[16.002px] w-[381px]">Your space to build the tax function of the future</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[23.996px] not-italic relative shrink-0 text-[#747480] text-[16.002px] w-full">Your space to build the tax function of the future</p>
     </div>
   );
 }
@@ -441,32 +377,37 @@ function Container11() {
   );
 }
 
-function Frame18() {
+function Frame18({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
-    <div className="content-stretch flex flex-col h-full items-center relative shrink-0 w-[429px]">
+    <button
+      type="button"
+      onClick={onOpenTaxLabs}
+      title="Explore EY.ai Tax Labs"
+      className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px] bg-transparent border-0 p-0 cursor-pointer text-left appearance-none"
+    >
       <div aria-hidden className="absolute border border-[#bfbfc8] border-solid inset-[-1px] pointer-events-none" />
       <Frame21 />
       <Container11 />
-    </div>
+    </button>
   );
 }
 
-function Frame19() {
+function Frame19({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
-    <div className="content-stretch flex gap-[24px] h-[391px] items-center relative shrink-0">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative shrink-0 w-full min-w-0">
       <Frame16 />
       <Frame17 />
-      <Frame18 />
+      <Frame18 onOpenTaxLabs={onOpenTaxLabs} />
     </div>
   );
 }
 
-function Section1() {
+function Section1({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
     <div className="bg-white relative shrink-0 w-full" data-name="Section">
-      <div className="content-stretch flex flex-col items-start p-[40px] relative size-full">
+      <div className="content-stretch flex flex-col gap-8 items-stretch p-5 sm:p-8 md:p-10 relative size-full">
         <Container2 />
-        <Frame19 />
+        <Frame19 onOpenTaxLabs={onOpenTaxLabs} />
       </div>
     </div>
   );
@@ -474,7 +415,7 @@ function Section1() {
 
 function Separator() {
   return (
-    <div className="h-px relative shrink-0 w-[1415.98px]" data-name="Separator">
+    <div className="h-px relative shrink-0 w-full" data-name="Separator">
       <div aria-hidden className="absolute border-[#c4c4cd] border-solid border-t inset-0 pointer-events-none" />
     </div>
   );
@@ -482,7 +423,7 @@ function Separator() {
 
 function Container15() {
   return (
-    <div className="content-stretch flex flex-col items-start overflow-clip pb-[60px] relative shrink-0 w-[1355.98px]" data-name="Container">
+    <div className="content-stretch flex flex-col items-start overflow-clip pb-10 md:pb-[60px] relative shrink-0 w-full" data-name="Container">
       <Separator />
     </div>
   );
@@ -764,12 +705,12 @@ function Frame13() {
   );
 }
 
-function Frame() {
+function Frame({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
-    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
       <Section />
-      <Section1 />
-      <div className="bg-white content-stretch flex flex-col h-[326px] items-center justify-center px-[64px] relative shrink-0 w-[1416px]" data-name="Footer Final">
+      <Section1 onOpenTaxLabs={onOpenTaxLabs} />
+      <div className="bg-white content-stretch flex flex-col min-h-[240px] md:min-h-[326px] items-center justify-center px-4 sm:px-8 md:px-[64px] relative shrink-0 w-full" data-name="Footer Final">
         <Container15 />
         <Frame13 />
       </div>
@@ -777,18 +718,10 @@ function Frame() {
   );
 }
 
-function Div() {
+function Body({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
-    <div className="bg-white content-stretch flex flex-col items-start overflow-clip relative shrink-0 w-full z-[1]" data-name="div">
-      <Frame />
-    </div>
-  );
-}
-
-function Body() {
-  return (
-    <div className="absolute bg-white content-stretch flex flex-col h-[1043px] isolate items-start left-0 top-[107px] w-[1416px]" data-name="Body">
-      <Div />
+    <div className="relative bg-white content-stretch flex flex-col items-stretch w-full min-w-0" data-name="Body">
+      <Frame onOpenTaxLabs={onOpenTaxLabs} />
     </div>
   );
 }
@@ -973,12 +906,14 @@ function Nav1() {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
   return (
-    <div className="relative size-full" data-name="HOME 2">
-      <Body />
-      <div className="absolute content-stretch flex flex-col items-start left-0 top-0 w-[1416px]">
-        <Nav />
-        <Nav1 />
+    <div className="relative w-full max-w-full min-w-0 overflow-x-hidden bg-white" data-name="HOME 2">
+      <div className="sticky top-0 z-[300] w-full">
+        <SiteHeader variant="hub" activeSection="home" onNavigate={navigate} skipLinkTarget="#home-content" />
+      </div>
+      <div id="home-content" className="w-full min-w-0">
+        <Body onOpenTaxLabs={() => navigate("/phased")} />
       </div>
     </div>
   );

@@ -186,9 +186,9 @@ function Nav1() {
 
 function Frame() {
   return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[16px] items-start justify-center not-italic relative shrink-0 w-[800px]" data-name="Frame">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[56px] relative shrink-0 text-[#ffe600] text-[48px] whitespace-nowrap">EY.ai Tax Labs</p>
-      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[28px] min-w-full relative shrink-0 text-[#d7d7dc] text-[18px] w-[min-content]">A structured phased engagement designed to empower your tax teams with AI capabilities, from foundational training to advanced workflow integration.</p>
+    <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] md:gap-[16px] items-start justify-center not-italic relative shrink-0 w-full max-w-[800px]" data-name="Frame">
+      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[1.15] relative shrink-0 text-[#ffe600] text-[32px] sm:text-[40px] md:text-[48px] md:leading-[56px]">EY.ai Tax Labs</p>
+      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[26px] md:leading-[28px] relative shrink-0 text-[#d7d7dc] text-[16px] md:text-[18px] w-full">A structured phased engagement designed to empower your tax teams with AI capabilities, from foundational training to advanced workflow integration.</p>
     </div>
   );
 }
@@ -197,7 +197,7 @@ function HeaderSection() {
   return (
     <div className="relative shrink-0 w-full" data-name="header-section">
       <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex items-center justify-between pb-[24px] pt-[40px] px-[64px] relative size-full">
+        <div className="content-stretch flex items-center justify-between pb-[24px] pt-[32px] md:pt-[40px] px-4 sm:px-8 md:px-[64px] relative size-full">
           <Frame />
         </div>
       </div>
@@ -812,9 +812,9 @@ function Frame38() {
 
 function DiagramViewport() {
   return (
-    <div className="bg-[#0c0c0f] relative shrink-0 w-full" data-name="diagram-viewport">
-      <div className="flex flex-row items-center justify-center size-full">
-        <div className="content-stretch flex items-center justify-center px-[48px] py-[40px] relative size-full">
+    <div className="bg-[#0c0c0f] relative shrink-0 w-full min-w-0" data-name="diagram-viewport">
+      <div className="flex flex-row items-center justify-center size-full min-w-0">
+        <div className="content-stretch flex items-center justify-center px-4 sm:px-8 md:px-[48px] py-6 md:py-[40px] relative size-full min-w-0 w-full">
           <CoreProcessingPipeline />
         </div>
       </div>
@@ -834,17 +834,17 @@ function AiMs365Schematic() {
 function Frame2() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-[#2e2e38] w-full" data-name="Frame">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[40px] relative shrink-0 text-[32px] whitespace-nowrap">Phased Approach</p>
-      <p className="font-['EYInterstate:Regular',sans-serif] leading-[24px] min-w-full relative shrink-0 text-[16px] w-[min-content]">{`A progressive journey from understanding to application to adoption, tailored for your organization's specific tax needs.`}</p>
+      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-[24px] sm:text-[28px] md:text-[32px] md:leading-[40px]">Phased Approach</p>
+      <p className="font-['EYInterstate:Regular',sans-serif] leading-[24px] relative shrink-0 text-[15px] md:text-[16px] w-full">{`A progressive journey from understanding to application to adoption, tailored for your organization's specific tax needs.`}</p>
     </div>
   );
 }
 
 function Frame3() {
   return (
-    <div className="bg-[#f9f9fa] content-stretch flex items-start px-[20px] py-[12px] relative rounded-[4px] shrink-0" data-name="Frame">
+    <div className="bg-[#f9f9fa] content-stretch flex items-start px-[16px] sm:px-[20px] py-[12px] relative rounded-[4px] shrink-0 max-w-full" data-name="Frame">
       <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[4px]" />
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[20px] not-italic relative shrink-0 text-[#2e2e38] text-[14px] whitespace-nowrap">5-6 Weeks | ~10 Participants | M365 Copilot Licensed</p>
+      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[20px] not-italic relative shrink-0 text-[#2e2e38] text-[13px] sm:text-[14px]">5-6 Weeks | ~10 Participants | M365 Copilot Licensed</p>
     </div>
   );
 }
@@ -861,7 +861,7 @@ function Frame1() {
 function Frame39() {
   return (
     <div className="bg-[#c4c4cd] relative shrink-0 w-full">
-      <div className="content-stretch flex flex-col items-start px-[64px] py-[24px] relative size-full">
+      <div className="content-stretch flex flex-col items-start px-4 sm:px-8 md:px-[64px] py-[24px] relative size-full">
         <Frame1 />
       </div>
     </div>
@@ -1290,7 +1290,7 @@ function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProce
               {phase.coverage.map((item) => (
                 <div key={item} className="content-stretch flex gap-[8px] items-center relative shrink-0">
                   <BulletCircle />
-                  <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[14px] whitespace-nowrap">{item}</p>
+                  <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
                 </div>
               ))}
             </div>
@@ -1301,7 +1301,7 @@ function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProce
               {phase.deliverables.map((item) => (
                 <div key={item} className="content-stretch flex gap-[8px] items-center relative shrink-0">
                   <BulletCircle />
-                  <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[14px] whitespace-nowrap">{item}</p>
+                  <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
                 </div>
               ))}
             </div>
@@ -1328,15 +1328,11 @@ function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProce
 
 function CardGrid({ onProceed }: { onProceed?: () => void }) {
   return (
-    <div className="relative shrink-0 w-full">
-      <div className="content-stretch flex flex-col gap-[24px] items-start px-[64px] relative size-full">
-        {/* Row 1: Phase 1 + Phase 2 */}
-        <div className="content-stretch flex gap-[24px] items-start relative shrink-0 w-full">
+    <div className="relative shrink-0 w-full min-w-0">
+      <div className="content-stretch flex flex-col gap-[24px] items-stretch px-4 sm:px-8 md:px-[64px] relative size-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[24px] relative shrink-0 w-full">
           <PhaseCard phase={PHASE_CARDS[0]} onProceed={onProceed} />
           <PhaseCard phase={PHASE_CARDS[1]} />
-        </div>
-        {/* Row 2: Phase 3 + Phase 4 */}
-        <div className="content-stretch flex gap-[24px] items-start relative shrink-0 w-full">
           <PhaseCard phase={PHASE_CARDS[2]} />
           <PhaseCard phase={PHASE_CARDS[3]} />
         </div>
@@ -1382,7 +1378,7 @@ function ContentArea() {
 
 function Separator() {
   return (
-    <div className="h-px relative shrink-0 w-[1415.98px]" data-name="Separator">
+    <div className="h-px relative shrink-0 w-full" data-name="Separator">
       <div aria-hidden className="absolute border-[#c4c4cd] border-solid border-t inset-0 pointer-events-none" />
     </div>
   );
@@ -1390,7 +1386,7 @@ function Separator() {
 
 function Container3() {
   return (
-    <div className="content-stretch flex flex-col items-start overflow-clip pb-[60px] relative shrink-0 w-[1355.98px]" data-name="Container">
+    <div className="content-stretch flex flex-col items-start overflow-clip pb-[40px] md:pb-[60px] relative shrink-0 w-full" data-name="Container">
       <Separator />
     </div>
   );
@@ -2381,7 +2377,7 @@ function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
       <Frame39 />
 
       {/* ── View switcher ── */}
-      <div className="flex items-center gap-[8px] px-[64px]">
+      <div className="flex flex-wrap items-center gap-[8px] px-4 sm:px-8 md:px-[64px]">
         <p className="font-['EYInterstate:Regular',sans-serif] text-[13px] leading-[20px] text-[#747480]">View:</p>
         <button
           onClick={() => setView("timeline")}
@@ -2412,13 +2408,13 @@ function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
 
       {/* ── Option 1: Timeline accordion ── */}
       {view === "timeline" && (
-        <div className="relative shrink-0 w-full">
-          <div className="content-stretch flex flex-col px-[64px] relative w-full">
+        <div className="relative shrink-0 w-full min-w-0">
+          <div className="content-stretch flex flex-col px-4 sm:px-8 md:px-[64px] relative w-full min-w-0">
             {PHASES.map((phase, i) => {
               const isExp = expandedPhase === phase.number;
               return (
-                <div key={phase.number} className="content-stretch flex gap-[32px] items-start relative shrink-0 w-full">
-                  <div className="content-stretch flex gap-[24px] items-start relative self-stretch shrink-0 w-[160px]">
+                <div key={phase.number} className="content-stretch flex flex-col sm:flex-row gap-4 sm:gap-[32px] items-start relative shrink-0 w-full min-w-0">
+                  <div className="content-stretch flex gap-[16px] sm:gap-[24px] items-start relative self-stretch shrink-0 sm:w-[160px]">
                     <div className="content-stretch flex h-[48px] items-center justify-center relative shrink-0">
                       <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">
                         {phase.week}
@@ -2433,15 +2429,15 @@ function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
                         </div>
                       </div>
                       {i < PHASES.length - 1 && (
-                        <div className="bg-[#ffe600] flex-[1_0_0] min-h-px relative w-[4px]" style={{ minHeight: 24 }} />
+                        <div className="bg-[#ffe600] flex-[1_0_0] min-h-px relative w-[4px] hidden sm:block" style={{ minHeight: 24 }} />
                       )}
                     </div>
                   </div>
                   {phase.locked ? (
-                    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[12px] mb-[16px]">
+                    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-0 relative rounded-[12px] mb-[16px] w-full">
                       <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                      <div className="content-stretch flex gap-[16px] items-center p-[32px] relative w-full">
-                        <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[30px] min-w-px not-italic relative text-[#2e2e38] text-[24px]">
+                      <div className="content-stretch flex flex-wrap gap-[16px] items-center p-5 sm:p-[32px] relative w-full">
+                        <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[28px] sm:leading-[30px] min-w-[12rem] not-italic relative text-[#2e2e38] text-[20px] sm:text-[24px]">
                           {phase.title}
                         </p>
                         <div className="bg-[#c4c4cd] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] shrink-0">
@@ -2454,14 +2450,14 @@ function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
                     </div>
                   ) : (
                     <div
-                      className="flex-[1_0_0] min-w-px mb-[16px]"
+                      className="flex-[1_0_0] min-w-0 mb-[16px] w-full"
                       style={{ cursor: "pointer" }}
                       onClick={() => setExpandedPhase(isExp ? 0 : phase.number)}
                     >
                       <TimelineCard
                         expanded={isExp}
                         onProceed={onProceed}
-                        className={`bg-white content-stretch drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex p-[32px] relative rounded-[12px] w-full ${isExp ? "flex-col gap-[24px] items-start" : "gap-[16px] items-center"}`}
+                        className={`bg-white content-stretch drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex p-5 sm:p-[32px] relative rounded-[12px] w-full ${isExp ? "flex-col gap-[24px] items-start" : "gap-[16px] items-center"}`}
                       />
                     </div>
                   )}
@@ -2483,15 +2479,18 @@ function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
 // ── Standalone page exports (no absolute canvas positioning) ─────────────────
 
 export function PhasedEngagementView({ onNavigateToPhase1 }: { onNavigateToPhase1?: () => void } = {}) {
+  const navigate = useNavigate();
+
   return (
-    <div className="relative bg-white content-stretch flex flex-col items-center overflow-clip w-[1416px]" data-name="EY.ai Tax Labs - Phased Engagement">
-      <div className="content-stretch flex flex-col items-start relative shrink-0 w-[1416px]" data-name="Top Navigation">
-        <Nav />
-        <Nav1 />
+    <div className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden" data-name="EY.ai Tax Labs - Phased Engagement">
+      <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]" data-name="Top Navigation">
+        <SiteHeader variant="hub" activeSection="tax-labs" onNavigate={navigate} skipLinkTarget="#phased-content" />
       </div>
-      <AiMs365Schematic />
-      <InteractiveContentArea onProceed={onNavigateToPhase1} />
-      <div className="bg-white content-stretch flex flex-col h-[326px] items-center justify-center px-[64px] relative shrink-0 w-[1416px]" data-name="Footer Final">
+      <div id="phased-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
+        <AiMs365Schematic />
+        <InteractiveContentArea onProceed={onNavigateToPhase1} />
+      </div>
+      <div className="bg-white content-stretch flex flex-col min-h-[240px] md:h-[326px] items-center justify-center px-4 sm:px-8 md:px-[64px] relative shrink-0 w-full" data-name="Footer Final">
         <Container3 />
         <Frame27 />
       </div>

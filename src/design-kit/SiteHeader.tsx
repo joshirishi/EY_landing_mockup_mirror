@@ -172,12 +172,12 @@ function HubBrandBar({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0 32px",
+          padding: "0 16px",
         }}
       >
         <button
           onClick={() => onNavigate("/")}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 4, borderRadius: 4, display: "flex", alignItems: "center", gap: 12 }}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 4, borderRadius: 4, display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}
           aria-label={`${BRAND_LABEL} — go to home`}
           onFocus={applyFocusRing}
           onBlur={clearFocusRing}
@@ -190,6 +190,7 @@ function HubBrandBar({
               fontSize: 13,
               borderLeft: "1px solid rgba(255,255,255,0.3)",
               paddingLeft: 12,
+              whiteSpace: "nowrap",
             }}
           >
             India AI Tax Hub
@@ -198,7 +199,7 @@ function HubBrandBar({
         {rightSlot}
       </div>
 
-      <nav aria-label="Site sections" style={{ background: "#23232F", display: "flex", alignItems: "center", padding: "0 32px" }}>
+      <nav aria-label="Site sections" style={{ background: "#23232F", display: "flex", alignItems: "center", padding: "0 16px", overflowX: "auto" }}>
         <SiteNavLink
           label="About EY India AI Tax Hub"
           isActive={activeSection === "home"}
