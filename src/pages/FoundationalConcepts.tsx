@@ -91,7 +91,7 @@ const TOKEN_BRIDGE = `
 }
 #module-content .gva-spectrum-card {
   background: ${colors.white};
-  border: 1px solid #94a3b8;
+  border: 1px solid ${colors.gray02};
   border-radius: 12px;
   overflow: hidden;
   display: flex;
@@ -115,20 +115,20 @@ const TOKEN_BRIDGE = `
   gap: 8px;
   padding: 20px;
 }
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-head { background: rgba(59,130,246,0.08); }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-head { background: rgba(16,185,129,0.08); }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-head { background: rgba(249,115,22,0.08); }
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-head { background: rgba(70,150,255,0.08); }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-head { background: rgba(0,200,100,0.08); }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-head { background: rgba(255,125,30,0.08); }
 #module-content .gva-spectrum-title { font-size: 18px; font-weight: 700; margin: 0; }
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-title { color: #3b82f6; }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-title { color: #10b981; }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-title { color: #f97316; }
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-title { color: ${colors.frameBlue}; }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-title { color: ${colors.frameGreen}; }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-title { color: ${colors.frameOrange}; }
 #module-content .gva-badge {
   display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #fff;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${colors.white};
 }
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-badge { background: #3b82f6; }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-badge { background: #10b981; }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-badge { background: #f97316; }
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-badge { background: ${colors.frameBlue}; }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-badge { background: ${colors.frameGreen}; }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-badge { background: ${colors.frameOrange}; }
 #module-content .gva-spectrum-body { display: flex; flex-direction: column; gap: 16px; padding: 20px; flex: 1; }
 #module-content .gva-spectrum-desc { margin: 0; font-size: 13px; line-height: 1.4; color: ${colors.gray01}; }
 #module-content .gva-flow {
@@ -136,9 +136,9 @@ const TOKEN_BRIDGE = `
   display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;
   background: ${colors.white};
 }
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-flow { color: #3b82f6; }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-flow { color: #10b981; }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-flow { color: #f97316; }
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-flow { color: ${colors.frameBlue}; }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-flow { color: ${colors.frameGreen}; }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-flow { color: ${colors.frameOrange}; }
 #module-content .gva-best-label { margin: 0; font-size: 11px; text-transform: uppercase; color: ${colors.gray01}; }
 #module-content .gva-best-value { margin: 2px 0 0; font-size: 13px; font-weight: 700; color: ${colors.offBlack}; }
 #module-content .gva-card-cta { margin-top: auto; font-size: 13px; font-weight: 700; color: ${colors.offBlack}; text-decoration: underline; text-underline-offset: 3px; }
@@ -151,7 +151,7 @@ const TOKEN_BRIDGE = `
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 #module-content .gva-banner-icon img { width: 20px; height: 20px; display: block; }
-#module-content .gva-banner-title { margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #fff; }
+#module-content .gva-banner-title { margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #FFFFFF; }
 #module-content .gva-banner-body { margin: 0; font-size: 13px; color: ${colors.gray02}; line-height: 1.45; }
 @media (max-width: 1000px) {
   #module-content .gva-spectrum { grid-template-columns: 1fr; }
@@ -189,7 +189,7 @@ const TOKEN_BRIDGE = `
 }
 #module-content .gva-modal-thumb {
   width: 100%; height: auto; object-fit: contain; object-position: center top;
-  border-radius: 8px; display: block; background: #f5f5f7;
+  border-radius: 8px; display: block; background: #F6F6FA;
   border: 1px solid rgba(46, 46, 56, 0.08);
 }
 body.gva-modal-open { overflow: hidden; }

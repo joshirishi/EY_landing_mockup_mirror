@@ -35,9 +35,9 @@ export const colors = {
   accentOrange:    '#FF7D1E', // alias of frameOrange — activity/badge accents
 
   // ── Dark module surfaces (mirrors --ey-* vars in theme.css) ──────────────
-  eyBgBody:        '#0D0D1A', // dark section base
-  eyBgBodyAlt:     '#12122A', // dark section gradient stop
-  eyBgCard:        '#1C1F36', // elevated card on dark surfaces
+  eyBgBody:        '#1A1A24', // dark section base
+  eyBgBodyAlt:     '#1A1A24', // dark section gradient stop
+  eyBgCard:        '#2E2E38', // elevated card on dark surfaces
   onDark:          '#FFFFFF', // primary text on dark backgrounds
   onDarkMuted:     'rgba(255, 255, 255, 0.72)', // secondary text on dark
   onDarkSubtle:    'rgba(255, 255, 255, 0.55)', // tertiary/caption text on dark

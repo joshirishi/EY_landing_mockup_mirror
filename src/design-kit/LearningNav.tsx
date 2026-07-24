@@ -108,7 +108,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
         className="flex flex-wrap items-center justify-between gap-3 md:gap-4 px-4 sm:px-6 md:px-10 py-3"
         style={{
           background: colors.offBlack,
-          borderBottom: "1px solid #3F3F4E",
+          borderBottom: `1px solid ${colors.offBlack}`,
         }}
       >
         <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
@@ -129,7 +129,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
             <YellowBackArrow />
             <span
               className="hidden sm:inline"
-              style={{ fontFamily: fonts.bold, fontSize: 14, color: "#FFE6A0", whiteSpace: "nowrap" }}
+              style={{ fontFamily: fonts.bold, fontSize: 14, color: colors.yellow, whiteSpace: "nowrap" }}
             >
               Tax Labs
             </span>
@@ -153,7 +153,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                 borderRadius: 4,
                 fontFamily: fonts.bold,
                 fontSize: 14,
-                color: "#FFFFFF",
+                color: colors.white,
               }}
               onFocus={applyFocusRing}
               onBlur={clearFocusRing}
@@ -224,7 +224,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
           <span
             className="hidden lg:inline truncate"
             style={{
-              color: "#8A8A99",
+              color: colors.gray01,
               fontFamily: fonts.regular,
               fontSize: 14,
             }}
@@ -242,7 +242,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
               padding: "6px 12px",
               fontFamily: fonts.bold,
               fontSize: 12,
-              color: "#1A1A1A",
+              color: colors.confidentBlack,
               whiteSpace: "nowrap",
             }}
           >
@@ -260,7 +260,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                 }}
                 aria-hidden="true"
               />
-              <span style={{ color: "#FFFFFF", fontFamily: fonts.regular, fontSize: 12, whiteSpace: "nowrap" }}>
+              <span style={{ color: colors.white, fontFamily: fonts.regular, fontSize: 12, whiteSpace: "nowrap" }}>
                 {statusText}
               </span>
             </div>
@@ -317,7 +317,7 @@ function YellowBackArrow() {
 
 function ChevronSep() {
   return (
-    <span style={{ color: "#8A8A99", fontSize: 14, flexShrink: 0 }} aria-hidden="true">
+    <span style={{ color: colors.gray01, fontSize: 14, flexShrink: 0 }} aria-hidden="true">
       ›
     </span>
   );
@@ -352,7 +352,7 @@ function PickerItem({
         textAlign: "left",
         fontFamily: isCurrent ? fonts.bold : fonts.regular,
         fontSize: 13,
-        color: isCurrent ? colors.yellow : "#FFFFFF",
+        color: isCurrent ? colors.yellow : colors.white,
       }}
       onMouseEnter={(e) => {
         if (!isCurrent) e.currentTarget.style.background = "rgba(255,255,255,0.08)";
@@ -407,7 +407,7 @@ function TabCluster({
           fontSize: 10,
           letterSpacing: "0.06em",
           textTransform: "uppercase",
-          color: "#8A8A99",
+          color: colors.gray01,
         }}
       >
         {label}
@@ -423,7 +423,7 @@ function TabCluster({
             paddingBottom: 10,
             background: "none",
             border: "none",
-            color: isActive ? colors.offBlack : "#8A8A99",
+            color: isActive ? colors.offBlack : colors.gray01,
             fontFamily: isActive ? fonts.bold : fonts.regular,
             fontSize: 14,
             whiteSpace: "nowrap",

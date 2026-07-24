@@ -89,7 +89,7 @@ function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }
       className="flex items-center justify-between gap-3 w-full px-4 sm:px-6 md:px-10 py-3 md:py-4"
       style={{
         background: colors.confidentBlack,
-        borderBottom: "1px solid #3F3F4E",
+        borderBottom: "1px solid #2E2E38",
       }}
     >
       <button
@@ -199,7 +199,7 @@ function HubBrandBar({
         {rightSlot}
       </div>
 
-      <nav aria-label="Site sections" style={{ background: "#23232F", display: "flex", alignItems: "center", padding: "0 16px", overflowX: "auto" }}>
+      <nav aria-label="Site sections" style={{ background: "#2E2E38", display: "flex", alignItems: "center", padding: "0 16px", overflowX: "auto" }}>
         <SiteNavLink
           label="About EY India AI Tax Hub"
           isActive={activeSection === "home"}

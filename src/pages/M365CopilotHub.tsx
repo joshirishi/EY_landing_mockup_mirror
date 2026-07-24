@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
+import { fonts as F } from "../design-kit/tokens";
 
 // ── EY Design System tokens ───────────────────────────────────────────────────
 const C = {
@@ -18,15 +19,15 @@ const C = {
   frameOrange:    "#FF7D1E",
   framePurple:    "#B400FF",
   // Microsoft app colours (kept for realistic app-window chrome only)
-  wordBlue:       "#185ABD",
-  excelGreen:     "#107C41",
-  pptOrange:      "#C43E1C",
-  outlookBlue:    "#0078D4",
-  teamsViolet:    "#6264A7",
+  wordBlue:       "#4696FF",
+  excelGreen:     "#00C864",
+  pptOrange:      "#FF3C00",
+  outlookBlue:    "#4696FF",
+  teamsViolet:    "#B400FF",
 };
 
 // ── EY Logo mark — paths from /public/ey-logo.svg ────────────────────────────
-function EYLogoMark({ height = 32, letterColor = "#fff" }: { height?: number; letterColor?: string }) {
+function EYLogoMark({ height = 32, letterColor = "#FFFFFF" }: { height?: number; letterColor?: string }) {
   return (
     <svg viewBox="0 -18 217.599 217.599" width={height * (217.599 / 181.599)} height={height} aria-label="EY logo">
       <path fill={C.yellow} d="M0 79.4L217.599 0v41z" />
@@ -40,8 +41,8 @@ function CopilotIcon({ size = 20 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
       <circle cx="16" cy="16" r="16" fill="url(#cg)" />
-      <defs><radialGradient id="cg" cx="30%" cy="30%"><stop offset="0%" stopColor="#7ac7ff"/><stop offset="100%" stopColor="#5557d7"/></radialGradient></defs>
-      <path d="M16 8l2 5h5l-4 3 2 5-5-3-5 3 2-5-4-3h5z" fill="#fff" opacity=".9"/>
+      <defs><radialGradient id="cg" cx="30%" cy="30%"><stop offset="0%" stopColor="#4696FF"/><stop offset="100%" stopColor="#B400FF"/></radialGradient></defs>
+      <path d="M16 8l2 5h5l-4 3 2 5-5-3-5 3 2-5-4-3h5z" fill="#FFFFFF" opacity=".9"/>
     </svg>
   );
 }
@@ -151,9 +152,9 @@ const SECTION_DATA: Record<TabId, {
 // ── Shared feature card ───────────────────────────────────────────────────────
 function FeatureCard({ title, body }: { title: string; body: string }) {
   return (
-    <div style={{ background: C.white, borderRadius: 12, padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", borderBottom: "1px solid #EBEBEF" }}>
-      <p style={{ fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 16, color: C.dark2, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
-      <p style={{ fontFamily: "Inter,sans-serif", fontSize: 14, color: C.gray01, lineHeight: 1.6 }}>{body}</p>
+    <div style={{ background: C.white, borderRadius: 12, padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", borderBottom: "1px solid #C4C4CD" }}>
+      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.dark2, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
+      <p style={{ fontFamily: F.regular, fontSize: 14, color: C.gray01, lineHeight: 1.6 }}>{body}</p>
     </div>
   );
 }
@@ -161,16 +162,16 @@ function FeatureCard({ title, body }: { title: string; body: string }) {
 // ── Copilot sidebar (shared across app windows) ───────────────────────────────
 function AppCopilotSidebar({ prompt, suggestions }: { prompt: string; suggestions: string[] }) {
   return (
-    <div style={{ width: 220, background: C.white, borderLeft: "1px solid #E5E7EB", padding: 16, flexShrink: 0 }}>
+    <div style={{ width: 220, background: C.white, borderLeft: "1px solid #C4C4CD", padding: 16, flexShrink: 0 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
         <CopilotIcon size={22} />
-        <p style={{ fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 14, color: C.dark2 }}>Copilot</p>
+        <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 14, color: C.dark2 }}>Copilot</p>
       </div>
-      <p style={{ fontFamily: "Inter,sans-serif", fontSize: 11, color: C.gray01, marginBottom: 6, fontWeight: 600, letterSpacing: "0.04em" }}>CURRENT PROMPT</p>
-      <p style={{ fontFamily: "Inter,sans-serif", fontSize: 12, background: C.offWhite, padding: "10px 12px", borderRadius: 8, fontStyle: "italic", color: C.dark2, lineHeight: 1.5, marginBottom: 16 }}>{prompt}</p>
-      <p style={{ fontFamily: "Inter,sans-serif", fontSize: 11, color: C.gray01, marginBottom: 8, fontWeight: 600, letterSpacing: "0.04em" }}>SUGGESTIONS</p>
+      <p style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, marginBottom: 6, fontWeight: 600, letterSpacing: "0.04em" }}>CURRENT PROMPT</p>
+      <p style={{ fontFamily: F.regular, fontSize: 12, background: C.offWhite, padding: "10px 12px", borderRadius: 8, fontStyle: "italic", color: C.dark2, lineHeight: 1.5, marginBottom: 16 }}>{prompt}</p>
+      <p style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, marginBottom: 8, fontWeight: 600, letterSpacing: "0.04em" }}>SUGGESTIONS</p>
       {suggestions.map(s => (
-        <div key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 16, border: "1px solid #E5E7EB", fontSize: 11, color: C.dark2, marginRight: 4, marginBottom: 4, background: C.white, cursor: "default", fontFamily: "Inter,sans-serif" }}>
+        <div key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 16, border: "1px solid #C4C4CD", fontSize: 11, color: C.dark2, marginRight: 4, marginBottom: 4, background: C.white, cursor: "default", fontFamily: F.regular }}>
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke={C.frameGreen ?? "#00C864"} /><path d="M3.5 6l1.7 1.7L8.5 4.5" stroke={C.frameGreen ?? "#00C864"} strokeWidth="1.2" strokeLinecap="round"/></svg>
           {s}
         </div>
@@ -182,22 +183,22 @@ function AppCopilotSidebar({ prompt, suggestions }: { prompt: string; suggestion
 // ── Word window mock ──────────────────────────────────────────────────────────
 function WordWindow({ prompt, suggestions }: { prompt: string; suggestions: string[] }) {
   return (
-    <div style={{ flex: 1, background: "#F3F4F6", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+    <div style={{ flex: 1, background: "#F6F6FA", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
       <div style={{ background: C.wordBlue, padding: "10px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#185ABD"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily="Inter">W</text></svg>
-        <span style={{ color: "#fff", fontSize: 13, fontFamily: "Inter,sans-serif", fontWeight: 600 }}>Untitled Document</span>
+        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#4696FF"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>W</text></svg>
+        <span style={{ color: "#FFFFFF", fontSize: 13, fontFamily: F.regular, fontWeight: 600 }}>Untitled Document</span>
         <div style={{ marginLeft: "auto", display: "flex", gap: 16 }}>
-          {["File","Home","Insert"].map(m=><span key={m} style={{color:"rgba(255,255,255,0.85)",fontSize:11,fontFamily:"Inter,sans-serif"}}>{m}</span>)}
+          {["File","Home","Insert"].map(m=><span key={m} style={{color:"rgba(255,255,255,0.85)",fontSize:11,fontFamily: F.regular}}>{m}</span>)}
         </div>
       </div>
       <div style={{ display: "flex", minHeight: 320 }}>
-        <div style={{ flex: 1, padding: "24px 24px", fontFamily: "Inter,sans-serif", overflow: "hidden" }}>
-          <p style={{ fontWeight: 700, fontSize: 16, color: "#111827", marginBottom: 12 }}>International Tax Transfer Pricing Memo</p>
-          <p style={{ fontSize: 13, color: "#374151", lineHeight: "1.65", marginBottom: 12 }}>
+        <div style={{ flex: 1, padding: "24px 24px", fontFamily: F.regular, overflow: "hidden" }}>
+          <p style={{ fontWeight: 700, fontSize: 16, color: "#1A1A24", marginBottom: 12 }}>International Tax Transfer Pricing Memo</p>
+          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65", marginBottom: 12 }}>
             Executive Summary: This document outlines the current regulatory landscape regarding safe harbor provisions for cross-border tech transfers. The following sections detail the methodology for calculating arm's length pricing and the implications of recent tribunal rulings on multinational entities.
           </p>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#111827", marginBottom: 6 }}>• Methodology</p>
-          <p style={{ fontSize: 13, color: "#374151", lineHeight: "1.65" }}>
+          <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A24", marginBottom: 6 }}>• Methodology</p>
+          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65" }}>
             We will utilize the Comparable Uncontrolled Price (CUP) method to establish a baseline for royalty rates. This approach ensures compliance with OECD guidelines while providing a defensible position for audit purposes.
           </p>
         </div>
@@ -220,69 +221,69 @@ const EXCEL_ROWS = [
 
 function ExcelWindow({ prompt, suggestions }: { prompt: string; suggestions: string[] }) {
   return (
-    <div style={{ flex: 1, background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+    <div style={{ flex: 1, background: "#FFFFFF", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
       {/* Title bar */}
       <div style={{ background: C.excelGreen, padding: "8px 14px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#107C41"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily="Inter">X</text></svg>
-        <span style={{ color: "#fff", fontSize: 12, fontFamily: "Inter,sans-serif", fontWeight: 600 }}>TaxAnalysis_Q4_2024.xlsx - Excel</span>
+        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#00C864"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>X</text></svg>
+        <span style={{ color: "#FFFFFF", fontSize: 12, fontFamily: F.regular, fontWeight: 600 }}>TaxAnalysis_Q4_2024.xlsx - Excel</span>
         <div style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
-          {[C.excelGreen,"#1d9655","#0e7a3d"].map((c,i)=><div key={i} style={{ width:10,height:10,borderRadius:"50%",background:c,border:"1px solid rgba(255,255,255,0.3)" }}/>)}
+          {[C.excelGreen,"#00C864","#00C864"].map((c,i)=><div key={i} style={{ width:10,height:10,borderRadius:"50%",background:c,border:"1px solid rgba(255,255,255,0.3)" }}/>)}
         </div>
       </div>
       {/* Ribbon */}
-      <div style={{ background: "#f5f5f5", padding: "4px 14px", display: "flex", gap: 16, borderBottom: "1px solid #e0e0e0" }}>
-        {["File","Home","Insert","Formulas","Data","Review","View","Copilot"].map(m=><span key={m} style={{ fontSize: 11, color: "#374151", fontFamily: "Inter,sans-serif" }}>{m}</span>)}
+      <div style={{ background: "#F6F6FA", padding: "4px 14px", display: "flex", gap: 16, borderBottom: "1px solid #C4C4CD" }}>
+        {["File","Home","Insert","Formulas","Data","Review","View","Copilot"].map(m=><span key={m} style={{ fontSize: 11, color: "#2E2E38", fontFamily: F.regular }}>{m}</span>)}
       </div>
       {/* Formula bar */}
-      <div style={{ background: "#fff", padding: "5px 14px", display: "flex", alignItems: "center", gap: 8, borderBottom: "1px solid #E5E7EB" }}>
-        <span style={{ background: "#F9FAFB", padding: "3px 8px", borderRadius: 4, fontSize: 10, fontFamily: "monospace", fontWeight: 600 }}>D4</span>
-        <span style={{ width: 1, height: 16, background: "#E5E7EB" }} />
+      <div style={{ background: "#FFFFFF", padding: "5px 14px", display: "flex", alignItems: "center", gap: 8, borderBottom: "1px solid #C4C4CD" }}>
+        <span style={{ background: "#F6F6FA", padding: "3px 8px", borderRadius: 4, fontSize: 10, fontFamily: "monospace", fontWeight: 600 }}>D4</span>
+        <span style={{ width: 1, height: 16, background: "#C4C4CD" }} />
         <span style={{ fontFamily: "monospace", fontSize: 10, color: C.excelGreen }}>=IF(ABS(C4-B4)/B4&gt;0.02,"FLAG","OK")</span>
       </div>
       {/* Spreadsheet */}
       <div style={{ position: "relative", overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, fontFamily: "Inter,sans-serif" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, fontFamily: F.regular }}>
           <thead>
             <tr>
-              <th style={{ background: "#f5f5f5", width: 32, padding: "5px 6px", border: "1px solid #E5E7EB", color: "#666" }}></th>
-              <th style={{ background: "#f5f5f5", padding: "5px 6px", border: "1px solid #E5E7EB", textAlign: "left", color: "#374151", fontWeight: 600 }}>Invoice ID</th>
-              <th style={{ background: "#f5f5f5", padding: "5px 6px", border: "1px solid #E5E7EB", textAlign: "left", color: "#374151", fontWeight: 600 }}>Expected Rate</th>
-              <th style={{ background: "#f5f5f5", padding: "5px 6px", border: "1px solid #E5E7EB", textAlign: "left", color: "#374151", fontWeight: 600 }}>Actual Rate</th>
-              <th style={{ background: "#f5f5f5", padding: "5px 6px", border: "1px solid #E5E7EB", textAlign: "left", color: "#374151", fontWeight: 600 }}>Variance Flag</th>
-              <th style={{ background: "#f5f5f5", padding: "5px 6px", border: "1px solid #E5E7EB", textAlign: "left", color: "#374151", fontWeight: 600 }}>Entity</th>
+              <th style={{ background: "#F6F6FA", width: 32, padding: "5px 6px", border: "1px solid #C4C4CD", color: "#747480" }}></th>
+              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Invoice ID</th>
+              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Expected Rate</th>
+              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Actual Rate</th>
+              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Variance Flag</th>
+              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Entity</th>
             </tr>
           </thead>
           <tbody>
             {EXCEL_ROWS.map(r => (
-              <tr key={r.n} style={{ background: r.active ? "rgba(16,124,65,0.06)" : r.flagged ? "rgba(192,57,43,0.04)" : "#fff", opacity: (r as any).faded ? 0.45 : 1 }}>
-                <td style={{ padding: "5px 6px", border: "1px solid #E5E7EB", color: r.active ? C.excelGreen : "#888", textAlign: "center", fontWeight: r.active ? 700 : 400 }}>{r.n}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #E5E7EB", color: r.active ? C.excelGreen : r.flagged ? "#C0392B" : "#374151" }}>{r.id}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #E5E7EB", color: "#374151" }}>{r.exp}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #E5E7EB", color: r.flagged ? "#C0392B" : r.active ? C.excelGreen : "#374151", fontWeight: r.flagged || r.active ? 600 : 400 }}>{r.act}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #E5E7EB" }}>
-                  <span style={{ background: r.flag === "FLAG" ? (r.active ? C.excelGreen : "rgba(192,57,43,0.12)") : "transparent", color: r.flag === "FLAG" ? (r.active ? "#fff" : "#C0392B") : C.excelGreen, padding: "2px 6px", borderRadius: 4, fontWeight: 700 }}>{r.flag}</span>
+              <tr key={r.n} style={{ background: r.active ? "rgba(16,124,65,0.06)" : r.flagged ? "rgba(192,57,43,0.04)" : "#FFFFFF", opacity: (r as any).faded ? 0.45 : 1 }}>
+                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.active ? C.excelGreen : "#747480", textAlign: "center", fontWeight: r.active ? 700 : 400 }}>{r.n}</td>
+                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.active ? C.excelGreen : r.flagged ? "#FF4136" : "#2E2E38" }}>{r.id}</td>
+                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: "#2E2E38" }}>{r.exp}</td>
+                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.flagged ? "#FF4136" : r.active ? C.excelGreen : "#2E2E38", fontWeight: r.flagged || r.active ? 600 : 400 }}>{r.act}</td>
+                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD" }}>
+                  <span style={{ background: r.flag === "FLAG" ? (r.active ? C.excelGreen : "rgba(192,57,43,0.12)") : "transparent", color: r.flag === "FLAG" ? (r.active ? "#FFFFFF" : "#FF4136") : C.excelGreen, padding: "2px 6px", borderRadius: 4, fontWeight: 700 }}>{r.flag}</span>
                 </td>
-                <td style={{ padding: "5px 6px", border: "1px solid #E5E7EB", color: r.active ? C.excelGreen : "#374151" }}>{r.ent}</td>
+                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.active ? C.excelGreen : "#2E2E38" }}>{r.ent}</td>
               </tr>
             ))}
           </tbody>
         </table>
         {/* Copilot chat overlay */}
-        <div style={{ background: "#fff", borderTop: "1px solid #E5E7EB", padding: 12 }}>
+        <div style={{ background: "#FFFFFF", borderTop: "1px solid #C4C4CD", padding: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
             <CopilotIcon size={16} />
-            <span style={{ fontFamily: "Inter,sans-serif", fontSize: 11, fontWeight: 700, background: C.excelGreen, color: "#fff", padding: "2px 8px", borderRadius: 10 }}>Copilot</span>
+            <span style={{ fontFamily: F.regular, fontSize: 11, fontWeight: 700, background: C.excelGreen, color: "#FFFFFF", padding: "2px 8px", borderRadius: 10 }}>Copilot</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ fontSize: 10, fontFamily: "Inter,sans-serif", padding: "8px 10px", borderRadius: 8, background: "#F9FAFB", color: "#333", lineHeight: 1.5 }}>I've analysed your transaction data. I found 2 invoices where currency rate deviation exceeds your 2% threshold.</div>
-            <div style={{ fontSize: 10, fontFamily: "Inter,sans-serif", padding: "8px 10px", borderRadius: 8, background: C.excelGreen, color: "#fff", alignSelf: "flex-end", maxWidth: "85%", lineHeight: 1.5 }}>Highlight and partition any invoice entries where currency rates deviate by more than 2%.</div>
-            <div style={{ fontSize: 10, fontFamily: "Inter,sans-serif", padding: "8px 10px", borderRadius: 8, background: "#F9FAFB", color: "#333", lineHeight: 1.5 }}>
+            <div style={{ fontSize: 10, fontFamily: F.regular, padding: "8px 10px", borderRadius: 8, background: "#F6F6FA", color: "#2E2E38", lineHeight: 1.5 }}>I've analysed your transaction data. I found 2 invoices where currency rate deviation exceeds your 2% threshold.</div>
+            <div style={{ fontSize: 10, fontFamily: F.regular, padding: "8px 10px", borderRadius: 8, background: C.excelGreen, color: "#FFFFFF", alignSelf: "flex-end", maxWidth: "85%", lineHeight: 1.5 }}>Highlight and partition any invoice entries where currency rates deviate by more than 2%.</div>
+            <div style={{ fontSize: 10, fontFamily: F.regular, padding: "8px 10px", borderRadius: 8, background: "#F6F6FA", color: "#2E2E38", lineHeight: 1.5 }}>
               Done! Rows 3 and 6 are flagged. Column D formula applied:
-              <div style={{ fontFamily: "monospace", fontSize: 9, color: C.excelGreen, background: "#F0FFF4", padding: "4px 8px", borderRadius: 4, marginTop: 4 }}>=IF(ABS(C-B)/B&gt;0.02,"FLAG","OK")</div>
+              <div style={{ fontFamily: "monospace", fontSize: 9, color: C.excelGreen, background: "#F6F6FA", padding: "4px 8px", borderRadius: 4, marginTop: 4 }}>=IF(ABS(C-B)/B&gt;0.02,"FLAG","OK")</div>
             </div>
           </div>
           <div style={{ marginTop: 8, display: "flex", alignItems: "center", background: C.offWhite, borderRadius: 8, padding: "6px 10px" }}>
-            <span style={{ flex: 1, fontFamily: "Inter,sans-serif", fontSize: 11, color: C.gray01 }}>Ask Copilot something...</span>
+            <span style={{ flex: 1, fontFamily: F.regular, fontSize: 11, color: C.gray01 }}>Ask Copilot something...</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gray01} strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </div>
         </div>
@@ -297,16 +298,16 @@ function GenericWindow({ appColor, appLetter, title, bodyContent, prompt, sugges
   bodyContent: React.ReactNode; prompt: string; suggestions: string[];
 }) {
   return (
-    <div style={{ flex: 1, background: "#F3F4F6", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+    <div style={{ flex: 1, background: "#F6F6FA", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
       <div style={{ background: appColor, padding: "10px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill={appColor}/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily="Inter">{appLetter}</text></svg>
-        <span style={{ color: "#fff", fontSize: 13, fontFamily: "Inter,sans-serif", fontWeight: 600 }}>{title}</span>
+        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill={appColor}/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>{appLetter}</text></svg>
+        <span style={{ color: "#FFFFFF", fontSize: 13, fontFamily: F.regular, fontWeight: 600 }}>{title}</span>
         <div style={{ marginLeft: "auto", display: "flex", gap: 16 }}>
-          {["File","Home","Insert"].map(m=><span key={m} style={{color:"rgba(255,255,255,0.85)",fontSize:11,fontFamily:"Inter,sans-serif"}}>{m}</span>)}
+          {["File","Home","Insert"].map(m=><span key={m} style={{color:"rgba(255,255,255,0.85)",fontSize:11,fontFamily: F.regular}}>{m}</span>)}
         </div>
       </div>
       <div style={{ display: "flex", minHeight: 300 }}>
-        <div style={{ flex: 1, padding: 24, fontFamily: "Inter,sans-serif", overflow: "hidden" }}>
+        <div style={{ flex: 1, padding: 24, fontFamily: F.regular, overflow: "hidden" }}>
           {bodyContent}
         </div>
         <AppCopilotSidebar prompt={prompt} suggestions={suggestions} />
@@ -318,28 +319,28 @@ function GenericWindow({ appColor, appLetter, title, bodyContent, prompt, sugges
 // ── M365 Chat window ──────────────────────────────────────────────────────────
 function M365ChatWindow() {
   return (
-    <div style={{ flex: 1, background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
+    <div style={{ flex: 1, background: "#FFFFFF", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
       <div style={{ background: C.teamsViolet, padding: "10px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#6264A7"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily="Inter">T</text></svg>
-        <span style={{ color: "#fff", fontSize: 13, fontFamily: "Inter,sans-serif", fontWeight: 600 }}>M365 Chat</span>
+        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#B400FF"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>T</text></svg>
+        <span style={{ color: "#FFFFFF", fontSize: 13, fontFamily: F.regular, fontWeight: 600 }}>M365 Chat</span>
       </div>
       <div style={{ padding: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: 16, borderBottom: "1px solid #E5E7EB", marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: 16, borderBottom: "1px solid #C4C4CD", marginBottom: 16 }}>
           <CopilotIcon size={28} />
           <div>
-            <p style={{ fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 15, color: C.dark2 }}>Copilot</p>
-            <p style={{ fontFamily: "Inter,sans-serif", fontSize: 12, color: C.excelGreen }}>Online</p>
+            <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 15, color: C.dark2 }}>Copilot</p>
+            <p style={{ fontFamily: F.regular, fontSize: 12, color: C.excelGreen }}>Online</p>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div style={{ display: "flex", gap: 10 }}>
-            <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 12, color: C.dark }}>U</div>
-            <div style={{ background: "#F9FAFB", padding: "12px 14px", borderRadius: 12, fontSize: 13, color: "#374151", fontFamily: "Inter,sans-serif", maxWidth: "85%", lineHeight: 1.6 }}>
+            <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontFamily: F.regular, fontWeight: 700, fontSize: 12, color: C.dark }}>U</div>
+            <div style={{ background: "#F6F6FA", padding: "12px 14px", borderRadius: 12, fontSize: 13, color: "#2E2E38", fontFamily: F.regular, maxWidth: "85%", lineHeight: 1.6 }}>
               Find all tax-related documents James shared last week and summarise the key updates across compliance and advisory.
             </div>
           </div>
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <div style={{ background: "#F9FAFB", padding: "12px 14px", borderRadius: 12, fontSize: 13, color: "#374151", fontFamily: "Inter,sans-serif", maxWidth: "85%", lineHeight: 1.6 }}>
+            <div style={{ background: "#F6F6FA", padding: "12px 14px", borderRadius: 12, fontSize: 13, color: "#2E2E38", fontFamily: F.regular, maxWidth: "85%", lineHeight: 1.6 }}>
               I found 3 documents shared by James last week. Here is a summary of the key tax updates:
               <br/>• <strong>Compliance:</strong> New safe harbor provisions for cross-border tech transfers.
               <br/>• <strong>Advisory:</strong> Tribunal rulings on arm's length pricing methodologies.
@@ -357,7 +358,7 @@ function AppIcon({ color, letter }: { color: string; letter: string }) {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" style={{ flexShrink: 0 }}>
       <rect width="20" height="20" rx="3" fill={color} />
-      <text x="4" y="14" fill="white" fontSize="11" fontWeight="bold" fontFamily="Inter,sans-serif">{letter}</text>
+      <text x="4" y="14" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>{letter}</text>
     </svg>
   );
 }
@@ -378,12 +379,12 @@ function TabSection({ tabId }: { tabId: TabId }) {
       prompt={d.prompt} suggestions={d.suggestions}
       bodyContent={
         <>
-          <p style={{ fontWeight: 700, fontSize: 16, color: "#111827", marginBottom: 12 }}>Safe Harbor Risks — Q3 Presentation</p>
-          <p style={{ fontSize: 13, color: "#374151", lineHeight: "1.65", marginBottom: 12 }}>
+          <p style={{ fontWeight: 700, fontSize: 16, color: "#1A1A24", marginBottom: 12 }}>Safe Harbor Risks — Q3 Presentation</p>
+          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65", marginBottom: 12 }}>
             Executive Summary: This deck summarizes the current regulatory landscape regarding safe harbor provisions for cross-border tech transfers. The following slides detail the methodology for calculating arm's length pricing.
           </p>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#111827", marginBottom: 6 }}>• Slide 1: Executive Summary</p>
-          <p style={{ fontSize: 13, color: "#374151", lineHeight: "1.65" }}>
+          <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A24", marginBottom: 6 }}>• Slide 1: Executive Summary</p>
+          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65" }}>
             We will utilize the Comparable Uncontrolled Price (CUP) method to establish a baseline for royalty rates. This approach ensures compliance with OECD guidelines.
           </p>
         </>
@@ -394,12 +395,12 @@ function TabSection({ tabId }: { tabId: TabId }) {
       appColor={C.outlookBlue} appLetter="O" title="Inbox — Compliance Team"
       prompt={d.prompt} suggestions={d.suggestions}
       bodyContent={
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: 12, background: "#F9FAFB", borderRadius: 8 }}>
-          <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.outlookBlue, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 15, flexShrink: 0, fontFamily: "Inter,sans-serif" }}>A</div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: 12, background: "#F6F6FA", borderRadius: 8 }}>
+          <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.outlookBlue, display: "flex", alignItems: "center", justifyContent: "center", color: "#FFFFFF", fontWeight: 700, fontSize: 15, flexShrink: 0, fontFamily: F.regular }}>A</div>
           <div>
-            <p style={{ fontWeight: 700, fontSize: 14, color: "#111827", marginBottom: 4, fontFamily: "Inter,sans-serif" }}>Alex Chen</p>
-            <p style={{ fontSize: 13, color: "#374151", fontFamily: "Inter,sans-serif" }}>Re: Compliance Review for Q3 Tax Filings</p>
-            <p style={{ fontSize: 11, color: C.gray01, fontFamily: "Inter,sans-serif", marginTop: 2 }}>10:42 AM</p>
+            <p style={{ fontWeight: 700, fontSize: 14, color: "#1A1A24", marginBottom: 4, fontFamily: F.regular }}>Alex Chen</p>
+            <p style={{ fontSize: 13, color: "#2E2E38", fontFamily: F.regular }}>Re: Compliance Review for Q3 Tax Filings</p>
+            <p style={{ fontSize: 11, color: C.gray01, fontFamily: F.regular, marginTop: 2 }}>10:42 AM</p>
           </div>
         </div>
       }
@@ -419,10 +420,10 @@ function TabSection({ tabId }: { tabId: TabId }) {
       {/* Eyebrow with app icon */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <AppIcon color={tabMeta.appColor} letter={tabMeta.letter} />
-        <span style={{ fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: "1.5px", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
+        <span style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 11, letterSpacing: "1.5px", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
       </div>
-      <p style={{ fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 28, color: C.dark2, marginBottom: 12, lineHeight: 1.2 }}>{d.h2}</p>
-      <p style={{ fontFamily: "Inter,sans-serif", fontSize: 15, color: C.gray01, maxWidth: 1000, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
+      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 28, color: C.dark2, marginBottom: 12, lineHeight: 1.2 }}>{d.h2}</p>
+      <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, maxWidth: 1000, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
       <div style={{ display: "flex", gap: 32, alignItems: "flex-start" }}>
         {d.screenshotSide === "left" ? <>{screenshotEl}{cardsEl}</> : <>{cardsEl}{screenshotEl}</>}
       </div>
@@ -493,7 +494,7 @@ export default function M365CopilotHub({
   const [activeTab, setActiveTab] = useState<TabId>("word");
 
   return (
-    <div style={{ fontFamily: "Inter,sans-serif", color: C.dark2, background: C.white, minHeight: "100vh" }}>
+    <div style={{ fontFamily: F.regular, color: C.dark2, background: C.white, minHeight: "100vh" }}>
 
       {onBack && onNavigate && (
         <>
@@ -508,7 +509,7 @@ export default function M365CopilotHub({
           {/* Badge row — green active dot + label */}
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.frameGreen }} />
-            <span style={{ fontSize: 11, color: C.gray02, letterSpacing: "1.5px", textTransform: "uppercase", fontWeight: 700, fontFamily: "Inter,sans-serif" }}>M365 COPILOT HUB IS LIVE</span>
+            <span style={{ fontSize: 11, color: C.gray02, letterSpacing: "1.5px", textTransform: "uppercase", fontWeight: 700, fontFamily: F.regular }}>M365 COPILOT HUB IS LIVE</span>
           </div>
           <h1 style={{ fontSize: 36, color: C.white, fontWeight: 700, lineHeight: 1.3, marginBottom: 20 }}>
             Explore M365 Copilot prompts in a new-age workspace
@@ -520,7 +521,7 @@ export default function M365CopilotHub({
         {/* Video placeholder (Figma: VideoPlaceholder 540×269) */}
         <div style={{ width: 540, height: 269, background: C.gray01, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ width: 0, height: 0, borderLeft: "22px solid #fff", borderTop: "13px solid transparent", borderBottom: "13px solid transparent", marginLeft: 5 }} />
+            <div style={{ width: 0, height: 0, borderLeft: "22px solid #FFFFFF", borderTop: "13px solid transparent", borderBottom: "13px solid transparent", marginLeft: 5 }} />
           </div>
         </div>
       </section>
@@ -543,7 +544,7 @@ export default function M365CopilotHub({
                 color: activeTab === t.id ? C.dark2 : C.gray02,
                 fontWeight: 700,
                 boxShadow: activeTab === t.id ? "0 1px 6px rgba(0,0,0,0.25)" : "none",
-                transition: "background 0.15s, color 0.15s, box-shadow 0.15s", fontFamily: "Inter,sans-serif",
+                transition: "background 0.15s, color 0.15s, box-shadow 0.15s", fontFamily: F.regular,
               }}
             >
               <AppIcon color={t.appColor} letter={t.letter} />
@@ -565,7 +566,7 @@ export default function M365CopilotHub({
             <div key={l.title} style={{ flex: "1 1 0", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "24px 20px", display: "flex", flexDirection: "column", gap: 12, transition: "transform 0.15s", cursor: "default" }}>
               <div style={{ width: 48, height: 48, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center" }}>{l.icon}</div>
               <p style={{ fontWeight: 700, fontSize: 15, color: C.white, lineHeight: 1.3 }}>{l.title}</p>
-              <p style={{ fontSize: 13, color: "#C3C3CB", flex: 1, lineHeight: 1.55 }}>{l.body}</p>
+              <p style={{ fontSize: 13, color: "#C4C4CD", flex: 1, lineHeight: 1.55 }}>{l.body}</p>
               <a href="#" style={{ fontSize: 14, color: C.yellow, textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
                 {l.cta} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
@@ -578,14 +579,14 @@ export default function M365CopilotHub({
       <section id="security" style={{ background: C.dark, padding: "80px 80px 80px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
         {/* GOVERNANCE & TRUST kicker badge */}
         <div style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,230,0,0.12)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, padding: "5px 14px", marginBottom: 24 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: C.yellow, fontFamily: "Inter,sans-serif" }}>GOVERNANCE &amp; TRUST</span>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: C.yellow, fontFamily: F.regular }}>GOVERNANCE &amp; TRUST</span>
         </div>
         <h2 style={{ fontSize: 32, fontWeight: 700, color: C.white, marginBottom: 14 }}>Enterprise-Grade Security</h2>
         <p style={{ fontSize: 16, color: C.gray02, marginBottom: 52, maxWidth: 800 }}>Before you let Copilot loose on tax data, know the ground rules. Tap any card to view it full-size.</p>
         {/* 4 horizontal cards (Figma: CaseStudiesGrid — each 302px wide) */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 26 }}>
           {SECURITY_CARDS.map(card => (
-            <div key={card.num} style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", transition: "transform 0.25s, box-shadow 0.25s", background: "#2e2e38", border: "1px solid #656579", display: "flex", flexDirection: "column" }}
+            <div key={card.num} style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", transition: "transform 0.25s, box-shadow 0.25s", background: "#2e2e38", border: "1px solid #747480", display: "flex", flexDirection: "column" }}
               onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px #ffe600"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "none"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}>
               {/* Card accent image area */}
@@ -598,12 +599,12 @@ export default function M365CopilotHub({
               </div>
               {/* Card body */}
               <div style={{ background: "#2e2e38", padding: "20px 24px", flex: 1, display: "flex", flexDirection: "column" }}>
-                <p style={{ fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 32, color: C.yellow, marginBottom: 10, lineHeight: 1 }}>{card.num}</p>
+                <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 32, color: C.yellow, marginBottom: 10, lineHeight: 1 }}>{card.num}</p>
                 {/* Title grows to fill — pushes separator + CTA to bottom */}
-                <p style={{ fontFamily: "Inter,sans-serif", fontWeight: 700, fontSize: 16, color: C.white, lineHeight: 1.35, flex: 1, marginBottom: 14 }}>{card.title}</p>
+                <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, lineHeight: 1.35, flex: 1, marginBottom: 14 }}>{card.title}</p>
                 <div style={{ height: 1, background: "rgba(255,255,255,0.1)", marginBottom: 14 }} />
                 {/* CTA — always at the bottom */}
-                <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: C.yellow, fontWeight: 700, textDecoration: "none", fontFamily: "Inter,sans-serif" }}>
+                <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: C.yellow, fontWeight: 700, textDecoration: "none", fontFamily: F.regular }}>
                   View Protocol
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -633,30 +634,30 @@ export default function M365CopilotHub({
         <div style={{ display: "flex", gap: 80, marginBottom: 48 }}>
           <div style={{ flex: 1, maxWidth: 280 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-              <EYLogoMark height={28} letterColor="#fff" />
-              <span style={{ color: C.white, fontWeight: 700, fontSize: 16, fontFamily: "Inter,sans-serif" }}>EY.ai Tax Labs</span>
+              <EYLogoMark height={28} letterColor="#FFFFFF" />
+              <span style={{ color: C.white, fontWeight: 700, fontSize: 16, fontFamily: F.regular }}>EY.ai Tax Labs</span>
             </div>
-            <p style={{ fontSize: 13, color: "#AFAEBA", lineHeight: 1.6 }}>Accelerating tax performance safely through custom generative AI structures and premium prompt frameworks.</p>
+            <p style={{ fontSize: 13, color: "#C4C4CD", lineHeight: 1.6 }}>Accelerating tax performance safely through custom generative AI structures and premium prompt frameworks.</p>
           </div>
           <div>
-            <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: "Inter,sans-serif" }}>M365 Apps</p>
+            <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>M365 Apps</p>
             {["Word Prompts","Excel Sheets","PowerPoint Decks","Outlook Emails"].map(l => (
-              <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#AFAEBA", textDecoration: "none", marginBottom: 8, fontFamily: "Inter,sans-serif" }}>{l}</a>
+              <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
             ))}
           </div>
           <div>
-            <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: "Inter,sans-serif" }}>Trust &amp; Security</p>
+            <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>Trust &amp; Security</p>
             {["Privacy Policy","Data Governance","Safe Harbor Rules"].map(l => (
-              <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#AFAEBA", textDecoration: "none", marginBottom: 8, fontFamily: "Inter,sans-serif" }}>{l}</a>
+              <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
             ))}
           </div>
         </div>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <p style={{ fontSize: 12, color: "#AFAEBA", fontFamily: "Inter,sans-serif" }}>© 2026 EY.ai Tax Labs. All rights reserved. Proprietary and confidential.</p>
+          <p style={{ fontSize: 12, color: "#C4C4CD", fontFamily: F.regular }}>© 2026 EY.ai Tax Labs. All rights reserved. Proprietary and confidential.</p>
           {/* Social links (Figma: linkedin + twitter icons) */}
           <div style={{ display: "flex", gap: 14 }}>
             {["in","𝕏"].map(s => (
-              <a key={s} href="#" style={{ width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#AFAEBA", fontSize: 11, fontWeight: 700, textDecoration: "none", fontFamily: "Inter,sans-serif" }}>{s}</a>
+              <a key={s} href="#" style={{ width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#C4C4CD", fontSize: 11, fontWeight: 700, textDecoration: "none", fontFamily: F.regular }}>{s}</a>
             ))}
           </div>
         </div>

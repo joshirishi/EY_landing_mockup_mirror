@@ -7,7 +7,7 @@ type StatusIndicatorProps = {
 function StatusIndicator({ className, property1 = "active" }: StatusIndicatorProps) {
   const isLocked = property1 === "locked";
   return (
-    <div className={className || `content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] ${isLocked ? "bg-[#c4c4cd]" : "bg-[#fffee5]"}`}>
+    <div className={className || `content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] ${isLocked ? "bg-[#c4c4cd]" : "bg-[#F6F6FA]"}`}>
       <div aria-hidden className="absolute border border-[#ffe600] border-solid inset-0 pointer-events-none rounded-[12px]" />
       <p className={`[word-break:break-word] font-["EYInterstate:Regular",sans-serif] leading-[20px] not-italic relative shrink-0 text-[14px] whitespace-nowrap ${isLocked ? "text-[#747480]" : "text-[#2e2e38]"}`}>ACTIVE PHASE</p>
     </div>
@@ -21,19 +21,19 @@ type CtaButtonProps = {
 function CtaButton({ className, state = "Open" }: CtaButtonProps) {
   const isLocked = state === "Locked";
   return (
-    <div className={className || `content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] ${isLocked ? "bg-[#d9d9d9] gap-[8px]" : "bg-[#ffe600]"}`}>
-      {state === "Open" && <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#262626] text-[16px] whitespace-nowrap">Click here to Proceed</p>}
+    <div className={className || `content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] ${isLocked ? "bg-[#C4C4CD] gap-[8px]" : "bg-[#ffe600]"}`}>
+      {state === "Open" && <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[16px] whitespace-nowrap">Click here to Proceed</p>}
       {isLocked && (
         <>
           <div className="relative shrink-0 size-[16px]" data-name="Lock Icon">
             <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
               <g id="Lock Icon">
-                <path d={svgPaths.p18f7f580} id="Vector" stroke="var(--stroke-0, #666666)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
-                <path d={svgPaths.p4317f80} id="Vector_2" stroke="var(--stroke-0, #666666)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+                <path d={svgPaths.p18f7f580} id="Vector" stroke="var(--stroke-0, #747480)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+                <path d={svgPaths.p4317f80} id="Vector_2" stroke="var(--stroke-0, #747480)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
               </g>
             </svg>
           </div>
-          <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#666] text-[16px] whitespace-nowrap">This journey is locked</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#747480] text-[16px] whitespace-nowrap">This journey is locked</p>
         </>
       )}
     </div>
@@ -50,22 +50,22 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
   const isNotExpanded = !expanded;
   return (
     <div className={className || `bg-white content-stretch drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex p-[32px] relative rounded-[12px] w-[1006px] ${isNotExpanded ? "gap-[16px] items-center" : "flex-col gap-[24px] items-start"}`}>
-      <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[12px]" />
       {isExpanded && (
         <>
           <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-name="Card-Header">
-            <StatusIndicator className="bg-[#fffee5] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] shrink-0" />
+            <StatusIndicator className="bg-[#F6F6FA] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] shrink-0" />
             <div className="content-stretch flex h-[24px] items-center justify-center overflow-clip relative shrink-0 w-[13px]" data-name="Collapse-Icon">
-              <p className="[word-break:break-word] font-['Inter:Medium',sans-serif] font-medium leading-[normal] not-italic relative shrink-0 text-[#666] text-[12px] whitespace-nowrap">▲</p>
+              <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] font-medium leading-[normal] not-italic relative shrink-0 text-[#747480] text-[12px] whitespace-nowrap">▲</p>
             </div>
           </div>
           <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] items-start not-italic relative shrink-0 w-full" data-name="Card-Body">
             <p className="font-['EYInterstate:Bold',sans-serif] leading-[30px] relative shrink-0 text-[#2e2e38] text-[24px] w-full">Foundational Training Workshops</p>
-            <p className="font-['Inter:Regular',sans-serif] font-normal leading-[22px] relative shrink-0 text-[#7f7f91] text-[14px] w-full">3 workshops × 1.5 hrs each. Covers essential generative AI structures, tax workflows prompt architecture, and M365 Copilot productivity.</p>
+            <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[22px] relative shrink-0 text-[#747480] text-[14px] w-full">3 workshops × 1.5 hrs each. Covers essential generative AI structures, tax workflows prompt architecture, and M365 Copilot productivity.</p>
           </div>
           <div className="content-stretch flex gap-[40px] items-start relative shrink-0 w-full" data-name="Card-Details">
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[12px] items-start min-w-px relative" data-name="Coverage-Col">
-              <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Coverage</p>
+              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Coverage</p>
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="List">
                 <div className="content-stretch flex gap-[10px] items-center relative shrink-0 w-full" data-name="Frame">
                   <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-name="Bullet">
@@ -77,7 +77,7 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
                       </svg>
                     </div>
                   </div>
-                  <p className="[word-break:break-word] flex-[1_0_0] font-['Inter:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">AI concepts in Tax</p>
+                  <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">AI concepts in Tax</p>
                 </div>
                 <div className="content-stretch flex gap-[10px] items-center relative shrink-0 w-full" data-name="Frame">
                   <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-name="Bullet">
@@ -89,7 +89,7 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
                       </svg>
                     </div>
                   </div>
-                  <p className="[word-break:break-word] flex-[1_0_0] font-['Inter:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">Prompt engineering basics</p>
+                  <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">Prompt engineering basics</p>
                 </div>
                 <div className="content-stretch flex gap-[10px] items-center relative shrink-0 w-full" data-name="Frame">
                   <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-name="Bullet">
@@ -101,36 +101,36 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
                       </svg>
                     </div>
                   </div>
-                  <p className="[word-break:break-word] flex-[1_0_0] font-['Inter:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">M365 Copilot across tax use cases</p>
+                  <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">M365 Copilot across tax use cases</p>
                 </div>
               </div>
             </div>
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[12px] items-start min-w-px relative" data-name="Deliverables-Col">
-              <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Deliverables</p>
+              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Deliverables</p>
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="List">
                 <div className="content-stretch flex gap-[10px] items-center relative shrink-0 w-full" data-name="Frame">
                   <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-name="Bullet">
                     <div className="relative shrink-0 size-[16px]" data-name="file-text">
                       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
                         <g id="file-text">
-                          <path d={svgPaths.p3cbc4600} id="Vector" stroke="var(--stroke-0, #10B981)" strokeLinecap="round" strokeWidth="2" />
+                          <path d={svgPaths.p3cbc4600} id="Vector" stroke="var(--stroke-0, #00C864)" strokeLinecap="round" strokeWidth="2" />
                         </g>
                       </svg>
                     </div>
                   </div>
-                  <p className="[word-break:break-word] flex-[1_0_0] font-['Inter:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">Copilot Prompt Templates</p>
+                  <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">Copilot Prompt Templates</p>
                 </div>
                 <div className="content-stretch flex gap-[10px] items-center relative shrink-0 w-full" data-name="Frame">
                   <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-name="Bullet">
                     <div className="relative shrink-0 size-[16px]" data-name="file-text">
                       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
                         <g id="file-text">
-                          <path d={svgPaths.p3cbc4600} id="Vector" stroke="var(--stroke-0, #10B981)" strokeLinecap="round" strokeWidth="2" />
+                          <path d={svgPaths.p3cbc4600} id="Vector" stroke="var(--stroke-0, #00C864)" strokeLinecap="round" strokeWidth="2" />
                         </g>
                       </svg>
                     </div>
                   </div>
-                  <p className="[word-break:break-word] flex-[1_0_0] font-['Inter:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">{`Adoption & Enablement Toolkit`}</p>
+                  <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">{`Adoption & Enablement Toolkit`}</p>
                 </div>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
             data-name="Action-Section"
             onClick={(e) => { e.stopPropagation(); onProceed?.(); }}
           >
-            <div aria-hidden className="absolute border-[#d7d7dc] border-solid border-t inset-0 pointer-events-none" />
+            <div aria-hidden className="absolute border-[#C4C4CD] border-solid border-t inset-0 pointer-events-none" />
             <CtaButton className="bg-[#ffe600] content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0" />
           </div>
         </>
@@ -148,9 +148,9 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
       {isNotExpanded && (
         <>
           <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] h-full leading-[30px] min-w-px not-italic relative text-[#2e2e38] text-[24px]">Foundational Training Workshops</p>
-          <StatusIndicator className="bg-[#fffee5] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] shrink-0" />
+          <StatusIndicator className="bg-[#F6F6FA] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] shrink-0" />
           <div className="content-stretch flex h-[24px] items-center justify-center overflow-clip relative shrink-0 w-[13px]" data-name="Expand-Icon">
-            <p className="[word-break:break-word] font-['Inter:Medium',sans-serif] font-medium leading-[normal] not-italic relative shrink-0 text-[#666] text-[12px] whitespace-nowrap">▼</p>
+            <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] font-medium leading-[normal] not-italic relative shrink-0 text-[#747480] text-[12px] whitespace-nowrap">▼</p>
           </div>
         </>
       )}

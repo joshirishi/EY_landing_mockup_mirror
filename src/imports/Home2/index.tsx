@@ -59,7 +59,7 @@ function Container2() {
 function Frame20() {
   return (
     <div className="bg-[#ffe600] content-stretch flex items-center justify-center py-[8px] relative shrink-0 w-full">
-      <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[32.004px] min-w-px not-italic relative text-[#23232f] text-[25.998px] text-center">{`Research & Litigation`}</p>
+      <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[32.004px] min-w-px not-italic relative text-[#2E2E38] text-[25.998px] text-center">{`Research & Litigation`}</p>
     </div>
   );
 }
@@ -121,8 +121,8 @@ function P2() {
 function Frame24() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0">
-      <div className="bg-[#d7d7dc] content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0" data-name="Link">
-        <div aria-hidden className="absolute border border-[#747481] border-solid inset-0 pointer-events-none" />
+      <div className="bg-[#C4C4CD] content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0" data-name="Link">
+        <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none" />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative shrink-0 text-[#1a1a24] text-[14px] whitespace-nowrap">Know more</p>
       </div>
     </div>
@@ -160,7 +160,7 @@ function Container3() {
 function Frame16() {
   return (
     <div className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px]">
-      <div aria-hidden className="absolute border border-[#bfbfc8] border-solid inset-[-1px] pointer-events-none" />
+      <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-[-1px] pointer-events-none" />
       <Frame20 />
       <Container3 />
     </div>
@@ -170,7 +170,7 @@ function Frame16() {
 function Frame22() {
   return (
     <div className="bg-[#ffe600] content-stretch flex items-center justify-center py-[8px] relative shrink-0 w-full">
-      <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[32.004px] min-w-px not-italic relative text-[#23232f] text-[25.998px] text-center">Compliance</p>
+      <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[32.004px] min-w-px not-italic relative text-[#2E2E38] text-[25.998px] text-center">Compliance</p>
     </div>
   );
 }
@@ -233,8 +233,8 @@ function P3() {
 function Frame25() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0">
-      <div className="bg-[#d7d7dc] content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0" data-name="Link">
-        <div aria-hidden className="absolute border border-[#747481] border-solid inset-0 pointer-events-none" />
+      <div className="bg-[#C4C4CD] content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0" data-name="Link">
+        <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none" />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative shrink-0 text-[#1a1a24] text-[14px] whitespace-nowrap">Know more</p>
       </div>
     </div>
@@ -269,7 +269,7 @@ function Container7() {
 function Frame17() {
   return (
     <div className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px]">
-      <div aria-hidden className="absolute border border-[#bfbfc8] border-solid inset-[-1px] pointer-events-none" />
+      <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-[-1px] pointer-events-none" />
       <Frame22 />
       <Container7 />
     </div>
@@ -279,7 +279,7 @@ function Frame17() {
 function Frame21() {
   return (
     <div className="bg-[#ffe600] content-stretch flex items-center justify-center py-[8px] relative shrink-0 w-full">
-      <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[32.004px] min-w-px not-italic relative text-[#23232f] text-[25.998px] text-center">EY.ai Tax Labs</p>
+      <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[32.004px] min-w-px not-italic relative text-[#2E2E38] text-[25.998px] text-center">EY.ai Tax Labs</p>
     </div>
   );
 }
@@ -342,8 +342,8 @@ function P4() {
 function Frame26() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0">
-      <div className="bg-[#d7d7dc] content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0" data-name="Link">
-        <div aria-hidden className="absolute border border-[#747481] border-solid inset-0 pointer-events-none" />
+      <div className="bg-[#C4C4CD] content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0" data-name="Link">
+        <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none" />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative shrink-0 text-[#1a1a24] text-[14px] whitespace-nowrap">Know more</p>
       </div>
     </div>
@@ -385,7 +385,7 @@ function Frame18({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
       title="Explore EY.ai Tax Labs"
       className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px] bg-transparent border-0 p-0 cursor-pointer text-left appearance-none"
     >
-      <div aria-hidden className="absolute border border-[#bfbfc8] border-solid inset-[-1px] pointer-events-none" />
+      <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-[-1px] pointer-events-none" />
       <Frame21 />
       <Container11 />
     </button>
@@ -897,7 +897,7 @@ function Div8() {
 
 function Nav1() {
   return (
-    <div className="bg-[#23232f] content-stretch flex flex-col items-center relative shrink-0 w-full" data-name="nav">
+    <div className="bg-[#2E2E38] content-stretch flex flex-col items-center relative shrink-0 w-full" data-name="nav">
       <Div8 />
     </div>
   );

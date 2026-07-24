@@ -3,7 +3,7 @@
  *
  * Colors from Figma node 3455:18320 (dark EY module surface):
  *   bg/page    #1A1A24  ·  bg/surface #2E2E38  ·  yellow #FFE600
- *   gray02     #C4C4CD  ·  gray01     #747480  ·  card border #4F4F5C
+ *   gray02     #C4C4CD  ·  gray01     #747480  ·  card border #2E2E38
  *
  * Use on every Phase 1 submodule screen so the handoff looks identical.
  */
@@ -18,7 +18,7 @@ const DARK = {
   surface: colors.offBlack, // #2E2E38
   yellow: colors.yellow, // #FFE600
   yellowSoft: "rgba(255, 230, 0, 0.10)",
-  border: "#4F4F5C",
+  border: "#2E2E38",
   body: colors.gray02, // #C4C4CD
   caption: colors.gray01, // #747480
   white: colors.white,

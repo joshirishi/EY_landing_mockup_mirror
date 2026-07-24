@@ -10,18 +10,18 @@
 :root {
   --ey-yellow: #ffe600;
   --ey-dark: #2e2e38;
-  --ey-bg: #1a1a2e;
-  --ey-bg-alt: #12122a;
-  --ey-bg-deep: #0d0d1a;
+  --ey-bg: #1A1A24;
+  --ey-bg-alt: #1A1A24;
+  --ey-bg-deep: #1A1A24;
   --text-primary: #ffffff;
   --text-secondary: #c4c4cd;
-  --text-muted: #94a3b8;
-  --text-dim: #6c6c78;
-  --accent-green: #2ecc71;
-  --accent-red: #ff6b6b;
-  --accent-blue: #4a90d9;
-  --accent-orange: #f39c12;
-  --accent-purple: #9b59b6;
+  --text-muted: #747480;
+  --text-dim: #747480;
+  --accent-green: #00C864;
+  --accent-red: #FF4136;
+  --accent-blue: #4696FF;
+  --accent-orange: #FF7D1E;
+  --accent-purple: #B400FF;
   --card-bg: rgba(255,255,255,0.02);
   --card-border: rgba(255,255,255,0.06);
   --radius: 12px;
@@ -45,8 +45,8 @@ body {
 }
 .nav-brand { display: flex; align-items: center; gap: 12px; }
 .nav-brand svg { height: 26px; width: auto; }
-.nav-brand .divider { width: 1px; height: 24px; background: #6c6c78; }
-.nav-brand .brand-text { font-size: 15px; font-weight: 600; color: #fff; letter-spacing: 0.3px; }
+.nav-brand .divider { width: 1px; height: 24px; background: #747480; }
+.nav-brand .brand-text { font-size: 15px; font-weight: 600; color: #FFFFFF; letter-spacing: 0.3px; }
 .nav-links { display: flex; align-items: center; }
 .nav-links a {
   padding: 18px 14px; text-decoration: none; color: var(--text-secondary);
@@ -105,7 +105,7 @@ body {
 .part-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ey-yellow); animation: blink 2s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-.hero-content h1 { font-size: 54px; font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 20px; }
+.hero-content h1 { font-size: 54px; font-weight: 700; color: #FFFFFF; line-height: 1.15; margin-bottom: 20px; }
 .hero-content h1 .highlight { color: var(--ey-yellow); position: relative; }
 .hero-content h1 .highlight::after {
   content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 3px;
@@ -115,15 +115,15 @@ body {
 .hero-content .subtitle { font-size: 19px; color: var(--text-secondary); font-weight: 300; line-height: 1.7; max-width: 680px; margin: 0 auto 40px; }
 .hero-cta { display: flex; gap: 14px; justify-content: center; }
 .btn-primary { padding: 14px 32px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); background: var(--ey-yellow); color: var(--ey-dark); letter-spacing: 0.3px; }
-.btn-primary:hover { background: #fff040; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,230,0,0.3); }
-.btn-secondary { padding: 14px 32px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); background: transparent; color: #fff; }
+.btn-primary:hover { background: #FFE600; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,230,0,0.3); }
+.btn-secondary { padding: 14px 32px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: var(--transition); background: transparent; color: #FFFFFF; }
 .btn-secondary:hover { border-color: var(--ey-yellow); color: var(--ey-yellow); transform: translateY(-2px); }
 
 /* ===== SECTIONS ===== */
 .section { padding: 100px 60px; }
 .section-center { text-align: center; }
 .badge { display: inline-block; background: rgba(255,230,0,0.1); padding: 6px 16px; border-radius: 20px; color: var(--ey-yellow); font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 16px; }
-.section h2 { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+.section h2 { font-size: 36px; font-weight: 700; color: #FFFFFF; margin-bottom: 12px; }
 .section-subtitle { color: var(--text-muted); font-size: 16px; margin-bottom: 50px; max-width: 650px; margin-left: auto; margin-right: auto; }
 
 /* ===== WHAT IS A PROMPT — Chat Interface Mockup ===== */
@@ -131,20 +131,20 @@ body {
 
 .chat-mockup {
   max-width: 900px; margin: 0 auto 60px;
-  background: #0f0f1e; border: 1px solid rgba(255,255,255,0.06);
+  background: #1A1A24; border: 1px solid rgba(255,255,255,0.06);
   border-radius: 16px; overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   position: relative;
 }
 .chat-header {
   display: flex; align-items: center; gap: 10px;
-  padding: 14px 20px; background: #1a1a2e; border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 14px 20px; background: #1A1A24; border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .chat-dots { display: flex; gap: 6px; }
 .chat-dots span { width: 10px; height: 10px; border-radius: 50%; }
-.chat-dots span:nth-child(1) { background: #ff5f57; }
-.chat-dots span:nth-child(2) { background: #ffbd2e; }
-.chat-dots span:nth-child(3) { background: #28ca41; }
+.chat-dots span:nth-child(1) { background: #FF4136; }
+.chat-dots span:nth-child(2) { background: #FFE600; }
+.chat-dots span:nth-child(3) { background: #00C864; }
 .chat-model { margin-left: auto; font-size: 12px; color: var(--text-dim); background: rgba(255,255,255,0.04); padding: 4px 12px; border-radius: 14px; }
 
 .chat-body { padding: 30px 28px 20px; min-height: 220px; }
@@ -169,11 +169,11 @@ body {
 /* Prompt input bar */
 .chat-input-area {
   display: flex; align-items: center; gap: 12px;
-  padding: 16px 20px; background: #13132a; border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 16px 20px; background: #1A1A24; border-top: 1px solid rgba(255,255,255,0.05);
   position: relative;
 }
 .chat-input {
-  flex: 1; background: #1e1e36; border: 1px solid rgba(255,255,255,0.08);
+  flex: 1; background: #1A1A24; border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px; padding: 14px 18px; color: var(--text-secondary);
   font-size: 14px; outline: none; transition: var(--transition);
 }
@@ -204,7 +204,7 @@ body {
   max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
 }
 .explainer-left, .explainer-right { text-align: left; }
-.explainer-left h3 { color: #fff; font-size: 24px; margin-bottom: 14px; line-height: 1.3; }
+.explainer-left h3 { color: #FFFFFF; font-size: 24px; margin-bottom: 14px; line-height: 1.3; }
 .explainer-left p { color: var(--text-muted); font-size: 14px; line-height: 1.8; margin-bottom: 18px; }
 .explainer-left .key-point {
   display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;
@@ -214,7 +214,7 @@ body {
 .explainer-left .key-point:hover { border-color: rgba(255,230,0,0.2); background: rgba(255,230,0,0.02); }
 .key-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
 .key-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
-.key-text strong { color: #fff; }
+.key-text strong { color: #FFFFFF; }
 
 /* Analogy card */
 .analogy-card {
@@ -342,7 +342,7 @@ body {
 }
 .element-title-area { flex: 1; }
 .element-name {
-  font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 2px;
+  font-size: 28px; font-weight: 700; color: #FFFFFF; margin-bottom: 2px;
 }
 .element-tagline {
   font-size: 12px; font-weight: 700; color: var(--ey-yellow); letter-spacing: 1.5px;
@@ -418,7 +418,7 @@ body {
 
 /* ===== ADVANCED PROMPTING TECHNIQUES ===== */
 .advanced-section {
-  background: linear-gradient(180deg, #0a0a18, var(--ey-bg-deep));
+  background: linear-gradient(180deg, #1A1A24, var(--ey-bg-deep));
   padding: 100px 60px; text-align: center;
 }
 .advanced-transition {
@@ -432,7 +432,7 @@ body {
 }
 .transition-badge .level-up { animation: levelBounce 1.5s ease-in-out infinite; display: inline-block; }
 @keyframes levelBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-.advanced-section h2 { font-size: 36px; color: #fff; margin-bottom: 12px; }
+.advanced-section h2 { font-size: 36px; color: #FFFFFF; margin-bottom: 12px; }
 .advanced-section .section-subtitle { color: var(--text-muted); font-size: 15px; line-height: 1.7; max-width: 650px; margin: 0 auto 50px; }
 
 /* Category accordion */
@@ -450,7 +450,7 @@ body {
   width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center;
   justify-content: center; font-size: 16px; font-weight: 800; flex-shrink: 0;
 }
-.adv-cat-name { font-size: 20px; font-weight: 700; color: #fff; }
+.adv-cat-name { font-size: 20px; font-weight: 700; color: #FFFFFF; }
 .adv-cat-count { font-size: 11px; color: var(--text-dim); background: rgba(255,255,255,0.04); padding: 3px 10px; border-radius: 10px; margin-left: auto; }
 .adv-cat-toggle { margin-left: 12px; font-size: 18px; color: var(--text-dim); transition: transform 0.3s; }
 .adv-category.open .adv-cat-toggle { transform: rotate(180deg); }
@@ -484,7 +484,7 @@ body {
   vertical-align: top; line-height: 1.6;
 }
 .adv-comp-table tr:hover td { background: rgba(255,230,0,0.015); }
-.adv-comp-table td:first-child { color: #fff; font-weight: 600; }
+.adv-comp-table td:first-child { color: #FFFFFF; font-weight: 600; }
 .adv-comp-table td:nth-child(2) { color: var(--text-muted); }
 .adv-comp-table td:nth-child(3) { color: var(--text-secondary); font-style: italic; font-size: 12px; }
 .tax-use { display: inline-flex; align-items: flex-start; gap: 6px; }
@@ -492,16 +492,16 @@ body {
 
 /* ===== META PROMPT GENERATION ===== */
 .meta-prompt-section {
-  background: linear-gradient(180deg, var(--ey-bg-deep), #0e0e20); padding: 100px 60px; text-align: center;
+  background: linear-gradient(180deg, var(--ey-bg-deep), #1A1A24); padding: 100px 60px; text-align: center;
 }
 .meta-intro { max-width: 720px; margin: 0 auto 60px; }
-.meta-intro h2 { font-size: 36px; color: #fff; margin-bottom: 12px; }
+.meta-intro h2 { font-size: 36px; color: #FFFFFF; margin-bottom: 12px; }
 .meta-intro .meta-tagline { font-size: 18px; color: var(--accent-purple); font-weight: 600; font-style: italic; margin-bottom: 14px; }
 .meta-intro p { color: var(--text-muted); font-size: 15px; line-height: 1.7; }
 
 /* Meta prompt builder card */
 .meta-builder {
-  max-width: 1000px; margin: 0 auto; background: #0a0a18;
+  max-width: 1000px; margin: 0 auto; background: #1A1A24;
   border: 1px solid rgba(155,89,182,0.2); border-radius: 16px;
   overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   text-align: left;
@@ -534,17 +534,17 @@ body {
 }
 .meta-step-content:hover { border-color: rgba(155,89,182,0.25); background: rgba(155,89,182,0.02); }
 .meta-step-content p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
-.meta-step-content .highlight-text { color: #fff; font-weight: 600; }
+.meta-step-content .highlight-text { color: #FFFFFF; font-weight: 600; }
 
 /* Step colors */
-.meta-step.step-persona .meta-step-num { background: rgba(255,107,157,0.15); color: #ff6b9d; }
-.meta-step.step-persona .meta-step-label { color: #ff6b9d; }
-.meta-step.step-usecase .meta-step-num { background: rgba(78,205,196,0.15); color: #4ecdc4; }
-.meta-step.step-usecase .meta-step-label { color: #4ecdc4; }
-.meta-step.step-task .meta-step-num { background: rgba(255,230,109,0.15); color: #ffe66d; }
-.meta-step.step-task .meta-step-label { color: #ffe66d; }
-.meta-step.step-components .meta-step-num { background: rgba(168,230,207,0.15); color: #a8e6cf; }
-.meta-step.step-components .meta-step-label { color: #a8e6cf; }
+.meta-step.step-persona .meta-step-num { background: rgba(255,107,157,0.15); color: #FF32FF; }
+.meta-step.step-persona .meta-step-label { color: #FF32FF; }
+.meta-step.step-usecase .meta-step-num { background: rgba(78,205,196,0.15); color: #32FFFF; }
+.meta-step.step-usecase .meta-step-label { color: #32FFFF; }
+.meta-step.step-task .meta-step-num { background: rgba(255,230,109,0.15); color: #FFE600; }
+.meta-step.step-task .meta-step-label { color: #FFE600; }
+.meta-step.step-components .meta-step-num { background: rgba(168,230,207,0.15); color: #00C864; }
+.meta-step.step-components .meta-step-label { color: #00C864; }
 
 /* Component chips in the meta prompt */
 .meta-components-list {
@@ -571,13 +571,13 @@ body {
 .meta-output-label { font-size: 11px; font-weight: 700; color: var(--accent-green); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 .meta-output-label::before { content: '✨'; }
 .meta-output-text { font-size: 13px; color: var(--text-muted); line-height: 1.8; font-style: italic; }
-.meta-output-text strong { color: #fff; font-style: normal; }
+.meta-output-text strong { color: #FFFFFF; font-style: normal; }
 
 /* ===== DO'S AND DON'TS ===== */
 .dos-donts-section {
-  background: linear-gradient(180deg, var(--ey-bg-deep), #0a0a18); padding: 100px 60px; text-align: center;
+  background: linear-gradient(180deg, var(--ey-bg-deep), #1A1A24); padding: 100px 60px; text-align: center;
 }
-.dos-donts-section h2 { font-size: 36px; color: #fff; margin-bottom: 12px; }
+.dos-donts-section h2 { font-size: 36px; color: #FFFFFF; margin-bottom: 12px; }
 
 .dd-grid {
   max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
@@ -628,9 +628,9 @@ body {
 
 /* ===== MATCH THE FOLLOWING ACTIVITY ===== */
 .match-section {
-  background: linear-gradient(180deg, #0e0e20, var(--ey-bg-deep)); padding: 100px 60px; text-align: center;
+  background: linear-gradient(180deg, #1A1A24, var(--ey-bg-deep)); padding: 100px 60px; text-align: center;
 }
-.match-section h2 { font-size: 36px; color: #fff; margin-bottom: 12px; }
+.match-section h2 { font-size: 36px; color: #FFFFFF; margin-bottom: 12px; }
 .match-tabs {
   display: flex; justify-content: center; gap: 12px; margin-bottom: 40px;
 }
@@ -718,21 +718,21 @@ body {
 
 /* ===== ANATOMY OF A PROMPT — Interactive Dissection ===== */
 .anatomy-section {
-  background: linear-gradient(180deg, var(--ey-bg), #0f0f22); padding: 100px 60px; text-align: center;
+  background: linear-gradient(180deg, var(--ey-bg), #1A1A24); padding: 100px 60px; text-align: center;
 }
 .anatomy-intro { max-width: 700px; margin: 0 auto 50px; }
-.anatomy-intro h2 { font-size: 36px; color: #fff; margin-bottom: 12px; }
+.anatomy-intro h2 { font-size: 36px; color: #FFFFFF; margin-bottom: 12px; }
 .anatomy-intro p { color: var(--text-muted); font-size: 15px; line-height: 1.7; }
 
 /* The full prompt document */
 .prompt-document {
-  max-width: 1000px; margin: 0 auto; background: #0a0a18; border: 1px solid rgba(255,255,255,0.06);
+  max-width: 1000px; margin: 0 auto; background: #1A1A24; border: 1px solid rgba(255,255,255,0.06);
   border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   text-align: left; position: relative;
 }
 .prompt-doc-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 24px; background: #1a1a2e; border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 14px 24px; background: #1A1A24; border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .prompt-doc-title { font-size: 13px; font-weight: 700; color: var(--ey-yellow); letter-spacing: 0.5px; }
 .prompt-doc-badge { font-size: 10px; color: var(--text-dim); background: rgba(255,255,255,0.04); padding: 4px 12px; border-radius: 12px; }
@@ -745,20 +745,20 @@ body {
   transition: all 0.3s ease;
 }
 .prompt-segment:hover { border-bottom-color: currentColor; }
-.prompt-segment[data-element="persona"] { color: #ff6b9d; }
-.prompt-segment[data-element="context"] { color: #4ecdc4; }
-.prompt-segment[data-element="instruction"] { color: #ffe66d; }
-.prompt-segment[data-element="output"] { color: #a8e6cf; }
-.prompt-segment[data-element="iteration"] { color: #ffa07a; }
-.prompt-segment[data-element="grounding"] { color: #b8a9f0; }
-.prompt-segment[data-element="constraints"] { color: #7fcdff; }
-.prompt-segment[data-element="tone"] { color: #ffd93d; }
+.prompt-segment[data-element="persona"] { color: #FF32FF; }
+.prompt-segment[data-element="context"] { color: #32FFFF; }
+.prompt-segment[data-element="instruction"] { color: #FFE600; }
+.prompt-segment[data-element="output"] { color: #00C864; }
+.prompt-segment[data-element="iteration"] { color: #FF7D1E; }
+.prompt-segment[data-element="grounding"] { color: #B400FF; }
+.prompt-segment[data-element="constraints"] { color: #4696FF; }
+.prompt-segment[data-element="tone"] { color: #FFE600; }
 
 /* Floating label on hover */
 .prompt-segment::after {
   content: attr(data-label);
   position: absolute; top: -38px; left: 50%; transform: translateX(-50%) scale(0.9);
-  background: #1e1e36; border: 1px solid currentColor; color: currentColor;
+  background: #1A1A24; border: 1px solid currentColor; color: currentColor;
   padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 700;
   letter-spacing: 0.8px; text-transform: uppercase; white-space: nowrap;
   opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 10;
@@ -779,22 +779,22 @@ body {
 .anno-chip:hover { transform: scale(1.08); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
 .anno-chip .chip-dot { width: 8px; height: 8px; border-radius: 50%; animation: chipPulse 2s ease-in-out infinite; }
 @keyframes chipPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.8)} }
-.anno-chip[data-for="persona"] { color: #ff6b9d; border-color: rgba(255,107,157,0.3); background: rgba(255,107,157,0.05); }
-.anno-chip[data-for="persona"] .chip-dot { background: #ff6b9d; }
-.anno-chip[data-for="context"] { color: #4ecdc4; border-color: rgba(78,205,196,0.3); background: rgba(78,205,196,0.05); }
-.anno-chip[data-for="context"] .chip-dot { background: #4ecdc4; }
-.anno-chip[data-for="instruction"] { color: #ffe66d; border-color: rgba(255,230,109,0.3); background: rgba(255,230,109,0.05); }
-.anno-chip[data-for="instruction"] .chip-dot { background: #ffe66d; }
-.anno-chip[data-for="output"] { color: #a8e6cf; border-color: rgba(168,230,207,0.3); background: rgba(168,230,207,0.05); }
-.anno-chip[data-for="output"] .chip-dot { background: #a8e6cf; }
-.anno-chip[data-for="iteration"] { color: #ffa07a; border-color: rgba(255,160,122,0.3); background: rgba(255,160,122,0.05); }
-.anno-chip[data-for="iteration"] .chip-dot { background: #ffa07a; }
-.anno-chip[data-for="grounding"] { color: #b8a9f0; border-color: rgba(184,169,240,0.3); background: rgba(184,169,240,0.05); }
-.anno-chip[data-for="grounding"] .chip-dot { background: #b8a9f0; }
-.anno-chip[data-for="constraints"] { color: #7fcdff; border-color: rgba(127,205,255,0.3); background: rgba(127,205,255,0.05); }
-.anno-chip[data-for="constraints"] .chip-dot { background: #7fcdff; }
-.anno-chip[data-for="tone"] { color: #ffd93d; border-color: rgba(255,217,61,0.3); background: rgba(255,217,61,0.05); }
-.anno-chip[data-for="tone"] .chip-dot { background: #ffd93d; }
+.anno-chip[data-for="persona"] { color: #FF32FF; border-color: rgba(255,107,157,0.3); background: rgba(255,107,157,0.05); }
+.anno-chip[data-for="persona"] .chip-dot { background: #FF32FF; }
+.anno-chip[data-for="context"] { color: #32FFFF; border-color: rgba(78,205,196,0.3); background: rgba(78,205,196,0.05); }
+.anno-chip[data-for="context"] .chip-dot { background: #32FFFF; }
+.anno-chip[data-for="instruction"] { color: #FFE600; border-color: rgba(255,230,109,0.3); background: rgba(255,230,109,0.05); }
+.anno-chip[data-for="instruction"] .chip-dot { background: #FFE600; }
+.anno-chip[data-for="output"] { color: #00C864; border-color: rgba(168,230,207,0.3); background: rgba(168,230,207,0.05); }
+.anno-chip[data-for="output"] .chip-dot { background: #00C864; }
+.anno-chip[data-for="iteration"] { color: #FF7D1E; border-color: rgba(255,160,122,0.3); background: rgba(255,160,122,0.05); }
+.anno-chip[data-for="iteration"] .chip-dot { background: #FF7D1E; }
+.anno-chip[data-for="grounding"] { color: #B400FF; border-color: rgba(184,169,240,0.3); background: rgba(184,169,240,0.05); }
+.anno-chip[data-for="grounding"] .chip-dot { background: #B400FF; }
+.anno-chip[data-for="constraints"] { color: #4696FF; border-color: rgba(127,205,255,0.3); background: rgba(127,205,255,0.05); }
+.anno-chip[data-for="constraints"] .chip-dot { background: #4696FF; }
+.anno-chip[data-for="tone"] { color: #FFE600; border-color: rgba(255,217,61,0.3); background: rgba(255,217,61,0.05); }
+.anno-chip[data-for="tone"] .chip-dot { background: #FFE600; }
 
 /* Active state when chip is clicked */
 .anno-chip.active { transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
@@ -822,7 +822,7 @@ body {
 }
 
 /* Recap table */
-.recap-section { background: linear-gradient(180deg, var(--ey-bg-deep), #0a0a18); padding: 100px 60px; text-align: center; }
+.recap-section { background: linear-gradient(180deg, var(--ey-bg-deep), #1A1A24); padding: 100px 60px; text-align: center; }
 .recap-table { max-width: 900px; margin: 0 auto; text-align: left; border-collapse: collapse; width: 100%; }
 .recap-table th {
   padding: 14px 20px; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
@@ -854,22 +854,22 @@ body {
 <nav style="position:fixed; top:0; left:0; right:0; z-index:1000; background:rgba(26,26,46,0.97); backdrop-filter:blur(12px); border-bottom:2px solid #ffe600;">
     <div style="display:flex; align-items:center; height:48px; padding:0 20px;">
         <a href="ai-tax-labs-final.html" style="text-decoration:none; font-size:18px; color:#ffe600; margin-right:8px; transition:transform 0.2s;" onmouseover="this.style.transform='translateX(-3px)'" onmouseout="this.style.transform='none'">←</a>
-        <a href="EY_Tax_Labs_Phase_Presentation.html" style="text-decoration:none; font-size:14px; font-weight:700; color:#ffe600; margin-right:20px; white-space:nowrap;"><span style="font-weight:300; color:#fff;">EY.ai</span> Tax Labs</a>
+        <a href="EY_Tax_Labs_Phase_Presentation.html" style="text-decoration:none; font-size:14px; font-weight:700; color:#ffe600; margin-right:20px; white-space:nowrap;"><span style="font-weight:300; color:#FFFFFF;">EY.ai</span> Tax Labs</a>
         <div style="display:flex; gap:14px; align-items:center; white-space:nowrap; margin-right:auto;">
-            <a href="#what-is-prompt" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Prompts</a>
-            <a href="#weak-vs-strong" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Weak vs Strong</a>
-            <a href="#elements" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Elements</a>
-            <a href="#advanced" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Techniques</a>
-            <a href="#anatomy" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Anatomy</a>
-            <a href="#meta-prompt" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Meta Prompt</a>
-            <a href="#match-activity" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Activity</a>
-            <a href="#dos-donts" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Do's &amp; Don'ts</a>
-            <a href="#recap" style="color:#94a3b8; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Cheat Sheet</a>
-            <div style="width:1px; height:20px; background:#444; margin:0 2px;"></div>
+            <a href="#what-is-prompt" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Prompts</a>
+            <a href="#weak-vs-strong" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Weak vs Strong</a>
+            <a href="#elements" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Elements</a>
+            <a href="#advanced" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Techniques</a>
+            <a href="#anatomy" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Anatomy</a>
+            <a href="#meta-prompt" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Meta Prompt</a>
+            <a href="#match-activity" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Activity</a>
+            <a href="#dos-donts" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Do's &amp; Don'ts</a>
+            <a href="#recap" style="color:#747480; font-size:11px; font-weight:500; text-decoration:none; transition:color 0.3s;">Cheat Sheet</a>
+            <div style="width:1px; height:20px; background:#2E2E38; margin:0 2px;"></div>
             <div style="padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; background:rgba(255,230,0,0.12); border:1px solid #ffe600; color:#ffe600;">Module 1</div>
-            <div style="padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; background:rgba(100,100,100,0.08); border:1px solid #444; color:#555;">Module 2</div>
-            <div style="padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; background:rgba(100,100,100,0.08); border:1px solid #444; color:#555;">Module 3</div>
-            <div style="padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; background:rgba(100,100,100,0.08); border:1px solid #444; color:#555;">Module 4</div>
+            <div style="padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; background:rgba(100,100,100,0.08); border:1px solid #2E2E38; color:#555;">Module 2</div>
+            <div style="padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; background:rgba(100,100,100,0.08); border:1px solid #2E2E38; color:#555;">Module 3</div>
+            <div style="padding:4px 10px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; background:rgba(100,100,100,0.08); border:1px solid #2E2E38; color:#555;">Module 4</div>
         </div>
     </div>
 </nav>
@@ -900,12 +900,12 @@ body {
       <!-- <div style="display:inline-block; background:rgba(255,230,0,0.08); border:1px solid rgba(255,230,0,0.25); padding:6px 16px; border-radius:20px; margin-bottom:24px;">
         <span style="color:var(--ey-yellow); font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase;">Part 2 — Prompting Workshop</span>
       </div> -->
-      <h1 style="font-size:46px; font-weight:700; color:#fff; line-height:1.2; margin-bottom:18px;">The Difference Is the<span class="highlight">Prompt</span></h1>
+      <h1 style="font-size:46px; font-weight:700; color:#FFFFFF; line-height:1.2; margin-bottom:18px;">The Difference Is the<span class="highlight">Prompt</span></h1>
       <p style="font-size:17px; color:var(--text-secondary); line-height:1.7; margin-bottom:32px; font-weight:300;">A prompt isn't just a question — it's a structured instruction that determines the quality of everything AI gives you back.</p>
     </div>
     <!-- Right: Video Placeholder -->
-    <div style="position:relative; aspect-ratio:16/9; background:#0a0a16; border-radius:14px; border:1px solid rgba(255,255,255,0.08); overflow:hidden; cursor:pointer; transition:all 0.3s ease; box-shadow:0 20px 60px rgba(0,0,0,0.5);" onmouseover="this.style.borderColor='rgba(255,230,0,0.3)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.5)'">
-      <div style="position:absolute; inset:0; background:linear-gradient(135deg, #12122a 0%, #1a2744 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
+    <div style="position:relative; aspect-ratio:16/9; background:#1A1A24; border-radius:14px; border:1px solid rgba(255,255,255,0.08); overflow:hidden; cursor:pointer; transition:all 0.3s ease; box-shadow:0 20px 60px rgba(0,0,0,0.5);" onmouseover="this.style.borderColor='rgba(255,230,0,0.3)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.boxShadow='0 20px 60px rgba(0,0,0,0.5)'">
+      <div style="position:absolute; inset:0; background:linear-gradient(135deg, #1A1A24 0%, #2E2E38 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
         <div style="width:64px; height:64px; background:rgba(255,230,0,0.9); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:transform 0.3s, box-shadow 0.3s;">
           <div style="width:0; height:0; border-style:solid; border-width:10px 0 10px 18px; border-color:transparent transparent transparent var(--ey-dark); margin-left:3px;"></div>
         </div>
@@ -931,12 +931,12 @@ body {
         <!-- YOU node -->
         <div style="display:flex; flex-direction:column; align-items:center; gap:10px; min-width:120px;">
           <div style="width:64px; height:64px; background:rgba(74,144,217,0.1); border:1.5px solid rgba(74,144,217,0.35); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4696FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
-          <div style="font-size:11px; font-weight:800; letter-spacing:2.5px; color:#4a90d9; text-transform:uppercase;">YOU</div>
+          <div style="font-size:11px; font-weight:800; letter-spacing:2.5px; color:#4696FF; text-transform:uppercase;">YOU</div>
           <div style="display:inline-flex; align-items:center; gap:5px; background:rgba(74,144,217,0.08); border:1px solid rgba(74,144,217,0.2); border-radius:6px; padding:5px 11px;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            <span style="color:#4a90d9; font-size:11px; font-weight:600; white-space:nowrap;">Instruction</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4696FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <span style="color:#4696FF; font-size:11px; font-weight:600; white-space:nowrap;">Instruction</span>
           </div>
         </div>
 
@@ -965,7 +965,7 @@ body {
         <div style="display:flex; flex-direction:column; align-items:center; gap:5px; padding:0 6px; margin-bottom:30px;">
           <div style="display:flex; align-items:center;">
             <div style="width:52px; height:1.5px; background:linear-gradient(90deg, rgba(255,230,0,0.6), rgba(46,204,113,0.6));"></div>
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="#2ecc71"><path d="M0,0 L8,7 L0,14 Z"/></svg>
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="#00C864"><path d="M0,0 L8,7 L0,14 Z"/></svg>
           </div>
           <span style="color:#ccc; font-size:10px; letter-spacing:0.5px; white-space:nowrap;">returns output</span>
         </div>
@@ -973,12 +973,12 @@ body {
         <!-- RESULT node -->
         <div style="display:flex; flex-direction:column; align-items:center; gap:10px; min-width:120px;">
           <div style="width:64px; height:64px; background:rgba(46,204,113,0.08); border:1.5px solid rgba(46,204,113,0.35); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           </div>
-          <div style="font-size:11px; font-weight:800; letter-spacing:2.5px; color:#2ecc71; text-transform:uppercase;">RESULT</div>
+          <div style="font-size:11px; font-weight:800; letter-spacing:2.5px; color:#00C864; text-transform:uppercase;">RESULT</div>
           <div style="display:inline-flex; align-items:center; gap:5px; background:rgba(46,204,113,0.07); border:1px solid rgba(46,204,113,0.2); border-radius:6px; padding:5px 11px;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            <span style="color:#2ecc71; font-size:11px; font-weight:600; white-space:nowrap;">Output</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span style="color:#00C864; font-size:11px; font-weight:600; white-space:nowrap;">Output</span>
           </div>
         </div>
 
@@ -988,15 +988,15 @@ body {
       <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
         <div style="display:flex; align-items:center; gap:12px; padding:13px 20px; background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:8px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-          <span style="color:#fff; font-size:13px; font-weight:600;">Specific input = Specific output.</span>
+          <span style="color:#FFFFFF; font-size:13px; font-weight:600;">Specific input = Specific output.</span>
         </div>
         <div style="display:flex; align-items:center; gap:12px; padding:13px 20px; background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:8px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6h-8c-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/><path d="M10 17h4"/></svg>
-          <span style="color:#fff; font-size:13px; font-weight:600;">AI doesn't read your mind.</span>
+          <span style="color:#FFFFFF; font-size:13px; font-weight:600;">AI doesn't read your mind.</span>
         </div>
         <div style="display:flex; align-items:center; gap:12px; padding:13px 20px; background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:8px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          <span style="color:#fff; font-size:13px; font-weight:600;">Prompting is a skill, not a gift.</span>
+          <span style="color:#FFFFFF; font-size:13px; font-weight:600;">Prompting is a skill, not a gift.</span>
         </div>
       </div>
 
@@ -1013,17 +1013,17 @@ body {
         <!-- Bad brief -->
         <div style="background:rgba(220,50,50,0.08); border:1px solid rgba(220,50,50,0.2); border-radius:10px; padding:22px; display:flex; flex-direction:column;">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-            <span style="color:#ff6b6b; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">Weak Brief</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <span style="color:#FF4136; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">Weak Brief</span>
           </div>
-          <p style="color:#94a3b8; font-size:13px; font-style:italic; padding:10px 13px; background:rgba(220,50,50,0.07); border-left:3px solid rgba(220,50,50,0.5); border-radius:0 6px 6px 0; margin:0 0 16px;">&ldquo;Research this matter and get back to me.&rdquo;</p>
+          <p style="color:#747480; font-size:13px; font-style:italic; padding:10px 13px; background:rgba(220,50,50,0.07); border-left:3px solid rgba(220,50,50,0.5); border-radius:0 6px 6px 0; margin:0 0 16px;">&ldquo;Research this matter and get back to me.&rdquo;</p>
           <div style="margin-bottom:18px;">
-            <div style="color:#ff6b6b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:9px;">Missing:</div>
+            <div style="color:#FF4136; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:9px;">Missing:</div>
             <div style="display:flex; flex-direction:column; gap:7px;">
-              <div style="display:flex; align-items:center; gap:8px; color:#94a3b8; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>What issue?</div>
-              <div style="display:flex; align-items:center; gap:8px; color:#94a3b8; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Which jurisdiction?</div>
-              <div style="display:flex; align-items:center; gap:8px; color:#94a3b8; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>What output?</div>
-              <div style="display:flex; align-items:center; gap:8px; color:#94a3b8; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>By when?</div>
+              <div style="display:flex; align-items:center; gap:8px; color:#747480; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>What issue?</div>
+              <div style="display:flex; align-items:center; gap:8px; color:#747480; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Which jurisdiction?</div>
+              <div style="display:flex; align-items:center; gap:8px; color:#747480; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>What output?</div>
+              <div style="display:flex; align-items:center; gap:8px; color:#747480; font-size:12px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>By when?</div>
             </div>
           </div>
           <div style="margin-top:auto; padding-top:16px;">
@@ -1031,10 +1031,10 @@ body {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,107,107,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
           </div>
           <div style="text-align:center;">
-            <div style="color:#64748b; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Outcome</div>
+            <div style="color:#747480; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Outcome</div>
             <div style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(220,50,50,0.1); border:1px solid rgba(220,50,50,0.3); border-radius:8px; padding:9px 18px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <span style="color:#ff6b6b; font-size:13px; font-weight:700;">Generic response</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span style="color:#FF4136; font-size:13px; font-weight:700;">Generic response</span>
             </div>
           </div>
           </div>
@@ -1050,26 +1050,26 @@ body {
         <!-- Good brief -->
         <div style="background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.2); border-radius:10px; padding:22px; display:flex; flex-direction:column;">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            <span style="color:#2ecc71; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">Strong Brief</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span style="color:#00C864; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">Strong Brief</span>
           </div>
           <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
-            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#64748b; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">User</span><span style="color:#e2e8f0; font-size:12px; font-weight:500; flex:1;">ABC Corp</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#64748b; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Issue</span><span style="color:#e2e8f0; font-size:12px; font-weight:500; flex:1;">Royalty payments</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#64748b; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Jurisdiction</span><span style="color:#e2e8f0; font-size:12px; font-weight:500; flex:1;">India</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#64748b; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Output</span><span style="color:#e2e8f0; font-size:12px; font-weight:500; flex:1;">1-page memo</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#64748b; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Deadline</span><span style="color:#e2e8f0; font-size:12px; font-weight:500; flex:1;">Thursday</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#64748b; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Audience</span><span style="color:#e2e8f0; font-size:12px; font-weight:500; flex:1;">User-ready</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#747480; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">User</span><span style="color:#F6F6FA; font-size:12px; font-weight:500; flex:1;">ABC Corp</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#747480; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Issue</span><span style="color:#F6F6FA; font-size:12px; font-weight:500; flex:1;">Royalty payments</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#747480; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Jurisdiction</span><span style="color:#F6F6FA; font-size:12px; font-weight:500; flex:1;">India</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#747480; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Output</span><span style="color:#F6F6FA; font-size:12px; font-weight:500; flex:1;">1-page memo</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#747480; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Deadline</span><span style="color:#F6F6FA; font-size:12px; font-weight:500; flex:1;">Thursday</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:6px 10px; background:rgba(46,204,113,0.05); border-radius:6px;"><span style="color:#747480; font-size:11px; font-weight:600; min-width:82px; flex-shrink:0;">Audience</span><span style="color:#F6F6FA; font-size:12px; font-weight:500; flex:1;">User-ready</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
           </div>
           <div style="margin-top:auto; padding-top:16px;">
           <div style="text-align:center; margin-bottom:12px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(46,204,113,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
           </div>
           <div style="text-align:center;">
-            <div style="color:#64748b; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Outcome</div>
+            <div style="color:#747480; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Outcome</div>
             <div style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.3); border-radius:8px; padding:9px 18px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span style="color:#2ecc71; font-size:13px; font-weight:700;">Focused response</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span style="color:#00C864; font-size:13px; font-weight:700;">Focused response</span>
             </div>
           </div>
           </div>
@@ -1083,7 +1083,7 @@ body {
           <span style="color:var(--ey-yellow); font-size:24px; font-weight:700;">=</span>
           <div style="background:rgba(74,144,217,0.08); border:1px solid rgba(74,144,217,0.2); padding:10px 20px; border-radius:8px; color:var(--accent-blue); font-size:14px; font-weight:600;">A Good Prompt</div>
         </div>
-        <!-- <p style="color:#fff; font-size:15px; font-weight:600;">The same skills you use to brief your team — use them to brief AI.</p> -->
+        <!-- <p style="color:#FFFFFF; font-size:15px; font-weight:600;">The same skills you use to brief your team — use them to brief AI.</p> -->
       </div>
     </div>
   </div>
@@ -1109,10 +1109,10 @@ body {
       <!-- ELEMENT CARD TEMPLATE: Each card has the title + 4 clickable tabs -->
       
       <!-- 1. Persona -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ff6b9d;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FF32FF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">1</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Persona</div><div style="color:#ff6b9d; font-size:11px; font-weight:600;">WHO should AI be?</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Persona</div><div style="color:#FF32FF; font-size:11px; font-weight:600;">WHO should AI be?</div></div>
         </div>
         <!-- Tabs -->
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
@@ -1131,10 +1131,10 @@ body {
       </div>
 
       <!-- 2. Context -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #4ecdc4;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #32FFFF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">2</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Context</div><div style="color:#4ecdc4; font-size:11px; font-weight:600;">WHAT's the background?</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Context</div><div style="color:#32FFFF; font-size:11px; font-weight:600;">WHAT's the background?</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="this.style.background='none'">WHAT IT IS</button>
@@ -1151,10 +1151,10 @@ body {
       </div>
 
       <!-- 3. Instruction -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ffe66d;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FFE600;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">3</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Instruction</div><div style="color:#ffe66d; font-size:11px; font-weight:600;">WHAT should AI do?</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Instruction</div><div style="color:#FFE600; font-size:11px; font-weight:600;">WHAT should AI do?</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="this.style.background='none'">WHAT IT IS</button>
@@ -1171,10 +1171,10 @@ body {
       </div>
 
       <!-- 4. Constraints -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #7fcdff;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #4696FF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">4</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Constraints & Boundaries</div><div style="color:#7fcdff; font-size:11px; font-weight:600;">WHAT are the limits?</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Constraints & Boundaries</div><div style="color:#4696FF; font-size:11px; font-weight:600;">WHAT are the limits?</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="this.style.background='none'">WHAT IT IS</button>
@@ -1191,10 +1191,10 @@ body {
       </div>
 
       <!-- 5. Grounding -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #b8a9f0;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #B400FF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">5</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Grounding / Source Anchoring</div><div style="color:#b8a9f0; font-size:11px; font-weight:600;">WHERE should AI look?</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Grounding / Source Anchoring</div><div style="color:#B400FF; font-size:11px; font-weight:600;">WHERE should AI look?</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="this.style.background='none'">WHAT IT IS</button>
@@ -1211,10 +1211,10 @@ body {
       </div>
 
       <!-- 6. Tone -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ffd93d;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FFE600;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">6</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Tone / Style</div><div style="color:#ffd93d; font-size:11px; font-weight:600;">HOW should it sound?</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Tone / Style</div><div style="color:#FFE600; font-size:11px; font-weight:600;">HOW should it sound?</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="this.style.background='none'">WHAT IT IS</button>
@@ -1231,10 +1231,10 @@ body {
       </div>
 
       <!-- 7. Output Format -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #a8e6cf;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #00C864;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">7</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Output Format</div><div style="color:#a8e6cf; font-size:11px; font-weight:600;">WHAT shape should the answer take?</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Output Format</div><div style="color:#00C864; font-size:11px; font-weight:600;">WHAT shape should the answer take?</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="this.style.background='none'">WHAT IT IS</button>
@@ -1251,10 +1251,10 @@ body {
       </div>
 
       <!-- 8. Iterative Refinement -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ffa07a;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FF7D1E;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">8</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Iterative Refinement</div><div style="color:#ffa07a; font-size:11px; font-weight:600;">REFINE — don't restart</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Iterative Refinement</div><div style="color:#FF7D1E; font-size:11px; font-weight:600;">REFINE — don't restart</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="this.style.background='none'">WHAT IT IS</button>
@@ -1312,30 +1312,30 @@ function togglePanel(btn) {
       <div style="background:rgba(220,50,50,0.03); border:1px solid rgba(220,50,50,0.15); border-radius:16px; padding:0; overflow:hidden; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(220,50,50,0.35)'" onmouseout="this.style.borderColor='rgba(220,50,50,0.15)'">
         <!-- Header bar -->
         <div style="background:rgba(220,50,50,0.08); padding:14px 22px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(220,50,50,0.1);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
           <span style="color:var(--accent-red); font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">The Lazy Ask</span>
         </div>
         <!-- Prompt -->
         <div style="padding:24px;">
-          <div style="background:#0a0a16; border-radius:10px; padding:18px 20px; border-left:3px solid var(--accent-red); margin-bottom:18px;">
+          <div style="background:#1A1A24; border-radius:10px; padding:18px 20px; border-left:3px solid var(--accent-red); margin-bottom:18px;">
             <p style="color:var(--text-primary); font-size:15px; font-style:italic; line-height:1.6;">"Summarise this document"</p>
           </div>
           <!-- What's missing -->
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:18px;">
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(220,50,50,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               <span style="color:var(--accent-red); font-size:11px; font-weight:600;">No role</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(220,50,50,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               <span style="color:var(--accent-red); font-size:11px; font-weight:600;">No context</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(220,50,50,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               <span style="color:var(--accent-red); font-size:11px; font-weight:600;">No format</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(220,50,50,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               <span style="color:var(--accent-red); font-size:11px; font-weight:600;">No limits</span>
             </div>
           </div>
@@ -1357,30 +1357,30 @@ function togglePanel(btn) {
       <div style="background:rgba(46,204,113,0.03); border:1px solid rgba(46,204,113,0.15); border-radius:16px; padding:0; overflow:hidden; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(46,204,113,0.35)'" onmouseout="this.style.borderColor='rgba(46,204,113,0.15)'">
         <!-- Header bar -->
         <div style="background:rgba(46,204,113,0.08); padding:14px 22px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(46,204,113,0.1);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           <span style="color:var(--accent-green); font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">The Pro Ask</span>
         </div>
         <!-- Prompt -->
         <div style="padding:24px;">
-          <div style="background:#0a0a16; border-radius:10px; padding:18px 20px; border-left:3px solid var(--accent-green); margin-bottom:18px;">
+          <div style="background:#1A1A24; border-radius:10px; padding:18px 20px; border-left:3px solid var(--accent-green); margin-bottom:18px;">
             <p style="color:var(--text-primary); font-size:15px; font-style:italic; line-height:1.6;">"You are a <span style="color:var(--ey-yellow);">tax advisor</span>. Summarise the key <span style="color:var(--accent-blue);">transfer pricing changes</span> in this circular for a <span style="color:var(--accent-orange);">client memo</span>. Use <span style="color:var(--accent-purple);">bullet points</span>. Keep it under <span style="color:var(--accent-green);">200 words</span>."</p>
           </div>
           <!-- What's included -->
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:18px;">
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(46,204,113,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               <span style="color:var(--accent-green); font-size:11px; font-weight:600;">Role defined</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(46,204,113,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               <span style="color:var(--accent-green); font-size:11px; font-weight:600;">Task clear</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(46,204,113,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               <span style="color:var(--accent-green); font-size:11px; font-weight:600;">Format set</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(46,204,113,0.06); border-radius:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               <span style="color:var(--accent-green); font-size:11px; font-weight:600;">Length capped</span>
             </div>
           </div>
@@ -1398,13 +1398,13 @@ function togglePanel(btn) {
     <div style="margin-top:40px; text-align:center; padding:24px 32px; background:rgba(255,230,0,0.03); border:1px solid rgba(255,230,0,0.15); border-radius:12px;">
       <p style="color:var(--ey-yellow); font-size:16px; font-weight:700; margin-bottom:8px;">The Prompting Equation</p>
       <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
-        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff;">Role</span>
+        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#FFFFFF;">Role</span>
         <span style="color:var(--ey-yellow); font-size:18px; font-weight:700;">+</span>
-        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff;">Context</span>
+        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#FFFFFF;">Context</span>
         <span style="color:var(--ey-yellow); font-size:18px; font-weight:700;">+</span>
-        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff;">Task</span>
+        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#FFFFFF;">Task</span>
         <span style="color:var(--ey-yellow); font-size:18px; font-weight:700;">+</span>
-        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#fff;">Format</span>
+        <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#FFFFFF;">Format</span>
         <span style="color:var(--accent-green); font-size:18px; font-weight:700;">=</span>
         <span style="padding:8px 16px; border-radius:6px; font-size:13px; font-weight:700; background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.3); color:var(--accent-green);">Client-Ready Output</span>
       </div>
@@ -1425,10 +1425,10 @@ function togglePanel(btn) {
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:stretch;" id="techniques-grid">
 
       <!-- 1. Few-Shot -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ff6b9d;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FF32FF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">1</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Few-Shot Prompting</div><div style="color:#ff6b9d; font-size:11px; font-weight:600;">SHOW AI what good looks like</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Few-Shot Prompting</div><div style="color:#FF32FF; font-size:11px; font-weight:600;">SHOW AI what good looks like</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1445,10 +1445,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- 2. Iteration -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #4ecdc4;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #32FFFF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">2</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Iteration</div><div style="color:#4ecdc4; font-size:11px; font-weight:600;">BUILD on what AI gives you</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Iteration</div><div style="color:#32FFFF; font-size:11px; font-weight:600;">BUILD on what AI gives you</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1465,10 +1465,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- 3. Chain of Thought -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ffe66d;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FFE600;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">3</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Chain of Thought</div><div style="color:#ffe66d; font-size:11px; font-weight:600;">MAKE AI show its reasoning</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Chain of Thought</div><div style="color:#FFE600; font-size:11px; font-weight:600;">MAKE AI show its reasoning</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1485,10 +1485,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- 4. Meta Prompt -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #b8a9f0;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #B400FF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">4</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Meta Prompt</div><div style="color:#b8a9f0; font-size:11px; font-weight:600;">ASK AI to write the prompt for you</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Meta Prompt</div><div style="color:#B400FF; font-size:11px; font-weight:600;">ASK AI to write the prompt for you</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1505,10 +1505,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- 5. Refinement -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #7fcdff;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #4696FF;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">5</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Refinement</div><div style="color:#7fcdff; font-size:11px; font-weight:600;">SHARPEN the output after review</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Refinement</div><div style="color:#4696FF; font-size:11px; font-weight:600;">SHARPEN the output after review</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1525,10 +1525,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- 6. Creative Expansion -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ffd93d;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FFE600;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">6</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Creative Expansion</div><div style="color:#ffd93d; font-size:11px; font-weight:600;">EXPLORE angles you haven't considered</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Creative Expansion</div><div style="color:#FFE600; font-size:11px; font-weight:600;">EXPLORE angles you haven't considered</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1545,10 +1545,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- 7. Audience -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #a8e6cf;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #00C864;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">7</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Audience Targeting</div><div style="color:#a8e6cf; font-size:11px; font-weight:600;">TAILOR for who will read it</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Audience Targeting</div><div style="color:#00C864; font-size:11px; font-weight:600;">TAILOR for who will read it</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1565,10 +1565,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- 8. Flipped Prompting -->
-      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #ffa07a;">
+      <div class="elem-card" style="background:rgba(255,255,255,0.015); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; border-top:3px solid #FF7D1E;">
         <div style="padding:22px 24px 16px; display:flex; align-items:center; gap:14px;">
           <div style="width:38px; height:38px; border-radius:50%; background:var(--ey-yellow); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:var(--ey-dark); flex-shrink:0;">8</div>
-          <div><div style="color:#fff; font-size:19px; font-weight:700;">Flipped Prompting</div><div style="color:#ffa07a; font-size:11px; font-weight:600;">LET AI ask YOU the questions</div></div>
+          <div><div style="color:#FFFFFF; font-size:19px; font-weight:700;">Flipped Prompting</div><div style="color:#FF7D1E; font-size:11px; font-weight:600;">LET AI ask YOU the questions</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,0.04);">
           <button onclick="togglePanel(this)" style="padding:10px 8px; background:none; border:none; border-right:1px solid rgba(255,255,255,0.04); cursor:pointer; font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--accent-blue);" onmouseover="this.style.background='rgba(74,144,217,0.08)'" onmouseout="if(!this.dataset.open)this.style.background='none'">WHAT IT IS</button>
@@ -1589,9 +1589,9 @@ function togglePanel(btn) {
 </div>
 
 <!-- ======== ANATOMY — Interactive Prompt Builder ======== -->
-<section style="background:linear-gradient(180deg, var(--ey-bg), #0f0f22); padding:80px 60px;" id="anatomy">
+<section style="background:linear-gradient(180deg, var(--ey-bg), #1A1A24); padding:80px 60px;" id="anatomy">
   <div style="max-width:1100px; margin:0 auto; text-align:center;">
-    <h2 style="font-size:36px; font-weight:700; color:#fff; margin-bottom:8px;">Build a Perfect Prompt — Piece by Piece</h2>
+    <h2 style="font-size:36px; font-weight:700; color:#FFFFFF; margin-bottom:8px;">Build a Perfect Prompt — Piece by Piece</h2>
     <p style="color:var(--text-muted); font-size:15px; margin-bottom:12px; max-width:650px; margin-left:auto; margin-right:auto;">Click each ingredient below to add it to the prompt. Watch it come together like assembling a client brief.</p>
     <p style="color:var(--text-dim); font-size:12px; margin-bottom:40px;">Use case: Analyzing withholding tax on software royalty payments to a US parent company</p>
 
@@ -1601,31 +1601,31 @@ function togglePanel(btn) {
       <div style="display:flex; flex-direction:column; gap:8px;">
         <div style="color:var(--ey-yellow); font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; padding-left:4px;">Click to add each layer:</div>
         
-        <button onclick="addLayer(this,0)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(255,107,157,0.06); border:1px solid rgba(255,107,157,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#ff6b9d; font-size:13px; font-weight:600;">
+        <button onclick="addLayer(this,0)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(255,107,157,0.06); border:1px solid rgba(255,107,157,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#FF32FF; font-size:13px; font-weight:600;">
           <span style="width:26px; height:26px; border-radius:50%; background:rgba(255,107,157,0.15); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">1</span>
           Persona
         </button>
-        <button onclick="addLayer(this,1)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(78,205,196,0.06); border:1px solid rgba(78,205,196,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#4ecdc4; font-size:13px; font-weight:600;">
+        <button onclick="addLayer(this,1)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(78,205,196,0.06); border:1px solid rgba(78,205,196,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#32FFFF; font-size:13px; font-weight:600;">
           <span style="width:26px; height:26px; border-radius:50%; background:rgba(78,205,196,0.15); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">2</span>
           Context
         </button>
-        <button onclick="addLayer(this,2)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(255,230,109,0.06); border:1px solid rgba(255,230,109,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#ffe66d; font-size:13px; font-weight:600;">
+        <button onclick="addLayer(this,2)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(255,230,109,0.06); border:1px solid rgba(255,230,109,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#FFE600; font-size:13px; font-weight:600;">
           <span style="width:26px; height:26px; border-radius:50%; background:rgba(255,230,109,0.15); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">3</span>
           Instruction
         </button>
-        <button onclick="addLayer(this,3)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(127,205,255,0.06); border:1px solid rgba(127,205,255,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#7fcdff; font-size:13px; font-weight:600;">
+        <button onclick="addLayer(this,3)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(127,205,255,0.06); border:1px solid rgba(127,205,255,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#4696FF; font-size:13px; font-weight:600;">
           <span style="width:26px; height:26px; border-radius:50%; background:rgba(127,205,255,0.15); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">4</span>
           Constraints
         </button>
-        <button onclick="addLayer(this,4)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(184,169,240,0.06); border:1px solid rgba(184,169,240,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#b8a9f0; font-size:13px; font-weight:600;">
+        <button onclick="addLayer(this,4)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(184,169,240,0.06); border:1px solid rgba(184,169,240,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#B400FF; font-size:13px; font-weight:600;">
           <span style="width:26px; height:26px; border-radius:50%; background:rgba(184,169,240,0.15); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">5</span>
           Grounding
         </button>
-        <button onclick="addLayer(this,5)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(255,217,61,0.06); border:1px solid rgba(255,217,61,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#ffd93d; font-size:13px; font-weight:600;">
+        <button onclick="addLayer(this,5)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(255,217,61,0.06); border:1px solid rgba(255,217,61,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#FFE600; font-size:13px; font-weight:600;">
           <span style="width:26px; height:26px; border-radius:50%; background:rgba(255,217,61,0.15); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">6</span>
           Tone / Style
         </button>
-        <button onclick="addLayer(this,6)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(168,230,207,0.06); border:1px solid rgba(168,230,207,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#a8e6cf; font-size:13px; font-weight:600;">
+        <button onclick="addLayer(this,6)" class="layer-btn" style="display:flex; align-items:center; gap:10px; padding:12px 16px; background:rgba(168,230,207,0.06); border:1px solid rgba(168,230,207,0.2); border-radius:8px; cursor:pointer; transition:all 0.3s; width:100%; text-align:left; color:#00C864; font-size:13px; font-weight:600;">
           <span style="width:26px; height:26px; border-radius:50%; background:rgba(168,230,207,0.15); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">7</span>
           Output Format
         </button>
@@ -1633,7 +1633,7 @@ function togglePanel(btn) {
         <!-- Progress -->
         <div style="margin-top:12px; padding:12px 16px; background:rgba(255,230,0,0.04); border:1px solid rgba(255,230,0,0.12); border-radius:8px; text-align:center;">
           <div style="color:var(--text-dim); font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:6px;">PROMPT STRENGTH</div>
-          <div style="background:#1a1a2e; border-radius:4px; height:8px; overflow:hidden;">
+          <div style="background:#1A1A24; border-radius:4px; height:8px; overflow:hidden;">
             <div id="prompt-strength-bar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--accent-red), var(--ey-yellow), var(--accent-green)); border-radius:4px; transition:width 0.5s ease;"></div>
           </div>
           <div id="prompt-strength-label" style="color:var(--accent-red); font-size:11px; font-weight:700; margin-top:6px;">Empty — add layers!</div>
@@ -1641,10 +1641,10 @@ function togglePanel(btn) {
       </div>
 
       <!-- RIGHT: The prompt being built -->
-      <div style="background:#0a0a18; border:1px solid rgba(255,255,255,0.06); border-radius:14px; overflow:hidden; box-shadow:0 16px 50px rgba(0,0,0,0.5);">
+      <div style="background:#1A1A24; border:1px solid rgba(255,255,255,0.06); border-radius:14px; overflow:hidden; box-shadow:0 16px 50px rgba(0,0,0,0.5);">
         <!-- Header -->
-        <div style="display:flex; align-items:center; gap:10px; padding:12px 20px; background:#1a1a2e; border-bottom:1px solid rgba(255,255,255,0.05);">
-          <div style="display:flex; gap:5px;"><span style="width:9px; height:9px; border-radius:50%; background:#ff5f57;"></span><span style="width:9px; height:9px; border-radius:50%; background:#ffbd2e;"></span><span style="width:9px; height:9px; border-radius:50%; background:#28ca41;"></span></div>
+        <div style="display:flex; align-items:center; gap:10px; padding:12px 20px; background:#1A1A24; border-bottom:1px solid rgba(255,255,255,0.05);">
+          <div style="display:flex; gap:5px;"><span style="width:9px; height:9px; border-radius:50%; background:#FF4136;"></span><span style="width:9px; height:9px; border-radius:50%; background:#FFE600;"></span><span style="width:9px; height:9px; border-radius:50%; background:#00C864;"></span></div>
           <span style="margin-left:auto; font-size:11px; color:var(--text-dim); background:rgba(255,255,255,0.04); padding:3px 10px; border-radius:10px;">Your Prompt — Building...</span>
         </div>
         <!-- Prompt body -->
@@ -1662,13 +1662,13 @@ function togglePanel(btn) {
 
 <script>
 const promptLayers = [
-  { color: '#ff6b9d', label: 'PERSONA', text: 'You are an Indian Tax Professional specializing in the Indian Income-tax Act and allied laws, with expertise in cross-border withholding tax and software royalty transactions.' },
-  { color: '#4ecdc4', label: 'CONTEXT', text: 'ABC Software Solutions Pvt. Ltd. (Pune, India) pays software license fees to its US parent XYZ Inc. The company needs clarity on whether these payments constitute "royalty" under the Income-tax Act and the India-US DTAA.' },
-  { color: '#ffe66d', label: 'INSTRUCTION', text: '1. Analyze the SC ruling in Engineering Analysis Centre of Excellence and categorize the EULAs.\n2. Analyze the attached Software License EULA clause by clause.\n3. Draft a client memo covering background, EULA analysis, documentation checklist, and withholding tax position.' },
-  { color: '#7fcdff', label: 'CONSTRAINTS', text: 'Scope: Withholding tax implications only. Do not cover GST, corporate tax, or transfer pricing. Keep the memo under 3 pages.' },
-  { color: '#b8a9f0', label: 'GROUNDING', text: 'Base your analysis strictly on the Income Tax Act 1961, Income Tax Rules 1962, the SC ruling in EACoE (2022), and applicable DTAA provisions. Do not cite tribunal decisions unless directly relevant.' },
-  { color: '#ffd93d', label: 'TONE', text: 'Draft in a formal, client-ready advisory style suitable for the Tax Head of a software company. Use professional language, avoid jargon where possible.' },
-  { color: '#a8e6cf', label: 'OUTPUT FORMAT', text: 'Present the EULA analysis as a table (Term | SC Interpretation). Provide clause analysis in a 3-column table (Clause | Description | SC Ruling). End with a numbered action checklist.' }
+  { color: '#FF32FF', label: 'PERSONA', text: 'You are an Indian Tax Professional specializing in the Indian Income-tax Act and allied laws, with expertise in cross-border withholding tax and software royalty transactions.' },
+  { color: '#32FFFF', label: 'CONTEXT', text: 'ABC Software Solutions Pvt. Ltd. (Pune, India) pays software license fees to its US parent XYZ Inc. The company needs clarity on whether these payments constitute "royalty" under the Income-tax Act and the India-US DTAA.' },
+  { color: '#FFE600', label: 'INSTRUCTION', text: '1. Analyze the SC ruling in Engineering Analysis Centre of Excellence and categorize the EULAs.\n2. Analyze the attached Software License EULA clause by clause.\n3. Draft a client memo covering background, EULA analysis, documentation checklist, and withholding tax position.' },
+  { color: '#4696FF', label: 'CONSTRAINTS', text: 'Scope: Withholding tax implications only. Do not cover GST, corporate tax, or transfer pricing. Keep the memo under 3 pages.' },
+  { color: '#B400FF', label: 'GROUNDING', text: 'Base your analysis strictly on the Income Tax Act 1961, Income Tax Rules 1962, the SC ruling in EACoE (2022), and applicable DTAA provisions. Do not cite tribunal decisions unless directly relevant.' },
+  { color: '#FFE600', label: 'TONE', text: 'Draft in a formal, client-ready advisory style suitable for the Tax Head of a software company. Use professional language, avoid jargon where possible.' },
+  { color: '#00C864', label: 'OUTPUT FORMAT', text: 'Present the EULA analysis as a table (Term | SC Interpretation). Provide clause analysis in a 3-column table (Clause | Description | SC Ruling). End with a numbered action checklist.' }
 ];
 
 let layersAdded = 0;
@@ -1808,7 +1808,7 @@ function addLayer(btn, index) {
 </section>
 
 <!-- ======== META PROMPT GENERATION ======== -->
-<section style="background:linear-gradient(180deg, var(--ey-bg-deep), #0e0e20); padding:100px 60px;" id="meta-prompt">
+<section style="background:linear-gradient(180deg, var(--ey-bg-deep), #1A1A24); padding:100px 60px;" id="meta-prompt">
   <div style="max-width:1100px; margin:0 auto;">
 
     <!-- Hero intro — the "aha" moment -->
@@ -1817,8 +1817,8 @@ function addLayer(btn, index) {
         <span style="font-size:20px; animation:levelBounce 1.5s ease-in-out infinite; display:inline-block;">🪄</span>
         <span style="color:var(--accent-purple); font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">The Ultimate Shortcut</span>
       </div>
-      <h2 style="font-size:40px; font-weight:800; color:#fff; margin-bottom:14px; line-height:1.2;">Don't Write a Prompt.<br><span style="color:var(--accent-purple);">Ask AI to Write It For You.</span></h2>
-      <p style="color:var(--text-muted); font-size:16px; max-width:650px; margin:0 auto; line-height:1.7;">Think of it like this: instead of cooking yourself, you hand a chef your ingredient list and dietary preferences — and they design the perfect recipe. That's a <strong style="color:#fff;">Meta Prompt</strong>.</p>
+      <h2 style="font-size:40px; font-weight:800; color:#FFFFFF; margin-bottom:14px; line-height:1.2;">Don't Write a Prompt.<br><span style="color:var(--accent-purple);">Ask AI to Write It For You.</span></h2>
+      <p style="color:var(--text-muted); font-size:16px; max-width:650px; margin:0 auto; line-height:1.7;">Think of it like this: instead of cooking yourself, you hand a chef your ingredient list and dietary preferences — and they design the perfect recipe. That's a <strong style="color:#FFFFFF;">Meta Prompt</strong>.</p>
     </div>
 
     <!-- The Analogy — Simple visual explanation -->
@@ -1852,27 +1852,27 @@ function addLayer(btn, index) {
 
     <!-- How it works — 3 simple steps -->
     <div style="text-align:center; margin-bottom:40px;">
-      <h3 style="color:#fff; font-size:22px; font-weight:700; margin-bottom:8px;">How It Works — 3 Simple Steps</h3>
+      <h3 style="color:#FFFFFF; font-size:22px; font-weight:700; margin-bottom:8px;">How It Works — 3 Simple Steps</h3>
       <p style="color:var(--text-dim); font-size:13px;">Like briefing a senior partner who then briefs the associate perfectly.</p>
     </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; max-width:1000px; margin:0 auto 50px;">
       <!-- Step 1 -->
-      <div style="position:relative; background:#0a0a18; border:1px solid rgba(155,89,182,0.15); border-radius:14px; padding:28px 24px; text-align:center; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(155,89,182,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(155,89,182,0.15)'; this.style.transform='none'">
-        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, rgba(255,107,157,0.2), rgba(155,89,182,0.2)); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; font-weight:800; color:#ff6b9d;">1</div>
-        <div style="color:#ff6b9d; font-size:11px; font-weight:700; letter-spacing:1px; margin-bottom:8px;">TELL AI WHO YOU ARE</div>
+      <div style="position:relative; background:#1A1A24; border:1px solid rgba(155,89,182,0.15); border-radius:14px; padding:28px 24px; text-align:center; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(155,89,182,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(155,89,182,0.15)'; this.style.transform='none'">
+        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, rgba(255,107,157,0.2), rgba(155,89,182,0.2)); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; font-weight:800; color:#FF32FF;">1</div>
+        <div style="color:#FF32FF; font-size:11px; font-weight:700; letter-spacing:1px; margin-bottom:8px;">TELL AI WHO YOU ARE</div>
         <p style="color:var(--text-secondary); font-size:14px; line-height:1.6; font-weight:600;">"I'm a Tax Head dealing with a GST show cause notice on misclassification"</p>
         <div style="position:absolute; top:50%; right:-14px; color:var(--ey-yellow); font-size:18px; font-weight:800; z-index:2;">→</div>
       </div>
       <!-- Step 2 -->
-      <div style="position:relative; background:#0a0a18; border:1px solid rgba(155,89,182,0.15); border-radius:14px; padding:28px 24px; text-align:center; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(155,89,182,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(155,89,182,0.15)'; this.style.transform='none'">
-        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, rgba(78,205,196,0.2), rgba(155,89,182,0.2)); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; font-weight:800; color:#4ecdc4;">2</div>
-        <div style="color:#4ecdc4; font-size:11px; font-weight:700; letter-spacing:1px; margin-bottom:8px;">ASK AI TO BUILD THE PROMPT</div>
+      <div style="position:relative; background:#1A1A24; border:1px solid rgba(155,89,182,0.15); border-radius:14px; padding:28px 24px; text-align:center; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(155,89,182,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(155,89,182,0.15)'; this.style.transform='none'">
+        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, rgba(78,205,196,0.2), rgba(155,89,182,0.2)); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; font-weight:800; color:#32FFFF;">2</div>
+        <div style="color:#32FFFF; font-size:11px; font-weight:700; letter-spacing:1px; margin-bottom:8px;">ASK AI TO BUILD THE PROMPT</div>
         <p style="color:var(--text-secondary); font-size:14px; line-height:1.6; font-weight:600;">"Craft me the best prompt to get a comprehensive reply with legal backing"</p>
         <div style="position:absolute; top:50%; right:-14px; color:var(--ey-yellow); font-size:18px; font-weight:800; z-index:2;">→</div>
       </div>
       <!-- Step 3 -->
-      <div style="background:#0a0a18; border:1px solid rgba(155,89,182,0.15); border-radius:14px; padding:28px 24px; text-align:center; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(155,89,182,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(155,89,182,0.15)'; this.style.transform='none'">
+      <div style="background:#1A1A24; border:1px solid rgba(155,89,182,0.15); border-radius:14px; padding:28px 24px; text-align:center; transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(155,89,182,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(155,89,182,0.15)'; this.style.transform='none'">
         <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, rgba(46,204,113,0.2), rgba(155,89,182,0.2)); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; font-weight:800; color:var(--accent-green);">3</div>
         <div style="color:var(--accent-green); font-size:11px; font-weight:700; letter-spacing:1px; margin-bottom:8px;">USE THE GENERATED PROMPT</div>
         <p style="color:var(--text-secondary); font-size:14px; line-height:1.6; font-weight:600;">Paste AI's crafted prompt into any platform → get expert-level output instantly</p>
@@ -1881,7 +1881,7 @@ function addLayer(btn, index) {
 
     <!-- The actual template — copyable (hidden) -->
     <div style="max-width:1000px; margin:0 auto; display:none;">
-      <div style="background:#0a0a18; border:1px solid rgba(155,89,182,0.2); border-radius:16px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+      <div style="background:#1A1A24; border:1px solid rgba(155,89,182,0.2); border-radius:16px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
         <!-- Header -->
         <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:linear-gradient(90deg, rgba(155,89,182,0.08), rgba(74,144,217,0.05)); border-bottom:1px solid rgba(155,89,182,0.15);">
           <span style="font-size:15px; font-weight:700; color:var(--accent-purple); display:flex; align-items:center; gap:8px;">📋 Copy-Paste This Template</span>
@@ -1891,43 +1891,43 @@ function addLayer(btn, index) {
         <div style="padding:32px 28px;">
           <!-- Line 1 -->
           <div style="display:flex; gap:14px; margin-bottom:18px; align-items:flex-start;">
-            <div style="width:32px; height:32px; border-radius:8px; background:rgba(255,107,157,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#ff6b9d;">①</div>
+            <div style="width:32px; height:32px; border-radius:8px; background:rgba(255,107,157,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#FF32FF;">①</div>
             <div>
-              <div style="color:#ff6b9d; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHO IS AI IN THIS SCENARIO?</div>
-              <p style="color:var(--text-secondary); font-size:14px; line-height:1.7; padding:12px 16px; background:rgba(255,107,157,0.04); border:1px solid rgba(255,107,157,0.1); border-radius:8px;">"You are an <strong style="color:#fff;">expert prompt crafter</strong> who understands advanced prompting frameworks like Chain of Thought, Step-back Prompting, and Analogical reasoning."</p>
+              <div style="color:#FF32FF; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHO IS AI IN THIS SCENARIO?</div>
+              <p style="color:var(--text-secondary); font-size:14px; line-height:1.7; padding:12px 16px; background:rgba(255,107,157,0.04); border:1px solid rgba(255,107,157,0.1); border-radius:8px;">"You are an <strong style="color:#FFFFFF;">expert prompt crafter</strong> who understands advanced prompting frameworks like Chain of Thought, Step-back Prompting, and Analogical reasoning."</p>
             </div>
           </div>
           <!-- Line 2 -->
           <div style="display:flex; gap:14px; margin-bottom:18px; align-items:flex-start;">
-            <div style="width:32px; height:32px; border-radius:8px; background:rgba(78,205,196,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#4ecdc4;">②</div>
+            <div style="width:32px; height:32px; border-radius:8px; background:rgba(78,205,196,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#32FFFF;">②</div>
             <div>
-              <div style="color:#4ecdc4; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHAT'S YOUR SITUATION? (Plain English)</div>
+              <div style="color:#32FFFF; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHAT'S YOUR SITUATION? (Plain English)</div>
               <p style="color:var(--text-secondary); font-size:14px; line-height:1.7; padding:12px 16px; background:rgba(78,205,196,0.04); border:1px solid rgba(78,205,196,0.1); border-radius:8px;">"I'm the Tax Head of a manufacturing company (₹3,000 Cr turnover). We got a GST show cause notice saying our products are misclassified. I need to prepare a legally-backed reply, find weak spots in our position, and create an action plan."</p>
             </div>
           </div>
           <!-- Line 3 -->
           <div style="display:flex; gap:14px; margin-bottom:18px; align-items:flex-start;">
-            <div style="width:32px; height:32px; border-radius:8px; background:rgba(255,230,109,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#ffe66d;">③</div>
+            <div style="width:32px; height:32px; border-radius:8px; background:rgba(255,230,109,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#FFE600;">③</div>
             <div>
-              <div style="color:#ffe66d; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHAT DO YOU WANT AI TO DO?</div>
-              <p style="color:var(--text-secondary); font-size:14px; line-height:1.7; padding:12px 16px; background:rgba(255,230,109,0.04); border:1px solid rgba(255,230,109,0.1); border-radius:8px;">"Craft me the <strong style="color:#fff;">best possible prompt</strong> I can paste into ChatGPT/Gemini to get a comprehensive analysis and reply for this situation."</p>
+              <div style="color:#FFE600; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHAT DO YOU WANT AI TO DO?</div>
+              <p style="color:var(--text-secondary); font-size:14px; line-height:1.7; padding:12px 16px; background:rgba(255,230,109,0.04); border:1px solid rgba(255,230,109,0.1); border-radius:8px;">"Craft me the <strong style="color:#FFFFFF;">best possible prompt</strong> I can paste into ChatGPT/Gemini to get a comprehensive analysis and reply for this situation."</p>
             </div>
           </div>
           <!-- Line 4 -->
           <div style="display:flex; gap:14px; align-items:flex-start;">
-            <div style="width:32px; height:32px; border-radius:8px; background:rgba(168,230,207,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#a8e6cf;">④</div>
+            <div style="width:32px; height:32px; border-radius:8px; background:rgba(168,230,207,0.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; font-weight:800; color:#00C864;">④</div>
             <div>
-              <div style="color:#a8e6cf; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHAT SHOULD THE PROMPT INCLUDE?</div>
+              <div style="color:#00C864; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:4px;">WHAT SHOULD THE PROMPT INCLUDE?</div>
               <div style="padding:12px 16px; background:rgba(168,230,207,0.04); border:1px solid rgba(168,230,207,0.1); border-radius:8px;">
                 <p style="color:var(--text-secondary); font-size:14px; line-height:1.7; margin-bottom:10px;">"Make sure the generated prompt includes:"</p>
                 <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(255,107,157,0.08); border:1px solid rgba(255,107,157,0.2); color:#ff6b9d;">Persona</span>
-                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(78,205,196,0.08); border:1px solid rgba(78,205,196,0.2); color:#4ecdc4;">Context</span>
-                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(255,230,109,0.08); border:1px solid rgba(255,230,109,0.2); color:#ffe66d;">Clear Task</span>
-                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(255,217,61,0.08); border:1px solid rgba(255,217,61,0.2); color:#ffd93d;">Tone</span>
-                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(127,205,255,0.08); border:1px solid rgba(127,205,255,0.2); color:#7fcdff;">Constraints</span>
-                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(184,169,240,0.08); border:1px solid rgba(184,169,240,0.2); color:#b8a9f0;">Step-back Reasoning</span>
-                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(168,230,207,0.08); border:1px solid rgba(168,230,207,0.2); color:#a8e6cf;">Output Format</span>
+                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(255,107,157,0.08); border:1px solid rgba(255,107,157,0.2); color:#FF32FF;">Persona</span>
+                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(78,205,196,0.08); border:1px solid rgba(78,205,196,0.2); color:#32FFFF;">Context</span>
+                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(255,230,109,0.08); border:1px solid rgba(255,230,109,0.2); color:#FFE600;">Clear Task</span>
+                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(255,217,61,0.08); border:1px solid rgba(255,217,61,0.2); color:#FFE600;">Tone</span>
+                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(127,205,255,0.08); border:1px solid rgba(127,205,255,0.2); color:#4696FF;">Constraints</span>
+                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(184,169,240,0.08); border:1px solid rgba(184,169,240,0.2); color:#B400FF;">Step-back Reasoning</span>
+                  <span style="padding:6px 12px; border-radius:6px; font-size:11px; font-weight:600; background:rgba(168,230,207,0.08); border:1px solid rgba(168,230,207,0.2); color:#00C864;">Output Format</span>
                 </div>
               </div>
             </div>
@@ -1941,7 +1941,7 @@ function addLayer(btn, index) {
               <span style="font-size:16px;">✨</span>
               <span style="color:var(--accent-green); font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase;">What Happens Next</span>
             </div>
-            <p style="color:var(--text-muted); font-size:13px; line-height:1.8;">AI gives you back a <strong style="color:#fff;">perfectly structured, multi-paragraph prompt</strong> — complete with persona, context, step-by-step task breakdown, grounding references, tone settings, and guardrails. You then paste <em>that</em> prompt into any AI platform and get an analysis that would've taken hours to write manually.</p>
+            <p style="color:var(--text-muted); font-size:13px; line-height:1.8;">AI gives you back a <strong style="color:#FFFFFF;">perfectly structured, multi-paragraph prompt</strong> — complete with persona, context, step-by-step task breakdown, grounding references, tone settings, and guardrails. You then paste <em>that</em> prompt into any AI platform and get an analysis that would've taken hours to write manually.</p>
           </div>
         </div>
       </div>
@@ -1953,11 +1953,11 @@ function addLayer(btn, index) {
         <p style="color:var(--ey-yellow); font-size:14px; font-weight:700; margin-bottom:14px;">💡 Why Does This Work So Well?</p>
         <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:20px; align-items:center; margin-bottom:20px;">
           <div style="text-align:right;">
-            <p style="color:var(--text-secondary); font-size:14px; line-height:1.6;">You tell a <strong style="color:#fff;">senior partner</strong> your problem in 2 sentences</p>
+            <p style="color:var(--text-secondary); font-size:14px; line-height:1.6;">You tell a <strong style="color:#FFFFFF;">senior partner</strong> your problem in 2 sentences</p>
           </div>
           <div style="color:var(--ey-yellow); font-size:14px; font-weight:700;">=</div>
           <div style="text-align:left;">
-            <p style="color:var(--text-secondary); font-size:14px; line-height:1.6;">They brief the <strong style="color:#fff;">associate</strong> with perfect detail and structure</p>
+            <p style="color:var(--text-secondary); font-size:14px; line-height:1.6;">They brief the <strong style="color:#FFFFFF;">associate</strong> with perfect detail and structure</p>
           </div>
         </div>
         <p style="color:var(--text-dim); font-size:12px;">The meta prompt is your senior partner. It takes your rough problem → turns it into a structured brief → that produces client-ready output.</p>
@@ -2178,72 +2178,72 @@ function addLayer(btn, index) {
 <!-- ======== RECAP TABLE ======== -->
 <section class="recap-section" id="recap">
   <div class="badge">Recap in a Nutshell</div>
-  <h2 style="font-size:36px; color:#fff; margin-bottom:10px;">Putting your <span style="color:var(--ey-yellow); font-style:italic;">#BestPrompt Forward</span></h2>
+  <h2 style="font-size:36px; color:#FFFFFF; margin-bottom:10px;">Putting your <span style="color:var(--ey-yellow); font-style:italic;">#BestPrompt Forward</span></h2>
   <p class="section-subtitle">Your 8-element checklist. Before you hit Send, make sure you've covered these.</p>
 
   <!-- Visual card grid instead of table -->
   <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
-    <div style="background:rgba(255,107,157,0.04); border:1px solid rgba(255,107,157,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #ff6b9d;">
+    <div style="background:rgba(255,107,157,0.04); border:1px solid rgba(255,107,157,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #FF32FF;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">👤</span>
-        <span style="color:#ff6b9d; font-size:15px; font-weight:700;">Persona</span>
+        <span style="color:#FF32FF; font-size:15px; font-weight:700;">Persona</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Tell AI WHO to be. Like telling a new colleague: "Pretend you're a senior tax partner" — so it talks like one, not like a Wikipedia article.</p>
     </div>
 
-    <div style="background:rgba(78,205,196,0.04); border:1px solid rgba(78,205,196,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #4ecdc4;">
+    <div style="background:rgba(78,205,196,0.04); border:1px solid rgba(78,205,196,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #32FFFF;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">📋</span>
-        <span style="color:#4ecdc4; font-size:15px; font-weight:700;">Context</span>
+        <span style="color:#32FFFF; font-size:15px; font-weight:700;">Context</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Give the background story. Like telling a taxi driver WHERE you're going — without it, AI drives in circles giving generic answers.</p>
     </div>
 
-    <div style="background:rgba(255,230,109,0.04); border:1px solid rgba(255,230,109,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #ffe66d;">
+    <div style="background:rgba(255,230,109,0.04); border:1px solid rgba(255,230,109,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #FFE600;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">📝</span>
-        <span style="color:#ffe66d; font-size:15px; font-weight:700;">Instruction</span>
+        <span style="color:#FFE600; font-size:15px; font-weight:700;">Instruction</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Say exactly WHAT to do. Like ordering food: "Give me a paneer tikka" works. "Give me something nice" doesn't.</p>
     </div>
 
-    <div style="background:rgba(127,205,255,0.04); border:1px solid rgba(127,205,255,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #7fcdff;">
+    <div style="background:rgba(127,205,255,0.04); border:1px solid rgba(127,205,255,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #4696FF;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">🚧</span>
-        <span style="color:#7fcdff; font-size:15px; font-weight:700;">Constraints</span>
+        <span style="color:#4696FF; font-size:15px; font-weight:700;">Constraints</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Set boundaries. Like telling a kid "draw me a picture — but only use 3 colours and keep it on one page." Keeps AI focused.</p>
     </div>
 
-    <div style="background:rgba(184,169,240,0.04); border:1px solid rgba(184,169,240,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #b8a9f0;">
+    <div style="background:rgba(184,169,240,0.04); border:1px solid rgba(184,169,240,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #B400FF;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">⚖️</span>
-        <span style="color:#b8a9f0; font-size:15px; font-weight:700;">Grounding</span>
+        <span style="color:#B400FF; font-size:15px; font-weight:700;">Grounding</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Tell AI WHERE to look. Like saying "only use THIS textbook for answers" — prevents it from making things up.</p>
     </div>
 
-    <div style="background:rgba(255,217,61,0.04); border:1px solid rgba(255,217,61,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #ffd93d;">
+    <div style="background:rgba(255,217,61,0.04); border:1px solid rgba(255,217,61,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #FFE600;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">🎨</span>
-        <span style="color:#ffd93d; font-size:15px; font-weight:700;">Tone / Style</span>
+        <span style="color:#FFE600; font-size:15px; font-weight:700;">Tone / Style</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Tell AI HOW to sound. Like asking someone: "Explain it like I'm presenting to a CFO" vs "Explain it to a 5-year-old." Same info, different packaging.</p>
     </div>
 
-    <div style="background:rgba(168,230,207,0.04); border:1px solid rgba(168,230,207,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #a8e6cf;">
+    <div style="background:rgba(168,230,207,0.04); border:1px solid rgba(168,230,207,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #00C864;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">📊</span>
-        <span style="color:#a8e6cf; font-size:15px; font-weight:700;">Output Format</span>
+        <span style="color:#00C864; font-size:15px; font-weight:700;">Output Format</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Tell AI WHAT SHAPE the answer should take. Like saying "give me a table, not a paragraph" — saves you 20 minutes of reformatting.</p>
     </div>
 
-    <div style="background:rgba(255,160,122,0.04); border:1px solid rgba(255,160,122,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #ffa07a;">
+    <div style="background:rgba(255,160,122,0.04); border:1px solid rgba(255,160,122,0.15); border-radius:12px; padding:20px 24px; border-left:4px solid #FF7D1E;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <span style="font-size:18px;">🔄</span>
-        <span style="color:#ffa07a; font-size:15px; font-weight:700;">Iterative Refinement</span>
+        <span style="color:#FF7D1E; font-size:15px; font-weight:700;">Iterative Refinement</span>
       </div>
       <p style="color:var(--text-secondary); font-size:13px; line-height:1.6;">Don't restart — refine. Like editing a draft: "Make it shorter", "Add a table", "Simplify for the board." Each follow-up makes it better.</p>
     </div>
@@ -2257,10 +2257,10 @@ function addLayer(btn, index) {
 </section>
 
 <!-- ======== CONTINUE TO NEXT PART ======== -->
-<section class="section" style="background: linear-gradient(180deg, var(--ey-bg-alt), #0a0a18); padding:120px 60px; text-align:center;">
+<section class="section" style="background: linear-gradient(180deg, var(--ey-bg-alt), #1A1A24); padding:120px 60px; text-align:center;">
   <div style="max-width:680px; margin:0 auto; padding:55px 40px; background:rgba(255,230,0,0.03); border:1px solid rgba(255,230,0,0.2); border-radius:20px; animation:glowPulse 3s ease-in-out infinite;">
     <div class="badge" style="margin-bottom:18px;">What's Next</div>
-    <h2 style="font-size:30px; color:#fff; line-height:1.35; margin-bottom:18px;">Prompting skills — unlocked.<br>Now see them <span style="color:var(--ey-yellow);">in action with M365 Copilot.</span></h2>
+    <h2 style="font-size:30px; color:#FFFFFF; line-height:1.35; margin-bottom:18px;">Prompting skills — unlocked.<br>Now see them <span style="color:var(--ey-yellow);">in action with M365 Copilot.</span></h2>
     <p style="color:var(--text-muted); font-size:16px; line-height:1.7; margin-bottom:28px;">
       The next module takes you into <em>Microsoft 365 Copilot</em> — where you'll apply these skills across Word, Excel, Outlook, and Teams with real tax use cases.
     </p>
@@ -2286,7 +2286,7 @@ window.addEventListener('scroll', () => {
     if (el && window.scrollY >= el.offsetTop - 120) current = id;
   });
   topNavLinks.forEach(a => {
-    a.style.color = '#94a3b8';
+    a.style.color = '#747480';
     a.style.borderBottom = 'none';
     if (a.getAttribute('href') === '#' + current) {
       a.style.color = '#ffe600';
@@ -2307,49 +2307,49 @@ const flyoutData = {
     title: '👤 Persona — Who should the AI be?',
     desc: 'By saying "You are an Indian Tax Professional specializing in the Income-tax Act," you immediately shift AI\'s response from generic to domain-specific. The AI adopts the expertise, vocabulary, and judgment of a senior tax advisor — not a generalist chatbot.',
     tip: '💡 Pro tip: Be specific with seniority and jurisdiction. "Senior partner in India" gives very different output from just "tax advisor."',
-    color: '#ff6b9d'
+    color: '#FF32FF'
   },
   context: {
     title: '📋 Context — The background facts',
     desc: 'Providing company names, industry (software/cybersecurity), headquarters (Pune), client base (Fortune 500), and tax residency status gives AI the precise factual foundation it needs. Without this, it would generate a generic analysis that doesn\'t apply to your client.',
     tip: '💡 Pro tip: Structure facts like a brief to counsel — entity names, jurisdictions, transaction type, and amounts.',
-    color: '#4ecdc4'
+    color: '#32FFFF'
   },
   instruction: {
     title: '📝 Instruction — The clear task',
     desc: 'The numbered step-by-step instructions eliminate ambiguity: (1) Analyze the SC ruling, (2) Do clause-by-clause EULA analysis, (3) Draft a client memo with specific sections. Each step is a discrete, measurable deliverable.',
     tip: '💡 Pro tip: Number your instructions. AI follows numbered steps more accurately than free-flowing paragraphs.',
-    color: '#ffe66d'
+    color: '#FFE600'
   },
   output: {
     title: '📊 Output Format — How to structure the response',
     desc: 'Specifying "table where one column contains terms of the EULA and the other contains explanations" and "3-column table: clause no., description, ruling" means the output is immediately usable — no reformatting needed.',
     tip: '💡 Pro tip: Specify exact column headers. Say "table with columns: Section, Old Rate, New Rate, Impact" rather than just "make a table."',
-    color: '#a8e6cf'
+    color: '#00C864'
   },
   grounding: {
     title: '⚖️ Grounding / Source Anchoring — Prevent hallucination',
     desc: 'By instructing "Basis the Income Tax Act, 1961 and Income Tax Rules, 1962," you anchor AI\'s analysis to specific legislation. This dramatically reduces hallucination risk — AI must reference these sources, not invent positions.',
     tip: '💡 Pro tip: Always name the statute, circular, or case law you want referenced. Attach documents when possible.',
-    color: '#b8a9f0'
+    color: '#B400FF'
   },
   constraints: {
     title: '🚧 Constraints & Boundaries — Keep it focused',
     desc: '"Include scope limitations — withholding tax implications for each EULA category only" prevents AI from going off-track into corporate tax, GST, or other irrelevant areas. You get exactly what you need, nothing more.',
     tip: '💡 Pro tip: State what to EXCLUDE as well as what to include. "Do not cover GST or customs implications" is powerful.',
-    color: '#7fcdff'
+    color: '#4696FF'
   },
   tone: {
     title: '🎨 Tone / Style — Match the audience',
     desc: '"Formal, client-ready advisory style suitable for the Tax Head of a software company" ensures the output doesn\'t read like a textbook or a casual email — it reads like a professional advisory memo ready for delivery.',
     tip: '💡 Pro tip: Name your audience explicitly. "For a CFO with no tax background" vs "For the ITAT bench" produces very different language.',
-    color: '#ffd93d'
+    color: '#FFE600'
   },
   iteration: {
     title: '🔄 Iterative Refinement — Refine, don\'t restart',
     desc: 'The "1st follow up prompt" builds on the previous output — updating the memo format, adding structure, and reinforcing "Do not hallucinate." Iteration is how you go from a decent draft to a polished deliverable.',
     tip: '💡 Pro tip: Treat AI like a conversation, not a one-shot. Each follow-up sharpens the output. Save good prompts as templates.',
-    color: '#ffa07a'
+    color: '#FF7D1E'
   }
 };
 

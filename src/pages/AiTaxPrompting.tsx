@@ -35,49 +35,49 @@ const SURFACE: Record<SurfaceTone, { bg: string; heading: string; body: string; 
 // ── Data ────────────────────────────────────────────────────────────────────
 
 const ELEMENTS = [
-  { id: 1, name: "Persona", color: "#BE185D", border: "#f472b6", q: "WHO should AI be?",
+  { id: 1, name: "Persona", color: C.frameMagenta, border: C.frameMagenta, q: "WHO should AI be?",
     what: "Defines who the AI should act like — setting expertise, seniority, and perspective. A tax partner writes differently from a junior analyst.",
     why: "Aligns output to the expertise level you need. Without it, AI defaults to a generic voice that doesn't match your audience.",
     without: '"Explain impact of New Tax Act on MNCs."',
     with: '"You are a senior tax partner in India. Explain impact of withholding tax changes in the New Income Tax Act, 2025 on MNCs."',
   },
-  { id: 2, name: "Context", color: "#0E7490", border: "#22d3ee", q: "WHAT's the background?",
+  { id: 2, name: "Context", color: C.frameTeal, border: C.frameTeal, q: "WHAT's the background?",
     what: "Background information for the task — the who, what, where, and when surrounding your query.",
     why: "Without context, AI gives generic answers that miss your specific situation entirely.",
     without: '"Explain recent changes to transfer pricing regulations."',
     with: '"Our client in India provides IT support to its parent in Singapore. Explain recent TP Regulation changes in 2025."',
   },
-  { id: 3, name: "Instruction", color: "#B45309", border: "#fbbf24", q: "WHAT should AI do?",
+  { id: 3, name: "Instruction", color: C.frameOrange, border: C.yellow, q: "WHAT should AI do?",
     what: "A clear task or command — the specific action you want AI to perform. No ambiguity.",
     why: 'Define what "significant" or "recent" means — don\'t leave it to AI to guess.',
     without: '"Summarise significant recent tax exposures of the Indian target company."',
     with: '"Summarise tax exposures above INR 25 crore, under dispute in the last 3 assessment years."',
   },
-  { id: 4, name: "Constraints", color: "#1D4ED8", border: "#60a5fa", q: "WHAT are the limits?",
+  { id: 4, name: "Constraints", color: C.frameBlue, border: C.frameBlue, q: "WHAT are the limits?",
     what: "Setting limits on scope, detail, or length — guardrails that keep AI focused.",
     why: "Without limits, AI may produce 2,000 words when you needed 200.",
     without: '"Summarise GST refund changes."',
     with: '"In under 200 words, summarise July 2025 GST refund changes for exporters."',
   },
-  { id: 5, name: "Grounding", color: "#5B21B6", border: "#a78bfa", q: "WHERE should AI look?",
+  { id: 5, name: "Grounding", color: C.framePurple, border: C.framePurple, q: "WHERE should AI look?",
     what: "Instructing AI to use specific statutes, circulars, or case law as its reference base.",
     why: "Prevents hallucination and ensures legal accuracy. Ungrounded output is dangerous output.",
     without: '"Explain safe harbour rules."',
     with: '"According to the Income-tax Act, 1961 and latest CBDT circulars, explain safe harbour applicability to cross-border service fees."',
   },
-  { id: 6, name: "Tone / Style", color: "#92400E", border: "#fcd34d", q: "HOW should it sound?",
+  { id: 6, name: "Tone / Style", color: C.eyebrowGold, border: C.yellow, q: "HOW should it sound?",
     what: "Directing AI to adopt a formal, client-ready, or simplified style matching your audience.",
     why: "A CFO needs different language than an internal audit team or ITAT bench.",
     without: '"Draft an email to the client regarding new GST slab rates."',
     with: '"Explain new GST slab changes in a formal and concise manner, suitable for the Tax Head of a Logistics company."',
   },
-  { id: 7, name: "Output Format", color: "#065F46", border: "#6ee7b7", q: "WHAT shape should the answer take?",
+  { id: 7, name: "Output Format", color: C.frameGreen, border: C.frameGreen, q: "WHAT shape should the answer take?",
     what: "Specifies desired format — table, bullets, email, memo, comparison chart, etc.",
     why: "Output is immediately usable without reformatting — saves editing time.",
     without: '"Compare old vs new tax rates."',
     with: '"Provide a table comparing old vs new tax rates, followed by 3 bullet-point risks and recommendations."',
   },
-  { id: 8, name: "Iterative Refinement", color: "#9A3412", border: "#fb923c", q: "REFINE — don't restart",
+  { id: 8, name: "Iterative Refinement", color: C.frameOrange, border: C.frameOrange, q: "REFINE — don't restart",
     what: "Improving output through follow-ups — treating AI conversations as iterative, not one-shot.",
     why: "First drafts are starting points. Each refinement sharpens precision and usability.",
     without: '"Summarize attached case law."',
@@ -123,7 +123,7 @@ const ADVANCED_CATEGORIES: AdvancedCategory[] = [
   {
     id: "context",
     name: "Context & Audience",
-    color: "#0E7490",
+    color: C.frameTeal,
     summary: "Shape who the answer is for and how examples guide format.",
     techniques: [
       {
@@ -149,7 +149,7 @@ const ADVANCED_CATEGORIES: AdvancedCategory[] = [
   {
     id: "iterate",
     name: "Iterative Flow",
-    color: "#B45309",
+    color: C.frameOrange,
     summary: "Build, question, and refine — don't restart from scratch.",
     techniques: [
       {
@@ -184,7 +184,7 @@ const ADVANCED_CATEGORIES: AdvancedCategory[] = [
   {
     id: "reasoning",
     name: "Structured Reasoning",
-    color: "#1D4ED8",
+    color: C.frameBlue,
     summary: "Step through complex tax analysis with deliberate structure.",
     techniques: [
       {
@@ -210,7 +210,7 @@ const ADVANCED_CATEGORIES: AdvancedCategory[] = [
   {
     id: "meta",
     name: "Meta & Craft",
-    color: "#5B21B6",
+    color: C.framePurple,
     summary: "Let AI help you design the prompt itself.",
     techniques: [
       {
@@ -229,8 +229,8 @@ const ADVANCED_CATEGORIES: AdvancedCategory[] = [
 type FacetKey = "what" | "does" | "without" | "with" | "taxUse";
 
 const FACETS: { key: FacetKey; label: string; color: string }[] = [
-  { key: "what", label: "What it is", color: "#1D4ED8" },
-  { key: "does", label: "What it does", color: "#B45309" },
+  { key: "what", label: "What it is", color: C.frameBlue },
+  { key: "does", label: "What it does", color: C.frameOrange },
   { key: "without", label: "Without", color: C.destructive },
   { key: "with", label: "With", color: C.success },
   { key: "taxUse", label: "Tax use case", color: C.eyebrowGold },
@@ -254,14 +254,14 @@ const RECAP = [
 ];
 
 const RECAP_CARDS: { icon: LucideIcon; name: string; color: string; bg: string; desc: string }[] = [
-  { icon: User, name: "Persona", color: "#ff6b9d", bg: "rgba(255,107,157,0.04)", desc: 'Tell AI WHO to be. Like telling a new colleague: "Pretend you\'re a senior tax partner" — so it talks like one, not like a Wikipedia article.' },
-  { icon: FileText, name: "Context", color: "#4ecdc4", bg: "rgba(78,205,196,0.04)", desc: "Give the background story. Like telling a taxi driver WHERE you're going — without it, AI drives in circles giving generic answers." },
-  { icon: ListChecks, name: "Instruction", color: "#ffe66d", bg: "rgba(255,230,109,0.04)", desc: 'Say exactly WHAT to do. Like ordering food: "Give me a paneer tikka" works. "Give me something nice" doesn\'t.' },
-  { icon: Shield, name: "Constraints", color: "#7fcdff", bg: "rgba(127,205,255,0.04)", desc: 'Set boundaries. Like telling a kid "draw me a picture — but only use 3 colours and keep it on one page." Keeps AI focused.' },
-  { icon: Scale, name: "Grounding", color: "#b8a9f0", bg: "rgba(184,169,240,0.04)", desc: 'Tell AI WHERE to look. Like saying "only use THIS textbook for answers" — prevents it from making things up.' },
-  { icon: Palette, name: "Tone / Style", color: "#ffd93d", bg: "rgba(255,217,61,0.04)", desc: 'Tell AI HOW to sound. Like asking someone: "Explain it like I\'m presenting to a CFO" vs "Explain it to a 5-year-old." Same info, different packaging.' },
-  { icon: Table2, name: "Output Format", color: "#a8e6cf", bg: "rgba(168,230,207,0.04)", desc: 'Tell AI WHAT SHAPE the answer should take. Like saying "give me a table, not a paragraph" — saves you 20 minutes of reformatting.' },
-  { icon: RefreshCw, name: "Iterative Refinement", color: "#ffa07a", bg: "rgba(255,160,122,0.04)", desc: 'Don\'t restart — refine. Like editing a draft: "Make it shorter", "Add a table", "Simplify for the board." Each follow-up makes it better.' },
+  { icon: User, name: "Persona", color: C.frameMagenta, bg: "rgba(255,50,255,0.06)", desc: 'Tell AI WHO to be. Like telling a new colleague: "Pretend you\'re a senior tax partner" — so it talks like one, not like a Wikipedia article.' },
+  { icon: FileText, name: "Context", color: C.frameTeal, bg: "rgba(50,255,255,0.06)", desc: "Give the background story. Like telling a taxi driver WHERE you're going — without it, AI drives in circles giving generic answers." },
+  { icon: ListChecks, name: "Instruction", color: C.yellow, bg: "rgba(255,230,0,0.08)", desc: 'Say exactly WHAT to do. Like ordering food: "Give me a paneer tikka" works. "Give me something nice" doesn\'t.' },
+  { icon: Shield, name: "Constraints", color: C.frameBlue, bg: "rgba(70,150,255,0.08)", desc: 'Set boundaries. Like telling a kid "draw me a picture — but only use 3 colours and keep it on one page." Keeps AI focused.' },
+  { icon: Scale, name: "Grounding", color: C.framePurple, bg: "rgba(180,0,255,0.06)", desc: 'Tell AI WHERE to look. Like saying "only use THIS textbook for answers" — prevents it from making things up.' },
+  { icon: Palette, name: "Tone / Style", color: C.yellow, bg: "rgba(255,230,0,0.08)", desc: 'Tell AI HOW to sound. Like asking someone: "Explain it like I\'m presenting to a CFO" vs "Explain it to a 5-year-old." Same info, different packaging.' },
+  { icon: Table2, name: "Output Format", color: C.frameGreen, bg: "rgba(0,200,100,0.08)", desc: 'Tell AI WHAT SHAPE the answer should take. Like saying "give me a table, not a paragraph" — saves you 20 minutes of reformatting.' },
+  { icon: RefreshCw, name: "Iterative Refinement", color: C.frameOrange, bg: "rgba(255,125,30,0.08)", desc: 'Don\'t restart — refine. Like editing a draft: "Make it shorter", "Add a table", "Simplify for the board." Each follow-up makes it better.' },
 ];
 
 const STRONG_BRIEF_FIELDS = [
@@ -770,7 +770,7 @@ function AiLazyProSection() {
             <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
               <div style={{ background: C.offWhite, borderRadius: 8, padding: "16px 18px", borderLeft: `3px solid ${C.success}`, minHeight: 128, display: "flex", alignItems: "flex-start" }}>
                 <p style={{ color: C.offBlack, fontSize: 14, fontStyle: "italic", lineHeight: 1.65, fontFamily: F.light, margin: 0 }}>
-                  &ldquo;You are a <strong style={{ color: C.eyebrowGold, fontStyle: "normal" }}>tax advisor</strong>. Summarise the key <strong style={{ color: "#1D4ED8", fontStyle: "normal" }}>transfer pricing changes</strong> in this circular for a <strong style={{ color: "#B45309", fontStyle: "normal" }}>client memo</strong>. Use <strong style={{ color: "#5B21B6", fontStyle: "normal" }}>bullet points</strong>. Keep it under <strong style={{ color: C.success, fontStyle: "normal" }}>200 words</strong>.&rdquo;
+                  &ldquo;You are a <strong style={{ color: C.eyebrowGold, fontStyle: "normal" }}>tax advisor</strong>. Summarise the key <strong style={{ color: C.frameBlue, fontStyle: "normal" }}>transfer pricing changes</strong> in this circular for a <strong style={{ color: C.frameOrange, fontStyle: "normal" }}>client memo</strong>. Use <strong style={{ color: C.framePurple, fontStyle: "normal" }}>bullet points</strong>. Keep it under <strong style={{ color: C.success, fontStyle: "normal" }}>200 words</strong>.&rdquo;
                 </p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, minHeight: 76 }}>

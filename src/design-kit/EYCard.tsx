@@ -56,7 +56,7 @@ export function EYCard({
   const [startColor, , endColor] = spectrumGradients[Math.max(0, Math.min(gradient - 1, 6))];
 
   const cardBg  = isDark ? colors.confidentBlack : colors.white;
-  const border  = `1px solid ${isDark ? '#33333f' : colors.gray02}`;
+  const border  = `1px solid ${isDark ? colors.offBlack : colors.gray02}`;
   const titleColor = isDark ? colors.white : colors.offBlack;
   const bodyColor  = isDark ? colors.gray02  : colors.gray01;
 

@@ -65,7 +65,7 @@ function PipelineCard({
   icon: string;
 }) {
   return (
-    <div className="bg-white border border-[#e5e7eb] shadow-[0px_2px_5px_rgba(0,0,0,0.08)] flex items-center justify-between px-4 py-3.5 rounded-xl w-[420px]">
+    <div className="bg-white border border-[#C4C4CD] shadow-[0px_2px_5px_rgba(0,0,0,0.08)] flex items-center justify-between px-4 py-3.5 rounded-xl w-[420px]">
       <div className="flex flex-1 gap-3 items-center min-w-0">
         {/* Yellow icon tile — 40×40 outer, 28×28 glyph */}
         <div className="bg-[#ffe600] flex items-center justify-center rounded-[10px] shrink-0 size-10">
@@ -126,7 +126,7 @@ function CopilotRing() {
       <div className="absolute left-[68px] top-[68px] size-[248px] rounded-full bg-[#1a1a24]" />
 
       <div className="absolute left-1/2 top-1/2 flex w-[120px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(255,230,0,0.2)] bg-[#23232f] p-3">
+        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(255,230,0,0.2)] bg-[#2E2E38] p-3">
           <img alt="" className="size-9" height={36} src={ASSET.bot} width={36} />
         </div>
         <p className="w-[120px] shrink-0 text-center font-['EYInterstate:Bold',sans-serif] text-[15px] leading-normal text-white">
@@ -212,7 +212,7 @@ export default function CoreProcessingPipeline() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 flex h-12 w-full items-center justify-center gap-2 bg-[#23232f] px-8">
+        <div className="absolute bottom-0 left-0 flex h-12 w-full items-center justify-center gap-2 bg-[#2E2E38] px-8">
           <img alt="" className="size-4" height={16} src={ASSET.info} width={16} />
           <p className="font-['EYInterstate:Regular',sans-serif] text-sm leading-[22.4px] text-[#c4c4cd] whitespace-nowrap">
             EY AI Tax Hub · Core Processing Pipeline · Confidential

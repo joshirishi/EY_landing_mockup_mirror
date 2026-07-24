@@ -16,7 +16,7 @@ function ArrowLeft() {
 function BackArrow() {
   return (
     <div className="content-stretch flex items-start p-[8px] relative rounded-[99px] shrink-0" data-name="Back Arrow">
-      <div aria-hidden className="absolute border border-[#94a3b8] border-solid inset-0 pointer-events-none rounded-[99px]" />
+      <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none rounded-[99px]" />
       <ArrowLeft />
     </div>
   );
@@ -230,7 +230,7 @@ function HeroLeft() {
         <span className="leading-[1.2]">{` and its Application in `}</span>
         <span className="leading-[1.2] text-[#ffe600]">Tax</span>
       </p>
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.6] min-w-full not-italic relative shrink-0 text-[#46464f] text-[18px] w-[min-content]">Empowering modern tax professionals with actionable clarity on artificial intelligence. Move beyond marketing buzzwords into the programmatic foundations that govern risk, automation, and strategic advisory.</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.6] min-w-full not-italic relative shrink-0 text-[#2E2E38] text-[18px] w-[min-content]">Empowering modern tax professionals with actionable clarity on artificial intelligence. Move beyond marketing buzzwords into the programmatic foundations that govern risk, automation, and strategic advisory.</p>
       <HeroActions />
     </div>
   );
@@ -241,7 +241,7 @@ function Play() {
     <div className="relative shrink-0 size-[24px]" data-name="play">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
         <g id="play">
-          <path d={svgPaths.p2a2ba120} id="Vector" stroke="var(--stroke-0, #0D0D1A)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p2a2ba120} id="Vector" stroke="var(--stroke-0, #1A1A24)" strokeLinecap="round" strokeWidth="2" />
         </g>
       </svg>
     </div>
@@ -492,7 +492,7 @@ function TheMeteoricRiseOfAi() {
 function SectionHeader1() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col font-['EYInterstate:Bold',sans-serif] gap-[8px] items-start leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-name="Section Header">
-      <p className="relative shrink-0 text-[#ef4444] text-[14px] uppercase">THE REALITY CHECK</p>
+      <p className="relative shrink-0 text-[#FF4136] text-[14px] uppercase">THE REALITY CHECK</p>
       <p className="relative shrink-0 text-[#1a1a24] text-[32px]">When AI Goes Wrong: The Hidden Risks</p>
     </div>
   );
@@ -502,7 +502,7 @@ function CardTopHighlight4() {
   return (
     <div className="bg-[rgba(239,68,68,0.08)] relative shrink-0 w-full" data-name="Card Top Highlight">
       <div className="[word-break:break-word] content-stretch flex flex-col font-['EYInterstate:Bold',sans-serif] gap-[4px] items-start leading-[normal] not-italic p-[20px] relative size-full whitespace-nowrap">
-        <p className="relative shrink-0 text-[#ef4444] text-[36px]">95%</p>
+        <p className="relative shrink-0 text-[#FF4136] text-[36px]">95%</p>
         <p className="relative shrink-0 text-[12px] text-white uppercase">Zero ROI</p>
       </div>
     </div>
@@ -512,7 +512,7 @@ function CardTopHighlight4() {
 function MetaRow4() {
   return (
     <div className="content-stretch flex items-start justify-between leading-[normal] relative shrink-0 text-[11px] w-full whitespace-nowrap" data-name="Meta Row">
-      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#ef4444]">McKinsey Support</p>
+      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#FF4136]">McKinsey Support</p>
       <p className="font-['EYInterstate:Regular',sans-serif] relative shrink-0 text-white">Feb 2026</p>
     </div>
   );
@@ -545,7 +545,7 @@ function CardTopHighlight5() {
   return (
     <div className="bg-[rgba(239,68,68,0.08)] relative shrink-0 w-full" data-name="Card Top Highlight">
       <div className="[word-break:break-word] content-stretch flex flex-col font-['EYInterstate:Bold',sans-serif] gap-[4px] items-start leading-[normal] not-italic p-[20px] relative size-full whitespace-nowrap">
-        <p className="relative shrink-0 text-[#ef4444] text-[36px]">$500M</p>
+        <p className="relative shrink-0 text-[#FF4136] text-[36px]">$500M</p>
         <p className="relative shrink-0 text-[12px] text-white uppercase">Monthly Compute Cost</p>
       </div>
     </div>
@@ -555,7 +555,7 @@ function CardTopHighlight5() {
 function MetaRow5() {
   return (
     <div className="content-stretch flex items-start justify-between leading-[normal] relative shrink-0 text-[11px] w-full whitespace-nowrap" data-name="Meta Row">
-      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#ef4444]">The Information</p>
+      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#FF4136]">The Information</p>
       <p className="font-['EYInterstate:Regular',sans-serif] relative shrink-0 text-white">March 2026</p>
     </div>
   );
@@ -588,7 +588,7 @@ function CardTopHighlight6() {
   return (
     <div className="bg-[rgba(239,68,68,0.08)] relative shrink-0 w-full" data-name="Card Top Highlight">
       <div className="[word-break:break-word] content-stretch flex flex-col font-['EYInterstate:Bold',sans-serif] gap-[4px] items-start leading-[normal] not-italic p-[20px] relative size-full whitespace-nowrap">
-        <p className="relative shrink-0 text-[#ef4444] text-[36px]">Sanctioned</p>
+        <p className="relative shrink-0 text-[#FF4136] text-[36px]">Sanctioned</p>
         <p className="relative shrink-0 text-[12px] text-white uppercase">AI Rationing</p>
       </div>
     </div>
@@ -598,7 +598,7 @@ function CardTopHighlight6() {
 function MetaRow6() {
   return (
     <div className="content-stretch flex items-start justify-between leading-[normal] relative shrink-0 text-[11px] w-full whitespace-nowrap" data-name="Meta Row">
-      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#ef4444]">{`Bar & Bench`}</p>
+      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#FF4136]">{`Bar & Bench`}</p>
       <p className="font-['EYInterstate:Regular',sans-serif] relative shrink-0 text-white">Dec 2025</p>
     </div>
   );
@@ -661,7 +661,7 @@ function SectionHeader2() {
 function PathTitleStack() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col gap-[6px] items-start leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-name="Path Title Stack">
-      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#ef4444] text-[20px]">{`The "Just Wing It" Path`}</p>
+      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#FF4136] text-[20px]">{`The "Just Wing It" Path`}</p>
       <p className="font-['EYInterstate:Regular',sans-serif] relative shrink-0 text-[13px] text-white">Treating complex enterprise AI like a simple search engine toy.</p>
     </div>
   );
@@ -672,7 +672,7 @@ function XCircle() {
     <div className="relative shrink-0 size-[18px]" data-name="x-circle">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g clipPath="url(#clip0_9_830)" id="x-circle">
-          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #EF4444)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #FF4136)" strokeLinecap="round" strokeWidth="2" />
         </g>
         <defs>
           <clipPath id="clip0_9_830">
@@ -698,7 +698,7 @@ function XCircle1() {
     <div className="relative shrink-0 size-[18px]" data-name="x-circle">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g clipPath="url(#clip0_9_830)" id="x-circle">
-          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #EF4444)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #FF4136)" strokeLinecap="round" strokeWidth="2" />
         </g>
         <defs>
           <clipPath id="clip0_9_830">
@@ -724,7 +724,7 @@ function XCircle2() {
     <div className="relative shrink-0 size-[18px]" data-name="x-circle">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g clipPath="url(#clip0_9_830)" id="x-circle">
-          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #EF4444)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #FF4136)" strokeLinecap="round" strokeWidth="2" />
         </g>
         <defs>
           <clipPath id="clip0_9_830">
@@ -750,7 +750,7 @@ function XCircle3() {
     <div className="relative shrink-0 size-[18px]" data-name="x-circle">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g clipPath="url(#clip0_9_830)" id="x-circle">
-          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #EF4444)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p2fb39800} id="Vector" stroke="var(--stroke-0, #FF4136)" strokeLinecap="round" strokeWidth="2" />
         </g>
         <defs>
           <clipPath id="clip0_9_830">
@@ -806,7 +806,7 @@ function VsCircle() {
 function PathTitleStack1() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col gap-[6px] items-start leading-[normal] not-italic relative shrink-0 whitespace-nowrap" data-name="Path Title Stack">
-      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#10b981] text-[20px]">The Foundations First Path</p>
+      <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#00C864] text-[20px]">The Foundations First Path</p>
       <p className="font-['EYInterstate:Regular',sans-serif] relative shrink-0 text-[13px] text-white">Structuring AI with programmatic governance and deep tax context.</p>
     </div>
   );
@@ -817,7 +817,7 @@ function Check() {
     <div className="relative shrink-0 size-[18px]" data-name="check">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g id="check">
-          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #10B981)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #00C864)" strokeLinecap="round" strokeWidth="2" />
         </g>
       </svg>
     </div>
@@ -838,7 +838,7 @@ function Check1() {
     <div className="relative shrink-0 size-[18px]" data-name="check">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g id="check">
-          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #10B981)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #00C864)" strokeLinecap="round" strokeWidth="2" />
         </g>
       </svg>
     </div>
@@ -859,7 +859,7 @@ function Check2() {
     <div className="relative shrink-0 size-[18px]" data-name="check">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g id="check">
-          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #10B981)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #00C864)" strokeLinecap="round" strokeWidth="2" />
         </g>
       </svg>
     </div>
@@ -880,7 +880,7 @@ function Check3() {
     <div className="relative shrink-0 size-[18px]" data-name="check">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 18 18">
         <g id="check">
-          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #10B981)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p3901e500} id="Vector" stroke="var(--stroke-0, #00C864)" strokeLinecap="round" strokeWidth="2" />
         </g>
       </svg>
     </div>
@@ -934,7 +934,7 @@ function ArrowDown() {
     <div className="relative shrink-0 size-[16px]" data-name="arrow-down">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
         <g id="arrow-down">
-          <path d={svgPaths.p2ee8d680} id="Vector" stroke="var(--stroke-0, #0D0D1A)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p2ee8d680} id="Vector" stroke="var(--stroke-0, #1A1A24)" strokeLinecap="round" strokeWidth="2" />
         </g>
       </svg>
     </div>
@@ -986,7 +986,7 @@ function SectionHeader3() {
 }
 
 function LayerColorAccent() {
-  return <div className="bg-[#3b82f6] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
+  return <div className="bg-[#4696FF] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
 }
 
 function LayerYear() {
@@ -1010,7 +1010,7 @@ function Pill() {
   return (
     <div className="bg-[rgba(59,130,246,0.08)] content-stretch flex items-start px-[12px] py-[6px] relative rounded-[99px] shrink-0" data-name="Pill">
       <div aria-hidden className="absolute border border-[rgba(59,130,246,0.25)] border-solid inset-0 pointer-events-none rounded-[99px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#3b82f6] text-[11px] whitespace-nowrap">Rules Engine</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#4696FF] text-[11px] whitespace-nowrap">Rules Engine</p>
     </div>
   );
 }
@@ -1018,7 +1018,7 @@ function Pill() {
 function TimelineLayer() {
   return (
     <div className="bg-white content-stretch flex gap-[20px] items-center px-[24px] py-[16px] relative rounded-[12px] shrink-0 w-[1280px]" data-name="Timeline Layer">
-      <div aria-hidden className="absolute border border-[#1a1a2e] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#1A1A24] border-solid inset-0 pointer-events-none rounded-[12px]" />
       <LayerColorAccent />
       <LayerYear />
       <LayerContent />
@@ -1028,7 +1028,7 @@ function TimelineLayer() {
 }
 
 function LayerColorAccent1() {
-  return <div className="bg-[#10b981] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
+  return <div className="bg-[#00C864] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
 }
 
 function LayerYear1() {
@@ -1052,7 +1052,7 @@ function Pill1() {
   return (
     <div className="bg-[rgba(16,185,129,0.08)] content-stretch flex items-start px-[12px] py-[6px] relative rounded-[99px] shrink-0" data-name="Pill">
       <div aria-hidden className="absolute border border-[rgba(16,185,129,0.25)] border-solid inset-0 pointer-events-none rounded-[99px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[11px] whitespace-nowrap">Pattern Recognition</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[11px] whitespace-nowrap">Pattern Recognition</p>
     </div>
   );
 }
@@ -1060,7 +1060,7 @@ function Pill1() {
 function TimelineLayer1() {
   return (
     <div className="bg-white content-stretch flex gap-[20px] items-center px-[24px] py-[16px] relative rounded-[12px] shrink-0 w-[1240px]" data-name="Timeline Layer">
-      <div aria-hidden className="absolute border border-[#23252b] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#1A1A24] border-solid inset-0 pointer-events-none rounded-[12px]" />
       <LayerColorAccent1 />
       <LayerYear1 />
       <LayerContent1 />
@@ -1070,7 +1070,7 @@ function TimelineLayer1() {
 }
 
 function LayerColorAccent2() {
-  return <div className="bg-[#f97316] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
+  return <div className="bg-[#FF7D1E] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
 }
 
 function LayerYear2() {
@@ -1094,7 +1094,7 @@ function Pill2() {
   return (
     <div className="bg-[rgba(249,115,22,0.08)] content-stretch flex items-start px-[12px] py-[6px] relative rounded-[99px] shrink-0" data-name="Pill">
       <div aria-hidden className="absolute border border-[rgba(249,115,22,0.25)] border-solid inset-0 pointer-events-none rounded-[99px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#f97316] text-[11px] whitespace-nowrap">Neural Networks</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF7D1E] text-[11px] whitespace-nowrap">Neural Networks</p>
     </div>
   );
 }
@@ -1112,7 +1112,7 @@ function TimelineLayer2() {
 }
 
 function LayerColorAccent3() {
-  return <div className="bg-[#ea580c] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
+  return <div className="bg-[#FF3C00] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
 }
 
 function LayerYear3() {
@@ -1136,7 +1136,7 @@ function Pill3() {
   return (
     <div className="bg-[rgba(234,88,12,0.08)] content-stretch flex items-start px-[12px] py-[6px] relative rounded-[99px] shrink-0" data-name="Pill">
       <div aria-hidden className="absolute border border-[rgba(234,88,12,0.25)] border-solid inset-0 pointer-events-none rounded-[99px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ea580c] text-[11px] whitespace-nowrap">Foundational Models</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF3C00] text-[11px] whitespace-nowrap">Foundational Models</p>
     </div>
   );
 }
@@ -1144,7 +1144,7 @@ function Pill3() {
 function TimelineLayer3() {
   return (
     <div className="bg-white content-stretch flex gap-[20px] items-center px-[24px] py-[16px] relative rounded-[12px] shrink-0 w-[1160px]" data-name="Timeline Layer">
-      <div aria-hidden className="absolute border border-[#9ca3af] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none rounded-[12px]" />
       <LayerColorAccent3 />
       <LayerYear3 />
       <LayerContent3 />
@@ -1154,7 +1154,7 @@ function TimelineLayer3() {
 }
 
 function LayerColorAccent4() {
-  return <div className="bg-[#8b5cf6] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
+  return <div className="bg-[#4696FF] h-[40px] relative rounded-[6px] shrink-0 w-[12px]" data-name="Layer Color Accent" />;
 }
 
 function LayerYear4() {
@@ -1178,7 +1178,7 @@ function Pill4() {
   return (
     <div className="bg-[rgba(139,92,246,0.08)] content-stretch flex items-start px-[12px] py-[6px] relative rounded-[99px] shrink-0" data-name="Pill">
       <div aria-hidden className="absolute border border-[rgba(139,92,246,0.25)] border-solid inset-0 pointer-events-none rounded-[99px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#8b5cf6] text-[11px] whitespace-nowrap">Goal Execution</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#4696FF] text-[11px] whitespace-nowrap">Goal Execution</p>
     </div>
   );
 }
@@ -1186,7 +1186,7 @@ function Pill4() {
 function TimelineLayer4() {
   return (
     <div className="bg-white content-stretch flex gap-[20px] items-center px-[24px] py-[16px] relative rounded-[12px] shrink-0 w-[1120px]" data-name="Timeline Layer">
-      <div aria-hidden className="absolute border border-[#bfbfc8] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[12px]" />
       <LayerColorAccent4 />
       <LayerYear4 />
       <LayerContent4 />
@@ -1251,9 +1251,9 @@ function OsDots() {
     <div className="h-[12px] relative shrink-0 w-[52px]" data-name="OS Dots">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 52 12">
         <g id="OS Dots">
-          <circle cx="6" cy="6" fill="var(--fill-0, #FF5F56)" id="Ellipse" r="6" />
-          <circle cx="26" cy="6" fill="var(--fill-0, #FFBD2E)" id="Ellipse_2" r="6" />
-          <circle cx="46" cy="6" fill="var(--fill-0, #27C93F)" id="Ellipse_3" r="6" />
+          <circle cx="6" cy="6" fill="var(--fill-0, #FF4136)" id="Ellipse" r="6" />
+          <circle cx="26" cy="6" fill="var(--fill-0, #FFE600)" id="Ellipse_2" r="6" />
+          <circle cx="46" cy="6" fill="var(--fill-0, #00C864)" id="Ellipse_3" r="6" />
         </g>
       </svg>
     </div>
@@ -1265,10 +1265,10 @@ function ConnectionStatus() {
     <div className="content-stretch flex gap-[6px] items-center relative shrink-0" data-name="Connection Status">
       <div className="relative shrink-0 size-[8px]" data-name="Ellipse">
         <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 8 8">
-          <circle cx="4" cy="4" fill="var(--fill-0, #10B981)" id="Ellipse" r="4" />
+          <circle cx="4" cy="4" fill="var(--fill-0, #00C864)" id="Ellipse" r="4" />
         </svg>
       </div>
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[12px] whitespace-nowrap">CONNECTED</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[12px] whitespace-nowrap">CONNECTED</p>
     </div>
   );
 }
@@ -1411,7 +1411,7 @@ function SectionHeader5() {
 
 function StepBadge() {
   return (
-    <div className="bg-[#3b82f6] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
+    <div className="bg-[#4696FF] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
       <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[10px] text-white uppercase whitespace-nowrap">Generate</p>
     </div>
   );
@@ -1421,7 +1421,7 @@ function CardHeader() {
   return (
     <div className="bg-[rgba(59,130,246,0.08)] relative shrink-0 w-full" data-name="Card Header">
       <div className="content-stretch flex flex-col gap-[4px] items-start p-[20px] relative size-full">
-        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#3b82f6] text-[18px] whitespace-nowrap">LLM / GenAI</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#4696FF] text-[18px] whitespace-nowrap">LLM / GenAI</p>
         <StepBadge />
       </div>
     </div>
@@ -1432,7 +1432,7 @@ function DiagramBox() {
   return (
     <div className="bg-white content-stretch flex h-[32px] items-center justify-center relative rounded-[6px] shrink-0 w-full" data-name="Diagram Box">
       <div aria-hidden className="absolute border border-[rgba(255,255,255,0.08)] border-solid inset-0 pointer-events-none rounded-[6px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold','Noto_Sans:Bold','Noto_Sans_Math:Regular','Noto_Sans_Symbols:Bold','Noto_Sans_Symbols2:Regular',sans-serif] leading-[normal] relative shrink-0 text-[#3b82f6] text-[11px] whitespace-nowrap" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100, "wght" 700' }}>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold','Noto_Sans:Bold','Noto_Sans_Math:Regular','Noto_Sans_Symbols:Bold','Noto_Sans_Symbols2:Regular',sans-serif] leading-[normal] relative shrink-0 text-[#4696FF] text-[11px] whitespace-nowrap" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100, "wght" 700' }}>
         Prompt ➔ Output
       </p>
     </div>
@@ -1467,14 +1467,14 @@ function SpectrumCard() {
         <CardHeader />
         <CardBody7 />
       </div>
-      <div aria-hidden className="absolute border border-[#94a3b8] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none rounded-[12px]" />
     </div>
   );
 }
 
 function StepBadge1() {
   return (
-    <div className="bg-[#10b981] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
+    <div className="bg-[#00C864] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
       <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[10px] text-white uppercase whitespace-nowrap">Act</p>
     </div>
   );
@@ -1484,7 +1484,7 @@ function CardHeader1() {
   return (
     <div className="bg-[rgba(16,185,129,0.08)] relative shrink-0 w-full" data-name="Card Header">
       <div className="content-stretch flex flex-col gap-[4px] items-start p-[20px] relative size-full">
-        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[18px] whitespace-nowrap">AI Agent</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[18px] whitespace-nowrap">AI Agent</p>
         <StepBadge1 />
       </div>
     </div>
@@ -1495,7 +1495,7 @@ function DiagramBox1() {
   return (
     <div className="bg-white content-stretch flex h-[32px] items-center justify-center relative rounded-[6px] shrink-0 w-full" data-name="Diagram Box">
       <div aria-hidden className="absolute border border-[rgba(255,255,255,0.08)] border-solid inset-0 pointer-events-none rounded-[6px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold','Noto_Sans:Bold','Noto_Sans_Math:Regular','Noto_Sans_Symbols:Bold','Noto_Sans_Symbols2:Regular',sans-serif] leading-[normal] relative shrink-0 text-[#10b981] text-[11px] whitespace-nowrap" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100, "wght" 700' }}>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold','Noto_Sans:Bold','Noto_Sans_Math:Regular','Noto_Sans_Symbols:Bold','Noto_Sans_Symbols2:Regular',sans-serif] leading-[normal] relative shrink-0 text-[#00C864] text-[11px] whitespace-nowrap" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100, "wght" 700' }}>
         Goal ➔ Loop ➔ Output
       </p>
     </div>
@@ -1530,14 +1530,14 @@ function SpectrumCard1() {
         <CardHeader1 />
         <CardBody8 />
       </div>
-      <div aria-hidden className="absolute border border-[#94a3b8] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none rounded-[12px]" />
     </div>
   );
 }
 
 function StepBadge2() {
   return (
-    <div className="bg-[#f97316] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
+    <div className="bg-[#FF7D1E] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
       <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[10px] text-white uppercase whitespace-nowrap">Orchestrate</p>
     </div>
   );
@@ -1547,7 +1547,7 @@ function CardHeader2() {
   return (
     <div className="bg-[rgba(249,115,22,0.08)] relative shrink-0 w-full" data-name="Card Header">
       <div className="content-stretch flex flex-col gap-[4px] items-start p-[20px] relative size-full">
-        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#f97316] text-[18px] whitespace-nowrap">Agentic Workflow</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF7D1E] text-[18px] whitespace-nowrap">Agentic Workflow</p>
         <StepBadge2 />
       </div>
     </div>
@@ -1558,7 +1558,7 @@ function DiagramBox2() {
   return (
     <div className="bg-white content-stretch flex h-[32px] items-center justify-center relative rounded-[6px] shrink-0 w-full" data-name="Diagram Box">
       <div aria-hidden className="absolute border border-[rgba(255,255,255,0.08)] border-solid inset-0 pointer-events-none rounded-[6px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold','Noto_Sans:Bold','Noto_Sans_Math:Regular','Noto_Sans_Symbols:Bold','Noto_Sans_Symbols2:Regular',sans-serif] leading-[normal] relative shrink-0 text-[#f97316] text-[11px] whitespace-nowrap" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100, "wght" 700' }}>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold','Noto_Sans:Bold','Noto_Sans_Math:Regular','Noto_Sans_Symbols:Bold','Noto_Sans_Symbols2:Regular',sans-serif] leading-[normal] relative shrink-0 text-[#FF7D1E] text-[11px] whitespace-nowrap" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100, "wght" 700' }}>
         Agent A ➔ Audit ➔ Agent B
       </p>
     </div>
@@ -1593,14 +1593,14 @@ function SpectrumCard2() {
         <CardHeader2 />
         <CardBody9 />
       </div>
-      <div aria-hidden className="absolute border border-[#94a3b8] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none rounded-[12px]" />
     </div>
   );
 }
 
 function StepBadge3() {
   return (
-    <div className="bg-[#8b5cf6] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
+    <div className="bg-[#4696FF] content-stretch flex items-start px-[8px] py-[2px] relative rounded-[4px] shrink-0" data-name="Step Badge">
       <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[10px] text-white uppercase whitespace-nowrap">Collaborate</p>
     </div>
   );
@@ -1610,7 +1610,7 @@ function CardHeader3() {
   return (
     <div className="bg-[rgba(139,92,246,0.08)] relative shrink-0 w-full" data-name="Card Header">
       <div className="content-stretch flex flex-col gap-[4px] items-start p-[20px] relative size-full">
-        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#8b5cf6] text-[18px] whitespace-nowrap">Multi-Agent System</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#4696FF] text-[18px] whitespace-nowrap">Multi-Agent System</p>
         <StepBadge3 />
       </div>
     </div>
@@ -1621,7 +1621,7 @@ function DiagramBox3() {
   return (
     <div className="bg-white content-stretch flex h-[32px] items-center justify-center relative rounded-[6px] shrink-0 w-full" data-name="Diagram Box">
       <div aria-hidden className="absolute border border-[rgba(255,255,255,0.08)] border-solid inset-0 pointer-events-none rounded-[6px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#8b5cf6] text-[11px] whitespace-nowrap">Persona debate loop</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#4696FF] text-[11px] whitespace-nowrap">Persona debate loop</p>
     </div>
   );
 }
@@ -1654,7 +1654,7 @@ function SpectrumCard3() {
         <CardHeader3 />
         <CardBody10 />
       </div>
-      <div aria-hidden className="absolute border border-[#94a3b8] border-solid inset-0 pointer-events-none rounded-[12px]" />
+      <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none rounded-[12px]" />
     </div>
   );
 }
@@ -1675,7 +1675,7 @@ function BookOpen() {
     <div className="relative shrink-0 size-[20px]" data-name="book-open">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="book-open">
-          <path d={svgPaths.p36206300} id="Vector" stroke="var(--stroke-0, #1F2937)" strokeLinecap="round" strokeWidth="2" />
+          <path d={svgPaths.p36206300} id="Vector" stroke="var(--stroke-0, #2E2E38)" strokeLinecap="round" strokeWidth="2" />
         </g>
       </svg>
     </div>
@@ -1694,7 +1694,7 @@ function SummaryTextStack() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start leading-[normal] min-w-px not-italic relative" data-name="Summary Text Stack">
       <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#1a1a24] text-[16px] whitespace-nowrap">When to Use What?</p>
-      <p className="font-['EYInterstate:Regular',sans-serif] min-w-full relative shrink-0 text-[#46464f] text-[13px] w-[min-content]">Do not use a Multi-Agent system where a simple LLM draft fits. Match system autonomy strictly to operational audit tolerance.</p>
+      <p className="font-['EYInterstate:Regular',sans-serif] min-w-full relative shrink-0 text-[#2E2E38] text-[13px] w-[min-content]">Do not use a Multi-Agent system where a simple LLM draft fits. Match system autonomy strictly to operational audit tolerance.</p>
     </div>
   );
 }
@@ -1763,7 +1763,7 @@ function CapabilityCard() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Create structural outlines and preliminary brief drafts.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Drafting a customs response draft.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Drafting a customs response draft.</p>
       </div>
     </div>
   );
@@ -1797,7 +1797,7 @@ function CapabilityCard1() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow1 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Locate target parameters inside massive scanned files.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Pulling loan rates from audit PDFs.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Pulling loan rates from audit PDFs.</p>
       </div>
     </div>
   );
@@ -1831,7 +1831,7 @@ function CapabilityCard2() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow2 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Retrieve answers from localized document repositories.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Interrogating statutory definitions.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Interrogating statutory definitions.</p>
       </div>
     </div>
   );
@@ -1865,7 +1865,7 @@ function CapabilityCard3() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow3 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Reformat tabular listings into valid tax formats.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Structuring transaction logs to ledger tables.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Structuring transaction logs to ledger tables.</p>
       </div>
     </div>
   );
@@ -1899,7 +1899,7 @@ function CapabilityCard4() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow4 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Categorize line-item transactions automatically.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Tagging capital vs revenue expenses.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Tagging capital vs revenue expenses.</p>
       </div>
     </div>
   );
@@ -1933,7 +1933,7 @@ function CapabilityCard5() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow5 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Condense long-form regulatory briefs into bullet summaries.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Reading 200-page high court judgments.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Reading 200-page high court judgments.</p>
       </div>
     </div>
   );
@@ -1967,7 +1967,7 @@ function CapabilityCard6() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow6 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Examine financial reports for internal math outliers.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Scanning tax schedules for reconciliation errors.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Scanning tax schedules for reconciliation errors.</p>
       </div>
     </div>
   );
@@ -2001,7 +2001,7 @@ function CapabilityCard7() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow7 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Verify contracts against compliance checklists.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Highlighting missing clause safeguards.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Highlighting missing clause safeguards.</p>
       </div>
     </div>
   );
@@ -2035,7 +2035,7 @@ function CapabilityCard8() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow8 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Simplify complex cross-border guidelines on request.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Explaining BEPS Pillar Two parameters.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Explaining BEPS Pillar Two parameters.</p>
       </div>
     </div>
   );
@@ -2069,7 +2069,7 @@ function CapabilityCard9() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow9 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Compare tax regulations across multiple active years.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Contrasting Finance Act revisions.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Contrasting Finance Act revisions.</p>
       </div>
     </div>
   );
@@ -2103,7 +2103,7 @@ function CapabilityCard10() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow10 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Model hypothetical tax structuring variations.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Analyzing local restructuring options.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Analyzing local restructuring options.</p>
       </div>
     </div>
   );
@@ -2137,7 +2137,7 @@ function CapabilityCard11() {
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative size-full">
         <IconRow11 />
         <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.4] min-w-full not-italic relative shrink-0 text-[#747480] text-[13px] w-[min-content]">Combine disparate sources into unified summaries.</p>
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#2563eb] text-[12px] w-[min-content]">e.g. Consolidating state tax policy revisions.</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#4696FF] text-[12px] w-[min-content]">e.g. Consolidating state tax policy revisions.</p>
       </div>
     </div>
   );
@@ -2203,10 +2203,10 @@ function CardTop() {
 function UsesAiButton() {
   return (
     <div className="bg-[rgba(16,185,129,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="Uses AI Button">
-      <div aria-hidden className="absolute border border-[#10b981] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#00C864] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[11px] whitespace-nowrap">Uses AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[11px] whitespace-nowrap">Uses AI</p>
         </div>
       </div>
     </div>
@@ -2216,10 +2216,10 @@ function UsesAiButton() {
 function NoAiButton() {
   return (
     <div className="bg-[rgba(239,68,68,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="No AI Button">
-      <div aria-hidden className="absolute border border-[#ef4444] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#FF4136] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ef4444] text-[11px] whitespace-nowrap">No AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF4136] text-[11px] whitespace-nowrap">No AI</p>
         </div>
       </div>
     </div>
@@ -2268,10 +2268,10 @@ function CardTop1() {
 function UsesAiButton1() {
   return (
     <div className="bg-[rgba(16,185,129,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="Uses AI Button">
-      <div aria-hidden className="absolute border border-[#10b981] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#00C864] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[11px] whitespace-nowrap">Uses AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[11px] whitespace-nowrap">Uses AI</p>
         </div>
       </div>
     </div>
@@ -2281,10 +2281,10 @@ function UsesAiButton1() {
 function NoAiButton1() {
   return (
     <div className="bg-[rgba(239,68,68,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="No AI Button">
-      <div aria-hidden className="absolute border border-[#ef4444] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#FF4136] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ef4444] text-[11px] whitespace-nowrap">No AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF4136] text-[11px] whitespace-nowrap">No AI</p>
         </div>
       </div>
     </div>
@@ -2333,10 +2333,10 @@ function CardTop2() {
 function UsesAiButton2() {
   return (
     <div className="bg-[rgba(16,185,129,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="Uses AI Button">
-      <div aria-hidden className="absolute border border-[#10b981] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#00C864] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[11px] whitespace-nowrap">Uses AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[11px] whitespace-nowrap">Uses AI</p>
         </div>
       </div>
     </div>
@@ -2346,10 +2346,10 @@ function UsesAiButton2() {
 function NoAiButton2() {
   return (
     <div className="bg-[rgba(239,68,68,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="No AI Button">
-      <div aria-hidden className="absolute border border-[#ef4444] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#FF4136] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ef4444] text-[11px] whitespace-nowrap">No AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF4136] text-[11px] whitespace-nowrap">No AI</p>
         </div>
       </div>
     </div>
@@ -2398,10 +2398,10 @@ function CardTop3() {
 function UsesAiButton3() {
   return (
     <div className="bg-[rgba(16,185,129,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="Uses AI Button">
-      <div aria-hidden className="absolute border border-[#10b981] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#00C864] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[11px] whitespace-nowrap">Uses AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[11px] whitespace-nowrap">Uses AI</p>
         </div>
       </div>
     </div>
@@ -2411,10 +2411,10 @@ function UsesAiButton3() {
 function NoAiButton3() {
   return (
     <div className="bg-[rgba(239,68,68,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="No AI Button">
-      <div aria-hidden className="absolute border border-[#ef4444] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#FF4136] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ef4444] text-[11px] whitespace-nowrap">No AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF4136] text-[11px] whitespace-nowrap">No AI</p>
         </div>
       </div>
     </div>
@@ -2463,10 +2463,10 @@ function CardTop4() {
 function UsesAiButton4() {
   return (
     <div className="bg-[rgba(16,185,129,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="Uses AI Button">
-      <div aria-hidden className="absolute border border-[#10b981] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#00C864] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#10b981] text-[11px] whitespace-nowrap">Uses AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#00C864] text-[11px] whitespace-nowrap">Uses AI</p>
         </div>
       </div>
     </div>
@@ -2476,10 +2476,10 @@ function UsesAiButton4() {
 function NoAiButton4() {
   return (
     <div className="bg-[rgba(239,68,68,0.15)] flex-[1_0_0] min-w-px relative rounded-[6px]" data-name="No AI Button">
-      <div aria-hidden className="absolute border border-[#ef4444] border-solid inset-0 pointer-events-none rounded-[6px]" />
+      <div aria-hidden className="absolute border border-[#FF4136] border-solid inset-0 pointer-events-none rounded-[6px]" />
       <div className="flex flex-row justify-center size-full">
         <div className="content-stretch flex items-start justify-center px-[12px] py-[8px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ef4444] text-[11px] whitespace-nowrap">No AI</p>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF4136] text-[11px] whitespace-nowrap">No AI</p>
         </div>
       </div>
     </div>
@@ -2544,8 +2544,8 @@ function SectionHeader8() {
 function BarTrack() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative" data-name="Bar Track">
-      <div className="bg-[#94a3b8] h-[24px] relative rounded-[4px] shrink-0 w-[800px]" data-name="Bar Fill" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#46464f] text-[12px] whitespace-nowrap">75 Years</p>
+      <div className="bg-[#747480] h-[24px] relative rounded-[4px] shrink-0 w-[800px]" data-name="Bar Fill" />
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[12px] whitespace-nowrap">75 Years</p>
     </div>
   );
 }
@@ -2562,8 +2562,8 @@ function ChartRow() {
 function BarTrack1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative" data-name="Bar Track">
-      <div className="bg-[#94a3b8] h-[24px] relative rounded-[4px] shrink-0 w-[560px]" data-name="Bar Fill" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#46464f] text-[12px] whitespace-nowrap">16 Years</p>
+      <div className="bg-[#747480] h-[24px] relative rounded-[4px] shrink-0 w-[560px]" data-name="Bar Fill" />
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[12px] whitespace-nowrap">16 Years</p>
     </div>
   );
 }
@@ -2580,8 +2580,8 @@ function ChartRow1() {
 function BarTrack2() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative" data-name="Bar Track">
-      <div className="bg-[#94a3b8] h-[24px] relative rounded-[4px] shrink-0 w-[400px]" data-name="Bar Fill" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#46464f] text-[12px] whitespace-nowrap">7 Years</p>
+      <div className="bg-[#747480] h-[24px] relative rounded-[4px] shrink-0 w-[400px]" data-name="Bar Fill" />
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[12px] whitespace-nowrap">7 Years</p>
     </div>
   );
 }
@@ -2598,8 +2598,8 @@ function ChartRow2() {
 function BarTrack3() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative" data-name="Bar Track">
-      <div className="bg-[#94a3b8] h-[24px] relative rounded-[4px] shrink-0 w-[280px]" data-name="Bar Fill" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#46464f] text-[12px] whitespace-nowrap">4 Years</p>
+      <div className="bg-[#747480] h-[24px] relative rounded-[4px] shrink-0 w-[280px]" data-name="Bar Fill" />
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[12px] whitespace-nowrap">4 Years</p>
     </div>
   );
 }
@@ -2616,8 +2616,8 @@ function ChartRow3() {
 function BarTrack4() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative" data-name="Bar Track">
-      <div className="bg-[#94a3b8] h-[24px] relative rounded-[4px] shrink-0 w-[200px]" data-name="Bar Fill" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#46464f] text-[12px] whitespace-nowrap">2.5 Years</p>
+      <div className="bg-[#747480] h-[24px] relative rounded-[4px] shrink-0 w-[200px]" data-name="Bar Fill" />
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[12px] whitespace-nowrap">2.5 Years</p>
     </div>
   );
 }
@@ -2634,8 +2634,8 @@ function ChartRow4() {
 function BarTrack5() {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-center min-w-px relative" data-name="Bar Track">
-      <div className="bg-[#ec4899] h-[24px] relative rounded-[4px] shrink-0 w-[64px]" data-name="Bar Fill" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ec4899] text-[12px] whitespace-nowrap">2 Months</p>
+      <div className="bg-[#FF4136] h-[24px] relative rounded-[4px] shrink-0 w-[64px]" data-name="Bar Fill" />
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF4136] text-[12px] whitespace-nowrap">2 Months</p>
     </div>
   );
 }
@@ -2643,7 +2643,7 @@ function BarTrack5() {
 function ChartRow5() {
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0 w-full" data-name="Chart Row">
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#ec4899] text-[14px] w-[120px]">ChatGPT</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#FF4136] text-[14px] w-[120px]">ChatGPT</p>
       <BarTrack5 />
     </div>
   );
@@ -2653,7 +2653,7 @@ function ChartHighlightBox() {
   return (
     <div className="[word-break:break-word] content-stretch flex gap-[12px] items-center leading-[normal] not-italic relative shrink-0 w-full" data-name="Chart Highlight Box">
       <p className="font-['EYInterstate:Bold',sans-serif] relative shrink-0 text-[#1a1a24] text-[32px] whitespace-nowrap">100 Million Users in 2 Months</p>
-      <p className="flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] min-w-px relative text-[#46464f] text-[14px]">- Generative AI is not an incremental technical shift. It is the fastest-adopted business and consumer tool in human history.</p>
+      <p className="flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] min-w-px relative text-[#2E2E38] text-[14px]">- Generative AI is not an incremental technical shift. It is the fastest-adopted business and consumer tool in human history.</p>
     </div>
   );
 }
@@ -2718,7 +2718,7 @@ function CtaGlowingCard() {
       <div aria-hidden className="absolute border border-[#ffe600] border-solid inset-0 pointer-events-none rounded-[16px]" />
       <Eyebrow />
       <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] min-w-full not-italic relative shrink-0 text-[#1a1a24] text-[28px] text-center w-[min-content]">{`Fundamentals are clear. Now it's time to use AI effectively.`}</p>
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.6] min-w-full not-italic relative shrink-0 text-[#46464f] text-[15px] text-center w-[min-content]">{`In Part 2, we will step beyond definitions. We'll explore the immediate mechanics of prompt design, system guidelines, and structured variable patterns designed for concrete corporate tax reporting.`}</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[1.6] min-w-full not-italic relative shrink-0 text-[#2E2E38] text-[15px] text-center w-[min-content]">{`In Part 2, we will step beyond definitions. We'll explore the immediate mechanics of prompt design, system guidelines, and structured variable patterns designed for concrete corporate tax reporting.`}</p>
       <NextButton />
     </div>
   );
@@ -2751,7 +2751,7 @@ function Footer() {
   return (
     <div className="bg-white relative shrink-0 w-full" data-name="Footer">
       <div className="flex flex-row items-center size-full">
-        <div className="[word-break:break-word] content-stretch flex font-['EYInterstate:Regular',sans-serif] items-center justify-between leading-[normal] not-italic px-[80px] py-[32px] relative size-full text-[#46464f] text-[13px] whitespace-nowrap">
+        <div className="[word-break:break-word] content-stretch flex font-['EYInterstate:Regular',sans-serif] items-center justify-between leading-[normal] not-italic px-[80px] py-[32px] relative size-full text-[#2E2E38] text-[13px] whitespace-nowrap">
           <p className="relative shrink-0">© 2026 EY India AI Tax Hub | Building a better working world</p>
           <FooterLinks />
         </div>

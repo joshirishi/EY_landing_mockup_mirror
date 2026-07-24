@@ -16,11 +16,11 @@ const APP_LOGOS: Record<string, string> = {
 };
 
 const FLOATING_POSITIONS: Record<string, React.CSSProperties> = {
-  Word: { top: 72, left: 64, background: "linear-gradient(135deg, var(--ey-app-word), #0b3f91)" },
-  Excel: { top: 52, right: 104, background: "linear-gradient(135deg, var(--ey-app-excel), #075f2e)", animationDelay: "0.4s" },
-  PowerPoint: { bottom: 184, right: 38, background: "linear-gradient(135deg, var(--ey-app-ppt), #8f2a13)", animationDelay: "0.8s" },
-  Outlook: { bottom: 184, left: 54, background: "linear-gradient(135deg, var(--ey-app-outlook), #004e8c)", animationDelay: "1.2s" },
-  "M365 Chat": { top: 0, left: "44%", background: "linear-gradient(135deg, #82d9ff, var(--ey-app-copilot), #ff5c8a)", animationDelay: "1.6s" },
+  Word: { top: 72, left: 64, background: "linear-gradient(135deg, var(--ey-app-word), #4696FF)" },
+  Excel: { top: 52, right: 104, background: "linear-gradient(135deg, var(--ey-app-excel), #00C864)", animationDelay: "0.4s" },
+  PowerPoint: { bottom: 184, right: 38, background: "linear-gradient(135deg, var(--ey-app-ppt), #FF3C00)", animationDelay: "0.8s" },
+  Outlook: { bottom: 184, left: 54, background: "linear-gradient(135deg, var(--ey-app-outlook), #4696FF)", animationDelay: "1.2s" },
+  "M365 Chat": { top: 0, left: "44%", background: "linear-gradient(135deg, #32FFFF, var(--ey-app-copilot), #FF32FF)", animationDelay: "1.6s" },
 };
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -109,34 +109,34 @@ const TAX_USE_CASES: Record<string, [string, string][]> = {
 // SVG line icon paths per app, per use-case (index-matched to TAX_USE_CASES)
 const USE_CASE_ICONS: Record<string, React.ReactNode[]> = {
   Word: [
-    <svg key="w0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
-    <svg key="w1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-    <svg key="w2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
-    <svg key="w3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>,
+    <svg key="w0" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
+    <svg key="w1" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+    <svg key="w2" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+    <svg key="w3" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>,
   ],
   Excel: [
-    <svg key="e0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
-    <svg key="e1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
-    <svg key="e2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
-    <svg key="e3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+    <svg key="e0" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+    <svg key="e1" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
+    <svg key="e2" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+    <svg key="e3" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
   ],
   PowerPoint: [
-    <svg key="p0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
-    <svg key="p1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>,
-    <svg key="p2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>,
-    <svg key="p3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
+    <svg key="p0" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
+    <svg key="p1" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>,
+    <svg key="p2" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>,
+    <svg key="p3" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
   ],
   Outlook: [
-    <svg key="o0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
-    <svg key="o1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
-    <svg key="o2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-    <svg key="o3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M5 17l.8 2.2L8 20l-2.2.8L5 23l-.8-2.2L2 20l2.2-.8L5 17z"/></svg>,
+    <svg key="o0" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
+    <svg key="o1" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
+    <svg key="o2" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+    <svg key="o3" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M5 17l.8 2.2L8 20l-2.2.8L5 23l-.8-2.2L2 20l2.2-.8L5 17z"/></svg>,
   ],
   "M365 Chat": [
-    <svg key="m0" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
-    <svg key="m1" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>,
-    <svg key="m2" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
-    <svg key="m3" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+    <svg key="m0" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+    <svg key="m1" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>,
+    <svg key="m2" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
+    <svg key="m3" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" width={26} height={26}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
   ],
 };
 
@@ -149,19 +149,19 @@ const APP_ACCENT: Record<string, string> = {
 };
 
 const RIBBON_BG: Record<string, string> = {
-  Word: "linear-gradient(135deg, var(--ey-app-word), #103f88 55%, #082a61)",
-  Excel: "linear-gradient(135deg, var(--ey-app-excel), #0b5f30 55%, #064520)",
-  PowerPoint: "linear-gradient(135deg, var(--ey-app-ppt), #9c2f15 55%, #6f1f0d)",
-  Outlook: "linear-gradient(135deg, var(--ey-app-outlook), #065a9e 55%, #003d73)",
-  "M365 Chat": "linear-gradient(135deg, var(--ey-app-copilot), var(--ey-app-outlook) 48%, #00a88f)",
+  Word: "linear-gradient(135deg, var(--ey-app-word), #4696FF 55%, #2E2E38)",
+  Excel: "linear-gradient(135deg, var(--ey-app-excel), #00C864 55%, #2E2E38)",
+  PowerPoint: "linear-gradient(135deg, var(--ey-app-ppt), #FF3C00 55%, #2E2E38)",
+  Outlook: "linear-gradient(135deg, var(--ey-app-outlook), #4696FF 55%, #2E2E38)",
+  "M365 Chat": "linear-gradient(135deg, var(--ey-app-copilot), var(--ey-app-outlook) 48%, #00C864)",
 };
 
 const GUIDE_LINKS = [
-  { num: "01", accent: "#4a90d9", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-(licensed).aspx", icon: <path d="M9 12l2 2 4-4"/>, title: "Do I have M365 Copilot (Premium)?", desc: "Check whether your account is licensed for the premium Copilot experience.", cta: "Check now" },
-  { num: "02", accent: "#2ecc71", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-prompts.aspx", icon: <><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8L18 15z"/></>, title: "M365 Copilot Prompts", desc: "A ready library of prompts you can copy and adapt for everyday work.", cta: "Browse prompts" },
-  { num: "03", accent: "#f0642f", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-Frequently-Asked-Questions.aspx", icon: <><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 015.5.8c0 1.9-2.8 2.4-2.8 4.2"/><path d="M12 17.5h.01"/></>, title: "M365 Copilot (Premium) FAQs", desc: "Answers to the most common questions about premium Copilot.", cta: "Read FAQs" },
-  { num: "04", accent: "#0e9be6", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-Agents-Frequently-Asked-Questions.aspx", icon: <><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1.4"/><path d="M9.5 13h.01M14.5 13h.01"/><path d="M2.5 12v3M21.5 12v3"/></>, title: "M365 Copilot Agents FAQs", desc: "Learn what Copilot agents are and how they can work for you.", cta: "Explore agents" },
-  { num: "05", accent: "#9b59b6", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/Exclude-M365-Copilot-from-accessing-content.aspx", icon: <><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/><path d="M12 15v2"/></>, title: "Know What Copilot Can Access", desc: "Control and exclude the content Copilot is able to read.", cta: "Manage access" },
+  { num: "01", accent: "#4696FF", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-(licensed).aspx", icon: <path d="M9 12l2 2 4-4"/>, title: "Do I have M365 Copilot (Premium)?", desc: "Check whether your account is licensed for the premium Copilot experience.", cta: "Check now" },
+  { num: "02", accent: "#00C864", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-prompts.aspx", icon: <><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8L18 15z"/></>, title: "M365 Copilot Prompts", desc: "A ready library of prompts you can copy and adapt for everyday work.", cta: "Browse prompts" },
+  { num: "03", accent: "#FF7D1E", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-Frequently-Asked-Questions.aspx", icon: <><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 015.5.8c0 1.9-2.8 2.4-2.8 4.2"/><path d="M12 17.5h.01"/></>, title: "M365 Copilot (Premium) FAQs", desc: "Answers to the most common questions about premium Copilot.", cta: "Read FAQs" },
+  { num: "04", accent: "#4696FF", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/M365-Copilot-Agents-Frequently-Asked-Questions.aspx", icon: <><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1.4"/><path d="M9.5 13h.01M14.5 13h.01"/><path d="M2.5 12v3M21.5 12v3"/></>, title: "M365 Copilot Agents FAQs", desc: "Learn what Copilot agents are and how they can work for you.", cta: "Explore agents" },
+  { num: "05", accent: "#B400FF", href: "https://sites.ey.com/sites/Enterprise-Technology/SitePages/Exclude-M365-Copilot-from-accessing-content.aspx", icon: <><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/><path d="M12 15v2"/></>, title: "Know What Copilot Can Access", desc: "Control and exclude the content Copilot is able to read.", cta: "Manage access" },
 ];
 
 const SEC_IMAGES = [
@@ -334,9 +334,9 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
               <div
                 key={m}
                 onClick={i === 0 ? onNavigateToModule2 : undefined}
-                style={{ padding: "5px 14px", borderRadius: 4, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", textTransform: "uppercase", letterSpacing: "0.5px", background: "rgba(100,100,100,0.05)", border: "1px solid #333", color: i === 0 ? "#94a3b8" : "#444", cursor: i === 0 ? "pointer" : "not-allowed", opacity: i === 0 ? 1 : 0.5, transition: "border-color 0.3s, color 0.3s" }}
+                style={{ padding: "5px 14px", borderRadius: 4, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", textTransform: "uppercase", letterSpacing: "0.5px", background: "rgba(100,100,100,0.05)", border: "1px solid #2E2E38", color: i === 0 ? "#747480" : "#2E2E38", cursor: i === 0 ? "pointer" : "not-allowed", opacity: i === 0 ? 1 : 0.5, transition: "border-color 0.3s, color 0.3s" }}
                 onMouseEnter={i === 0 ? e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#ffe600"; (e.currentTarget as HTMLDivElement).style.color = "#ffe600"; } : undefined}
-                onMouseLeave={i === 0 ? e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#333"; (e.currentTarget as HTMLDivElement).style.color = "#94a3b8"; } : undefined}
+                onMouseLeave={i === 0 ? e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#2E2E38"; (e.currentTarget as HTMLDivElement).style.color = "#747480"; } : undefined}
               >{m}</div>
             ))}
           </div>
@@ -360,10 +360,10 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
           {/* Laptop stage */}
           <div style={{ position: "relative", minHeight: 610, display: "flex", alignItems: "center", justifyContent: "center", perspective: 1000 }}>
             {/* Keyboard base */}
-            <div style={{ position: "absolute", bottom: 58, width: 720, maxWidth: "96vw", height: 74, background: "linear-gradient(180deg, #3b3b46, #1a1a22)", borderRadius: "8px 8px 28px 28px", transform: "rotateX(55deg)", boxShadow: "0 35px 60px rgba(0,0,0,0.55)" }} />
+            <div style={{ position: "absolute", bottom: 58, width: 720, maxWidth: "96vw", height: 74, background: "linear-gradient(180deg, #2E2E38, #1A1A24)", borderRadius: "8px 8px 28px 28px", transform: "rotateX(55deg)", boxShadow: "0 35px 60px rgba(0,0,0,0.55)" }} />
             {/* Laptop screen */}
-            <div style={{ width: "min(660px, 92vw)", height: 395, background: "linear-gradient(145deg, #0d0d12, #2e2e38)", border: "4px solid #3b3b46", borderRadius: "24px 24px 14px 14px", boxShadow: "0 45px 110px rgba(0,0,0,0.66), 0 0 42px rgba(107,92,255,0.25)", position: "relative", transform: "rotateX(4deg) rotateY(-5deg)", overflow: "hidden" }}>
-              <div style={{ position: "absolute", inset: 18, borderRadius: 16, background: "linear-gradient(135deg, #101018, #1e1e2a)" }} />
+            <div style={{ width: "min(660px, 92vw)", height: 395, background: "linear-gradient(145deg, #1A1A24, #2e2e38)", border: "4px solid #2E2E38", borderRadius: "24px 24px 14px 14px", boxShadow: "0 45px 110px rgba(0,0,0,0.66), 0 0 42px rgba(107,92,255,0.25)", position: "relative", transform: "rotateX(4deg) rotateY(-5deg)", overflow: "hidden" }}>
+              <div style={{ position: "absolute", inset: 18, borderRadius: 16, background: "linear-gradient(135deg, #1A1A24, #1A1A24)" }} />
               <div style={{ position: "absolute", zIndex: 5, width: "66%", textAlign: "center", left: "50%", top: "50%", transform: "translate(-50%, -46%)", pointerEvents: "none" }}>
                 <h3 style={{ color: "var(--ey-brand-yellow)", fontSize: "clamp(26px, 3vw, 40px)", marginBottom: 13, fontFamily: "'EYInterstate:Bold', sans-serif" }}>What you can do</h3>
                 <p style={{ color: "var(--ey-on-dark-72)", fontSize: 15, lineHeight: 1.55, fontFamily: "'EYInterstate:Regular', sans-serif" }}>Click the popping Apps to explore the M365 copilot use cases in Tax</p>
@@ -443,9 +443,9 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
               {/* App mock */}
               <div style={{ borderRadius: 30, overflow: "hidden", background: "linear-gradient(180deg, var(--ey-bg-card), var(--ey-bg-card-alt))", border: "1px solid var(--ey-on-dark-12)", boxShadow: "0 30px 80px rgba(0,0,0,0.4)", display: "flex", flexDirection: "column" }}>
                 {/* Window chrome */}
-                <div style={{ height: 38, background: "#111322", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", borderBottom: "1px solid var(--ey-on-dark-08)" }}>
+                <div style={{ height: 38, background: "#1A1A24", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", borderBottom: "1px solid var(--ey-on-dark-08)" }}>
                   <div style={{ display: "flex", gap: 8 }}>
-                    {["#ff5f57", "#ffbd2e", "#28c840"].map(c => (
+                    {["#FF4136", "#FFE600", "#00C864"].map(c => (
                       <div key={c} style={{ width: 12, height: 12, borderRadius: "50%", background: c }} />
                     ))}
                   </div>
@@ -454,14 +454,14 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
                 </div>
                 {/* Canvas */}
                 <div style={{ flex: 1, padding: 26, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", minHeight: 340, background: RIBBON_BG[activeApp] }}>
-                  <div style={{ width: "100%", maxWidth: 420, background: "linear-gradient(180deg, #ffffff, #f5f5fa)", borderRadius: 18, padding: 26, boxShadow: "0 22px 60px rgba(0,0,0,0.24)", position: "relative", zIndex: 1 }}>
+                  <div style={{ width: "100%", maxWidth: 420, background: "linear-gradient(180deg, #ffffff, #F6F6FA)", borderRadius: 18, padding: 26, boxShadow: "0 22px 60px rgba(0,0,0,0.24)", position: "relative", zIndex: 1 }}>
                     {[92, 78, 92, 92, 78, 60].map((w, i) => (
-                      <div key={i} style={{ height: 10, borderRadius: 999, background: "#e7e7e7", marginBottom: 14, width: `${w}%` }} />
+                      <div key={i} style={{ height: 10, borderRadius: 999, background: "#F6F6FA", marginBottom: 14, width: `${w}%` }} />
                     ))}
-                    <div style={{ marginTop: 16, background: "linear-gradient(160deg, #fffef2, #fff)", border: "1px solid var(--ey-brand-yellow)", borderRadius: 14, padding: 16 }}>
+                    <div style={{ marginTop: 16, background: "linear-gradient(160deg, #FFFFFF, #FFFFFF)", border: "1px solid var(--ey-brand-yellow)", borderRadius: 14, padding: 16 }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", color: "#7a6500", textTransform: "uppercase", letterSpacing: "0.8px" }}>
-                          <div style={{ width: 9, height: 9, borderRadius: "50%", background: "linear-gradient(135deg, #36C5F0, #A24FE0, #FFB900)", flexShrink: 0 }} />
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", color: "#B89B00", textTransform: "uppercase", letterSpacing: "0.8px" }}>
+                          <div style={{ width: 9, height: 9, borderRadius: "50%", background: "linear-gradient(135deg, #4696FF, #B400FF, #FFE600)", flexShrink: 0 }} />
                           Copilot
                         </div>
                         {promptTexts[activeApp] && (
@@ -471,9 +471,9 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
                               display: "flex", alignItems: "center", gap: 5,
                               padding: "4px 12px", borderRadius: 999, fontSize: 11,
                               fontFamily: "'EYInterstate:Bold', sans-serif",
-                              border: copied ? "1px solid #107c41" : "1px solid var(--ey-brand-yellow)",
+                              border: copied ? "1px solid #00C864" : "1px solid var(--ey-brand-yellow)",
                               background: copied ? "rgba(16,124,65,0.18)" : "var(--ey-brand-yellow)",
-                              color: copied ? "#107c41" : "#111",
+                              color: copied ? "#00C864" : "#111",
                               cursor: "pointer", transition: "all 0.2s",
                               animation: promptReady && !copied ? "copyBtnEnter 200ms cubic-bezier(0.34,1.56,0.64,1) both" : "none",
                             }}
@@ -632,7 +632,7 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
               <button
                 key={i}
                 onClick={() => { setSecIdx(i); setSecOpen(true); }}
-                style={{ flex: "1 0 0", minWidth: 0, background: "#2e2e38", border: "1px solid #656579", borderRadius: 12, overflow: "hidden", cursor: "pointer", textAlign: "left", fontFamily: "inherit", padding: 0, display: "flex", flexDirection: "column", transition: "transform 0.25s, box-shadow 0.25s" }}
+                style={{ flex: "1 0 0", minWidth: 0, background: "#2e2e38", border: "1px solid #747480", borderRadius: 12, overflow: "hidden", cursor: "pointer", textAlign: "left", fontFamily: "inherit", padding: 0, display: "flex", flexDirection: "column", transition: "transform 0.25s, box-shadow 0.25s" }}
                 onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-6px)"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px #ffe600"; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "none"; }}
               >
@@ -652,7 +652,7 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
                     {String(i + 1).padStart(2, "0")}
                   </p>
                   {/* Title grows to fill space — pushes separator + CTA to bottom */}
-                  <p style={{ fontFamily: "'EYInterstate:Bold', sans-serif", fontSize: 18, color: "#fff", lineHeight: "24px", flex: 1, marginBottom: 12 }}>
+                  <p style={{ fontFamily: "'EYInterstate:Bold', sans-serif", fontSize: 18, color: "#FFFFFF", lineHeight: "24px", flex: 1, marginBottom: 12 }}>
                     {sec.caption}
                   </p>
                   {/* Separator line */}
@@ -680,7 +680,7 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
           <button onClick={e => { e.stopPropagation(); setSecIdx(i => (i - 1 + 4) % 4); }} style={lightboxArrowStyle("left")}>‹</button>
           <img src={SEC_IMAGES[secIdx].src} alt="" style={{ maxWidth: "82vw", maxHeight: "82vh", borderRadius: 16, boxShadow: "0 30px 90px rgba(0,0,0,0.6)", objectFit: "contain" }} onClick={e => e.stopPropagation()} />
           <button onClick={e => { e.stopPropagation(); setSecIdx(i => (i + 1) % 4); }} style={lightboxArrowStyle("right")}>›</button>
-          <button onClick={e => { e.stopPropagation(); setSecOpen(false); }} style={{ position: "absolute", top: 24, right: 32, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 22, cursor: "pointer" }}>✕</button>
+          <button onClick={e => { e.stopPropagation(); setSecOpen(false); }} style={{ position: "absolute", top: 24, right: 32, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#FFFFFF", fontSize: 22, cursor: "pointer" }}>✕</button>
         </div>
       )}
 
