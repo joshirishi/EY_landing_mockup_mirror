@@ -1,0 +1,176 @@
+/**
+ * EYWhatsNext — reusable end-of-module CTA
+ *
+ * Colors from Figma node 3455:18320 (dark EY module surface):
+ *   bg/page    #1A1A24  ·  bg/surface #2E2E38  ·  yellow #FFE600
+ *   gray02     #C4C4CD  ·  gray01     #747480  ·  card border #4F4F5C
+ *
+ * Use on every Phase 1 submodule screen so the handoff looks identical.
+ */
+
+import type { CSSProperties, ReactNode } from "react";
+import { ArrowRight } from "lucide-react";
+import { colors, fonts } from "./tokens";
+
+/** Figma dark-module palette (3455:18320) */
+const DARK = {
+  page: colors.confidentBlack, // #1A1A24
+  surface: colors.offBlack, // #2E2E38
+  yellow: colors.yellow, // #FFE600
+  yellowSoft: "rgba(255, 230, 0, 0.10)",
+  border: "#4F4F5C",
+  body: colors.gray02, // #C4C4CD
+  caption: colors.gray01, // #747480
+  white: colors.white,
+} as const;
+
+export interface EYWhatsNextProps {
+  /** Small uppercase pill label — e.g. "What's Next" */
+  eyebrow?: string;
+  /** Main headline. Pass a string, or React nodes for a yellow highlight span. */
+  title: ReactNode;
+  /** Supporting paragraph under the title */
+  description: ReactNode;
+  /** Primary CTA label */
+  ctaLabel: string;
+  /** Called when the yellow CTA is clicked */
+  onContinue: () => void;
+  /** Optional fine-print under the button */
+  meta?: string;
+  /** Section id for in-page anchors (default: whats-next) */
+  id?: string;
+  style?: CSSProperties;
+}
+
+export function EYWhatsNext({
+  eyebrow = "What's Next",
+  title,
+  description,
+  ctaLabel,
+  onContinue,
+  meta,
+  id = "whats-next",
+  style,
+}: EYWhatsNextProps) {
+  return (
+    <section
+      id={id}
+      aria-labelledby={`${id}-heading`}
+      style={{
+        background: DARK.page,
+        padding: "96px 64px",
+        textAlign: "center",
+        borderTop: `1px solid ${DARK.border}`,
+        ...style,
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 640,
+          margin: "0 auto",
+          padding: "48px 40px",
+          background: DARK.surface,
+          border: `1px solid ${DARK.border}`,
+          borderRadius: 16,
+          boxShadow: "0 16px 40px rgba(0,0,0,0.35)",
+        }}
+      >
+        {/* Yellow outline pill — matches Figma INTERACTIVE AUDIT badge */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            background: DARK.yellowSoft,
+            border: `1px solid ${DARK.yellow}`,
+            borderRadius: 100,
+            padding: "4px 12px",
+            marginBottom: 16,
+          }}
+        >
+          <span
+            style={{
+              color: DARK.yellow,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              fontFamily: fonts.bold,
+              lineHeight: 1.2,
+            }}
+          >
+            {eyebrow}
+          </span>
+        </div>
+
+        <h2
+          id={`${id}-heading`}
+          style={{
+            margin: "0 0 14px",
+            fontSize: 32,
+            lineHeight: "38px",
+            fontWeight: 700,
+            color: DARK.white,
+            fontFamily: fonts.bold,
+          }}
+        >
+          {title}
+        </h2>
+
+        <p
+          style={{
+            margin: "0 0 28px",
+            fontSize: 15,
+            lineHeight: "22px",
+            color: DARK.body,
+            fontFamily: fonts.regular,
+          }}
+        >
+          {description}
+        </p>
+
+        <button
+          type="button"
+          onClick={onContinue}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            padding: "14px 28px",
+            fontSize: 15,
+            fontWeight: 700,
+            fontFamily: fonts.bold,
+            background: DARK.yellow,
+            color: DARK.page,
+            border: "none",
+            borderRadius: 8,
+            cursor: "pointer",
+            lineHeight: 1.2,
+          }}
+        >
+          {ctaLabel}
+          <ArrowRight size={16} aria-hidden />
+        </button>
+
+        {meta ? (
+          <p
+            style={{
+              margin: "18px 0 0",
+              fontSize: 13,
+              lineHeight: 1.5,
+              color: DARK.caption,
+              fontFamily: fonts.regular,
+            }}
+          >
+            {meta}
+          </p>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+/** Yellow highlight for a phrase inside the title */
+export function EYWhatsNextHighlight({ children }: { children: ReactNode }) {
+  return <span style={{ color: DARK.yellow }}>{children}</span>;
+}

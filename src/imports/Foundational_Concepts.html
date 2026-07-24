@@ -155,8 +155,8 @@ body {
   gap: 64px;
   align-items: center;
   width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
 }
 .hero-eyebrow {
   font-size: 12px; font-weight: 700;
@@ -274,17 +274,20 @@ body {
 .surface-dark .wrong-title,
 .surface-dark .paths-title,
 .surface-dark .evo-title,
+.surface-dark .gva-title,
 .surface-dark .velocity-section h2 {
   color: #fff !important;
 }
 .surface-dark .section-subtitle,
 .surface-dark .evo-sub,
+.surface-dark .gva-sub,
 .surface-dark .velocity-callout-body {
   color: var(--surface-dark-muted) !important;
 }
 .surface-dark .rise-label,
 .surface-dark .paths-label,
 .surface-dark .evo-label,
+.surface-dark .gva-label,
 .surface-dark .sim-label,
 .surface-dark .velocity-eyebrow,
 .surface-dark .badge {
@@ -298,8 +301,7 @@ body {
 .surface-dark .wrong-card,
 .surface-dark .paths-card,
 .surface-dark .cheat-row,
-.surface-dark .velocity-card,
-.surface-dark .cta-final {
+.surface-dark .velocity-card {
   color: var(--ey-dark);
 }
 .badge {
@@ -358,18 +360,22 @@ body {
   font-size: 14px; font-weight: 700;
   color: var(--ey-yellow);
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  width: 100%;
 }
 .rise-section .rise-title {
   font-size: 32px; font-weight: 700;
-  color: #fff; margin-bottom: 40px;
+  color: #fff;
+  margin: 0 0 40px;
   letter-spacing: -0.5px;
+  width: 100%;
 }
 .rise-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
-  max-width: 1300px;
+  width: 100%;
+  max-width: none;
 }
 .rise-card {
   background: var(--white);
@@ -429,19 +435,22 @@ body {
   font-size: 14px; font-weight: 700;
   color: #EF4444;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  width: 100%;
 }
 .wrong-section .wrong-title {
   font-size: 32px; font-weight: 700;
   color: var(--confident-black);
-  margin-bottom: 40px;
+  margin: 0 0 40px;
   letter-spacing: -0.5px;
+  width: 100%;
 }
 .wrong-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
-  max-width: 1300px;
+  width: 100%;
+  max-width: none;
 }
 .wrong-card {
   background: rgba(239, 68, 68, 0.02);
@@ -514,9 +523,16 @@ body {
   color: var(--ey-dark); font-weight: 400;
   margin: 0;
 }
-/* ===== LLM vs AI Agent vs Agentic AI — EY insight cards ===== */
+@media (max-width: 900px) {
+  .wrong-section { padding: 56px 24px; }
+  .wrong-grid { grid-template-columns: 1fr; }
+  .wrong-section .wrong-title { font-size: 24px; }
+}
+
+
+/* ===== AUTONOMY SPECTRUM (Figma 3187:3460) + modals ===== */
 .gva-section {
-  padding: 100px 40px;
+  padding: 80px 40px !important;
   text-align: left;
 }
 .gva-section .gva-label {
@@ -526,138 +542,237 @@ body {
   text-transform: uppercase;
   color: var(--ey-yellow);
   margin: 0 0 8px;
+  width: 100%;
 }
 .gva-section .gva-title {
   font-size: 32px;
   font-weight: 700;
-  color: #fff;
-  margin: 0 0 12px;
+  color: #fff !important;
+  margin: 0 0 40px;
+  width: 100%;
   letter-spacing: -0.5px;
   text-align: left;
 }
-.gva-section .gva-sub {
-  color: var(--surface-dark-muted);
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 1.5;
-  max-width: 720px;
-  margin: 0 0 40px;
-}
-.gva-eq {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 0 0 12px;
-}
-.gva-eq-chip {
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.04);
-  padding: 10px 16px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.gva-eq-chip.is-llm { color: var(--accent-blue); border-color: rgba(70,150,255,0.35); background: rgba(70,150,255,0.08); }
-.gva-eq-chip.is-agent { color: var(--accent-green); border-color: rgba(0,200,100,0.35); background: rgba(0,200,100,0.08); }
-.gva-eq-chip.is-agentic { color: var(--accent-purple); border-color: rgba(180,0,255,0.35); background: rgba(180,0,255,0.08); }
-.gva-eq-chip.is-add { color: var(--ey-yellow); border-color: rgba(255,230,0,0.25); background: rgba(255,230,0,0.06); font-weight: 400; }
-.gva-eq-op {
-  color: var(--surface-dark-muted);
-  font-size: 22px;
-  font-weight: 300;
-  padding: 0 4px;
-}
-.gva-eq-note {
-  color: var(--surface-dark-muted);
-  font-size: 12px;
-  margin: 0 0 40px;
-  letter-spacing: 0.02em;
-}
-.gva-grid {
+.gva-spectrum {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  max-width: 1200px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 24px;
 }
-.gva-card {
+.gva-spectrum-card {
   background: var(--white);
-  border: 1px solid var(--gray-02);
+  border: 1px solid #94a3b8;
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  transition: transform 0.15s, box-shadow 0.15s;
   text-align: left;
-}
-.gva-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-}
-.gva-thumb {
-  position: relative;
-  height: 160px;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: var(--confident-black);
-}
-.gva-thumb img {
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  color: inherit;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-/* EY Spectrum frame overlay — top + left + right, open bottom */
-.gva-frame {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  right: 36px;
-  bottom: 36px;
-  pointer-events: none;
-  border-top: 2px solid #FFE600;
-  border-left: 2px solid #FFE600;
+.gva-spectrum-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
 }
-.gva-card[data-accent="blue"] .gva-frame { border-right: 2px solid #4696FF; }
-.gva-card[data-accent="green"] .gva-frame { border-right: 2px solid #00C864; }
-.gva-card[data-accent="purple"] .gva-frame { border-right: 2px solid #B400FF; }
-.gva-body {
+.gva-spectrum-card:focus-visible {
+  outline: 2px solid var(--ey-yellow);
+  outline-offset: 3px;
+}
+.gva-spectrum-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   padding: 20px;
+}
+.gva-spectrum-card[data-tone="blue"] .gva-spectrum-head { background: rgba(59,130,246,0.08); }
+.gva-spectrum-card[data-tone="green"] .gva-spectrum-head { background: rgba(16,185,129,0.08); }
+.gva-spectrum-card[data-tone="orange"] .gva-spectrum-head { background: rgba(249,115,22,0.08); }
+.gva-spectrum-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+.gva-spectrum-card[data-tone="blue"] .gva-spectrum-title { color: #3b82f6; }
+.gva-spectrum-card[data-tone="green"] .gva-spectrum-title { color: #10b981; }
+.gva-spectrum-card[data-tone="orange"] .gva-spectrum-title { color: #f97316; }
+.gva-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.gva-spectrum-card[data-tone="blue"] .gva-badge { background: #3b82f6; }
+.gva-spectrum-card[data-tone="green"] .gva-badge { background: #10b981; }
+.gva-spectrum-card[data-tone="orange"] .gva-badge { background: #f97316; }
+.gva-spectrum-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  flex: 1;
+}
+.gva-spectrum-desc {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--gray-01);
+}
+.gva-flow {
+  border: 1px solid rgba(46,46,56,0.12);
+  border-radius: 6px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--white);
+}
+.gva-spectrum-card[data-tone="blue"] .gva-flow { color: #3b82f6; }
+.gva-spectrum-card[data-tone="green"] .gva-flow { color: #10b981; }
+.gva-spectrum-card[data-tone="orange"] .gva-flow { color: #f97316; }
+.gva-best-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray-01);
+}
+.gva-best-value {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ey-dark);
+}
+.gva-card-cta {
+  margin-top: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ey-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gva-banner {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 24px;
+  border-radius: 12px;
+  background: #1a1a24;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.gva-banner-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--ey-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.gva-banner-icon img { width: 20px; height: 20px; display: block; }
+.gva-banner-title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+.gva-banner-body {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--gray-02);
+  line-height: 1.45;
+}
+
+/* Modal */
+.gva-modal[hidden] { display: none !important; }
+.gva-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.gva-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26,26,36,0.72);
+}
+.gva-modal-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(720px, 100%);
+  max-height: min(88vh, 900px);
+  overflow: auto;
+  background: var(--white);
+  border: 1px solid var(--gray-02);
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+}
+.gva-modal-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray-02);
+}
+.gva-modal-top h3 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ey-dark);
+}
+.gva-modal-close {
+  border: 1px solid var(--gray-02);
+  background: var(--off-white);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ey-dark);
+  flex-shrink: 0;
+}
+.gva-modal-close:focus-visible {
+  outline: 2px solid var(--ey-yellow);
+  outline-offset: 2px;
+}
+.gva-modal-content {
+  padding: 20px 24px 28px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  flex: 1;
 }
-.gva-eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin: 0;
-  color: var(--eyebrow-gold);
-}
-.gva-card[data-accent="blue"] .gva-eyebrow { color: var(--accent-blue); }
-.gva-card[data-accent="green"] .gva-eyebrow { color: var(--accent-green); }
-.gva-card[data-accent="purple"] .gva-eyebrow { color: var(--accent-purple); }
-.gva-card h3 {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ey-dark);
-  margin: 0;
-  line-height: 1.25;
-}
-.gva-lead {
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.55;
-  color: var(--gray-01);
-  margin: 0;
-}
-.gva-block {
+.gva-modal-content .gva-block {
   border: 1px solid var(--gray-02);
   background: var(--off-white);
   padding: 12px 14px;
+  border-radius: 8px;
 }
-.gva-block-label {
+.gva-modal-content .gva-block-label {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -665,7 +780,7 @@ body {
   color: var(--gray-01);
   margin: 0 0 8px;
 }
-.gva-list {
+.gva-modal-content .gva-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -673,280 +788,232 @@ body {
   flex-direction: column;
   gap: 6px;
 }
-.gva-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 12px;
-  line-height: 1.4;
+.gva-modal-content .gva-list li {
+  font-size: 13px;
   color: var(--ey-dark);
+  line-height: 1.4;
+  padding-left: 12px;
+  position: relative;
 }
-.gva-list li::before {
+.gva-modal-content .gva-list li::before {
   content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
   width: 6px;
   height: 6px;
-  margin-top: 5px;
-  flex-shrink: 0;
-  background: currentColor;
+  background: var(--ey-dark);
 }
-.gva-card[data-accent="blue"] .gva-list li::before { background: var(--accent-blue); }
-.gva-card[data-accent="green"] .gva-list li::before { background: var(--accent-green); }
-.gva-card[data-accent="purple"] .gva-list li::before { background: var(--accent-purple); }
-.gva-analogy {
+.gva-modal-content .gva-analogy {
   border-left: 3px solid var(--ey-yellow);
-  padding: 10px 12px;
   background: rgba(255,230,0,0.06);
+  padding: 10px 12px;
 }
-.gva-analogy .gva-block-label { color: var(--eyebrow-gold); }
-.gva-analogy p {
+.gva-modal-content .gva-analogy p,
+.gva-modal-content .gva-example p {
   margin: 0;
   font-size: 13px;
   color: var(--ey-dark);
-  font-weight: 400;
-}
-.gva-example p {
-  margin: 0;
-  font-size: 12px;
   line-height: 1.5;
-  color: var(--ey-dark);
 }
-.gva-example .gva-quote {
+.gva-modal-content .gva-quote {
   font-style: italic;
   color: var(--gray-01);
-  margin-bottom: 6px;
+  margin-bottom: 6px !important;
 }
-.gva-cap {
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--gray-02);
-}
-.gva-cap-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border: 1px solid var(--gray-02);
-  background: var(--off-white);
-}
-.gva-card[data-accent="blue"] .gva-cap-pill { color: var(--accent-blue); border-color: rgba(70,150,255,0.3); background: rgba(70,150,255,0.08); }
-.gva-card[data-accent="green"] .gva-cap-pill { color: var(--accent-green); border-color: rgba(0,200,100,0.3); background: rgba(0,200,100,0.08); }
-.gva-card[data-accent="purple"] .gva-cap-pill { color: var(--accent-purple); border-color: rgba(180,0,255,0.3); background: rgba(180,0,255,0.08); }
-.gva-summary {
-  margin-top: 40px;
-  max-width: 1200px;
-  background: var(--white);
-  border: 1px solid var(--gray-02);
-  padding: 28px 32px;
-}
-.gva-summary-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ey-dark);
-  margin: 0 0 20px;
-  text-align: center;
-}
-.gva-table {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  max-width: 560px;
-  margin: 0 auto 24px;
-  border: 1px solid var(--gray-02);
-}
-.gva-table > div {
-  padding: 10px 14px;
-  font-size: 13px;
-  color: var(--ey-dark);
-  border-bottom: 1px solid var(--gray-02);
-}
-.gva-table > div:nth-child(even) { border-left: 1px solid var(--gray-02); }
-.gva-table > div:nth-last-child(-n+2) { border-bottom: none; }
-.gva-table .gva-th {
-  background: var(--off-white);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--gray-01);
-}
-.gva-mantras {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  max-width: 700px;
-  margin: 0 auto;
-}
-.gva-mantra {
-  text-align: center;
-  padding: 16px;
-  border: 1px solid var(--gray-02);
-  background: var(--off-white);
-}
-.gva-mantra span {
+.gva-modal-thumb {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center top;
+  border-radius: 8px;
   display: block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  background: #f5f5f7;
+  border: 1px solid rgba(46, 46, 56, 0.08);
 }
-.gva-mantra strong {
-  font-size: 16px;
-  font-style: italic;
-  color: var(--ey-dark);
-}
-.gva-mantra.is-llm span { color: var(--accent-blue); }
-.gva-mantra.is-agent span { color: var(--accent-green); }
-.gva-mantra.is-agentic span { color: var(--accent-purple); }
+body.gva-modal-open { overflow: hidden; }
 @media (max-width: 1000px) {
-  .gva-grid { grid-template-columns: 1fr; }
-  .gva-mantras { grid-template-columns: 1fr; }
-  .gva-section { padding: 64px 24px; }
+  .gva-spectrum { grid-template-columns: 1fr; }
+  .gva-section { padding: 56px 24px !important; }
 }
 
-@media (max-width: 900px) {
-  .wrong-section { padding: 56px 24px; }
-  .wrong-grid { grid-template-columns: 1fr; }
-  .wrong-section .wrong-title { font-size: 24px; }
-}
-
-/* ===== STRATEGIC DIVIDE / Why Fundamentals (Figma 3061:12822) ===== */
+/* ===== STRATEGIC DIVIDE / Why Fundamentals (Figma 3198:38831) ===== */
 .paths-section {
-  background: var(--surface-neutral);
+  background: var(--surface-light);
   border-bottom: 1px solid var(--gray-02);
-  padding: 80px;
+  padding: 80px 64px 64px;
   text-align: center;
 }
 .paths-section .paths-label {
-  font-size: 14px; font-weight: 700;
-  color: var(--eyebrow-gold, #B89B00);
+  font-size: 12px; font-weight: 700;
+  color: #656579;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  letter-spacing: 2px;
+  margin: 0 0 12px;
 }
 .paths-section .paths-title {
   font-size: 32px; font-weight: 700;
-  color: var(--confident-black);
-  margin: 0 0 48px;
-  letter-spacing: -0.5px;
+  color: #2e2e38;
+  margin: 0;
+  letter-spacing: -0.64px;
+  line-height: 40px;
+}
+.paths-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
 }
 .paths-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  max-width: 1300px;
-  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   text-align: left;
 }
 .paths-card {
-  background: #f5dbeb;
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 16px;
-  padding: 32px 32px 32px 48px;
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--white);
+  border: 1px solid #e0e0e5;
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  box-shadow:
+    0 2px 4px rgba(35, 35, 47, 0.06),
+    0 6px 12px rgba(35, 35, 47, 0.08);
+}
+.paths-card-head {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.paths-card.bad .paths-card-head { background: #f0f0f3; }
+.paths-card.good .paths-card-head {
+  background: #fffef0;
+  border-top: 3px solid var(--ey-yellow);
 }
 .paths-card-title {
-  font-size: 20px; font-weight: 700;
-  margin: 0 0 6px;
+  font-size: 18px; font-weight: 700;
+  color: #2e2e38;
+  margin: 0;
+  line-height: 1.3;
 }
-.paths-card.bad .paths-card-title { color: #EF4444; }
-.paths-card.good .paths-card-title { color: var(--ey-dark); }
 .paths-card-sub {
   font-size: 13px; font-weight: 400;
-  color: var(--gray-01);
+  color: #656579;
+  line-height: 18px;
   margin: 0;
 }
-.paths-items {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.paths-items { display: flex; flex-direction: column; }
 .paths-item {
   display: flex;
+  align-items: center;
   gap: 12px;
-  align-items: flex-start;
+  min-height: 48px;
+  padding: 16px;
+  background: var(--white);
 }
+.paths-item:nth-child(even) { background: #f8f8fa; }
 .paths-item img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
-  margin-top: 2px;
   display: block;
 }
-.paths-item-title {
+.paths-item p {
   font-size: 14px; font-weight: 400;
-  color: var(--confident-black);
-  line-height: 1.4;
-  margin: 0 0 2px;
-}
-.paths-item-desc {
-  font-size: 12px; font-weight: 400;
-  color: #737373;
+  color: #2e2e38;
+  line-height: 1.35;
   margin: 0;
 }
 .paths-outcome {
-  font-size: 13px; font-weight: 700;
+  padding: 16px;
   margin: 0;
+  font-size: 13px; font-weight: 700;
+  line-height: 1.35;
 }
-.paths-card.bad .paths-outcome { color: #E54040; }
-.paths-card.good .paths-outcome { color: #1ABF73; }
-.paths-vs {
-  position: absolute;
-  left: 50%;
-  top: 148px;
-  transform: translateX(-50%);
-  width: 48px; height: 48px;
-  border-radius: 24px;
-  background: var(--ey-yellow);
-  border: 1px solid var(--ey-dark);
+.paths-card.bad .paths-outcome {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.paths-card.good .paths-outcome {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+.paths-divider {
+  width: 24px;
+  flex-shrink: 0;
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  z-index: 2;
-  font-size: 14px; font-weight: 700;
-  color: var(--confident-black);
+  align-self: stretch;
+}
+.paths-divider::before {
+  content: '';
+  width: 2px;
+  background: #c3c3cb;
+  border-radius: 1px;
+}
+.paths-divider-diamond {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: #c3c3cb;
+  border-radius: 2px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.paths-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 64px;
+}
+.paths-footer-msg {
+  font-size: 18px; font-weight: 700;
+  color: #2e2e38;
+  margin: 0;
+  text-align: center;
 }
 .paths-cta {
-  max-width: 1300px;
-  margin: 48px auto 0;
-  background: var(--ey-yellow);
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 8px 14px;
+  background: #2e2e38;
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 14px; font-weight: 400;
   text-decoration: none;
-  color: var(--confident-black);
+  line-height: 20px;
   transition: filter 0.15s;
 }
-.paths-cta:hover { filter: brightness(0.97); }
-.paths-cta-msg {
-  font-size: 18px; font-weight: 700;
-  margin: 0;
-  text-align: left;
-}
-.paths-cta-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px; font-weight: 700;
-  white-space: nowrap;
-}
-.paths-cta-link img {
-  width: 16px;
-  height: 16px;
-  display: block;
-}
+.paths-cta:hover { filter: brightness(1.12); }
 @media (max-width: 900px) {
   .paths-section { padding: 56px 24px; }
-  .paths-section .paths-title { font-size: 24px; }
-  .paths-row { grid-template-columns: 1fr; }
-  .paths-vs { position: static; transform: none; margin: -8px auto; }
-  .paths-cta { flex-direction: column; align-items: flex-start; }
+  .paths-section .paths-title { font-size: 24px; line-height: 1.25; }
+  .paths-row { flex-direction: column; gap: 16px; }
+  .paths-divider {
+    width: 100%;
+    height: 24px;
+    align-items: center;
+  }
+  .paths-divider::before {
+    width: 100%;
+    height: 2px;
+  }
+  .paths-footer { margin-top: 40px; }
 }
 
 
@@ -958,72 +1025,112 @@ body {
   text-align: left;
   color: #fff;
 }
+#evo-timeline-view {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
 .evo-label {
   font-size: 12px; font-weight: 700;
   color: var(--ey-yellow);
   letter-spacing: 2px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin: 0 0 12px;
+  width: 100%;
 }
 .evo-title {
   font-size: 32px; font-weight: 700;
   color: #fff;
   line-height: 40px;
   margin: 0 0 12px;
+  width: 100%;
 }
 .evo-sub {
   font-size: 18px; font-weight: 400;
   color: #a0a0b0;
   line-height: 28px;
   margin: 0 0 20px;
-}
-.evo-tabs {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.evo-tabs::before {
-  content: '';
-  position: absolute;
-  left: 24px; right: 24px; top: 44px;
-  height: 2px; background: #2a2a2a;
-  z-index: 0;
-}
-.evo-tab {
-  position: relative; z-index: 1;
-  width: 168px; height: 96px;
-  border-radius: 16px;
-  border: 1px solid #2e2e3a;
-  background: #111116;
-  color: #a0a0b0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 8px; cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-.evo-tab .y { font-size: 28px; font-weight: 700; line-height: 1; }
-.evo-tab .s { font-size: 14px; font-weight: 700; text-transform: uppercase; }
-.evo-tab.active {
-  background: var(--ey-yellow);
-  border-color: var(--ey-yellow);
-  color: #1a1a24;
+  width: 100%;
 }
 .evo-meta {
   font-size: 12px; font-weight: 600;
-  color: #fff; margin: 0 0 40px;
+  color: #fff; margin: 0 0 16px;
 }
+/* Parent → child concentric nest (wraps the featured card) */
+.evo-builds {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin: 0 0 16px;
+  font-size: 13px; line-height: 1.4; color: #a0a0b0;
+}
+.evo-builds strong { color: #fff; font-weight: 700; }
+.evo-builds-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid rgba(255,230,0,0.25);
+  background: rgba(255,230,0,0.06);
+  color: var(--ey-yellow);
+  font-size: 12px; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px;
+}
+.evo-concentric {
+  margin: 0 0 24px;
+  width: 100%;
+}
+.evo-nest-layer {
+  border: 1.5px solid #3a3a48;
+  border-radius: 16px;
+  padding: 10px;
+  background: rgba(255,255,255,0.015);
+  transition: border-color 0.2s, background 0.2s, padding 0.2s;
+}
+.evo-nest-layer > .evo-nest-layer {
+  margin-top: 8px;
+}
+.evo-nest-layer .evo-nest-row {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 28px;
+  padding: 0 4px 2px;
+}
+.evo-nest-layer .evo-nest-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.evo-nest-layer .evo-nest-label {
+  font-size: 12px; font-weight: 700; color: #a0a0b0;
+  letter-spacing: 0.02em;
+}
+.evo-nest-layer .evo-nest-role {
+  margin-left: auto;
+  font-size: 11px; font-weight: 600; color: #656579;
+  text-transform: uppercase;
+}
+.evo-nest-layer.is-ancestor {
+  border-color: #3a3a48;
+}
+.evo-nest-layer.is-current {
+  border-color: var(--ey-yellow);
+  background: rgba(255,230,0,0.04);
+  padding: 0;
+  overflow: hidden;
+}
+.evo-nest-layer.is-current > .evo-nest-row {
+  padding: 10px 14px;
+  background: rgba(255,230,0,0.1);
+  border-bottom: 1px solid rgba(255,230,0,0.22);
+}
+.evo-nest-layer.is-current .evo-nest-label { color: #fff; }
+.evo-nest-layer.is-current .evo-nest-role { color: var(--ey-yellow); }
 .evo-featured {
   display: flex; gap: 24px;
   background: #1b1b22;
-  border: 1px solid #2e2e3a;
-  border-radius: 12px;
+  border: none;
+  border-radius: 0 0 14px 14px;
   overflow: hidden;
   min-height: 420px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
+}
+/* When featured is alone (pre-init), keep a frame */
+.evo-concentric > .evo-featured {
+  border: 1px solid #2e2e3a;
+  border-radius: 12px;
 }
 .evo-featured-img {
   width: 520px; max-width: 45%;
@@ -1154,9 +1261,6 @@ body {
 
 @media (max-width: 1100px) {
   .evo-section { padding: 64px 24px; }
-  .evo-tabs { flex-wrap: wrap; justify-content: flex-start; }
-  .evo-tabs::before { display: none; }
-  .evo-tab { width: calc(50% - 8px); height: 80px; }
   .evo-featured { flex-direction: column; }
   .evo-featured-img { width: 100%; max-width: none; min-height: 240px; }
   .evo-previews { grid-template-columns: 1fr 1fr; }
@@ -1166,7 +1270,6 @@ body {
 }
 @media (max-width: 640px) {
   .evo-previews { grid-template-columns: 1fr; }
-  .evo-tab { width: 100%; }
 }
 
 /* ===== TIMELINE ===== */
@@ -1261,18 +1364,259 @@ body {
   padding: 7px 16px; border-radius: 5px; font-size: 12px; font-weight: 600;
   cursor: pointer; transition: var(--transition); border: none;
 }
-.btn-yes { background: rgba(46,204,113,0.12); color: var(--accent-green); border: 1px solid rgba(46,204,113,0.3) !important; }
-.btn-yes:hover { background: rgba(46,204,113,0.25); }
-.btn-no { background: rgba(220,50,50,0.12); color: var(--accent-red); border: 1px solid rgba(220,50,50,0.3) !important; }
-.btn-no:hover { background: rgba(220,50,50,0.25); }
+.btn-yes { background: rgba(0,200,100,0.12); color: var(--accent-green); border: 1px solid rgba(0,200,100,0.3) !important; }
+.btn-yes:hover { background: rgba(0,200,100,0.25); }
+.btn-no { background: rgba(255,65,54,0.12); color: var(--accent-red); border: 1px solid rgba(255,65,54,0.3) !important; }
+.btn-no:hover { background: rgba(255,65,54,0.25); }
 .quiz-reveal { margin-top: 14px; padding: 14px; border-radius: 8px; display: none; font-size: 12px; line-height: 1.6; }
 .quiz-reveal.show { display: block; }
-.quiz-reveal.correct { background: rgba(46,204,113,0.06); border: 1px solid rgba(46,204,113,0.15); color: var(--text-secondary); }
-.quiz-reveal.incorrect { background: rgba(220,50,50,0.06); border: 1px solid rgba(220,50,50,0.15); color: var(--text-secondary); }
-.quiz-reveal strong { color: var(--ey-yellow); }
-.quiz-score { text-align: center; margin-top: 24px; padding: 18px; background: rgba(255,230,0,0.04); border: 1px solid rgba(255,230,0,0.12); border-radius: var(--radius); display: none; }
+.quiz-reveal.correct { background: rgba(0,200,100,0.06); border: 1px solid rgba(0,200,100,0.15); color: var(--text-secondary); }
+.quiz-reveal.incorrect { background: rgba(255,65,54,0.06); border: 1px solid rgba(255,65,54,0.15); color: var(--text-secondary); }
+.quiz-reveal strong { color: var(--eyebrow-gold); }
+.quiz-score { text-align: center; margin-top: 24px; padding: 18px; background: rgba(255,230,0,0.08); border: 1px solid rgba(255,230,0,0.35); border-radius: var(--radius); display: none; }
 .quiz-score.show { display: block; }
-.quiz-score .score-num { font-size: 38px; font-weight: 800; color: var(--ey-yellow); }
+.quiz-score .score-num { font-size: 38px; font-weight: 800; color: var(--confident-black); }
+.quiz-score .score-label { color: var(--gray-01); font-size: 13px; margin-top: 4px; }
+
+/* Quiz section — EY light surface pop (tokens) */
+#quiz.quiz-section {
+  background: var(--off-white) !important;
+  border-top: 1px solid var(--gray-02);
+  border-bottom: 1px solid var(--gray-02);
+}
+#quiz.quiz-section > h2 { color: var(--confident-black); }
+#quiz.quiz-section > .section-subtitle { color: var(--gray-01); }
+.quiz-ex-panel {
+  max-width: 920px;
+  margin: 0 auto 64px;
+  background: var(--white);
+  border: 1px solid var(--gray-02);
+  border-left: 4px solid var(--ey-yellow);
+  border-radius: 16px;
+  padding: 36px 40px;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(35,35,47,0.06), 0 8px 20px rgba(35,35,47,0.06);
+}
+.quiz-ex-panel.is-spot { border-left-color: var(--accent-blue); margin-bottom: 0; }
+.quiz-ex-icon {
+  width: 38px; height: 38px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.quiz-ex-icon.is-yellow {
+  background: rgba(255,230,0,0.16);
+  border: 1px solid rgba(184,155,0,0.35);
+}
+.quiz-ex-icon.is-blue {
+  background: rgba(70,150,255,0.12);
+  border: 1px solid rgba(70,150,255,0.35);
+}
+.quiz-ex-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 3px;
+}
+.quiz-ex-eyebrow.is-yellow { color: var(--eyebrow-gold); }
+.quiz-ex-eyebrow.is-blue { color: var(--accent-blue); }
+.quiz-desc {
+  background: var(--white);
+  border: 1px solid var(--gray-02);
+  border-radius: 9px;
+  padding: 11px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
+  user-select: none;
+}
+.quiz-desc:hover:not([data-matched]) {
+  border-color: rgba(184,155,0,0.45);
+  background: rgba(255,230,0,0.06);
+}
+.quiz-desc.is-selected {
+  border-color: var(--ey-yellow);
+  background: rgba(255,230,0,0.14);
+  box-shadow: inset 3px 0 0 var(--ey-yellow);
+  transform: translateX(3px);
+}
+.quiz-desc.is-matched {
+  border-color: rgba(0,200,100,0.45);
+  background: rgba(0,200,100,0.08);
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+.quiz-desc-letter {
+  color: var(--eyebrow-gold);
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0; width: 16px; padding-top: 1px;
+}
+.quiz-desc-text {
+  color: var(--ey-dark);
+  font-size: 13px; line-height: 1.5; flex: 1;
+}
+.quiz-term {
+  background: var(--off-white);
+  border: 1px solid var(--gray-02);
+  border-radius: 9px;
+  padding: 11px 12px;
+  cursor: pointer;
+  text-align: center;
+  color: var(--ey-dark);
+  font-size: 13px; font-weight: 600;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  user-select: none;
+  letter-spacing: 0.3px;
+}
+.quiz-term:hover:not([data-matched]) {
+  border-color: var(--ey-yellow);
+  background: rgba(255,230,0,0.12);
+}
+.quiz-term.is-matched {
+  background: rgba(0,200,100,0.1);
+  border-color: rgba(0,200,100,0.45);
+  color: var(--accent-green);
+  cursor: default;
+}
+.quiz-desc.is-wrong-flash {
+  border-color: rgba(255,65,54,0.5) !important;
+  background: rgba(255,65,54,0.08) !important;
+  box-shadow: none;
+  transform: none;
+}
+.quiz-term.is-wrong-flash {
+  background: rgba(255,65,54,0.08);
+  border-color: rgba(255,65,54,0.45);
+}
+.quiz-scorebar {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--white);
+  border: 1px solid var(--gray-02);
+  border-left: 3px solid var(--ey-yellow);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+}
+.quiz-scorebar #spot-score-val {
+  color: var(--confident-black);
+  background: var(--ey-yellow);
+  font-weight: 800;
+  font-size: 13px;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+.quiz-spot-card {
+  background: var(--white);
+  border: 1px solid var(--gray-02);
+  border-radius: 10px;
+  padding: 16px 18px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.quiz-spot-card:hover { border-color: rgba(70,150,255,0.35); }
+.quiz-spot-num {
+  background: rgba(70,150,255,0.12);
+  color: var(--accent-blue);
+  font-size: 11px; font-weight: 700;
+  border-radius: 5px; padding: 2px 7px;
+  flex-shrink: 0; margin-top: 2px;
+}
+.spot-btn {
+  background: var(--off-white);
+  border: 1px solid var(--gray-02);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--ey-dark);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  user-select: none;
+  white-space: nowrap;
+}
+.spot-btn:hover:not([disabled]) {
+  border-color: var(--eyebrow-gold);
+  background: rgba(255,230,0,0.14);
+  color: var(--confident-black);
+}
+.spot-btn[disabled] { cursor: default; }
+.spot-btn.is-correct {
+  background: rgba(0,200,100,0.14) !important;
+  border-color: rgba(0,200,100,0.5) !important;
+  color: var(--accent-green) !important;
+}
+.spot-btn.is-wrong {
+  background: rgba(255,65,54,0.1) !important;
+  border-color: rgba(255,65,54,0.45) !important;
+  color: var(--accent-red) !important;
+}
+.spot-reveal {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(0,200,100,0.08);
+  border-left: 3px solid var(--accent-green);
+  border-radius: 0 7px 7px 0;
+}
+.spot-reveal strong {
+  color: var(--accent-green);
+  font-size: 13px;
+  display: block;
+  margin-bottom: 3px;
+}
+.spot-reveal .why {
+  color: var(--gray-01);
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+}
+.quiz-result {
+  display: none;
+  margin-top: 22px;
+  border-radius: 12px;
+  padding: 20px 24px;
+  text-align: center;
+}
+.quiz-result.is-match {
+  background: rgba(0,200,100,0.08);
+  border: 1px solid rgba(0,200,100,0.3);
+}
+.quiz-result.is-spot {
+  background: rgba(255,230,0,0.12);
+  border: 1px solid rgba(184,155,0,0.35);
+}
+.quiz-result.is-visible {
+  display: block;
+  animation: quiz-result-pop 280ms ease-out;
+}
+.quiz-result-score {
+  display: inline-block;
+  background: var(--ey-yellow);
+  color: var(--confident-black);
+  font-size: 18px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 6px;
+  animation: quiz-score-pulse 400ms ease-out;
+}
+@keyframes quiz-result-pop {
+  0% { opacity: 0; transform: translateY(8px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes quiz-score-pulse {
+  0% { transform: scale(0.86); }
+  55% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz-result.is-visible,
+  .quiz-result-score { animation: none; }
+}
+@media (max-width: 720px) {
+  .quiz-ex-panel { padding: 24px 18px; }
+  #quiz [style*="grid-template-columns:1fr 200px"],
+  #quiz [style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
 .quiz-score .score-label { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 
 /* ===== ADOPTION BARS ===== */
@@ -1302,9 +1646,54 @@ body {
 
 /* ===== CTA FINAL ===== */
 .cta-final {
-  max-width: 680px; margin: 0 auto; padding: 55px 40px;
-  background: rgba(255,230,0,0.03); border: 1px solid rgba(255,230,0,0.2);
-  border-radius: 20px; animation: glowPulse 3s ease-in-out infinite;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 40px;
+  background: rgba(255,230,0,0.06);
+  border: 1px solid rgba(255,230,0,0.28);
+  border-radius: 16px;
+  animation: glowPulse 3s ease-in-out infinite;
+  text-align: center;
+}
+#whats-next.surface-dark {
+  color: #fff;
+}
+#whats-next .cta-final h2 {
+  color: #fff !important;
+  font-size: 30px;
+  line-height: 1.35;
+  margin: 0 0 18px;
+}
+#whats-next .cta-final .cta-lead {
+  color: rgba(255,255,255,0.72);
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0 0 28px;
+}
+#whats-next .cta-final .cta-meta {
+  color: rgba(255,255,255,0.55);
+  font-size: 12px;
+  margin: 18px 0 0;
+}
+#whats-next .cta-final .badge {
+  color: var(--ey-yellow) !important;
+  margin-bottom: 18px;
+}
+#whats-next .cta-final .btn-primary {
+  padding: 15px 34px;
+  font-size: 15px;
+  text-decoration: none;
+  display: inline-block;
+  background: var(--ey-yellow);
+  color: var(--confident-black);
+  border-radius: 4px;
+  font-weight: 700;
+}
+#whats-next .cta-final .btn-primary:hover {
+  filter: brightness(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-final { animation: none; }
 }
 
 /* ===== FOOTER ===== */
@@ -1587,8 +1976,9 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   border-bottom: 1px solid var(--gray-02);
 }
 .velocity-header {
-  max-width: 1200px;
-  margin: 0 auto 48px;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 48px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1612,8 +2002,9 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   text-align: left;
 }
 .velocity-card {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   background: var(--white);
   border: 1px solid rgba(196, 196, 205, 0.35);
   border-radius: 16px;
@@ -2049,98 +2440,83 @@ document.addEventListener('keydown', function(e) {
   </div>
 </section>
 
-<!-- ======== STRATEGIC DIVIDE — Why Fundamentals Matter (Figma 3061:12822) ======== -->
-<section id="strategic-divide" class="paths-section surface-neutral" aria-labelledby="paths-heading">
-  <p class="paths-label">Strategic Divide</p>
-  <h2 id="paths-heading" class="paths-title">Why Fundamentals Matter: Two Paths for Tax Practice</h2>
+<!-- ======== STRATEGIC DIVIDE — Why Fundamentals Matter (Figma 3198:38831) ======== -->
+<section id="strategic-divide" class="paths-section surface-light" aria-labelledby="paths-heading">
+  <div class="paths-header">
+    <p class="paths-label">Strategic Divide</p>
+    <h2 id="paths-heading" class="paths-title">Why Fundamentals Matter: Two Paths for Tax Practice</h2>
+  </div>
 
   <div class="paths-row">
     <article class="paths-card bad">
-      <div>
+      <div class="paths-card-head">
         <h3 class="paths-card-title">The "Just Wing It" Path</h3>
         <p class="paths-card-sub">Treating complex enterprise AI like a simple search engine toy.</p>
       </div>
       <div class="paths-items">
         <div class="paths-item">
-          <img src="/icons/path-x-circle.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">No Defined Use Case</p>
-            <p class="paths-item-desc">Like applying AI to everything instead of the right things</p>
-          </div>
+          <img src="/icons/path-x.svg" alt="" width="16" height="16">
+          <p>Relies on out-of-the-box ChatGPT prompts</p>
         </div>
         <div class="paths-item">
-          <img src="/icons/path-x-circle.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">Blind Reliance on Outputs</p>
-            <p class="paths-item-desc">Like citing a tax provision without verifying the source</p>
-          </div>
+          <img src="/icons/path-x.svg" alt="" width="16" height="16">
+          <p>No governance framework</p>
         </div>
         <div class="paths-item">
-          <img src="/icons/path-x-circle.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">Weak Governance</p>
-            <p class="paths-item-desc">Like issuing advice without an appropriate review process</p>
-          </div>
+          <img src="/icons/path-x.svg" alt="" width="16" height="16">
+          <p>Ignores tax-specific hallucination risks</p>
         </div>
         <div class="paths-item">
-          <img src="/icons/path-x-circle.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">Access Without Enablement</p>
-            <p class="paths-item-desc">Like moving to AI while still relying on spreadsheets</p>
-          </div>
+          <img src="/icons/path-x.svg" alt="" width="16" height="16">
+          <p>Zero prompt engineering discipline</p>
         </div>
-        <p class="paths-outcome">OUTCOME: Wasted Budget, Risk Exposure, Inefficiency</p>
+        <div class="paths-item">
+          <img src="/icons/path-x.svg" alt="" width="16" height="16">
+          <p>No measurement of output accuracy</p>
+        </div>
       </div>
+      <p class="paths-outcome">OUTCOME: Wasted Budget, Risk Exposure, Inefficiency</p>
     </article>
 
-    <div class="paths-vs" aria-hidden="true">VS</div>
+    <div class="paths-divider" aria-hidden="true">
+      <span class="paths-divider-diamond"></span>
+    </div>
 
     <article class="paths-card good">
-      <div>
+      <div class="paths-card-head">
         <h3 class="paths-card-title">The Foundations First Path</h3>
         <p class="paths-card-sub">Structuring AI with programmatic governance and deep tax context.</p>
       </div>
       <div class="paths-items">
         <div class="paths-item">
-          <img src="/icons/path-check.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">Intentional use — right tool, right task</p>
-            <p class="paths-item-desc">Choosing the right AI tool for the right activity</p>
-          </div>
+          <img src="/icons/path-check-mark.svg" alt="" width="16" height="16">
+          <p>Custom system prompts for tax domains</p>
         </div>
         <div class="paths-item">
-          <img src="/icons/path-check.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">Human validation</p>
-            <p class="paths-item-desc">Like a senior reviewing the junior's draft before filing</p>
-          </div>
+          <img src="/icons/path-check-mark.svg" alt="" width="16" height="16">
+          <p>Structured output validation</p>
         </div>
         <div class="paths-item">
-          <img src="/icons/path-check.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">Measured Impact</p>
-            <p class="paths-item-desc">Like measuring value through time savings and quality improvements</p>
-          </div>
+          <img src="/icons/path-check-mark.svg" alt="" width="16" height="16">
+          <p>Human-in-the-loop audit checkpoints</p>
         </div>
         <div class="paths-item">
-          <img src="/icons/path-check.svg" alt="" width="18" height="18">
-          <div>
-            <p class="paths-item-title">Strong Governance</p>
-            <p class="paths-item-desc">Like having guardrails on a mountain road—they keep you moving safely</p>
-          </div>
+          <img src="/icons/path-check-mark.svg" alt="" width="16" height="16">
+          <p>Domain-specific fine-tuning strategy</p>
         </div>
-        <p class="paths-outcome">OUTCOME: Efficiency, Trust, Competitive Edge</p>
+        <div class="paths-item">
+          <img src="/icons/path-check-mark.svg" alt="" width="16" height="16">
+          <p>Measurable ROI tracking</p>
+        </div>
       </div>
+      <p class="paths-outcome">OUTCOME: Efficiency, Trust, Competitive Edge</p>
     </article>
   </div>
 
-  <a class="paths-cta" href="#evolution">
-    <p class="paths-cta-msg">This is why we start here - with the foundations.</p>
-    <span class="paths-cta-link">
-      EXPLORE TIMELINE BELOW
-      <img src="/icons/arrow-down.svg" alt="" width="16" height="16">
-    </span>
-  </a>
+  <div class="paths-footer">
+    <p class="paths-footer-msg">This is why we start here - with the foundations.</p>
+    <a class="paths-cta" href="#evolution">Explore Timeline Below ↓</a>
+  </div>
 </section>
 
 <!-- ======== AI EVOLUTION TIMELINE (Figma 3276:17185) ======== -->
@@ -2150,27 +2526,31 @@ document.addEventListener('keydown', function(e) {
   <p class="evo-sub">Each layer is a subset of the one before it - building on the last</p>
 
   <div id="evo-timeline-view">
-    <div class="evo-tabs" id="evo-tabs" role="tablist" aria-label="AI eras"></div>
-    <p class="evo-meta">5 eras · 1943-2024</p>
+    <p class="evo-meta">5 eras · 1943-2024 · each era nests inside the one before it</p>
 
-    <div class="evo-featured" id="evo-featured">
-      <div class="evo-featured-img"><img id="evo-feat-img" src="/evo-ai.png" alt=""></div>
-      <div class="evo-featured-body">
-        <div>
-          <p class="evo-year-display" id="evo-feat-year">1943</p>
-          <div class="evo-title-row">
-            <h3 class="evo-era-name" id="evo-feat-title">Artificial Intelligence</h3>
-            <span class="evo-tag" id="evo-feat-tag">Rules Engine</span>
+    <p class="evo-builds" id="evo-builds" aria-live="polite"></p>
+
+    <!-- Concentric nest: ancestor rings wrap the featured card -->
+    <div class="evo-concentric" id="evo-nest" role="img" aria-label="Technology nesting from parent to child">
+      <div class="evo-featured" id="evo-featured">
+        <div class="evo-featured-img"><img id="evo-feat-img" src="/evo-ai.png" alt=""></div>
+        <div class="evo-featured-body">
+          <div>
+            <p class="evo-year-display" id="evo-feat-year">1943</p>
+            <div class="evo-title-row">
+              <h3 class="evo-era-name" id="evo-feat-title">Artificial Intelligence</h3>
+              <span class="evo-tag" id="evo-feat-tag">Rules Engine</span>
+            </div>
           </div>
-        </div>
-        <p class="evo-desc" id="evo-feat-desc"></p>
-        <div class="evo-analogy">
-          <div class="evo-analogy-h"><span class="bar"></span><span>Analogy</span></div>
-          <p id="evo-feat-analogy"></p>
-        </div>
-        <div>
-          <p class="evo-examples-label">Everyday Examples</p>
-          <div class="evo-chips" id="evo-feat-chips"></div>
+          <p class="evo-desc" id="evo-feat-desc"></p>
+          <div class="evo-analogy">
+            <div class="evo-analogy-h"><span class="bar"></span><span>Analogy</span></div>
+            <p id="evo-feat-analogy"></p>
+          </div>
+          <div>
+            <p class="evo-examples-label">Everyday Examples</p>
+            <div class="evo-chips" id="evo-feat-chips"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2280,18 +2660,17 @@ document.addEventListener('keydown', function(e) {
     <div id="copilot-window" style="background:var(--off-white); border:1px solid var(--gray-02); border-radius:16px; overflow:hidden; box-shadow:0 24px 60px rgba(46,46,56,0.12);">
 
       <!-- Title bar -->
-      <div style="display:flex; align-items:center; padding:12px 20px; background:var(--off-white); border-bottom:1px solid rgba(46,46,56,0.05);">
+      <div style="display:flex; align-items:center; padding:12px 20px; background:var(--confident-black); border-bottom:1px solid rgba(255,255,255,0.08);">
         <div style="display:flex; align-items:center; gap:8px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span style="color:var(--ey-dark); font-size:14px; font-weight:600;">EY.ai Copilot</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span style="color:#fff; font-size:14px; font-weight:600;">EY.ai Copilot</span>
         </div>
-        <span style="margin-left:auto; font-size:10px; color:var(--gray-01); background:rgba(46,46,56,0.04); padding:3px 10px; border-radius:10px;">GPT-4o • EY Secure</span>
+        <span style="margin-left:auto; font-size:10px; color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.08); padding:3px 10px; border-radius:10px;">GPT-4o • EY Secure</span>
       </div>
 
       <!-- Chat body -->
       <div id="copilot-chat" style="padding:28px; min-height:420px; max-height:600px; overflow-y:auto; background:var(--white);">
         <div id="copilot-welcome" style="text-align:center; padding:60px 20px;">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="1" style="margin-bottom:16px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h6"/></svg>
           <h3 style="color:var(--ey-dark); font-size:20px; font-weight:700; margin-bottom:8px;">Welcome to EY.ai Copilot</h3>
           <p style="color:var(--gray-01); font-size:14px; max-width:400px; margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p>
           <button onclick="startDemo()" style="background:var(--ey-yellow); color:var(--ey-dark); border:none; padding:14px 32px; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,230,0,0.3)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
@@ -2432,7 +2811,7 @@ function backBeat() {
 
 function resetDemo() {
   if (window._typer) clearInterval(window._typer);
-  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="1" style="margin-bottom:16px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h6"/></svg><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;margin-bottom:8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
+  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;margin-bottom:8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
   document.getElementById('beat-strip').style.display = 'none';
   document.getElementById('demo-actions').style.display = 'none';
   var bar = document.getElementById('copilot-input-bar'); if (bar) bar.style.display = 'none';
@@ -2547,131 +2926,139 @@ function renderBeat() {
   <h2>Think Beyond Drafting and Summarisation</h2>
   <p class="section-subtitle">Generative AI can be your smart thought partner. Tap a capability to see it in action.</p>
 
-  <div style="max-width:980px; margin:0 auto; display:flex; flex-direction:column; gap:16px;">
+  <div class="cheat-stack">
 
-    <!-- ROW 1: CREATE -->
-    <div class="cheat-row" style="border-left-color: var(--ey-yellow);">
+    <!-- ROW 1: CREATE (Figma 3512:4223) -->
+    <div class="cheat-row" style="--cheat-accent: var(--ey-yellow); --cheat-accent-soft: rgba(255,230,0,0.1); --cheat-accent-border: rgba(255,230,0,0.3); --cheat-accent-text: var(--eyebrow-gold);">
       <div class="cheat-row-label">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-          <div class="cheat-row-icon" style="background:rgba(255,230,0,0.1); border-color:rgba(255,230,0,0.3);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="2"><path d="M12 2L9.5 8.5 2 9.5l5 5-1 7 6-3.5 6 3.5-1-7 5-5-7.5-1z"/></svg>
+        <div class="cheat-row-brand">
+          <div class="cheat-row-icon">
+            <img src="/icons/cheat-create-star.svg" alt="" width="18" height="18">
           </div>
-          <span class="cheat-row-eyebrow" style="color:var(--eyebrow-gold);">Create</span>
+          <div class="cheat-row-copy">
+            <span class="cheat-row-eyebrow">Create</span>
+            <p class="cheat-row-desc">Produce new content from your instructions.</p>
+          </div>
         </div>
-        <p class="cheat-row-desc">Produce new content from your instructions.</p>
       </div>
       <div class="cheat-items">
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-create-generate', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-create-generate', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Generate</span><span class="cheat-item-desc">Create something new from instructions</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-create-generate" class="cheat-item-example" hidden><p>&ldquo;Draft a response to a tax authority notice based on the facts provided&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-create-transform', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-create-transform', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Transform</span><span class="cheat-item-desc">Convert information from one format into another</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-create-transform" class="cheat-item-example" hidden><p>&ldquo;Convert this GST reconciliation table into a user-ready summary.&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-create-synthesize', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-create-synthesize', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Synthesize</span><span class="cheat-item-desc">Combine information from multiple sources into one view</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-create-synthesize" class="cheat-item-example" hidden><p>&ldquo;Combine the judgment, circular and statutory provisions into a consolidated briefing note.&rdquo;</p></div>
       </div>
     </div>
 
     <!-- ROW 2: UNDERSTAND -->
-    <div class="cheat-row" style="border-left-color: var(--accent-blue);">
+    <div class="cheat-row" style="--cheat-accent: var(--accent-blue); --cheat-accent-soft: rgba(70,150,255,0.1); --cheat-accent-border: rgba(70,150,255,0.3); --cheat-accent-text: var(--accent-blue);">
       <div class="cheat-row-label">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-          <div class="cheat-row-icon" style="background:rgba(70,150,255,0.1); border-color:rgba(70,150,255,0.3);">
+        <div class="cheat-row-brand">
+          <div class="cheat-row-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           </div>
-          <span class="cheat-row-eyebrow" style="color:var(--accent-blue);">Understand</span>
+          <div class="cheat-row-copy">
+            <span class="cheat-row-eyebrow">Understand</span>
+            <p class="cheat-row-desc">Make sense of information that already exists.</p>
+          </div>
         </div>
-        <p class="cheat-row-desc">Make sense of information that already exists.</p>
       </div>
       <div class="cheat-items">
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-understand-query', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-understand-query', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Query</span><span class="cheat-item-desc">Ask questions and get targeted answers</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-understand-query" class="cheat-item-example" hidden><p>&ldquo;What is the time limit for filing a revised return?&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-understand-summarise', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-understand-summarise', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Summarise</span><span class="cheat-item-desc">Condense large volumes of information into key points</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-understand-summarise" class="cheat-item-example" hidden><p>&ldquo;Summarize this tax judgment in five key takeaways.&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-understand-explain', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-understand-explain', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Explain</span><span class="cheat-item-desc">Simplify complex topics for a specific audience</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-understand-explain" class="cheat-item-example" hidden><p>&ldquo;Explain POEM in simple language for a CFO presentation.&rdquo;</p></div>
       </div>
     </div>
 
     <!-- ROW 3: ORGANIZE -->
-    <div class="cheat-row" style="border-left-color: var(--accent-green);">
+    <div class="cheat-row" style="--cheat-accent: var(--accent-green); --cheat-accent-soft: rgba(0,200,100,0.1); --cheat-accent-border: rgba(0,200,100,0.3); --cheat-accent-text: var(--accent-green);">
       <div class="cheat-row-label">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-          <div class="cheat-row-icon" style="background:rgba(0,200,100,0.1); border-color:rgba(0,200,100,0.3);">
+        <div class="cheat-row-brand">
+          <div class="cheat-row-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
           </div>
-          <span class="cheat-row-eyebrow" style="color:var(--accent-green);">Organize</span>
+          <div class="cheat-row-copy">
+            <span class="cheat-row-eyebrow">Organize</span>
+            <p class="cheat-row-desc">Structure and compare what you already have.</p>
+          </div>
         </div>
-        <p class="cheat-row-desc">Structure and compare what you already have.</p>
       </div>
       <div class="cheat-items">
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-organize-extract', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-organize-extract', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Extract</span><span class="cheat-item-desc">Pull specific information from documents</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-organize-extract" class="cheat-item-example" hidden><p>&ldquo;Extract TDS amounts, PANs and section references from Form 26AS.&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-organize-classify', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-organize-classify', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Classify</span><span class="cheat-item-desc">Categorise information into predefined groups</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-organize-classify" class="cheat-item-example" hidden><p>&ldquo;Classify expenses as capital or revenue based on the descriptions provided.&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-organize-compare', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-organize-compare', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Compare</span><span class="cheat-item-desc">Highlight similarities, differences and trade-offs</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-organize-compare" class="cheat-item-example" hidden><p>&ldquo;Compare the India&#8211;Singapore and India&#8211;Mauritius treaties for capital gains taxation.&rdquo;</p></div>
       </div>
     </div>
 
     <!-- ROW 4: THINK -->
-    <div class="cheat-row" style="border-left-color: var(--accent-purple);">
+    <div class="cheat-row" style="--cheat-accent: var(--accent-purple); --cheat-accent-soft: rgba(180,0,255,0.1); --cheat-accent-border: rgba(180,0,255,0.3); --cheat-accent-text: var(--accent-purple);">
       <div class="cheat-row-label">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-          <div class="cheat-row-icon" style="background:rgba(180,0,255,0.1); border-color:rgba(180,0,255,0.3);">
+        <div class="cheat-row-brand">
+          <div class="cheat-row-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6h-8c-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6M10 17h4"/></svg>
           </div>
-          <span class="cheat-row-eyebrow" style="color:var(--accent-purple);">Think</span>
+          <div class="cheat-row-copy">
+            <span class="cheat-row-eyebrow">Think</span>
+            <p class="cheat-row-desc">Weigh judgment calls and reason toward a recommendation.</p>
+          </div>
         </div>
-        <p class="cheat-row-desc">Weigh judgment calls and reason toward a recommendation.</p>
       </div>
       <div class="cheat-items">
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-think-analyse', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-think-analyse', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Analyse</span><span class="cheat-item-desc">Identify patterns, risks and insights</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-think-analyse" class="cheat-item-example" hidden><p>&ldquo;Analyze these transactions and highlight potential transfer pricing risk areas.&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-think-evaluate', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-think-evaluate', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Evaluate</span><span class="cheat-item-desc">Assess strengths, weaknesses and potential issues</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-think-evaluate" class="cheat-item-example" hidden><p>&ldquo;Evaluate the risks and support available for this tax position.&rdquo;</p></div>
 
-        <button class="cheat-item-toggle" onclick="toggleCheat('cheat-think-advise', this)">
+        <button type="button" class="cheat-item-toggle" onclick="toggleCheat('cheat-think-advise', this)" aria-expanded="false">
           <span class="cheat-item-text"><span class="cheat-item-verb">Advise</span><span class="cheat-item-desc">Suggest possible approaches or next steps</span></span>
-          <svg class="cheat-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <img class="cheat-chev" src="/icons/cheat-chevron.svg" alt="" width="14" height="14">
         </button>
         <div id="cheat-think-advise" class="cheat-item-example" hidden><p>&ldquo;Suggest factors to consider when evaluating a cross-border restructuring.&rdquo;</p></div>
       </div>
@@ -2681,55 +3068,87 @@ function renderBeat() {
 </section>
 
 <style>
+.cheat-stack {
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+/* Figma 3512:4223 — accent outline + thick left rail */
 .cheat-row {
+  --cheat-accent: var(--ey-yellow);
+  --cheat-accent-soft: rgba(255,230,0,0.1);
+  --cheat-accent-border: rgba(255,230,0,0.3);
+  --cheat-accent-text: var(--eyebrow-gold);
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
   gap: 28px;
   align-items: center;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-left: 4px solid var(--gray-02);
+  background: var(--white);
+  border: 1px solid var(--cheat-accent);
+  border-left-width: 4px;
   border-radius: 16px;
-  padding: 28px 30px;
+  padding: 29px 31px 29px 34px;
 }
 .cheat-row-label {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
   min-height: 88px;
   align-self: stretch;
+  text-align: left;
 }
-.cheat-row-label > div:first-child {
+.cheat-row-brand {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
-  margin-bottom: 0 !important;
   min-height: 38px;
 }
 .cheat-row-icon {
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--cheat-accent-border);
+  background: var(--cheat-accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+.cheat-row-icon img,
+.cheat-row-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.cheat-row-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+  align-items: flex-start;
 }
 .cheat-row-eyebrow {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  line-height: 1.2;
+  line-height: 15.6px;
+  color: var(--cheat-accent-text);
+  text-align: left;
+  display: block;
+  width: 100%;
 }
 .cheat-row-desc {
-  color: var(--gray-01);
+  color: #747480;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 19.5px;
   margin: 0;
-  min-height: 2.9em; /* reserve ~2 lines so label rails stay level across rows */
+  text-align: left;
+  width: 100%;
 }
 .cheat-items {
   display: flex;
@@ -2744,32 +3163,56 @@ function renderBeat() {
   gap: 14px;
   background: transparent;
   border: none;
-  border-top: 1px solid var(--card-border);
-  padding: 14px 4px;
+  border-top: 1px solid #c4c4cd;
+  padding: 15px 4px 14px;
   cursor: pointer;
   text-align: left;
+  font-family: inherit;
 }
-.cheat-items .cheat-item-toggle:first-child { border-top: none; padding-top: 0; }
-.cheat-item-toggle:hover { background: var(--off-white); }
-.cheat-item-toggle:hover .cheat-item-verb { color: var(--ey-dark); }
-.cheat-item-text { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; min-width: 0; }
-.cheat-item-verb { font-size: 14px; font-weight: 700; color: var(--ey-dark); }
-.cheat-item-desc { font-size: 12.5px; color: var(--gray-01); }
-.cheat-chev { transition: transform 0.25s ease; flex-shrink: 0; }
+.cheat-items .cheat-item-toggle:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.cheat-item-toggle:hover { background: rgba(46,46,56,0.02); }
+.cheat-item-text {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.cheat-item-verb {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2e2e38;
+  line-height: 22.4px;
+}
+.cheat-item-desc {
+  font-size: 12.5px;
+  color: #747480;
+  line-height: 20px;
+}
+.cheat-chev {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  display: block;
+}
 .cheat-item-toggle[aria-expanded="true"] .cheat-chev { transform: rotate(180deg); }
 .cheat-item-example {
-  padding: 2px 4px 16px;
-  margin-top: -2px;
+  padding: 2px 4px 14px;
+  margin-top: -4px;
 }
 .cheat-item-example p {
   margin: 0;
   padding: 10px 14px;
   background: var(--off-white);
-  border-left: 3px solid var(--gray-02);
+  border-left: 3px solid var(--cheat-accent);
   border-radius: 0 8px 8px 0;
   font-size: 13px;
   font-style: italic;
-  color: var(--gray-01);
+  color: #747480;
   line-height: 1.5;
 }
 @media (max-width: 720px) {
@@ -2782,10 +3225,8 @@ function renderBeat() {
   .cheat-row-label {
     min-height: 0;
     padding-bottom: 12px;
-    border-bottom: 1px solid var(--card-border);
-    margin-bottom: 4px;
+    border-bottom: 1px solid #c4c4cd;
   }
-  .cheat-row-desc { min-height: 0; }
 }
 </style>
 <script>
@@ -2799,289 +3240,240 @@ function toggleCheat(id, btn) {
 </script>
 
 
-<section class="section surface-dark" id="genai-vs-agents" style="padding:100px 40px;">
-  <h2>LLM vs AI Agent vs Agentic AI</h2>
-  <p class="section-subtitle">Each level builds on the previous by adding new capabilities. Understanding the difference helps you choose the right tool for the job.</p>
+<section class="section surface-dark gva-section" id="genai-vs-agents" aria-labelledby="gva-heading" data-node-id="3187:3460">
+  <p class="gva-label">Autonomy Spectrum</p>
+  <h2 id="gva-heading" class="gva-title">LLM vs Agent vs Agentic Workflow</h2>
 
-  <div style="max-width:1200px; margin:0 auto;">
+  <div class="gva-spectrum">
+    <button type="button" class="gva-spectrum-card" data-tone="blue" data-gva-open="llm" aria-haspopup="dialog">
+      <div class="gva-spectrum-head">
+        <p class="gva-spectrum-title">LLM / GenAI</p>
+        <span class="gva-badge">Generate</span>
+      </div>
+      <div class="gva-spectrum-body">
+        <p class="gva-spectrum-desc">A static knowledge generator that responds immediately to a prompt. No actions, no long-term memory.</p>
+        <div class="gva-flow">Prompt → Output</div>
+        <div>
+          <p class="gva-best-label">Best for</p>
+          <p class="gva-best-value">Summarization &amp; Drafting</p>
+        </div>
+        <span class="gva-card-cta">Open details →</span>
+      </div>
+    </button>
 
-    <!-- Evolution Equation -->
-    <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; margin:50px auto 16px;">
-      <div style="background:rgba(74,144,217,0.08); border:1px solid rgba(74,144,217,0.3); border-radius:10px; padding:12px 20px; text-align:center;">
-        <div style="color:#4a90d9; font-size:13px; font-weight:700;">LLM (GenAI)</div>
+    <button type="button" class="gva-spectrum-card" data-tone="green" data-gva-open="agent" aria-haspopup="dialog">
+      <div class="gva-spectrum-head">
+        <p class="gva-spectrum-title">AI Agent</p>
+        <span class="gva-badge">Act</span>
       </div>
-      <div style="color:#ffe600; font-size:24px; font-weight:300; line-height:1;">+</div>
-      <div style="background:rgba(255,230,0,0.05); border:1px solid rgba(255,230,0,0.2); border-radius:10px; padding:12px 20px; text-align:center;">
-        <div style="color:#ffe600; font-size:13px; font-weight:600;">Tools &amp; Actions</div>
+      <div class="gva-spectrum-body">
+        <p class="gva-spectrum-desc">Equipped with memory and tool access. Executes lookups, takes actions, and revises its plan.</p>
+        <div class="gva-flow">Goal → Loop → Output</div>
+        <div>
+          <p class="gva-best-label">Best for</p>
+          <p class="gva-best-value">Information Retrieval &amp; Task Actions</p>
+        </div>
+        <span class="gva-card-cta">Open details →</span>
       </div>
-      <div style="color:var(--surface-dark-muted); font-size:24px; font-weight:300; line-height:1; padding:0 6px;">=</div>
-      <div style="background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.3); border-radius:10px; padding:12px 20px; text-align:center;">
-        <div style="color:#2ecc71; font-size:13px; font-weight:700;">AI Agent</div>
-      </div>
-      <div style="color:#ffe600; font-size:24px; font-weight:300; line-height:1;">+</div>
-      <div style="background:rgba(255,230,0,0.05); border:1px solid rgba(255,230,0,0.2); border-radius:10px; padding:12px 20px; text-align:center;">
-        <div style="color:#ffe600; font-size:13px; font-weight:600;">Planning &amp; Workflow</div>
-      </div>
-      <div style="color:var(--surface-dark-muted); font-size:24px; font-weight:300; line-height:1; padding:0 6px;">=</div>
-      <div style="background:rgba(155,89,182,0.08); border:1px solid rgba(155,89,182,0.3); border-radius:10px; padding:12px 20px; text-align:center;">
-        <div style="color:#9b59b6; font-size:13px; font-weight:700;">Agentic AI</div>
-      </div>
-    </div>
-    <p style="text-align:center; color:var(--surface-dark-muted); font-size:12px; margin:0 auto 52px; letter-spacing:0.3px;">Each level inherits everything from the previous level.</p>
+    </button>
 
-    <!-- 3 Cards: CSS subgrid aligns all 7 sections across cards automatically -->
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); column-gap:24px; row-gap:18px;">
-
-      <!-- â”€â”€ CARD 1: LLM (Generative AI) â”€â”€ -->
-      <div style="display:grid; grid-row:span 7; grid-template-rows:subgrid; background:var(--white); border-top:3px solid #4a90d9; border-left:1px solid rgba(74,144,217,0.18); border-right:1px solid rgba(74,144,217,0.18); border-bottom:1px solid rgba(74,144,217,0.18); border-radius:16px; transition:box-shadow 0.3s, border-color 0.3s;" onmouseover="this.style.borderLeftColor='rgba(74,144,217,0.4)';this.style.borderRightColor='rgba(74,144,217,0.4)';this.style.borderBottomColor='rgba(74,144,217,0.4)';this.style.boxShadow='0 12px 40px rgba(74,144,217,0.1)'" onmouseout="this.style.borderLeftColor='rgba(74,144,217,0.18)';this.style.borderRightColor='rgba(74,144,217,0.18)';this.style.borderBottomColor='rgba(74,144,217,0.18)';this.style.boxShadow='none'">
-        <!-- S1: Header -->
-        <div style="padding:24px 26px 0; display:flex; align-items:flex-start; gap:12px; align-self:start;">
-          <div style="width:40px; height:40px; border-radius:10px; background:rgba(74,144,217,0.12); border:1px solid rgba(74,144,217,0.25); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>
-          </div>
-          <div><div style="color:#4a90d9; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:5px;">1 &#8212; LLM</div><h3 style="color:var(--ey-dark); font-size:19px; font-weight:700; margin:0; line-height:1.2;">LLM (Generative AI)</h3></div>
-        </div>
-        <!-- S2: Capability box -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:rgba(74,144,217,0.05); border:1px solid rgba(74,144,217,0.15); border-radius:8px; padding:14px 16px;">
-            <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:10px;">What it gives you</div>
-            <div style="display:flex; flex-direction:column; gap:7px;">
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Answer</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Draft</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Summary</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Email</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Presentation content</span></div>
-            </div>
-          </div>
-        </div>
-        <!-- S3: What it does -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:5px;">What it does</div>
-          <p style="color:var(--gray-01); font-size:13px; line-height:1.6; margin:0;">Answers questions and creates content.</p>
-        </div>
-        <!-- S4: Think of it as -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:rgba(255,230,0,0.04); border-left:3px solid rgba(255,230,0,0.35); padding:10px 14px; border-radius:0 6px 6px 0;">
-            <div style="color:#ffe600; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:4px;">Think of it as</div>
-            <p style="color:var(--gray-01); font-size:13px; margin:0;">A knowledgeable assistant.</p>
-          </div>
-        </div>
-        <!-- S5: Example -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:var(--off-white); border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:14px 16px;">
-            <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Example</div>
-            <p style="color:#ffe600; font-size:12px; font-style:italic; line-height:1.6; margin:0 0 6px;">"Summarize the GST implications for e-commerce sellers."</p>
-            <p style="color:var(--gray-01); font-size:12px; margin:0;">AI returns an answer.</p>
-          </div>
-        </div>
-        <!-- S6: Best Used When -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Best Used When</div>
-          <div style="display:flex; flex-direction:column; gap:5px;">
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#4a90d9; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">You need information</span></div>
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#4a90d9; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">You need a draft</span></div>
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#4a90d9; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">You need ideas</span></div>
-          </div>
-        </div>
-        <!-- S7: New Capability -->
-        <div style="padding:0 26px 24px; align-self:start; border-top:1px solid rgba(74,144,217,0.18); padding-top:14px;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">New Capability Introduced</div>
-          <div style="display:inline-flex; align-items:center; gap:7px; background:rgba(74,144,217,0.1); border:1px solid rgba(74,144,217,0.3); border-radius:20px; padding:6px 14px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg>
-            <span style="color:#4a90d9; font-size:12px; font-weight:600;">Creates content</span>
-          </div>
-        </div>
+    <button type="button" class="gva-spectrum-card" data-tone="orange" data-gva-open="agentic" aria-haspopup="dialog">
+      <div class="gva-spectrum-head">
+        <p class="gva-spectrum-title">Agentic Workflow</p>
+        <span class="gva-badge">Orchestrate</span>
       </div>
-
-      <!-- â”€â”€ CARD 2: AI Agent â”€â”€ -->
-      <div style="display:grid; grid-row:span 7; grid-template-rows:subgrid; background:var(--white); border-top:3px solid #2ecc71; border-left:1px solid rgba(46,204,113,0.18); border-right:1px solid rgba(46,204,113,0.18); border-bottom:1px solid rgba(46,204,113,0.18); border-radius:16px; transition:box-shadow 0.3s, border-color 0.3s;" onmouseover="this.style.borderLeftColor='rgba(46,204,113,0.4)';this.style.borderRightColor='rgba(46,204,113,0.4)';this.style.borderBottomColor='rgba(46,204,113,0.4)';this.style.boxShadow='0 12px 40px rgba(46,204,113,0.1)'" onmouseout="this.style.borderLeftColor='rgba(46,204,113,0.18)';this.style.borderRightColor='rgba(46,204,113,0.18)';this.style.borderBottomColor='rgba(46,204,113,0.18)';this.style.boxShadow='none'">
-        <!-- S1: Header -->
-        <div style="padding:24px 26px 0; display:flex; align-items:flex-start; gap:12px; align-self:start;">
-          <div style="width:40px; height:40px; border-radius:10px; background:rgba(46,204,113,0.12); border:1px solid rgba(46,204,113,0.25); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M17 11l2 2 4-4"/></svg>
-          </div>
-          <div><div style="color:#2ecc71; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:5px;">2 &#8212; AI AGENT</div><h3 style="color:var(--ey-dark); font-size:19px; font-weight:700; margin:0; line-height:1.2;">AI Agent</h3></div>
+      <div class="gva-spectrum-body">
+        <p class="gva-spectrum-desc">A structured process loop of sequential tasks with integrated human-in-the-loop audit checks.</p>
+        <div class="gva-flow">Agent A → Audit → Agent B</div>
+        <div>
+          <p class="gva-best-label">Best for</p>
+          <p class="gva-best-value">Multi-Step Tax Filings</p>
         </div>
-        <!-- S2: Capability box -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:rgba(46,204,113,0.05); border:1px solid rgba(46,204,113,0.15); border-radius:8px; padding:14px 16px;">
-            <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:10px;">What is added?</div>
-            <div style="display:flex; flex-direction:column; gap:7px;">
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">LLM Capability</span></div>
-              <!-- <div style="color:#ffe600; font-size:15px; font-weight:400; padding-left:21px; line-height:1;">+</div> -->
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Access to tools</span></div>
-              <!-- <div style="color:#ffe600; font-size:15px; font-weight:400; padding-left:21px; line-height:1;">+</div> -->
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Ability to take actions</span></div>
-            </div>
-          </div>
-        </div>
-        <!-- S3: What it does -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:5px;">What it does</div>
-          <p style="color:var(--gray-01); font-size:13px; line-height:1.6; margin:0;">Not only answers &#8212; but also does things.</p>
-        </div>
-        <!-- S4: Think of it as -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:rgba(255,230,0,0.04); border-left:3px solid rgba(255,230,0,0.35); padding:10px 14px; border-radius:0 6px 6px 0;">
-            <div style="color:#ffe600; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:4px;">Think of it as</div>
-            <p style="color:var(--gray-01); font-size:13px; margin:0;">A virtual team member.</p>
-          </div>
-        </div>
-        <!-- S5: Example -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:var(--off-white); border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:14px 16px;">
-            <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Example</div>
-            <p style="color:var(--gray-01); font-size:11px; margin:0 0 4px;">Instead of:</p>
-            <p style="color:var(--gray-01); font-size:12px; font-style:italic; margin:0 0 10px; padding-left:8px; border-left:2px solid rgba(255,255,255,0.1);">Summarize this GST notice</p>
-            <p style="color:var(--gray-01); font-size:11px; margin:0 0 6px;">The Agent:</p>
-            <div style="display:flex; flex-direction:column; gap:4px;">
-              <div style="color:var(--gray-01); font-size:12px;">&#8212; reads the notice</div>
-              <div style="color:var(--gray-01); font-size:12px;">&#8212; extracts key facts</div>
-              <div style="color:var(--gray-01); font-size:12px;">&#8212; drafts a summary</div>
-              <div style="color:var(--gray-01); font-size:12px;">&#8212; stores it in the correct folder</div>
-            </div>
-          </div>
-        </div>
-        <!-- S6: Best Used When -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Best Used When</div>
-          <div style="display:flex; flex-direction:column; gap:5px;">
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#2ecc71; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">Tasks are repetitive</span></div>
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#2ecc71; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">Multiple actions are required</span></div>
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#2ecc71; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">The process is still relatively simple</span></div>
-          </div>
-        </div>
-        <!-- S7: New Capability -->
-        <div style="padding:0 26px 24px; align-self:start; border-top:1px solid rgba(46,204,113,0.18); padding-top:14px;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">New Capability Introduced</div>
-          <div style="display:inline-flex; align-items:center; gap:7px; background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.3); border-radius:20px; padding:6px 14px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg>
-            <span style="color:#2ecc71; font-size:12px; font-weight:600;">Takes action</span>
-          </div>
-        </div>
+        <span class="gva-card-cta">Open details →</span>
       </div>
-
-      <!-- â”€â”€ CARD 3: Agentic AI â”€â”€ -->
-      <div style="display:grid; grid-row:span 7; grid-template-rows:subgrid; background:var(--white); border-top:3px solid #9b59b6; border-left:1px solid rgba(155,89,182,0.18); border-right:1px solid rgba(155,89,182,0.18); border-bottom:1px solid rgba(155,89,182,0.18); border-radius:16px; transition:box-shadow 0.3s, border-color 0.3s;" onmouseover="this.style.borderLeftColor='rgba(155,89,182,0.4)';this.style.borderRightColor='rgba(155,89,182,0.4)';this.style.borderBottomColor='rgba(155,89,182,0.4)';this.style.boxShadow='0 12px 40px rgba(155,89,182,0.1)'" onmouseout="this.style.borderLeftColor='rgba(155,89,182,0.18)';this.style.borderRightColor='rgba(155,89,182,0.18)';this.style.borderBottomColor='rgba(155,89,182,0.18)';this.style.boxShadow='none'">
-        <!-- S1: Header -->
-        <div style="padding:24px 26px 0; display:flex; align-items:flex-start; gap:12px; align-self:start;">
-          <div style="width:40px; height:40px; border-radius:10px; background:rgba(155,89,182,0.12); border:1px solid rgba(155,89,182,0.25); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <div><div style="color:#9b59b6; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:5px;">3 &#8212; AGENTIC AI</div><h3 style="color:var(--ey-dark); font-size:19px; font-weight:700; margin:0; line-height:1.2;">Agentic AI</h3></div>
-        </div>
-        <!-- S2: Capability box -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:rgba(155,89,182,0.05); border:1px solid rgba(155,89,182,0.15); border-radius:8px; padding:14px 16px;">
-            <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:10px;">What is added?</div>
-            <div style="display:flex; flex-direction:column; gap:7px;">
-              <!-- <div style="display:flex; align-items:center; gap:8px; opacity:0.4;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">LLM + Tools + Tools</span></div> -->
-              <!-- <div style="color:#ffe600; font-size:15px; font-weight:400; padding-left:21px; line-height:1;">+</div> -->
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">LLM</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Tools</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Tools</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Planning</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Decision-making</span></div>
-              <div style="display:flex; align-items:center; gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg><span style="color:var(--gray-01); font-size:12px;">Multi-step workflow management</span></div>
-            </div>
-          </div>
-        </div>
-        <!-- S3: What it does -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:5px;">What it does</div>
-          <p style="color:var(--gray-01); font-size:13px; line-height:1.6; margin:0;">Manages an entire objective from start to finish.</p>
-        </div>
-        <!-- S4: Think of it as -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:rgba(255,230,0,0.04); border-left:3px solid rgba(255,230,0,0.35); padding:10px 14px; border-radius:0 6px 6px 0;">
-            <div style="color:#ffe600; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:4px;">Think of it as</div>
-            <p style="color:var(--gray-01); font-size:13px; margin:0;">A project manager.</p>
-          </div>
-        </div>
-        <!-- S5: Example -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="background:var(--off-white); border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:14px 16px;">
-            <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:6px;">Example</div>
-            <p style="color:var(--gray-01); font-size:11px; margin:0 0 4px;">Goal:</p>
-            <p style="color:var(--gray-01); font-size:12px; font-style:italic; margin:0 0 10px;">Prepare an initial response package for a GST notice.</p>
-            <p style="color:var(--gray-01); font-size:11px; margin:0 0 6px;">Agentic AI can:</p>
-            <div style="display:flex; flex-direction:column; gap:4px;">
-              <div style="color:var(--gray-01); font-size:12px;">1. Review the notice</div>
-              <div style="color:var(--gray-01); font-size:12px;">2. Identify due dates</div>
-              <div style="color:var(--gray-01); font-size:12px;">3. Gather supporting documents</div>
-              <div style="color:var(--gray-01); font-size:12px;">4. Draft response points</div>
-              <div style="color:var(--gray-01); font-size:12px;">5. Create a review package</div>
-            </div>
-          </div>
-        </div>
-        <!-- S6: Best Used When -->
-        <div style="padding:0 26px; align-self:start;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">Best Used When</div>
-          <div style="display:flex; flex-direction:column; gap:5px;">
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#9b59b6; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">Multiple steps are involved</span></div>
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#9b59b6; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">Decisions need to be made</span></div>
-            <div style="display:flex; align-items:center; gap:7px;"><span style="color:#9b59b6; font-weight:700;">&#8212;</span><span style="color:var(--gray-01); font-size:12px;">Several tasks must be coordinated</span></div>
-          </div>
-        </div>
-        <!-- S7: New Capability -->
-        <div style="padding:0 26px 24px; align-self:start; border-top:1px solid rgba(155,89,182,0.18); padding-top:14px;">
-          <div style="color:var(--gray-01); font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin-bottom:8px;">New Capability Introduced</div>
-          <div style="display:inline-flex; align-items:center; gap:7px; background:rgba(155,89,182,0.1); border:1px solid rgba(155,89,182,0.3); border-radius:20px; padding:6px 14px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg>
-            <span style="color:#9b59b6; font-size:12px; font-weight:600;">Plans and coordinates work</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Bottom Summary Strip -->
-    <div style="margin-top:48px; background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:32px 36px;">
-      <p style="color:#ffe600; font-size:14px; font-weight:700; letter-spacing:0.5px; margin:0 0 24px; text-align:center;">When Should I Use Which?</p>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0; max-width:600px; margin:0 auto 32px; border:1px solid var(--gray-02); border-radius:10px; overflow:hidden;">
-        <div style="background:var(--off-white); padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.08);"><span style="color:var(--gray-01); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600;">If You Need To...</span></div>
-        <div style="background:var(--off-white); padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.08); border-left:1px solid rgba(255,255,255,0.08);"><span style="color:var(--gray-01); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600;">Use</span></div>
-        <div style="padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="color:var(--gray-01); font-size:13px;">Get an answer or draft content</span></div>
-        <div style="padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06); border-left:1px solid rgba(255,255,255,0.06);"><span style="color:#4a90d9; font-size:13px; font-weight:600;">LLM (GenAI)</span></div>
-        <div style="padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06);"><span style="color:var(--gray-01); font-size:13px;">Complete a task</span></div>
-        <div style="padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06); border-left:1px solid rgba(255,255,255,0.06);"><span style="color:#2ecc71; font-size:13px; font-weight:600;">AI Agent</span></div>
-        <div style="padding:12px 16px;"><span style="color:var(--gray-01); font-size:13px;">Manage a process with multiple steps</span></div>
-        <div style="padding:12px 16px; border-left:1px solid rgba(255,255,255,0.06);"><span style="color:#9b59b6; font-size:13px; font-weight:600;">Agentic AI</span></div>
-      </div>
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:700px; margin:0 auto;">
-        <div style="text-align:center; padding:18px 16px; background:rgba(74,144,217,0.06); border:1px solid rgba(74,144,217,0.2); border-radius:12px;">
-          <div style="color:#4a90d9; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px;">LLM</div>
-          <div style="color:var(--ey-dark); font-size:16px; font-weight:700; font-style:italic;">"Tell me."</div>
-        </div>
-        <div style="text-align:center; padding:18px 16px; background:rgba(46,204,113,0.06); border:1px solid rgba(46,204,113,0.2); border-radius:12px;">
-          <div style="color:#2ecc71; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px;">AI Agent</div>
-          <div style="color:var(--ey-dark); font-size:16px; font-weight:700; font-style:italic;">"Do it."</div>
-        </div>
-        <div style="text-align:center; padding:18px 16px; background:rgba(155,89,182,0.06); border:1px solid rgba(155,89,182,0.2); border-radius:12px;">
-          <div style="color:#9b59b6; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px;">Agentic AI</div>
-          <div style="color:var(--ey-dark); font-size:16px; font-weight:700; font-style:italic;">"Own it."</div>
-        </div>
-      </div>
-    </div>
-
+    </button>
   </div>
+
+  <div class="gva-banner">
+    <div class="gva-banner-icon" aria-hidden="true">
+      <img src="/icons/book-open.svg" alt="" width="20" height="20">
+    </div>
+    <div>
+      <p class="gva-banner-title">When to Use What?</p>
+      <p class="gva-banner-body">Do not use a multi-agent system where a simple LLM draft fits. Match system autonomy strictly to operational audit tolerance. Click a card above for tax examples and when to use each level.</p>
+    </div>
+  </div>
+
+  <!-- Modals — content from Foundational Concepts curriculum -->
+  <div class="gva-modal" id="gva-modal" hidden>
+    <div class="gva-modal-backdrop" data-gva-close tabindex="-1"></div>
+    <div class="gva-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="gva-modal-title" tabindex="-1">
+      <div class="gva-modal-top">
+        <div>
+          <span class="gva-badge" id="gva-modal-badge">Generate</span>
+          <h3 id="gva-modal-title">LLM / GenAI</h3>
+        </div>
+        <button type="button" class="gva-modal-close" data-gva-close aria-label="Close details">×</button>
+      </div>
+      <div class="gva-modal-content" id="gva-modal-content"></div>
+    </div>
   </div>
 </section>
 
+<script>
+(function initAutonomySpectrum() {
+  var GVA = {
+    llm: {
+      tone: 'blue',
+      badge: 'Generate',
+      title: 'LLM / GenAI',
+      image: '/llm.png',
+      imageAlt: 'Large language model generating content',
+      mantra: '“Tell me.”',
+      blocks: [
+        { type: 'lead', text: 'Answers questions and creates content. A static knowledge generator that responds immediately to a prompt — no actions, no long-term memory.' },
+        { type: 'list', label: 'What it gives you', items: ['Answer', 'Draft', 'Summary', 'Email', 'Presentation content'] },
+        { type: 'analogy', label: 'Think of it as', text: 'A knowledgeable assistant.' },
+        { type: 'example', label: 'Example', quote: '"Summarize the GST implications for e-commerce sellers."', text: 'AI returns an answer.' },
+        { type: 'list', label: 'Best used when', items: ['You need information', 'You need a draft', 'You need ideas'] },
+        { type: 'cap', label: 'New capability introduced', text: 'Creates content' }
+      ]
+    },
+    agent: {
+      tone: 'green',
+      badge: 'Act',
+      title: 'AI Agent',
+      image: '/ai.png',
+      imageAlt: 'AI agent assisting with workplace tasks',
+      mantra: '“Do it.”',
+      blocks: [
+        { type: 'lead', text: 'Not only answers — but also does things. Equipped with memory and tool access to execute lookups, take actions, and revise its plan.' },
+        { type: 'list', label: 'What is added?', items: ['LLM capability', 'Access to tools', 'Ability to take actions'] },
+        { type: 'analogy', label: 'Think of it as', text: 'A virtual team member.' },
+        { type: 'example', label: 'Example', quote: 'Instead of only: "Summarize this GST notice"', text: 'The agent reads the notice, extracts key facts, drafts a summary, and stores it in the correct folder.' },
+        { type: 'list', label: 'Best used when', items: ['Tasks are repetitive', 'Multiple actions are required', 'The process is still relatively simple'] },
+        { type: 'cap', label: 'New capability introduced', text: 'Takes action' }
+      ]
+    },
+    agentic: {
+      tone: 'orange',
+      badge: 'Orchestrate',
+      title: 'Agentic Workflow',
+      image: '/agentic.png',
+      imageAlt: 'Agentic AI coordinating a multi-step workflow',
+      mantra: '“Own it.”',
+      blocks: [
+        { type: 'lead', text: 'Manages an entire objective from start to finish. A structured process loop of sequential tasks with human-in-the-loop audit checks.' },
+        { type: 'list', label: 'What is added?', items: ['LLM', 'Tools', 'Planning', 'Decision-making', 'Multi-step workflow management'] },
+        { type: 'analogy', label: 'Think of it as', text: 'A project manager.' },
+        { type: 'example', label: 'Example', quote: 'Goal: Prepare an initial response package for a GST notice.', text: 'Reviews the notice, identifies due dates, gathers documents, drafts response points, and creates a review package.' },
+        { type: 'list', label: 'Best used when', items: ['Multiple steps are involved', 'Decisions need to be made', 'Several tasks must be coordinated'] },
+        { type: 'cap', label: 'New capability introduced', text: 'Plans and coordinates work' }
+      ]
+    }
+  };
+
+  // Always re-query the live DOM — HMR / React re-inject can replace nodes.
+  var lastFocus = null;
+
+  function els() {
+    return {
+      modal: document.getElementById('gva-modal'),
+      content: document.getElementById('gva-modal-content'),
+      titleEl: document.getElementById('gva-modal-title'),
+      badgeEl: document.getElementById('gva-modal-badge')
+    };
+  }
+
+  function renderBlocks(data) {
+    var html = '';
+    html += '<img class="gva-modal-thumb" src="' + data.image + '" alt="' + data.imageAlt + '" width="672" height="160">';
+    html += '<p style="margin:0;font-size:14px;font-weight:700;color:var(--ey-dark);">' + data.mantra + '</p>';
+    data.blocks.forEach(function (b) {
+      if (b.type === 'lead') {
+        html += '<p style="margin:0;font-size:14px;line-height:1.55;color:var(--gray-01);">' + b.text + '</p>';
+      } else if (b.type === 'list') {
+        html += '<div class="gva-block"><p class="gva-block-label">' + b.label + '</p><ul class="gva-list">';
+        b.items.forEach(function (it) { html += '<li>' + it + '</li>'; });
+        html += '</ul></div>';
+      } else if (b.type === 'analogy') {
+        html += '<div class="gva-analogy"><p class="gva-block-label">' + b.label + '</p><p>' + b.text + '</p></div>';
+      } else if (b.type === 'example') {
+        html += '<div class="gva-block gva-example"><p class="gva-block-label">' + b.label + '</p>';
+        html += '<p class="gva-quote">' + b.quote + '</p><p>' + b.text + '</p></div>';
+      } else if (b.type === 'cap') {
+        html += '<div class="gva-block"><p class="gva-block-label">' + b.label + '</p>';
+        html += '<p style="margin:0;font-size:13px;font-weight:700;color:var(--ey-dark);">' + b.text + '</p></div>';
+      }
+    });
+    return html;
+  }
+
+  function openModal(key) {
+    var data = GVA[key];
+    var e = els();
+    if (!data || !e.modal || !e.content || !e.titleEl || !e.badgeEl) return;
+    lastFocus = document.activeElement;
+    e.badgeEl.textContent = data.badge;
+    e.badgeEl.style.background = key === 'llm' ? '#3b82f6' : key === 'agent' ? '#10b981' : '#f97316';
+    e.titleEl.textContent = data.title;
+    e.content.innerHTML = renderBlocks(data);
+    e.modal.hidden = false;
+    document.body.classList.add('gva-modal-open');
+    var closeBtn = e.modal.querySelector('.gva-modal-close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeModal() {
+    var e = els();
+    if (!e.modal || e.modal.hidden) return;
+    e.modal.hidden = true;
+    document.body.classList.remove('gva-modal-open');
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  window.openGvaModal = openModal;
+  window.closeGvaModal = closeModal;
+
+  // Event delegation survives React replacing the card nodes on HMR.
+  // Always call window.* so re-inits update the live handlers.
+  if (!window.__gvaSpectrumDelegated) {
+    window.__gvaSpectrumDelegated = true;
+    document.addEventListener('click', function (ev) {
+      var t = ev.target;
+      if (!t || !t.closest) return;
+      var openBtn = t.closest('[data-gva-open]');
+      if (openBtn && typeof window.openGvaModal === 'function') {
+        window.openGvaModal(openBtn.getAttribute('data-gva-open'));
+        return;
+      }
+      if (t.closest('[data-gva-close]') && typeof window.closeGvaModal === 'function') {
+        window.closeGvaModal();
+      }
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && typeof window.closeGvaModal === 'function') {
+        window.closeGvaModal();
+      }
+    });
+  }
+})();
+</script>
+
 <!-- ======== INTERACTIVE EXERCISES ======== -->
-<section class="section surface-light" id="quiz" style="padding:100px 60px;">
+<section class="section surface-neutral quiz-section" id="quiz" style="padding:100px 60px;">
   <h2>Test Your Understanding</h2>
   <p class="section-subtitle">Two exercises to check what you have learned.</p>
 
   <!-- â”€â”€ EXERCISE 1: Match the Explanation â”€â”€ -->
-  <div style="max-width:920px; margin:0 auto 64px; background:rgba(255,255,255,0.01); border:1px solid var(--gray-02); border-radius:16px; padding:36px 40px; text-align:left;">
+  <div class="quiz-ex-panel">
 
     <div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
-      <div style="width:38px; height:38px; background:rgba(255,230,0,0.1); border:1px solid rgba(255,230,0,0.25); border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffe600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 10h2a2 2 0 0 1 0 4h-2"/><line x1="6" y1="12" x2="10" y2="12"/></svg>
+      <div class="quiz-ex-icon is-yellow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B89B00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 10h2a2 2 0 0 1 0 4h-2"/><line x1="6" y1="12" x2="10" y2="12"/></svg>
       </div>
       <div>
-        <div style="color:#ffe600; font-size:10px; text-transform:uppercase; letter-spacing:2px; font-weight:700; margin-bottom:3px;">Exercise 1</div>
+        <div class="quiz-ex-eyebrow is-yellow">Exercise 1</div>
         <h3 style="color:var(--ey-dark); font-size:21px; font-weight:700; margin:0;">Match the Explanation</h3>
       </div>
     </div>
@@ -3092,127 +3484,120 @@ function toggleCheat(id, btn) {
       <!-- Left: Descriptions -->
       <div style="display:flex; flex-direction:column; gap:7px;">
 
-        <div id="desc-A" onclick="matchSelectDesc('A')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">A</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Breaks your question into smaller pieces before processing it.</span>
-          <span id="dcheck-A" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-A" class="quiz-desc" onclick="matchSelectDesc('A')">
+          <span class="quiz-desc-letter">A</span>
+          <span class="quiz-desc-text">Breaks your question into smaller pieces before processing it.</span>
+          <span id="dcheck-A" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-B" onclick="matchSelectDesc('B')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">B</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">A question or instruction given to the AI.</span>
-          <span id="dcheck-B" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-B" class="quiz-desc" onclick="matchSelectDesc('B')">
+          <span class="quiz-desc-letter">B</span>
+          <span class="quiz-desc-text">A question or instruction given to the AI.</span>
+          <span id="dcheck-B" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-C" onclick="matchSelectDesc('C')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">C</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Uses patterns learned from large amounts of text to generate responses.</span>
-          <span id="dcheck-C" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-C" class="quiz-desc" onclick="matchSelectDesc('C')">
+          <span class="quiz-desc-letter">C</span>
+          <span class="quiz-desc-text">Uses patterns learned from large amounts of text to generate responses.</span>
+          <span id="dcheck-C" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-D" onclick="matchSelectDesc('D')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">D</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Retrieves relevant information before generating an answer.</span>
-          <span id="dcheck-D" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-D" class="quiz-desc" onclick="matchSelectDesc('D')">
+          <span class="quiz-desc-letter">D</span>
+          <span class="quiz-desc-text">Retrieves relevant information before generating an answer.</span>
+          <span id="dcheck-D" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-E" onclick="matchSelectDesc('E')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">E</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Produces an answer that sounds convincing but may be incorrect.</span>
-          <span id="dcheck-E" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-E" class="quiz-desc" onclick="matchSelectDesc('E')">
+          <span class="quiz-desc-letter">E</span>
+          <span class="quiz-desc-text">Produces an answer that sounds convincing but may be incorrect.</span>
+          <span id="dcheck-E" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-F" onclick="matchSelectDesc('F')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">F</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Human review and judgment used to validate AI-generated outputs.</span>
-          <span id="dcheck-F" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-F" class="quiz-desc" onclick="matchSelectDesc('F')">
+          <span class="quiz-desc-letter">F</span>
+          <span class="quiz-desc-text">Human review and judgment used to validate AI-generated outputs.</span>
+          <span id="dcheck-F" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-G" onclick="matchSelectDesc('G')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">G</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Creates content such as summaries, emails, presentations or code.</span>
-          <span id="dcheck-G" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-G" class="quiz-desc" onclick="matchSelectDesc('G')">
+          <span class="quiz-desc-letter">G</span>
+          <span class="quiz-desc-text">Creates content such as summaries, emails, presentations or code.</span>
+          <span id="dcheck-G" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-H" onclick="matchSelectDesc('H')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">H</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Can use tools and perform actions to complete a task.</span>
-          <span id="dcheck-H" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-H" class="quiz-desc" onclick="matchSelectDesc('H')">
+          <span class="quiz-desc-letter">H</span>
+          <span class="quiz-desc-text">Can use tools and perform actions to complete a task.</span>
+          <span id="dcheck-H" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
-        <div id="desc-I" onclick="matchSelectDesc('I')" style="background:var(--white); border:1px solid var(--gray-02); border-radius:9px; padding:11px 14px; cursor:pointer; display:flex; align-items:flex-start; gap:10px; transition:all 0.2s; user-select:none;">
-          <span style="color:#ffe600; font-size:12px; font-weight:700; flex-shrink:0; width:16px; padding-top:1px;">I</span>
-          <span style="color:var(--gray-01); font-size:13px; line-height:1.5; flex:1;">Can coordinate multiple steps, make decisions and work toward an objective.</span>
-          <span id="dcheck-I" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
+                <div id="desc-I" class="quiz-desc" onclick="matchSelectDesc('I')">
+          <span class="quiz-desc-letter">I</span>
+          <span class="quiz-desc-text">Can coordinate multiple steps, make decisions and work toward an objective.</span>
+          <span id="dcheck-I" style="display:none; margin-left:auto; flex-shrink:0; padding-top:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 7"/></svg></span>
         </div>
 
       </div>
 
       <!-- Right: Term chips (shuffled order) -->
       <div style="display:flex; flex-direction:column; gap:7px;">
-        <div id="term-Prompt" onclick="matchSelectTerm('Prompt')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">Prompt</div>
-        <div id="term-Tokens" onclick="matchSelectTerm('Tokens')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">Tokens</div>
-        <div id="term-Hallucination" onclick="matchSelectTerm('Hallucination')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">Hallucination</div>
-        <div id="term-RAG" onclick="matchSelectTerm('RAG')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">RAG</div>
-        <div id="term-AI-Agent" onclick="matchSelectTerm('AI Agent')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">AI Agent</div>
-        <div id="term-LLM" onclick="matchSelectTerm('LLM')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">LLM</div>
-        <div id="term-Agentic-AI" onclick="matchSelectTerm('Agentic AI')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">Agentic AI</div>
-        <div id="term-Human-in-the-Loop" onclick="matchSelectTerm('Human in the Loop')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px; line-height:1.35;">Human in the Loop</div>
-        <div id="term-Generative-AI" onclick="matchSelectTerm('Generative AI')" style="background:var(--off-white); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 12px; cursor:pointer; text-align:center; color:var(--gray-01); font-size:13px; font-weight:600; transition:all 0.2s; user-select:none; letter-spacing:0.3px;">Generative AI</div>
+        <div id="term-Prompt" class="quiz-term" onclick="matchSelectTerm('Prompt')">Prompt</div>
+        <div id="term-Tokens" class="quiz-term" onclick="matchSelectTerm('Tokens')">Tokens</div>
+        <div id="term-Hallucination" class="quiz-term" onclick="matchSelectTerm('Hallucination')">Hallucination</div>
+        <div id="term-RAG" class="quiz-term" onclick="matchSelectTerm('RAG')">RAG</div>
+        <div id="term-AI-Agent" class="quiz-term" onclick="matchSelectTerm('AI Agent')">AI Agent</div>
+        <div id="term-LLM" class="quiz-term" onclick="matchSelectTerm('LLM')">LLM</div>
+        <div id="term-Agentic-AI" class="quiz-term" onclick="matchSelectTerm('Agentic AI')">Agentic AI</div>
+        <div id="term-Human-in-the-Loop" class="quiz-term" onclick="matchSelectTerm('Human in the Loop')">Human in the Loop</div>
+        <div id="term-Generative-AI" class="quiz-term" onclick="matchSelectTerm('Generative AI')">Generative AI</div>
       </div>
 
     </div>
 
     <!-- Result banner -->
-    <div id="match-result" style="display:none; margin-top:22px; background:rgba(46,204,113,0.06); border:1px solid rgba(46,204,113,0.2); border-radius:12px; padding:20px 24px;">
-      <div style="display:flex; align-items:center; gap:10px; justify-content:center;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <span style="color:#2ecc71; font-size:15px; font-weight:700;">All 9 matched correctly. Well done!</span>
+    <div id="match-result" class="quiz-result is-match">
+      <div style="display:flex; align-items:center; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span style="color:var(--confident-black); font-size:15px; font-weight:700;">Complete — here&rsquo;s what you locked in:</span>
+        <span class="quiz-result-score">9 / 9</span>
       </div>
-      <p style="color:var(--gray-01); font-size:13px; text-align:center; margin:8px 0 16px;">You have a solid grasp of the core AI concepts.</p>
+      <p style="color:var(--gray-01); font-size:13px; text-align:center; margin:10px 0 16px;">You have a solid grasp of the core AI concepts.</p>
       <div style="text-align:center;">
-        <button onclick="matchReset()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:8px 22px; color:var(--gray-01); font-size:12px; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:inherit;" onmouseover="this.style.borderColor='rgba(255,230,0,0.35)';this.style.color='#ffe600';" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='#94a3b8';">Try Again</button>
+        <button onclick="matchReset()" style="background:var(--ey-yellow); border:none; border-radius:4px; padding:8px 22px; color:var(--confident-black); font-size:12px; font-weight:700; cursor:pointer; font-family:inherit;">Try Again</button>
       </div>
     </div>
 
   </div>
 
   <!-- â”€â”€ EXERCISE 2: Can You Spot the AI? â”€â”€ -->
-  <div style="max-width:920px; margin:0 auto; text-align:left;">
+  <div class="quiz-ex-panel is-spot">
 
-    <style>
-      .spot-btn{background:var(--off-white);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 12px;color:var(--gray-01);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:border-color 0.15s,color 0.15s,background 0.15s;user-select:none;white-space:nowrap;}
-      .spot-btn:hover:not([disabled]){border-color:rgba(255,230,0,0.4);color:#ffe600;}
-      .spot-btn[disabled]{cursor:default;}
-      .spot-reveal{display:none;margin-top:12px;padding:10px 14px;background:rgba(46,204,113,0.06);border-left:3px solid rgba(46,204,113,0.4);border-radius:0 7px 7px 0;}
-      .spot-reveal strong{color:#2ecc71;font-size:13px;display:block;margin-bottom:3px;}
-      .spot-reveal .why{color:var(--gray-01);font-size:12px;line-height:1.55;margin:0;}
-    </style>
 
     <div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
-      <div style="width:38px; height:38px; background:rgba(74,144,217,0.1); border:1px solid rgba(74,144,217,0.25); border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="22" y1="12" x2="15" y2="12"/><line x1="9" y1="12" x2="2" y2="12"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/></svg>
+      <div class="quiz-ex-icon is-blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="22" y1="12" x2="15" y2="12"/><line x1="9" y1="12" x2="2" y2="12"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/></svg>
       </div>
       <div>
-        <div style="color:#4a90d9; font-size:10px; text-transform:uppercase; letter-spacing:2px; font-weight:700; margin-bottom:3px;">Exercise 2</div>
+        <div class="quiz-ex-eyebrow is-blue">Exercise 2</div>
         <h3 style="color:var(--ey-dark); font-size:21px; font-weight:700; margin:0;">Spot the Right Technology</h3>
       </div>
     </div>
     <p style="color:var(--gray-01); font-size:13px; line-height:1.6; margin:0 0 24px; padding-left:52px;">For each scenario, select the AI technology that best describes what is happening.</p>
 
-    <div style="display:flex; align-items:center; gap:8px; background:var(--white); border:1px solid var(--gray-02); border-radius:8px; padding:9px 16px; margin-bottom:20px;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div class="quiz-scorebar">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span style="color:var(--gray-01); font-size:12px;">Score:</span>
-      <span id="spot-score-val" style="color:#ffe600; font-weight:700; font-size:13px;">0 / 0</span>
+      <span id="spot-score-val">0 / 0</span>
       <span style="color:var(--gray-01); font-size:12px;">correct</span>
     </div>
 
     <!-- Scenarios 1-5 -->
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
 
-      <div id="sc1" style="background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 18px;">
+      <div id="sc1" class="quiz-spot-card">
         <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:var(--off-white); color:var(--gray-01); font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">1</span>
+          <span class="quiz-spot-num">1</span>
           <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A traffic signal automatically changes from green to red based on programmed timing rules.</p>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:7px;">
@@ -3225,9 +3610,9 @@ function toggleCheat(id, btn) {
         <div id="sc1-reveal" class="spot-reveal"><strong>Artificial Intelligence</strong></div>
       </div>
 
-      <div id="sc2" style="background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 18px;">
+      <div id="sc2" class="quiz-spot-card">
         <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:var(--off-white); color:var(--gray-01); font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">2</span>
+          <span class="quiz-spot-num">2</span>
           <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A shopping app recommends products based on a customer's previous purchases.</p>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:7px;">
@@ -3240,9 +3625,9 @@ function toggleCheat(id, btn) {
         <div id="sc2-reveal" class="spot-reveal"><strong>Machine Learning</strong></div>
       </div>
 
-      <div id="sc3" style="background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 18px;">
+      <div id="sc3" class="quiz-spot-card">
         <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:var(--off-white); color:var(--gray-01); font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">3</span>
+          <span class="quiz-spot-num">3</span>
           <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A smartphone unlocks when it recognizes its owner's face.</p>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:7px;">
@@ -3255,9 +3640,9 @@ function toggleCheat(id, btn) {
         <div id="sc3-reveal" class="spot-reveal"><strong>Deep Learning</strong></div>
       </div>
 
-      <div id="sc4" style="background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 18px;">
+      <div id="sc4" class="quiz-spot-card">
         <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:var(--off-white); color:var(--gray-01); font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">4</span>
+          <span class="quiz-spot-num">4</span>
           <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A user asks Copilot to draft an email explaining GST implications.</p>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:7px;">
@@ -3272,7 +3657,7 @@ function toggleCheat(id, btn) {
 
       <div id="sc5" style="background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 18px; grid-column:1/-1;">
         <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:var(--off-white); color:var(--gray-01); font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">5</span>
+          <span class="quiz-spot-num">5</span>
           <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A system monitors tax notices, identifies deadlines, gathers supporting documents and prepares a review package.</p>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:7px;">
@@ -3390,13 +3775,13 @@ function toggleCheat(id, btn) {
     </div>
 
     <!-- Final result -->
-    <div id="spot-final" style="display:none; margin-top:24px; background:rgba(74,144,217,0.06); border:1px solid rgba(74,144,217,0.2); border-radius:12px; padding:20px 24px; text-align:center;">
-      <div style="display:flex; align-items:center; gap:10px; justify-content:center;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a90d9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <span style="color:#4a90d9; font-size:15px; font-weight:700;">Exercise complete â€”</span>
-        <span id="spot-final-score" style="color:#ffe600; font-size:18px; font-weight:800;">0/10</span>
+    <div id="spot-final" class="quiz-result is-spot">
+      <div style="display:flex; align-items:center; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--confident-black)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span style="color:var(--confident-black); font-size:15px; font-weight:700;">Complete — here&rsquo;s what we found:</span>
+        <span id="spot-final-score" class="quiz-result-score">0/10</span>
       </div>
-      <p style="color:var(--gray-01); font-size:13px; margin:8px 0 0;">Understanding when each technology applies is the first step to using AI effectively.</p>
+      <p style="color:var(--gray-01); font-size:13px; margin:10px 0 0;">Understanding when each technology applies is the first step to using AI effectively.</p>
     </div>
 
     <script>
@@ -3415,15 +3800,11 @@ function toggleCheat(id, btn) {
         btns.forEach(function(btn) {
           btn.disabled = true;
           if (btn.dataset.val === correct) {
-            btn.style.background  = 'rgba(46,204,113,0.15)';
-            btn.style.borderColor = 'rgba(46,204,113,0.5)';
-            btn.style.color       = '#2ecc71';
+            btn.classList.add('is-correct');
           } else if (btn.dataset.val === chosen && chosen !== correct) {
-            btn.style.background  = 'rgba(255,107,107,0.1)';
-            btn.style.borderColor = 'rgba(255,107,107,0.4)';
-            btn.style.color       = '#ff6b6b';
+            btn.classList.add('is-wrong');
           } else {
-            btn.style.opacity = '0.3';
+            btn.style.opacity = '0.35';
           }
         });
         document.getElementById(cardId + '-reveal').style.display = 'block';
@@ -3432,8 +3813,12 @@ function toggleCheat(id, btn) {
         if (chosen === correct) spotScore++;
         document.getElementById('spot-score-val').textContent = spotScore + ' / ' + spotAnswered;
         if (spotAnswered === 10) {
-          document.getElementById('spot-final').style.display = 'block';
+          var banner = document.getElementById('spot-final');
           document.getElementById('spot-final-score').textContent = spotScore + ' / 10';
+          banner.style.display = 'block';
+          banner.classList.add('is-visible');
+          var score = banner.querySelector('.quiz-result-score');
+          if (score) { score.style.animation = 'none'; void score.offsetWidth; score.style.animation = ''; }
         }
       }
     </script>
@@ -3471,24 +3856,16 @@ function toggleCheat(id, btn) {
       var el = document.getElementById('desc-' + letter);
       if (el.dataset.matched) return;
       if (matchSelected === letter) {
-        el.style.borderColor = 'rgba(255,255,255,0.08)';
-        el.style.background  = 'rgba(255,255,255,0.02)';
-        el.style.transform   = '';
+        el.classList.remove('is-selected');
         matchSelected = null;
         return;
       }
       if (matchSelected) {
         var prev = document.getElementById('desc-' + matchSelected);
-        if (prev && !prev.dataset.matched) {
-          prev.style.borderColor = 'rgba(255,255,255,0.08)';
-          prev.style.background  = 'rgba(255,255,255,0.02)';
-          prev.style.transform   = '';
-        }
+        if (prev && !prev.dataset.matched) prev.classList.remove('is-selected');
       }
       matchSelected = letter;
-      el.style.borderColor = 'rgba(255,230,0,0.55)';
-      el.style.background  = 'rgba(255,230,0,0.05)';
-      el.style.transform   = 'translateX(4px)';
+      el.classList.add('is-selected');
     }
 
     function matchSelectTerm(term) {
@@ -3499,39 +3876,28 @@ function toggleCheat(id, btn) {
       if (!termEl || termEl.dataset.matched || !descEl) return;
 
       if (matchAnswers[matchSelected] === term) {
-        // Correct match
-        descEl.style.borderColor = 'rgba(46,204,113,0.45)';
-        descEl.style.background  = 'rgba(46,204,113,0.05)';
-        descEl.style.transform   = '';
-        descEl.style.cursor      = 'default';
-        descEl.dataset.matched   = '1';
+        descEl.classList.remove('is-selected');
+        descEl.classList.add('is-matched');
+        descEl.dataset.matched = '1';
         document.getElementById('dcheck-' + matchSelected).style.display = 'inline';
-        termEl.style.background  = 'rgba(46,204,113,0.1)';
-        termEl.style.borderColor = 'rgba(46,204,113,0.4)';
-        termEl.style.color       = '#2ecc71';
-        termEl.style.cursor      = 'default';
-        termEl.dataset.matched   = '1';
+        termEl.classList.add('is-matched');
+        termEl.dataset.matched = '1';
         matchSelected = null;
         matchCount++;
         if (matchCount === 9) {
-          document.getElementById('match-result').style.display = 'block';
+          var banner = document.getElementById('match-result');
+          banner.style.display = 'block';
+          banner.classList.add('is-visible');
+          var score = banner.querySelector('.quiz-result-score');
+          if (score) { score.style.animation = 'none'; void score.offsetWidth; score.style.animation = ''; }
         }
       } else {
-        // Wrong match â€” flash red then reset
-        descEl.style.borderColor = 'rgba(255,107,107,0.55)';
-        descEl.style.background  = 'rgba(255,107,107,0.05)';
-        termEl.style.borderColor = 'rgba(255,107,107,0.55)';
-        termEl.style.background  = 'rgba(255,107,107,0.08)';
+        descEl.classList.remove('is-selected');
+        descEl.classList.add('is-wrong-flash');
+        termEl.classList.add('is-wrong-flash');
         setTimeout(function() {
-          if (!descEl.dataset.matched) {
-            descEl.style.borderColor = 'rgba(255,255,255,0.08)';
-            descEl.style.background  = 'rgba(255,255,255,0.02)';
-            descEl.style.transform   = '';
-          }
-          if (!termEl.dataset.matched) {
-            termEl.style.borderColor = 'rgba(255,255,255,0.1)';
-            termEl.style.background  = 'rgba(255,255,255,0.03)';
-          }
+          descEl.classList.remove('is-wrong-flash');
+          termEl.classList.remove('is-wrong-flash');
           matchSelected = null;
         }, 700);
       }
@@ -3542,22 +3908,20 @@ function toggleCheat(id, btn) {
       matchCount    = 0;
       ['A','B','C','D','E','F','G','H','I'].forEach(function(l) {
         var el = document.getElementById('desc-' + l);
-        el.style.borderColor = 'rgba(255,255,255,0.08)';
-        el.style.background  = 'rgba(255,255,255,0.02)';
-        el.style.transform   = '';
-        el.style.cursor      = 'pointer';
+        el.classList.remove('is-selected', 'is-matched', 'is-wrong-flash');
+        el.style.cursor = 'pointer';
         delete el.dataset.matched;
         document.getElementById('dcheck-' + l).style.display = 'none';
       });
       ['Prompt','Tokens','Hallucination','RAG','AI-Agent','LLM','Agentic-AI','Human-in-the-Loop','Generative-AI'].forEach(function(t) {
         var el = document.getElementById('term-' + t);
-        el.style.borderColor = 'rgba(255,255,255,0.1)';
-        el.style.background  = 'rgba(255,255,255,0.03)';
-        el.style.color       = '#cbd5e1';
-        el.style.cursor      = 'pointer';
+        el.classList.remove('is-matched', 'is-wrong-flash');
+        el.style.cursor = 'pointer';
         delete el.dataset.matched;
       });
-      document.getElementById('match-result').style.display = 'none';
+      var banner = document.getElementById('match-result');
+      banner.style.display = 'none';
+      banner.classList.remove('is-visible');
     }
   </script>
 
@@ -3594,23 +3958,7 @@ function toggleCheat(id, btn) {
   </div>
 </div>
 
-<!-- ======== CONCLUSION / CTA ======== -->
-<section class="section surface-neutral" id="whats-next" style="padding:120px 60px;">
-  <div class="cta-final">
-    <div class="badge" style="margin-bottom:18px;">What's Next</div>
-    <h2 style="font-size:30px; color:var(--ey-dark); line-height:1.35; margin-bottom:18px;">Fundamentals are clear.<br>Now it's time to <span style="color:var(--ey-yellow);">use AI effectively.</span></h2>
-    <p style="color:var(--text-muted); font-size:16px; line-height:1.7; margin-bottom:28px;">
-      You now understand what AI is, how it works, where it fails, and why fundamentals matter. The next step is learning <em>how</em> to interact with it — how to craft prompts that deliver real, usable results in tax work.
-    </p>
-    <a href="ai-tax-prompting.html" class="btn-primary" style="padding:15px 34px; font-size:15px; text-decoration:none; display:inline-block;">
-      Continue to Part 2: Basics of Prompting in Tax →
-    </a>
-    <p style="color:var(--text-dim); font-size:12px; margin-top:18px;">Part 2 covers: prompt structure, role-setting, context framing, output formatting, and real tax prompt templates</p>
-  </div>
-</section>
-
-<!-- ======== FOOTER ======== -->
-<div class="footer">© 2026 EY India AI Tax Hub | Building a better working world</div>
+<!-- What's Next CTA is rendered by EYWhatsNext in FoundationalConcepts.tsx -->
 
 <!-- ======== JAVASCRIPT ======== -->
 <script>
@@ -3701,6 +4049,7 @@ topNavLinks.forEach(a => {
 
 
 // ===== EVOLUTION ERA EXPLORER (Figma 3276:17185) =====
+// Causal chain: each era is a child/subset of the previous parent layer.
 const EVO_ERAS = [
   {
     year: '1943', short: 'AI', title: 'Artificial Intelligence', tag: 'Rules Engine',
@@ -3709,7 +4058,8 @@ const EVO_ERAS = [
     examples: ['Traffic lights', 'Elevator logic', 'Washing machine cycles'],
     preview: 'Follows predefined rules',
     image: '/evo-ai.png',
-    dot: '#4a90d9'
+    dot: '#4a90d9',
+    parent: null
   },
   {
     year: '1959', short: 'ML', title: 'Machine Learning', tag: 'Pattern Learner',
@@ -3718,7 +4068,8 @@ const EVO_ERAS = [
     examples: ['Netflix recommendations', 'Amazon suggestions', 'Email spam filtering'],
     preview: 'Learns from experience',
     image: '/evo-ml.png',
-    dot: '#2ecc71'
+    dot: '#2ecc71',
+    parent: 0
   },
   {
     year: '2006', short: 'DL', title: 'Deep Learning', tag: 'Neural Nets',
@@ -3727,7 +4078,8 @@ const EVO_ERAS = [
     examples: ['Face Unlock', 'Voice assistants', 'Photo recognition'],
     preview: 'Recognises complex patterns',
     image: '/evo-dl.png',
-    dot: '#f39c12'
+    dot: '#f39c12',
+    parent: 1
   },
   {
     year: '2017', yearLabel: '2017-22', short: 'Gen', title: 'Generative AI', tag: 'Content Creator',
@@ -3736,7 +4088,8 @@ const EVO_ERAS = [
     examples: ['ChatGPT drafting', 'Copilot presentations', 'AI image generation'],
     preview: 'Creates new content',
     image: '/evo-gen.png',
-    dot: '#e67e22'
+    dot: '#e67e22',
+    parent: 2
   },
   {
     year: '2024', short: 'Agentic', title: 'Agentic AI', tag: 'Goal-Driven',
@@ -3745,15 +4098,83 @@ const EVO_ERAS = [
     examples: ['Travel planners', 'Shopping assistants', 'Meeting prep agents'],
     preview: 'Acts towards an end goal',
     image: '/evo-agentic.png',
-    dot: '#9b59b6'
+    dot: '#9b59b6',
+    parent: 3
   }
 ];
 let evoActive = 0;
 
+function renderEvoNest(i) {
+  const nest = document.getElementById('evo-nest');
+  const builds = document.getElementById('evo-builds');
+  const featured = document.getElementById('evo-featured');
+  if (!nest || !builds || !featured) return;
+
+  // Keep the featured card alive — pull it out before rebuilding rings
+  featured.remove();
+
+  // Build concentric rings: outer ancestors → inner current wraps featured
+  let outer = null;
+  let innermost = null;
+  for (let depth = 0; depth <= i; depth++) {
+    const e = EVO_ERAS[depth];
+    const isCurrent = depth === i;
+    const role = depth === 0 && i === 0
+      ? 'Root'
+      : isCurrent
+        ? 'You are here'
+        : (depth === 0 ? 'Parent root' : 'Parent layer');
+
+    const layer = document.createElement('div');
+    layer.className = 'evo-nest-layer ' + (isCurrent ? 'is-current' : 'is-ancestor');
+    layer.setAttribute('data-depth', String(depth));
+
+    const row = document.createElement('div');
+    row.className = 'evo-nest-row';
+    row.innerHTML =
+      `<span class="evo-nest-dot" style="background:${e.dot}"></span>` +
+      `<span class="evo-nest-label">${e.short} · ${e.title}</span>` +
+      `<span class="evo-nest-role">${role}</span>`;
+    layer.appendChild(row);
+
+    if (!outer) outer = layer;
+    else innermost.appendChild(layer);
+    innermost = layer;
+  }
+
+  innermost.appendChild(featured);
+  nest.innerHTML = '';
+  nest.appendChild(outer);
+  nest.setAttribute(
+    'aria-label',
+    'Nesting: ' + EVO_ERAS.slice(0, i + 1).map((e) => e.short).join(' contains ')
+  );
+
+  const era = EVO_ERAS[i];
+  const child = EVO_ERAS[i + 1];
+  if (era.parent === null) {
+    builds.innerHTML = child
+      ? `<span class="evo-builds-chip">Root layer</span>
+         <span>Child tech that nests inside: <strong>${child.title}</strong></span>`
+      : `<span class="evo-builds-chip">Root layer</span>`;
+  } else {
+    const parent = EVO_ERAS[era.parent];
+    builds.innerHTML = `<span class="evo-builds-chip">Builds on ${parent.short}</span>
+      <span>Parent: <strong>${parent.title}</strong>${
+        child ? ` · next child: <strong>${child.title}</strong>` : ''
+      }</span>`;
+  }
+}
+
 function selectEra(i) {
+  if (i < 0 || i >= EVO_ERAS.length) return;
   evoActive = i;
   const era = EVO_ERAS[i];
-  document.getElementById('evo-feat-img').src = era.image;
+  const img = document.getElementById('evo-feat-img');
+  if (!img) return;
+
+  img.src = era.image;
+  img.alt = era.title;
   document.getElementById('evo-feat-year').textContent = era.yearLabel || era.year;
   document.getElementById('evo-feat-title').textContent = era.title;
   document.getElementById('evo-feat-tag').textContent = era.tag;
@@ -3763,40 +4184,46 @@ function selectEra(i) {
     `<span class="evo-chip">${e}</span>`
   ).join('');
 
-  document.querySelectorAll('.evo-tab').forEach((tab, idx) => {
-    tab.classList.toggle('active', idx === i);
-    tab.setAttribute('aria-selected', idx === i ? 'true' : 'false');
-  });
+  renderEvoNest(i);
 
   const previews = document.getElementById('evo-previews');
-  previews.innerHTML = EVO_ERAS.filter((_, idx) => idx !== i).map((e) => {
-    const realIdx = EVO_ERAS.indexOf(e);
-    return `<button type="button" class="evo-preview" onclick="selectEra(${realIdx})">
+  if (previews) {
+    previews.innerHTML = EVO_ERAS.filter((_, idx) => idx !== i).map((e) => {
+      const realIdx = EVO_ERAS.indexOf(e);
+      const relation =
+        realIdx === i - 1 ? 'Parent' :
+        realIdx === i + 1 ? 'Child' :
+        realIdx < i ? 'Ancestor' : 'Later';
+      return `<button type="button" class="evo-preview" onclick="selectEra(${realIdx})">
       <div class="evo-preview-top">
         <div class="evo-preview-left">
           <span class="evo-dot" style="background:${e.dot}"></span>
           <span class="evo-preview-year">${e.yearLabel || e.year}</span>
         </div>
-        <span class="evo-preview-short">${e.short}</span>
+        <span class="evo-preview-short">${relation} · ${e.short}</span>
       </div>
       <p class="evo-preview-title">${e.title}</p>
       <p class="evo-preview-desc">${e.preview}</p>
       <div class="evo-preview-thumb"><img src="${e.image}" alt=""></div>
     </button>`;
-  }).join('');
+    }).join('');
+  }
 }
 
 function initEvoExplorer() {
-  const tabs = document.getElementById('evo-tabs');
-  if (!tabs) return;
-  tabs.innerHTML = EVO_ERAS.map((e, i) =>
-    `<button type="button" class="evo-tab${i===0?' active':''}" role="tab" aria-selected="${i===0}" onclick="selectEra(${i})">
-      <span class="y">${e.year}</span><span class="s">${e.short}</span>
-    </button>`
-  ).join('');
+  // Preview cards are the era picker — no separate year-tab strip
+  if (!document.getElementById('evo-featured')) return;
   selectEra(0);
 }
-document.addEventListener('DOMContentLoaded', initEvoExplorer);
+
+// Expose for inline handlers + React late inject (DOMContentLoaded already fired)
+window.selectEra = selectEra;
+window.initEvoExplorer = initEvoExplorer;
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEvoExplorer);
+} else {
+  initEvoExplorer();
+}
 
 // ===== EASY EXPLANATION SLIDESHOW =====
 const easyImages = ['/ai.png', '/ml.png', '/dl.png', '/llm.png', '/agentic.png'];

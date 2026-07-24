@@ -10,8 +10,9 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
-import { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
+import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { colors, fonts, spacing } from "../design-kit/tokens";
 
 /**
@@ -55,9 +56,143 @@ const TOKEN_BRIDGE = `
 #module-content .section,
 #module-content .rise-section,
 #module-content .wrong-section,
-#module-content .paths-section {
+#module-content .paths-section,
+#module-content .gva-section {
   padding: var(--section-padding);
 }
+
+/* Ultrawide: stretch capped content rails to the full section width
+   (backgrounds already full-bleed; only the inner grids were stuck at ~1300px). */
+#module-content .rise-grid,
+#module-content .wrong-grid,
+#module-content .gva-spectrum,
+#module-content .gva-banner,
+#module-content .paths-row,
+#module-content .hero-inner,
+#module-content .velocity-header,
+#module-content .velocity-card,
+#module-content #evo-timeline-view,
+#module-content .news-grid {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Autonomy Spectrum — kept here so lesson cards always render even if
+   the embedded HTML stylesheet drifts. Mirrors Figma 3187:3460. */
+#module-content .gva-spectrum {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 24px;
+}
+#module-content .gva-spectrum-card {
+  background: ${colors.white};
+  border: 1px solid #94a3b8;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#module-content .gva-spectrum-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+}
+#module-content .gva-spectrum-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px;
+}
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-head { background: rgba(59,130,246,0.08); }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-head { background: rgba(16,185,129,0.08); }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-head { background: rgba(249,115,22,0.08); }
+#module-content .gva-spectrum-title { font-size: 18px; font-weight: 700; margin: 0; }
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-title { color: #3b82f6; }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-title { color: #10b981; }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-title { color: #f97316; }
+#module-content .gva-badge {
+  display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #fff;
+}
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-badge { background: #3b82f6; }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-badge { background: #10b981; }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-badge { background: #f97316; }
+#module-content .gva-spectrum-body { display: flex; flex-direction: column; gap: 16px; padding: 20px; flex: 1; }
+#module-content .gva-spectrum-desc { margin: 0; font-size: 13px; line-height: 1.4; color: ${colors.gray01}; }
+#module-content .gva-flow {
+  border: 1px solid rgba(46,46,56,0.12); border-radius: 6px; min-height: 32px;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;
+  background: ${colors.white};
+}
+#module-content .gva-spectrum-card[data-tone="blue"] .gva-flow { color: #3b82f6; }
+#module-content .gva-spectrum-card[data-tone="green"] .gva-flow { color: #10b981; }
+#module-content .gva-spectrum-card[data-tone="orange"] .gva-flow { color: #f97316; }
+#module-content .gva-best-label { margin: 0; font-size: 11px; text-transform: uppercase; color: ${colors.gray01}; }
+#module-content .gva-best-value { margin: 2px 0 0; font-size: 13px; font-weight: 700; color: ${colors.offBlack}; }
+#module-content .gva-card-cta { margin-top: auto; font-size: 13px; font-weight: 700; color: ${colors.offBlack}; text-decoration: underline; text-underline-offset: 3px; }
+#module-content .gva-banner {
+  width: 100%; max-width: none; display: flex; gap: 20px; align-items: center; padding: 24px;
+  border-radius: 12px; background: ${colors.confidentBlack}; border: 1px solid rgba(255,255,255,0.08);
+}
+#module-content .gva-banner-icon {
+  width: 40px; height: 40px; border-radius: 8px; background: ${colors.yellow};
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+#module-content .gva-banner-icon img { width: 20px; height: 20px; display: block; }
+#module-content .gva-banner-title { margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #fff; }
+#module-content .gva-banner-body { margin: 0; font-size: 13px; color: ${colors.gray02}; line-height: 1.45; }
+@media (max-width: 1000px) {
+  #module-content .gva-spectrum { grid-template-columns: 1fr; }
+}
+
+/* Modal shell — also pinned here so open/close UI never loses styles */
+#module-content .gva-modal[hidden] { display: none !important; }
+#module-content .gva-modal {
+  position: fixed; inset: 0; z-index: 10050;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+#module-content .gva-modal-backdrop {
+  position: absolute; inset: 0; background: rgba(26,26,36,0.72);
+}
+#module-content .gva-modal-dialog {
+  position: relative; z-index: 1; width: min(720px, 100%);
+  max-height: min(88vh, 900px); overflow: auto;
+  background: ${colors.white}; border: 1px solid ${colors.gray02};
+  border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+}
+#module-content .gva-modal-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; padding: 20px 24px; border-bottom: 1px solid ${colors.gray02};
+}
+#module-content .gva-modal-top h3 {
+  margin: 0 0 6px; font-size: 22px; font-weight: 700; color: ${colors.offBlack};
+}
+#module-content .gva-modal-close {
+  border: 1px solid ${colors.gray02}; background: ${colors.offWhite};
+  width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+  font-size: 18px; line-height: 1; color: ${colors.offBlack}; flex-shrink: 0;
+}
+#module-content .gva-modal-content {
+  padding: 20px 24px 28px; display: flex; flex-direction: column; gap: 14px;
+}
+#module-content .gva-modal-thumb {
+  width: 100%; height: auto; object-fit: contain; object-position: center top;
+  border-radius: 8px; display: block; background: #f5f5f7;
+  border: 1px solid rgba(46, 46, 56, 0.08);
+}
+body.gva-modal-open { overflow: hidden; }
 
 #module-content .hero {
   padding: 48px 64px 56px;
@@ -114,7 +249,10 @@ export default function FoundationalConcepts({
   onBack: () => void;
   onNavigate: (path: string) => void;
 }) {
-  const { css, body, scripts } = useMemo(() => parseLessonHtml(foundationalHtml), []);
+  const { css, body, scripts } = useMemo(
+    () => parseLessonHtml(foundationalHtml),
+    [foundationalHtml]
+  );
   const contentRef = useRef<HTMLDivElement>(null);
   const scriptsRan = useRef(false);
 
@@ -132,6 +270,11 @@ export default function FoundationalConcepts({
       nodes.push(el);
     }
 
+    // Lesson scripts may listen for DOMContentLoaded — that already fired in SPA
+    // mode, so boot explorers that expose a window init (e.g. era tabs).
+    const boot = window as Window & { initEvoExplorer?: () => void };
+    if (typeof boot.initEvoExplorer === "function") boot.initEvoExplorer();
+
     return () => {
       nodes.forEach((n) => n.remove());
       scriptsRan.current = false;
@@ -148,7 +291,20 @@ export default function FoundationalConcepts({
         <div dangerouslySetInnerHTML={{ __html: body }} />
       </div>
 
-      <ModulePrevNext currentModuleId="foundational" onNavigate={onNavigate} onBack={onBack} />
+      {/* Shared dark CTA — Figma 3455:18320 palette */}
+      <EYWhatsNext
+        title={
+          <>
+            Fundamentals are clear.
+            <br />
+            Now it&apos;s time to <EYWhatsNextHighlight>use AI effectively.</EYWhatsNextHighlight>
+          </>
+        }
+        description="You now understand what AI is, how it works, where it fails, and why fundamentals matter. The next step is learning how to interact with it — how to craft prompts that deliver real, usable results in tax work."
+        ctaLabel="Continue to Part 2: Basics of Prompting in Tax"
+        onContinue={() => onNavigate("/ai-tax-prompting")}
+        meta="Part 2 covers: prompt structure, role-setting, context framing, output formatting, and real tax prompt templates"
+      />
     </div>
   );
 }

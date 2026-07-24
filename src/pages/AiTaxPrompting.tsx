@@ -2,8 +2,9 @@ import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight, CheckCircle, ChevronLeft, ChevronRight, Copy, Cpu, EyeOff, FileText, Lightbulb, ListChecks, ListTree, Palette, RefreshCw, RotateCcw, Scale, Shield, Table2, Target, User, Zap } from "lucide-react";
 import { colors as C, fonts as F, spectrumCss } from "../design-kit/tokens";
-import { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
+import { EYWhatsNext } from "../design-kit/EYWhatsNext";
 
 // ── Data ────────────────────────────────────────────────────────────────────
 
@@ -830,42 +831,17 @@ function RecapInNutshellSection() {
 
 function WhatsNextSection({ onContinue }: { onContinue: () => void }) {
   return (
-    <section style={{
-      background: C.white,
-      padding: "100px 64px", textAlign: "center",
-    }}>
-      <div style={{
-        maxWidth: 680, margin: "0 auto", padding: "55px 40px",
-        background: C.offWhite, border: "1px solid rgba(46,46,56,0.10)", borderRadius: 16,
-      }}>
-        <div style={{
-          display: "inline-flex", background: C.yellow, border: `1px solid ${C.gray02}`,
-          borderRadius: 100, padding: "6px 16px", marginBottom: 18,
-        }}>
-          <span style={{ color: C.offBlack, fontSize: 14, fontFamily: F.regular }}>What&apos;s Next</span>
-        </div>
-        <h2 style={{ fontSize: 30, color: C.confidentBlack, lineHeight: 1.35, marginBottom: 18, fontFamily: F.bold }}>
-          Prompting skills — unlocked.
-        </h2>
-        <p style={{ color: C.gray01, fontSize: 16, lineHeight: 1.7, marginBottom: 28, fontFamily: F.light }}>
-          The next module takes you into <em>Microsoft 365 Copilot</em> — where you&apos;ll apply these skills across Word, Excel, Outlook, and Teams with real tax use cases.
-        </p>
-        <button
-          type="button"
-          onClick={onContinue}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "15px 34px", fontSize: 15, background: C.yellow, color: C.confidentBlack,
-            borderRadius: 6, fontWeight: 600, border: "none", cursor: "pointer", fontFamily: F.bold,
-          }}
-        >
-          Continue to Part 3: M365 Copilot Deep Dive <ArrowRight size={16} />
-        </button>
-        <p style={{ color: C.gray01, fontSize: 12, marginTop: 18, fontFamily: F.regular }}>
-          Part 3 covers: Copilot in Word, Excel, Outlook, Teams, and real tax workflows
-        </p>
-      </div>
-    </section>
+    <EYWhatsNext
+      title="Prompting skills — unlocked."
+      description={
+        <>
+          The next module takes you into Microsoft 365 Copilot — where you&apos;ll apply these skills across Word, Excel, Outlook, and Teams with real tax use cases.
+        </>
+      }
+      ctaLabel="Continue to Part 3: M365 Copilot Deep Dive"
+      onContinue={onContinue}
+      meta="Part 3 covers: Copilot in Word, Excel, Outlook, Teams, and real tax workflows"
+    />
   );
 }
 
@@ -2013,9 +1989,6 @@ export default function AiTaxPrompting({
 
       {/* ── 11. WHAT'S NEXT — continue to M365 Copilot ── */}
       <WhatsNextSection onContinue={() => onNavigate("/copilot-hub")} />
-
-      {/* ── Prev / Next module ── */}
-      <ModulePrevNext currentModuleId="ai-tax-prompting" onNavigate={onNavigate} onBack={onBack} />
 
       {/* ── Footer ── */}
       <div style={{ background: C.confidentBlack, borderTop: "1px solid rgba(255,255,255,0.06)", padding: "24px 64px", textAlign: "center" }}>

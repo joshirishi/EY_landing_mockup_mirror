@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
+import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 
 // ── EY Design System tokens ───────────────────────────────────────────────────
 const C = {
@@ -612,10 +613,20 @@ export default function M365CopilotHub({
         </div>
       </section>
 
-      {/* ── Prev / Next module ── */}
-      {onBack && onNavigate && (
-        <ModulePrevNext currentModuleId="copilot-hub" onNavigate={onNavigate} onBack={onBack} />
-      )}
+      {/* Shared dark CTA — Phase 1 complete */}
+      <EYWhatsNext
+        title={
+          <>
+            You&apos;ve completed Phase 1.
+            <br />
+            Keep practising with <EYWhatsNextHighlight>real tax workflows.</EYWhatsNextHighlight>
+          </>
+        }
+        description="You now have the foundations, prompting craft, and Copilot patterns to use AI safely in tax work. Revisit any module anytime — or return to Tax Labs to explore what's next."
+        ctaLabel="Back to Tax Labs"
+        onContinue={() => onNavigate?.("/phase1")}
+        meta="Phase 1 covered: AI foundations, tax prompting, and M365 Copilot"
+      />
 
       {/* ── Footer (Figma: Footer — EY logo + EY.ai Tax Labs + link cols) ────── */}
       <footer style={{ background: C.dark2, padding: "56px 80px 32px" }}>

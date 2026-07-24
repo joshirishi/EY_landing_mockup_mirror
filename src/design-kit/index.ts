@@ -21,6 +21,7 @@ export { EYFrame } from './EYFrame';
 export { SiteHeader, PlatformModeBadge } from './SiteHeader';
 export type { SiteSection } from './SiteHeader';
 export { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_OFFSET } from './LearningNav';
+export { EYWhatsNext, EYWhatsNextHighlight } from './EYWhatsNext';
 export {
   MODULES,
   PHASE_LABEL,
