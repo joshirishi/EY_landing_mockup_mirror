@@ -6,6 +6,32 @@ import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext } from "../design-kit/EYWhatsNext";
 
+/** Section surface rhythm: dark → neutral → light (repeats down the page). */
+type SurfaceTone = "dark" | "neutral" | "light";
+const SURFACE: Record<SurfaceTone, { bg: string; heading: string; body: string; eyebrow: string; border: string }> = {
+  dark: {
+    bg: C.confidentBlack,
+    heading: C.onDark,
+    body: C.gray02,
+    eyebrow: C.yellow,
+    border: C.borderOnDark,
+  },
+  neutral: {
+    bg: C.offWhite,
+    heading: C.confidentBlack,
+    body: C.gray01,
+    eyebrow: C.eyebrowGold,
+    border: "rgba(46,46,56,0.10)",
+  },
+  light: {
+    bg: C.white,
+    heading: C.confidentBlack,
+    body: C.gray01,
+    eyebrow: C.eyebrowGold,
+    border: "rgba(46,46,56,0.10)",
+  },
+};
+
 // ── Data ────────────────────────────────────────────────────────────────────
 
 const ELEMENTS = [
@@ -613,7 +639,7 @@ function PromptStackBuilder() {
 function TeamBriefingSection() {
   const missingItems = ["What issue?", "Which jurisdiction?", "What output?", "By when?"];
   return (
-    <section id="team-briefing" style={{ background: C.offWhite, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+    <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Brief AI Like You Brief Your Team
@@ -696,7 +722,7 @@ function TeamBriefingSection() {
 
 function AiLazyProSection() {
   return (
-    <section id="lazy-vs-pro" style={{ background: C.white, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+    <section id="lazy-vs-pro" style={{ background: SURFACE.neutral.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Same AI. Two Very Different Results.
@@ -768,9 +794,10 @@ function AiLazyProSection() {
 }
 
 function RecapInNutshellSection() {
+  const s = SURFACE.dark;
   return (
     <section id="recap" style={{
-      background: C.offWhite,
+      background: s.bg,
       padding: "100px 64px",
       scrollMarginTop: SUBNAV_SCROLL_OFFSET,
     }}>
@@ -784,17 +811,17 @@ function RecapInNutshellSection() {
             Recap in a Nutshell
           </span>
         </div>
-        <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, marginBottom: 10, fontFamily: F.bold }}>
-          Putting your <span style={{ color: C.eyebrowGold, fontStyle: "italic" }}>#BestPrompt Forward</span>
+        <h2 style={{ fontSize: 36, fontWeight: 700, color: s.heading, marginBottom: 10, fontFamily: F.bold }}>
+          Putting your <span style={{ color: C.yellow, fontStyle: "italic" }}>#BestPrompt Forward</span>
         </h2>
-        <p style={{ fontSize: 16, color: C.gray01, lineHeight: 1.6, marginBottom: 50, fontFamily: F.light }}>
+        <p style={{ fontSize: 16, color: s.body, lineHeight: 1.6, marginBottom: 50, fontFamily: F.light }}>
           Your 8-element checklist. Before you hit Send, make sure you&apos;ve covered these.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, textAlign: "left" }}>
           {RECAP_CARDS.map(({ icon: Icon, name, color, desc }) => (
             <div key={name} style={{
-              background: C.white, border: "1px solid rgba(46,46,56,0.10)",
+              background: C.white, border: `1px solid ${s.border}`,
               borderLeft: `4px solid ${color}`, borderRadius: 12, padding: "21px 28px",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
@@ -813,14 +840,14 @@ function RecapInNutshellSection() {
 
         <div style={{
           marginTop: 40, maxWidth: 900, marginLeft: "auto", marginRight: "auto",
-          background: C.white, border: `1px solid rgba(46,46,56,0.10)`,
+          background: C.surfaceOnDark, border: `1px solid ${s.border}`,
           borderTop: `3px solid ${C.yellow}`,
           borderRadius: 12, padding: 29, textAlign: "center",
         }}>
-          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, fontFamily: F.bold, color: C.confidentBlack }}>
+          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, fontFamily: F.bold, color: s.heading }}>
             We have shared the essentials. Now it&apos;s your turn to unlock the extraordinary.
           </p>
-          <p style={{ margin: "8px 0 0", fontSize: 16, lineHeight: 1.6, color: C.gray01, fontFamily: F.regular }}>
+          <p style={{ margin: "8px 0 0", fontSize: 16, lineHeight: 1.6, color: s.body, fontFamily: F.regular }}>
             The more you practice, the sharper your prompts become. Start with one element — and layer more as you gain confidence.
           </p>
         </div>
@@ -832,6 +859,7 @@ function RecapInNutshellSection() {
 function WhatsNextSection({ onContinue }: { onContinue: () => void }) {
   return (
     <EYWhatsNext
+      style={{ background: SURFACE.neutral.bg, borderTop: `1px solid ${SURFACE.neutral.border}` }}
       title="Prompting skills — unlocked."
       description={
         <>
@@ -925,7 +953,7 @@ function MatchPromptActivity() {
 
   return (
     <section id="match-activity" style={{
-      background: C.offWhite,
+      background: SURFACE.neutral.bg,
       padding: "100px 64px",
       textAlign: "center",
       scrollMarginTop: SUBNAV_SCROLL_OFFSET,
@@ -1130,17 +1158,17 @@ function EightElementsWizard() {
   const elementTag = elem.name.replace(" / ", " ").toUpperCase();
 
   return (
-    <section id="elements" style={{ background: C.gray02, padding: "80px 80px 48px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+    <section id="elements" style={{ background: SURFACE.dark.bg, padding: "80px 80px 48px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexDirection: "column", gap: 8 }}>
         {/* Header */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, marginBottom: 8 }}>
           <div style={{ background: C.yellow, border: `1px solid ${C.gray02}`, borderRadius: 100, padding: "6px 16px" }}>
             <span style={{ fontSize: 14, color: C.offBlack, fontFamily: F.regular }}>METHODOLOGY</span>
           </div>
-          <h2 style={{ fontSize: 32, fontWeight: 700, color: C.offBlack, fontFamily: F.bold, letterSpacing: "-0.32px", textAlign: "center", margin: 0 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 700, color: SURFACE.dark.heading, fontFamily: F.bold, letterSpacing: "-0.32px", textAlign: "center", margin: 0 }}>
             Prompt like a Pro — The 8 Elements
           </h2>
-          <p style={{ fontSize: 16, color: C.offBlack, fontFamily: F.light, lineHeight: "24px", textAlign: "center", maxWidth: 760, margin: 0 }}>
+          <p style={{ fontSize: 16, color: SURFACE.dark.body, fontFamily: F.light, lineHeight: "24px", textAlign: "center", maxWidth: 760, margin: 0 }}>
             The more context and structural anchors you provide, the better the final output.
           </p>
         </div>
@@ -1351,14 +1379,14 @@ function EightElementsWizard() {
         </div>
 
         <div style={{ paddingTop: 24 }}>
-          <div style={{ height: 1, background: C.white, width: "100%" }} />
+          <div style={{ height: 1, background: SURFACE.dark.border, width: "100%" }} />
         </div>
       </div>
     </section>
   );
 }
 
-function AdvancedViewToggle({ view, onChange }: { view: AdvancedView; onChange: (v: AdvancedView) => void }) {
+function AdvancedViewToggle({ view, onChange, onDark = false }: { view: AdvancedView; onChange: (v: AdvancedView) => void; onDark?: boolean }) {
   const focusRing = `2px solid ${C.yellow}`;
   const options: { id: AdvancedView; label: string; Icon: typeof Table2; hint: string }[] = [
     { id: "wizard", label: "Wizard", Icon: ListTree, hint: "One technique at a time" },
@@ -1371,7 +1399,7 @@ function AdvancedViewToggle({ view, onChange }: { view: AdvancedView; onChange: 
       aria-label="Advanced techniques view"
       style={{
         display: "inline-flex",
-        background: C.offWhite,
+        background: onDark ? C.white : C.offWhite,
         border: `1px solid rgba(46,46,56,0.10)`,
         borderRadius: 10,
         padding: 4,
@@ -1453,8 +1481,9 @@ function AdvancedTechniquesTable() {
   );
 }
 
-function AdvancedTechniquesSection() {
+function AdvancedTechniquesSection({ onDark = false }: { onDark?: boolean }) {
   const [view, setView] = useState<AdvancedView>("wizard");
+  const muted = onDark ? SURFACE.dark.body : C.gray01;
 
   return (
     <>
@@ -1466,12 +1495,12 @@ function AdvancedTechniquesSection() {
         flexWrap: "wrap",
         marginBottom: 24,
       }}>
-        <p style={{ fontSize: 11, color: C.gray01, margin: 0, fontFamily: F.regular, flex: 1, minWidth: 220 }}>
+        <p style={{ fontSize: 11, color: muted, margin: 0, fontFamily: F.regular, flex: 1, minWidth: 220 }}>
           {view === "wizard"
             ? "Wizard — decompose left, walk through one facet at a time."
             : "Table — compare all techniques side by side for quick reference."}
         </p>
-        <AdvancedViewToggle view={view} onChange={setView} />
+        <AdvancedViewToggle view={view} onChange={setView} onDark={onDark} />
       </div>
 
       {view === "wizard" ? <AdvancedDecomposition /> : <AdvancedTechniquesTable />}
@@ -1771,8 +1800,8 @@ export default function AiTaxPrompting({
         </div>
       </section>
 
-      {/* ── 2. THE PIPELINE — Figma Section Instruction ── */}
-      <section id="pipeline" style={{ background: C.offWhite, padding: "80px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      {/* ── 2. THE PIPELINE — neutral ── */}
+      <section id="pipeline" style={{ background: SURFACE.neutral.bg, padding: "80px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: "column", gap: 48, alignItems: "center" }}>
           {/* Header */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, width: "100%" }}>
@@ -1884,8 +1913,8 @@ export default function AiTaxPrompting({
       {/* ── 5. AI PARALLEL — Same AI, Lazy Ask vs Pro Ask ── */}
       <AiLazyProSection />
 
-      {/* ── 6. PROMPT STACK BUILDER — interactive, separate from recap ── */}
-      <section id="stack-builder" style={{ background: C.offWhite, padding: "80px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      {/* ── 6. PROMPT STACK BUILDER — light ── */}
+      <section id="stack-builder" style={{ background: SURFACE.light.bg, padding: "80px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
             Build a Perfect Prompt — Piece by Piece
@@ -1900,32 +1929,32 @@ export default function AiTaxPrompting({
         </div>
       </section>
 
-      {/* ── 7. ADVANCED TECHNIQUES — light ── */}
-      <section id="advanced" style={{ background: C.white, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      {/* ── 7. ADVANCED TECHNIQUES — dark ── */}
+      <section id="advanced" style={{ background: SURFACE.dark.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <p style={{ color: C.eyebrowGold, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 10 }}>
+          <p style={{ color: SURFACE.dark.eyebrow, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 10 }}>
             NEXT LEVEL
           </p>
-          <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, marginBottom: 8, fontFamily: F.bold }}>
+          <h2 style={{ fontSize: 36, fontWeight: 700, color: SURFACE.dark.heading, marginBottom: 8, fontFamily: F.bold }}>
             Advanced Prompting Techniques
           </h2>
-          <p style={{ fontSize: 16, color: C.gray01, lineHeight: 1.7, marginBottom: 12, fontFamily: F.light, maxWidth: 680 }}>
+          <p style={{ fontSize: 16, color: SURFACE.dark.body, lineHeight: 1.7, marginBottom: 12, fontFamily: F.light, maxWidth: 680 }}>
             Once you've mastered the 8 elements, these techniques help you get more precise, structured, and creative output.
           </p>
-          <AdvancedTechniquesSection />
+          <AdvancedTechniquesSection onDark />
         </div>
       </section>
 
       {/* ── 8. MATCH THE PROMPT — interactive activity (Figma 3215:5657) ── */}
       <MatchPromptActivity />
 
-      {/* ── 9. DOS AND DON'TS — dark EY theme ── */}
-      <section id="dos-donts" style={{ background: C.confidentBlack, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      {/* ── 9. DOS AND DON'TS — light ── */}
+      <section id="dos-donts" style={{ background: SURFACE.light.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <p style={{ color: C.yellow, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 10 }}>
+          <p style={{ color: SURFACE.light.eyebrow, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 10 }}>
             GUARDRAILS
           </p>
-          <h2 style={{ fontSize: 36, fontWeight: 700, color: C.onDark, marginBottom: 48, fontFamily: F.bold }}>
+          <h2 style={{ fontSize: 36, fontWeight: 700, color: SURFACE.light.heading, marginBottom: 48, fontFamily: F.bold }}>
             Do's & Don'ts
           </h2>
 
@@ -1951,23 +1980,23 @@ export default function AiTaxPrompting({
                   <div key={doItem.title} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignItems: "stretch" }}>
                     <div style={{
                       height: "100%",
-                      padding: "16px 18px", background: C.surfaceOnDark, borderRadius: 8,
-                      border: `1px solid ${C.borderOnDark}`,
+                      padding: "16px 18px", background: SURFACE.neutral.bg, borderRadius: 8,
+                      border: `1px solid ${SURFACE.light.border}`,
                       borderLeft: `3px solid ${C.success}`,
                       display: "flex", flexDirection: "column",
                     }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: C.success, marginBottom: 5, fontFamily: F.bold }}>{doItem.title}</div>
-                      <div style={{ fontSize: 13, color: C.onDarkMuted, lineHeight: 1.6, fontFamily: F.regular, flex: 1 }}>{doItem.desc}</div>
+                      <div style={{ fontSize: 13, color: SURFACE.light.body, lineHeight: 1.6, fontFamily: F.regular, flex: 1 }}>{doItem.desc}</div>
                     </div>
                     <div style={{
                       height: "100%",
-                      padding: "16px 18px", background: C.surfaceOnDark, borderRadius: 8,
-                      border: `1px solid ${C.borderOnDark}`,
+                      padding: "16px 18px", background: SURFACE.neutral.bg, borderRadius: 8,
+                      border: `1px solid ${SURFACE.light.border}`,
                       borderLeft: `3px solid ${C.destructive}`,
                       display: "flex", flexDirection: "column",
                     }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: C.destructive, marginBottom: 5, fontFamily: F.bold }}>{dontItem.title}</div>
-                      <div style={{ fontSize: 13, color: C.onDarkMuted, lineHeight: 1.6, fontFamily: F.regular, flex: 1 }}>{dontItem.desc}</div>
+                      <div style={{ fontSize: 13, color: SURFACE.light.body, lineHeight: 1.6, fontFamily: F.regular, flex: 1 }}>{dontItem.desc}</div>
                     </div>
                   </div>
                 );
@@ -1977,7 +2006,7 @@ export default function AiTaxPrompting({
 
           {/* Disclaimer */}
           <div style={{ marginTop: 40, padding: "14px 22px", background: C.yellowAlpha10, border: `1px solid ${C.yellow}33`, borderRadius: 8, textAlign: "center" }}>
-            <p style={{ fontSize: 12, color: C.yellow, lineHeight: 1.6, fontFamily: F.regular }}>
+            <p style={{ fontSize: 12, color: C.eyebrowGold, lineHeight: 1.6, fontFamily: F.regular }}>
               ⚠️ AI tools are assistants, not advisors. All output must be reviewed by a qualified tax professional before client delivery. Never input confidential or personally identifiable information into public AI platforms.
             </p>
           </div>
@@ -1990,8 +2019,8 @@ export default function AiTaxPrompting({
       {/* ── 11. WHAT'S NEXT — continue to M365 Copilot ── */}
       <WhatsNextSection onContinue={() => onNavigate("/copilot-hub")} />
 
-      {/* ── Footer ── */}
-      <div style={{ background: C.confidentBlack, borderTop: "1px solid rgba(255,255,255,0.06)", padding: "24px 64px", textAlign: "center" }}>
+      {/* ── Footer — light ── */}
+      <div style={{ background: SURFACE.light.bg, borderTop: `1px solid ${SURFACE.light.border}`, padding: "24px 64px", textAlign: "center" }}>
         <p style={{ color: C.gray01, fontSize: 12, fontFamily: F.regular }}>EY.ai Tax Labs · AI Tax Prompting Module · For internal training use only. Not for external distribution.</p>
       </div>
 
