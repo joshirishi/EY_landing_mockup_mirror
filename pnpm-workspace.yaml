@@ -3,8 +3,13 @@ packages:
 supportedArchitectures:
   os:
     - linux
+    - darwin
+    - current
   cpu:
     - x64
     - arm64
+    - current
   libc:
     - glibc
+    - musl
+    - unknown

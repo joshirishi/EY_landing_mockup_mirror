@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import svgPaths from "./svg-9qo006nmu4";
 import imgIndianTaxLady1 from "./cf830df8acc30d2ebe5a2c08149d39333d1079bd.png";
 import imgResearchLitigation1 from "./c47d9607a0edbab8c4595b79a2b7a480058303f1.png";
@@ -894,91 +895,39 @@ function Nav() {
   );
 }
 
+// Only the two site sections that actually exist in this app are shown here.
+// The rest of the original Figma export (Research & Litigation, Compliance,
+// EY Tax AI Performance, How it helps, Why EY, Responsible AI, Resources,
+// Coming soon) belonged to pages that were never built, so they're
+// intentionally omitted rather than shown as broken/disabled links.
 function Frame1() {
+  const navigate = useNavigate();
   return (
-    <div className="relative shrink-0 w-full">
+    <button
+      onClick={() => navigate("/")}
+      aria-current="page"
+      className="relative shrink-0 w-full text-left"
+      style={{ background: "none", border: "none", cursor: "default" }}
+    >
       <div className="flex flex-row items-center justify-center size-full">
         <div className="content-stretch flex items-center justify-center p-[10px] relative size-full">
           <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#ffe600] text-[13px] whitespace-nowrap">About EY India AI Tax Hub</p>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Frame2() {
-  return (
-    <div className="relative shrink-0 w-full">
-      <div className="flex flex-row items-center justify-center size-full">
-        <div className="content-stretch flex items-center justify-center p-[10px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">{`Research & Litigation`}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Frame4() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Compliance</p>
-    </div>
+    </button>
   );
 }
 
 function Frame5() {
+  const navigate = useNavigate();
   return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
+    <button
+      onClick={() => navigate("/phased")}
+      className="content-stretch flex items-center justify-center p-[10px] relative shrink-0"
+      style={{ background: "none", border: "none", cursor: "pointer" }}
+    >
       <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">EY.ai Tax Labs</p>
-    </div>
-  );
-}
-
-function Frame6() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">EY Tax AI Performance</p>
-    </div>
-  );
-}
-
-function Frame7() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">How it helps</p>
-    </div>
-  );
-}
-
-function Frame8() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Why EY</p>
-    </div>
-  );
-}
-
-function Frame9() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Responsible AI</p>
-    </div>
-  );
-}
-
-function Frame10() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Resources</p>
-    </div>
-  );
-}
-
-function Frame11() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Coming soon</p>
-    </div>
+    </button>
   );
 }
 
@@ -989,32 +938,8 @@ function Frame3() {
         <div className="content-stretch flex flex-col items-start px-px relative shrink-0 w-[180px]" data-name="NavLink">
           <Frame1 />
         </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0 w-[152px]" data-name="NavLink">
-          <Frame2 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame4 />
-        </div>
         <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
           <Frame5 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame6 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame7 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame8 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame9 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame10 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame11 />
         </div>
       </div>
     </div>

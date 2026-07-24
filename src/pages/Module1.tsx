@@ -165,10 +165,10 @@ const GUIDE_LINKS = [
 ];
 
 const SEC_IMAGES = [
-  { src: "/security_Picture1.png", caption: "Quick Check Before You Prompt", icon: "🛡️", accent: "#4a90d9" },
-  { src: "/security_Picture2.png", caption: "Share Smartly", icon: "🔗", accent: "#2ecc71" },
-  { src: "/security_Picture3.png", caption: "Use Sensitivity Labels", icon: "🏷️", accent: "#f39c12" },
-  { src: "/security_Picture4.png", caption: "Check Who Has Access", icon: "👥", accent: "#9b59b6" },
+  { src: "/security_Picture1.png", caption: "Quick Check Before You Prompt" },
+  { src: "/security_Picture2.png", caption: "Share Smartly" },
+  { src: "/security_Picture3.png", caption: "Use Sensitivity Labels" },
+  { src: "/security_Picture4.png", caption: "Check Who Has Access" },
 ];
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -200,7 +200,7 @@ function ArrowUpRightIcon() {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export default function Module1({ onBack }: { onBack: () => void }) {
+export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () => void; onNavigateToModule2?: () => void }) {
   const [activeApp, setActiveApp] = useState<string | null>(null);
   const [promptTexts, setPromptTexts] = useState<Record<string, string>>({});
   const [activePromptIdx, setActivePromptIdx] = useState<Record<string, number>>({});
@@ -208,7 +208,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
   const [secIdx, setSecIdx] = useState(0);
   const [scrollPct, setScrollPct] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [secErrors, setSecErrors] = useState<Record<number, boolean>>({});
+  const [secErrors, setSecErrors] = useState<Record<number, boolean>>({}); // kept for img onError tracking
   const [promptReady, setPromptReady] = useState(false);
   const [readyLabel, setReadyLabel] = useState(false);
   const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -331,7 +331,13 @@ export default function Module1({ onBack }: { onBack: () => void }) {
           <div style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: "auto" }}>
             <div style={{ padding: "5px 14px", borderRadius: 4, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", textTransform: "uppercase", letterSpacing: "0.5px", background: "var(--ey-brand-yellow-alpha-12)", border: "1px solid var(--ey-brand-yellow)", color: "var(--ey-brand-yellow)" }}>Module 1</div>
             {["Module 2", "Module 3", "Module 4"].map((m, i) => (
-              <div key={m} style={{ padding: "5px 14px", borderRadius: 4, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", textTransform: "uppercase", letterSpacing: "0.5px", background: "rgba(100,100,100,0.05)", border: "1px solid #333", color: "#444", cursor: i === 0 ? "pointer" : "not-allowed", opacity: i === 0 ? 1 : 0.5 }}>{m}</div>
+              <div
+                key={m}
+                onClick={i === 0 ? onNavigateToModule2 : undefined}
+                style={{ padding: "5px 14px", borderRadius: 4, fontSize: 11, fontFamily: "'EYInterstate:Bold', sans-serif", textTransform: "uppercase", letterSpacing: "0.5px", background: "rgba(100,100,100,0.05)", border: "1px solid #333", color: i === 0 ? "#94a3b8" : "#444", cursor: i === 0 ? "pointer" : "not-allowed", opacity: i === 0 ? 1 : 0.5, transition: "border-color 0.3s, color 0.3s" }}
+                onMouseEnter={i === 0 ? e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#ffe600"; (e.currentTarget as HTMLDivElement).style.color = "#ffe600"; } : undefined}
+                onMouseLeave={i === 0 ? e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#333"; (e.currentTarget as HTMLDivElement).style.color = "#94a3b8"; } : undefined}
+              >{m}</div>
             ))}
           </div>
         </div>
@@ -589,7 +595,7 @@ export default function Module1({ onBack }: { onBack: () => void }) {
             Useful Links
           </h2>
           <p style={{ textAlign: "center", color: "var(--ey-on-dark)", fontSize: 16, maxWidth: 720, margin: "0 auto 30px", lineHeight: 1.6, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
-            Handy EY resources to check your access, find prompts, and use Copilot safely.
+            Handy EY resources to check your access, find prompts, and use Copilot safely. Click any card to open the page.
           </p>
           <div style={{ border: "1px dashed var(--ey-brand-yellow-alpha-28)", borderRadius: 34, background: "radial-gradient(circle at top left, var(--ey-brand-yellow-alpha-12), transparent 35%), linear-gradient(135deg, var(--ey-bg-surface), rgba(255,255,255,0.03))", padding: 46, boxShadow: "0 28px 80px rgba(0,0,0,0.32)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(180px, 1fr))", gap: 22 }}>
@@ -612,38 +618,54 @@ export default function Module1({ onBack }: { onBack: () => void }) {
         </section>
 
         {/* ── Security ── */}
-        <section id="security" style={{ minHeight: "86vh", padding: "92px 0 90px" }}>
+        <section id="security" style={{ padding: "92px 0 90px" }}>
           <h2 style={{ fontSize: "clamp(34px, 4vw, 58px)", lineHeight: 1.02, letterSpacing: -1.5, margin: "0 auto 12px", textAlign: "center", color: "var(--ey-brand-yellow)", fontFamily: "'EYInterstate:Bold', sans-serif" }}>
             Security
           </h2>
-          <p style={{ textAlign: "center", color: "var(--ey-on-dark)", fontSize: 16, maxWidth: 720, margin: "0 auto 40px", lineHeight: 1.6, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
+          <p style={{ textAlign: "center", color: "rgba(255,255,255,0.66)", fontSize: 16, maxWidth: 720, margin: "0 auto 48px", lineHeight: 1.6, fontFamily: "'EYInterstate:Regular', sans-serif" }}>
             Before you let Copilot loose on tax data, know the ground rules. Tap any card to view it full-size.
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 26, maxWidth: 1150, margin: "0 auto" }}>
+
+          {/* 4-across EY design system cards */}
+          <div style={{ display: "flex", gap: 24, alignItems: "stretch" }}>
             {SEC_IMAGES.map((sec, i) => (
-              <button key={i} onClick={() => { setSecIdx(i); setSecOpen(true); }}
-                style={{ position: "relative", border: 0, padding: 0, cursor: "pointer", borderRadius: 26, overflow: "hidden", background: "linear-gradient(150deg, var(--ey-bg-surface), rgba(255,255,255,0.02))", boxShadow: "0 26px 68px rgba(0,0,0,0.36)", textAlign: "left", fontFamily: "inherit" }}>
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: sec.accent, zIndex: 3 }} />
-                <div style={{ position: "absolute", top: 16, left: 18, zIndex: 4, width: 42, height: 42, borderRadius: 14, background: sec.accent, color: "#0d0d1a", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'EYInterstate:Bold', sans-serif", fontSize: 16, boxShadow: "0 10px 24px rgba(0,0,0,0.35)" }}>
-                  {String(i + 1).padStart(2, "0")}
+              <button
+                key={i}
+                onClick={() => { setSecIdx(i); setSecOpen(true); }}
+                style={{ flex: "1 0 0", minWidth: 0, background: "#2e2e38", border: "1px solid #656579", borderRadius: 12, overflow: "hidden", cursor: "pointer", textAlign: "left", fontFamily: "inherit", padding: 0, display: "flex", flexDirection: "column", transition: "transform 0.25s, box-shadow 0.25s" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-6px)"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px #ffe600"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "none"; }}
+              >
+                {/* Image */}
+                <div style={{ height: 140, background: "linear-gradient(155deg, rgb(69,69,83) 0%, rgb(37,37,46) 100%)", position: "relative", flexShrink: 0, overflow: "hidden" }}>
+                  <img
+                    src={sec.src}
+                    alt={sec.caption}
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                    onError={() => setSecErrors(prev => ({ ...prev, [i]: true }))}
+                  />
                 </div>
-                <div style={{ width: "100%", background: "#0d0d16", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", minHeight: 220, maxHeight: 420 }}>
-                  {secErrors[i] ? (
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, padding: "40px 32px", textAlign: "center" }}>
-                      <div style={{ width: 56, height: 56, borderRadius: 16, background: sec.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>{sec.icon}</div>
-                      <p style={{ color: "var(--ey-on-dark-72)", fontSize: 14, lineHeight: 1.5, fontFamily: "'EYInterstate:Regular', sans-serif", maxWidth: 280 }}>{sec.caption}</p>
-                    </div>
-                  ) : (
-                    <img
-                      src={sec.src}
-                      alt={sec.caption}
-                      style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }}
-                      onError={() => setSecErrors(prev => ({ ...prev, [i]: true }))}
-                    />
-                  )}
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "18px 22px", fontSize: 17, fontFamily: "'EYInterstate:Bold', sans-serif", color: "var(--ey-on-dark)", background: "linear-gradient(180deg, var(--ey-bg-surface), transparent)" }}>
-                  <span>{sec.icon}</span> {sec.caption}
+
+                {/* Body */}
+                <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1 }}>
+                  <p style={{ fontFamily: "'EYInterstate:Bold', sans-serif", fontSize: 32, color: "#ffe600", lineHeight: 1, marginBottom: 12 }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+                  {/* Title grows to fill space — pushes separator + CTA to bottom */}
+                  <p style={{ fontFamily: "'EYInterstate:Bold', sans-serif", fontSize: 18, color: "#fff", lineHeight: "24px", flex: 1, marginBottom: 12 }}>
+                    {sec.caption}
+                  </p>
+                  {/* Separator line */}
+                  <div style={{ height: 1, background: "rgba(255,255,255,0.12)", width: "100%", marginBottom: 12 }} />
+                  {/* CTA — always at the bottom */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontFamily: "'EYInterstate:Bold', sans-serif", fontSize: 12, color: "#ffe600", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                      View Protocol
+                    </span>
+                    <svg viewBox="0 0 12 12" fill="none" width={12} height={12}>
+                      <path d="M2.5 9.5L9.5 2.5M5.5 2.5H9.5V6.5" stroke="#ffe600" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
                 </div>
               </button>
             ))}
@@ -654,11 +676,11 @@ export default function Module1({ onBack }: { onBack: () => void }) {
       {/* ── Security lightbox ── */}
       {secOpen && (
         <div onClick={() => setSecOpen(false)}
-          style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.9)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "zoom-out" }}>
+          style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "zoom-out" }}>
           <button onClick={e => { e.stopPropagation(); setSecIdx(i => (i - 1 + 4) % 4); }} style={lightboxArrowStyle("left")}>‹</button>
           <img src={SEC_IMAGES[secIdx].src} alt="" style={{ maxWidth: "82vw", maxHeight: "82vh", borderRadius: 16, boxShadow: "0 30px 90px rgba(0,0,0,0.6)", objectFit: "contain" }} onClick={e => e.stopPropagation()} />
           <button onClick={e => { e.stopPropagation(); setSecIdx(i => (i + 1) % 4); }} style={lightboxArrowStyle("right")}>›</button>
-          <button onClick={e => { e.stopPropagation(); setSecOpen(false); }} style={{ position: "absolute", top: 24, right: 32, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "1px solid var(--ey-on-dark-20)", color: "var(--ey-on-dark)", fontSize: 22, cursor: "pointer" }}>✕</button>
+          <button onClick={e => { e.stopPropagation(); setSecOpen(false); }} style={{ position: "absolute", top: 24, right: 32, width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 22, cursor: "pointer" }}>✕</button>
         </div>
       )}
 

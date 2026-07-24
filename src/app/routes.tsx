@@ -1,8 +1,9 @@
 import { createBrowserRouter, Outlet, useNavigate } from "react-router";
 import Home from "../imports/Home2/index";
 import { PhasedEngagementView, Phase1View } from "../imports/Frame353/index";
-import Module1 from "../pages/Module1";
 import FoundationalConcepts from "../pages/FoundationalConcepts";
+import AiTaxPrompting from "../pages/AiTaxPrompting";
+import M365CopilotHub from "../pages/M365CopilotHub";
 
 // ── /  ──────────────────────────────────────────────────────────────────────
 function HomeRoute() {
@@ -29,15 +30,15 @@ function HomeRoute() {
 }
 
 // ── /phased  ─────────────────────────────────────────────────────────────────
+// Note: no floating "Back to Home" button here anymore — the shared Nav/Nav1
+// site header (rendered inside PhasedEngagementView) already provides a
+// working "About EY India AI Tax Hub" link back to Home.
 function PhasedRoute() {
   const navigate = useNavigate();
   return (
-    <>
-      <BackButton label="Back to Home" onClick={() => navigate("/")} />
-      <div style={{ width: 1416 }}>
-        <PhasedEngagementView onNavigateToPhase1={() => navigate("/phase1")} />
-      </div>
-    </>
+    <div style={{ width: 1416 }}>
+      <PhasedEngagementView onNavigateToPhase1={() => navigate("/phase1")} />
+    </div>
   );
 }
 
@@ -45,24 +46,33 @@ function PhasedRoute() {
 function Phase1Route() {
   const navigate = useNavigate();
   return (
-    <>
-      <BackButton label="Back to Overview" onClick={() => navigate("/phased")} />
-      <div style={{ width: 1720 }}>
-        <Phase1View
-          onNavigateToModule1={() => navigate("/module1")}
-          onNavigateToFoundational={() => navigate("/foundational")}
-        />
-      </div>
-    </>
+    <div style={{ width: "100%", maxWidth: "100%", minWidth: 0 }}>
+      <Phase1View
+        onNavigate={navigate}
+        onNavigateToFoundational={() => navigate("/foundational")}
+        onNavigateToAiTaxPrompting={() => navigate("/ai-tax-prompting")}
+        onNavigateToCopilotHub={() => navigate("/copilot-hub")}
+      />
+    </div>
   );
 }
 
-// ── /module1  ────────────────────────────────────────────────────────────────
-function Module1Route() {
+// ── /copilot-hub  ────────────────────────────────────────────────────────────
+function CopilotHubRoute() {
   const navigate = useNavigate();
   return (
     <div className="size-full">
-      <Module1 onBack={() => navigate("/phase1")} />
+      <M365CopilotHub onBack={() => navigate("/phase1")} onNavigate={navigate} />
+    </div>
+  );
+}
+
+// ── /ai-tax-prompting  ───────────────────────────────────────────────────────
+function AiTaxPromptingRoute() {
+  const navigate = useNavigate();
+  return (
+    <div className="size-full">
+      <AiTaxPrompting onBack={() => navigate("/phase1")} onNavigate={navigate} />
     </div>
   );
 }
@@ -72,45 +82,8 @@ function FoundationalRoute() {
   const navigate = useNavigate();
   return (
     <div className="size-full">
-      <FoundationalConcepts onBack={() => navigate("/phase1")} />
+      <FoundationalConcepts onBack={() => navigate("/phase1")} onNavigate={navigate} />
     </div>
-  );
-}
-
-// ── Shared back button  ──────────────────────────────────────────────────────
-function BackButton({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#ffe600";
-        (e.currentTarget as HTMLButtonElement).style.color = "#2e2e38";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#2e2e38";
-        (e.currentTarget as HTMLButtonElement).style.color = "#ffffff";
-      }}
-      style={{
-        position: "fixed",
-        top: 16,
-        right: 16,
-        zIndex: 9999,
-        backgroundColor: "#2e2e38",
-        color: "#ffffff",
-        border: "none",
-        padding: "10px 20px",
-        cursor: "pointer",
-        fontFamily: "'EYInterstate:Regular', sans-serif",
-        fontSize: 13,
-        letterSpacing: "0.02em",
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        transition: "background-color 0.15s, color 0.15s",
-      }}
-    >
-      ← {label}
-    </button>
   );
 }
 
@@ -132,8 +105,9 @@ export const router = createBrowserRouter([
       { index: true, Component: HomeRoute },
       { path: "phased", Component: PhasedRoute },
       { path: "phase1", Component: Phase1Route },
-      { path: "module1", Component: Module1Route },
+      { path: "ai-tax-prompting", Component: AiTaxPromptingRoute },
       { path: "foundational", Component: FoundationalRoute },
+      { path: "copilot-hub", Component: CopilotHubRoute },
     ],
   },
 ]);

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M365 Copilot Hub - EY Tax Labs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ey-yellow: #FFE600; --ey-dark: #1A1A24; --ey-dark-2: #2E2E38;
+    --ey-gray-01: #747480; --ey-gray-02: #C4C4CD; --ey-gray-03: #F6F6FA;
+    --ey-gray-04: #F3F3F5; --ey-text-dark: #2E2E38; --ey-text-muted: #656579;
+    --ey-text-light: #AFAEBA; --ey-white: #FFFFFF;
+    --ey-word-blue: #185ABD; --ey-excel-green: #107C41;
+    --ey-ppt-orange: #D35230; --ey-outlook-blue: #0078D4;
+  }
+  body { font-family: 'EY Interstate','Inter',sans-serif; color: var(--ey-text-dark); background: #fff; line-height: 1.5; max-width: 1440px; margin: 0 auto; }
+  .navbar { background: var(--ey-dark); display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; height: 58px; }
+  .navbar .logo { width: 26px; height: 26px; background: var(--ey-yellow); clip-path: polygon(0 0,100% 0,100% 40%,60% 40%,60% 60%,100% 60%,100% 100%,0 100%); }
+  .navbar .nav-links { display: flex; gap: 28px; }
+  .navbar .nav-links a { color: var(--ey-gray-02); text-decoration: none; font-size: 13px; }
+  .hero { background: var(--ey-dark); display: flex; align-items: center; padding: 96px 80px; gap: 64px; }
+  .hero-left { flex: 1; }
+  .hero-tag { font-size: 11px; color: #fff; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; font-weight: 600; }
+  .hero h1 { font-size: 32px; color: #fff; font-weight: 700; line-height: 1.3; margin-bottom: 16px; }
+  .hero p { font-size: 16px; color: #fff; opacity: 0.9; }
+  .hero-right { width: 540px; height: 269px; background: var(--ey-gray-01); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .play-btn { width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .play-btn::after { content: ''; display: block; width: 0; height: 0; border-left: 22px solid white; border-top: 14px solid transparent; border-bottom: 14px solid transparent; margin-left: 4px; }
+  .repo-tabs-section { background: #fff; padding: 80px 80px 48px; }
+  .repo-tabs-section .section-tag { font-size: 12px; color: var(--ey-text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .repo-tabs-section h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+  .repo-tabs-section .subtitle { font-size: 15px; color: var(--ey-text-muted); margin-bottom: 32px; }
+  .tabs-row { display: flex; gap: 8px; background: var(--ey-gray-03); border-radius: 12px; padding: 8px; }
+  .tab-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; background: #fff; border: none; cursor: pointer; font-size: 14px; color: var(--ey-text-muted); font-family: inherit; }
+  .tab-btn.active { color: var(--ey-text-dark); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .tab-icon { width: 20px; height: 20px; }
+  .app-section { padding: 40px 80px 64px; }
+  .app-section.alt-bg { background: var(--ey-gray-04); }
+  .app-section.white-bg { background: #fff; }
+  .section-header { margin-bottom: 32px; }
+  .section-header .tag { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 12px; }
+  .section-header h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+  .section-header p { font-size: 15px; color: var(--ey-text-muted); max-width: 700px; }
+  .content-grid { display: flex; gap: 32px; }
+  .screenshot-container { flex: 1; background: #F3F4F6; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .app-titlebar { background: #fff; padding: 10px 16px; border-bottom: 1px solid #E5E7EB; font-size: 14px; font-weight: 600; color: #111827; }
+  .app-toolbar { background: #fff; padding: 6px 16px; border-bottom: 1px solid #E5E7EB; display: flex; gap: 16px; font-size: 11px; color: #374151; }
+  .app-body { padding: 24px 20px; font-size: 14px; color: #374151; min-height: 300px; }
+  .app-body h3 { font-size: 24px; color: #111827; margin-bottom: 16px; font-weight: 600; }
+  .app-body p { margin-bottom: 12px; line-height: 1.6; }
+  .copilot-sidebar { width: 260px; background: #fff; border-left: 1px solid #E5E7EB; padding: 16px; font-size: 13px; }
+  .copilot-sidebar .copilot-title { font-weight: 600; font-size: 14px; margin-bottom: 16px; }
+  .copilot-sidebar .prompt-label { font-size: 12px; color: #6B7280; margin-bottom: 6px; }
+  .copilot-sidebar .prompt-text { font-size: 13px; background: #F9FAFB; padding: 10px; border-radius: 8px; margin-bottom: 16px; font-style: italic; }
+  .copilot-sidebar .suggestion-btn { display: inline-block; padding: 6px 12px; border-radius: 16px; border: 1px solid #E5E7EB; font-size: 12px; color: #374151; margin: 3px; cursor: pointer; background: #fff; }
+  .feature-cards { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .feature-card { background: #fff; border-radius: 16px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .feature-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .feature-card h4 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .feature-card p { font-size: 14px; color: var(--ey-text-muted); }
+  .excel-titlebar { background: #107C41; color: white; }
+  .excel-toolbar { background: #107C41; color: white; }
+  .excel-formula-bar { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: #fff; border-bottom: 1px solid #E5E7EB; font-size: 10px; }
+  .excel-formula-bar .cell-ref { background: #F9FAFB; padding: 4px 8px; border-radius: 4px; }
+  .excel-formula-bar .formula { color: #107C41; font-family: monospace; }
+  .excel-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+  .excel-table th { background: #107C41; color: white; padding: 6px 10px; text-align: left; }
+  .excel-table td { padding: 6px 10px; border-bottom: 1px solid #F0F0F0; color: #333; }
+  .excel-table .flag { color: #C0392B; font-weight: 600; }
+  .excel-table .ok { color: #107C41; font-weight: 600; }
+  .excel-table .highlight-row { background: rgba(16,124,65,0.06); }
+  .excel-table .flag-row { background: rgba(192,57,43,0.04); }
+  .excel-copilot { background: #fff; border-top: 1px solid #E5E7EB; padding: 12px; font-size: 10px; }
+  .excel-copilot .copilot-badge { background: #107C41; color: white; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-bottom: 8px; display: inline-flex; }
+  .excel-copilot .chat-bubble { padding: 8px 10px; border-radius: 8px; margin-bottom: 6px; font-size: 10px; }
+  .excel-copilot .user-bubble { background: #107C41; color: white; }
+  .excel-copilot .bot-bubble { background: #F9FAFB; color: #333; }
+  .excel-copilot .formula-code { font-family: monospace; font-size: 9px; color: #107C41; background: #F0FFF4; padding: 4px 8px; border-radius: 4px; }
+  .useful-links { background: var(--ey-gray-02); padding: 96px 80px; }
+  .useful-links h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+  .useful-links .subtitle { font-size: 15px; color: var(--ey-gray-01); margin-bottom: 48px; }
+  .links-grid { display: flex; gap: 20px; }
+  .link-card { flex: 1; background: var(--ey-gray-01); border: 1px solid var(--ey-gray-02); border-radius: 16px; padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .link-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+  .link-card .icon-box { width: 44px; height: 44px; background: var(--ey-yellow); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .link-card h3 { font-size: 16px; font-weight: 600; color: #fff; }
+  .link-card p { font-size: 14px; color: #C3C3CB; flex: 1; }
+  .link-card .cta { font-size: 16px; color: var(--ey-yellow); text-decoration: none; font-weight: 600; }
+  .security-section { background: var(--ey-gray-01); padding: 96px 80px; }
+  .security-section .section-tag { font-size: 11px; color: var(--ey-yellow); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 16px; }
+  .security-section h2 { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+  .security-section .subtitle { font-size: 16px; color: var(--ey-gray-02); margin-bottom: 56px; }
+  .case-studies-grid { display: flex; gap: 24px; }
+  .case-card { flex: 1; background: var(--ey-dark-2); border-radius: 12px; overflow: hidden; }
+  .case-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .case-card-image { height: 140px; background: linear-gradient(135deg, #3a3a4a, #2a2a3a); }
+  .case-card-image.img1 { background: linear-gradient(135deg, #1a2a4a, #2a3a5a); }
+  .case-card-image.img2 { background: linear-gradient(135deg, #2a3a2a, #3a4a3a); }
+  .case-card-image.img3 { background: linear-gradient(135deg, #3a2a3a, #4a3a4a); }
+  .case-card-image.img4 { background: linear-gradient(135deg, #2a2a3a, #3a3a4a); }
+  .case-card-body { padding: 24px; }
+  .case-card-body .number { font-size: 32px; font-weight: 700; color: var(--ey-yellow); margin-bottom: 8px; }
+  .case-card-body h3 { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 16px; }
+  .case-card-body .view-link { font-size: 12px; color: var(--ey-yellow); text-decoration: none; font-weight: 600; }
+  .footer { background: var(--ey-dark-2); padding: 80px 80px 40px; }
+  .footer-top { display: flex; gap: 80px; margin-bottom: 64px; }
+  .footer-brand { flex: 1; }
+  .footer-brand h3 { font-size: 18px; color: #fff; font-weight: 700; margin-bottom: 12px; }
+  .footer-brand p { font-size: 13px; color: var(--ey-text-light); }
+  .footer-col h4 { font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 13px; color: var(--ey-text-light); text-decoration: none; margin-bottom: 8px; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; font-size: 12px; color: var(--ey-text-light); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .chat-interface { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .chat-messages { padding: 20px; min-height: 300px; }
+  .chat-msg { display: flex; gap: 10px; margin-bottom: 16px; }
+  .chat-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+  .chat-avatar.user { background: var(--ey-yellow); color: var(--ey-dark); }
+  .chat-avatar.bot { background: #E8E8F0; }
+  .chat-msg-text { font-size: 14px; color: #374151; padding: 12px 16px; background: #F9FAFB; border-radius: 12px; max-width: 85%; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo"></div>
+  <div class="nav-links">
+    <a href="#">M365 Apps</a>
+    <a href="#">Prompt Sandbox</a>
+    <a href="#">Security &amp; Governance</a>
+    <a href="#">About Us</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">M365 COPILOT HUB IS LIVE</div>
+    <h1>Explore M365 Copilot prompts in a new-age workspace</h1>
+    <p>Step into an interactive M365 learning space where you can find what wonders the age-old MS apps can do just by adding a magical element called M365.</p>
+  </div>
+  <div class="hero-right"><div class="play-btn"></div></div>
+</section>
+
+<section class="repo-tabs-section">
+  <div class="section-tag">EXPLORE PROMPT CATEGORIES</div>
+  <h2>Sample Prompt Repository for using Copilot in Tax</h2>
+  <p class="subtitle">Select your preferred M365 application tool below to view optimized, compliant corporate-ready prompts.</p>
+  <div class="tabs-row">
+    <button class="tab-btn active" onclick="showTab('word')"><svg width="18" height="18" viewBox="0 0 18 18"><rect width="18" height="18" rx="3" fill="#185ABD"/><text x="5" y="13" fill="white" font-size="10" font-weight="bold">W</text></svg> Word Prompts</button>
+    <button class="tab-btn" onclick="showTab('excel')"><svg width="18" height="18" viewBox="0 0 18 18"><rect width="18" height="18" rx="3" fill="#107C41"/><text x="5" y="13" fill="white" font-size="10" font-weight="bold">X</text></svg> Excel Formulas</button>
+    <button class="tab-btn" onclick="showTab('ppt')"><svg width="18" height="18" viewBox="0 0 18 18"><rect width="18" height="18" rx="3" fill="#D35230"/><text x="5" y="13" fill="white" font-size="10" font-weight="bold">P</text></svg> PowerPoint Decks</button>
+    <button class="tab-btn" onclick="showTab('outlook')"><svg width="18" height="18" viewBox="0 0 18 18"><rect width="18" height="18" rx="3" fill="#0078D4"/><text x="5" y="13" fill="white" font-size="10" font-weight="bold">O</text></svg> Outlook Threads</button>
+    <button class="tab-btn" onclick="showTab('m365')"><svg width="18" height="18" viewBox="0 0 18 18"><rect width="18" height="18" rx="3" fill="#6264A7"/><text x="4" y="13" fill="white" font-size="9" font-weight="bold">T</text></svg> M365 Chat</button>
+  </div>
+</section>
+<div id="tab-word" class="tab-content active">
+<section class="app-section alt-bg">
+  <div class="section-header">
+    <div class="tag" style="color:#185ABD;">DOCUMENT INTELLIGENCE</div>
+    <h2>Copilot in Word</h2>
+    <p>Draft documents, summarize content, and rewrite text with AI-powered assistance.</p>
+  </div>
+  <div class="content-grid">
+    <div class="screenshot-container" style="display:flex;flex:1;">
+      <div style="flex:1;">
+        <div class="app-titlebar">Untitled Document</div>
+        <div class="app-toolbar"><span>File</span><span>Home</span><span>Insert</span></div>
+        <div class="app-body">
+          <h3>International Tax Transfer Pricing Memo</h3>
+          <p>Executive Summary: This document outlines the current regulatory landscape regarding safe harbor provisions for cross-border tech transfers.</p>
+          <p style="font-weight:600;color:#111827;margin-top:16px;">&#8226; Methodology</p>
+          <p>We will utilize the Comparable Uncontrolled Price (CUP) method to establish a baseline for royalty rates.</p>
+        </div>
+      </div>
+      <div class="copilot-sidebar">
+        <div class="copilot-title">Copilot</div>
+        <div class="prompt-label">Current Prompt</div>
+        <div class="prompt-text">"Draft a position memo on international tax safe harbor implications for tech transfers."</div>
+        <div class="prompt-label">Suggestions</div>
+        <span class="suggestion-btn">Summarize Rulings</span>
+        <span class="suggestion-btn">Rewrite &amp; Restructure</span>
+      </div>
+    </div>
+    <div class="feature-cards">
+      <div class="feature-card"><h4>Draft Position Notes</h4><p>Generate comprehensive first-cut tax research memos, issue analyses, and legal summaries for client reviews.</p></div>
+      <div class="feature-card"><h4>Refine Legal Language</h4><p>Audit and adjust draft submissions, ensuring technical precision and alignment with jurisdictional requirements.</p></div>
+      <div class="feature-card"><h4>Summarize Case Laws</h4><p>Quickly synthesize extensive tax court rulings, tribunal orders, and state circulars into essential facts and holdings.</p></div>
+      <div class="feature-card"><h4>Track Review Points</h4><p>Convert comments and inputs into action points, open items and next-step trackers.</p></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div id="tab-excel" class="tab-content active">
+<section class="app-section white-bg">
+  <div class="section-header">
+    <div class="tag" style="color:#107C41;">ANALYTICAL ROUTINES</div>
+    <h2>Copilot in Excel</h2>
+    <p>Analyze data, create formulas, generate charts, and uncover insights from your spreadsheets.</p>
+  </div>
+  <div class="content-grid">
+    <div class="feature-cards">
+      <div class="feature-card"><h4>Analyse Tax Data</h4><p>Summarise large datasets and identify key trends, gaps, mismatches and exceptions.</p></div>
+      <div class="feature-card"><h4>Spot Exceptions</h4><p>Detect anomalies such as missing details, rate mismatches or duplicates.</p></div>
+      <div class="feature-card"><h4>Build Reconciliations</h4><p>Create formulas and logic checks to compare books, returns and working papers.</p></div>
+      <div class="feature-card"><h4>Visualise Compliance</h4><p>Create dashboards to show status, exposures, ageing and risk movement.</p></div>
+    </div>
+    <div class="screenshot-container" style="flex:1;">
+      <div class="app-titlebar excel-titlebar">TaxAnalysis_Q4_2024.xlsx - Excel</div>
+      <div class="app-toolbar excel-toolbar"><span>File</span><span>Home</span><span>Insert</span><span>Formulas</span><span>Data</span><span>Review</span><span>View</span><span>Copilot</span></div>
+      <div class="excel-formula-bar"><span class="cell-ref">D4</span><span class="formula">=IF(ABS(C4-B4)/B4&gt;0.02,"FLAG","OK")</span></div>
+      <table class="excel-table">
+        <thead><tr><th></th><th>Invoice ID</th><th>Expected Rate</th><th>Actual Rate</th><th>Variance Flag</th><th>Entity</th></tr></thead>
+        <tbody>
+          <tr><td>2</td><td>INV-20240101</td><td>1.1250</td><td>1.1260</td><td class="ok">OK</td><td>DE Entity A</td></tr>
+          <tr class="flag-row"><td>3</td><td>INV-20240102</td><td>1.1250</td><td style="color:#C0392B;">1.1520</td><td class="flag">FLAG</td><td>FR Entity B</td></tr>
+          <tr class="highlight-row"><td style="color:#107C41;">4</td><td style="color:#107C41;">INV-20240103</td><td style="color:#107C41;">1.1250</td><td style="color:#107C41;">1.1480</td><td style="color:white;background:#107C41;border-radius:4px;">FLAG</td><td style="color:#107C41;">NL Entity C</td></tr>
+          <tr><td>5</td><td>INV-20240104</td><td>1.1250</td><td>1.1255</td><td class="ok">OK</td><td>UK Entity D</td></tr>
+          <tr class="flag-row"><td>6</td><td>INV-20240105</td><td>1.1250</td><td style="color:#C0392B;">1.1610</td><td class="flag">FLAG</td><td>ES Entity E</td></tr>
+          <tr><td>7</td><td>INV-20240106</td><td>1.1250</td><td>1.1258</td><td class="ok">OK</td><td>IT Entity F</td></tr>
+          <tr><td style="color:#888;">8</td><td style="color:#999;">INV-20240107</td><td style="color:#999;">1.1250</td><td style="color:#999;">1.1263</td><td style="color:#999;">OK</td><td style="color:#999;">PL Entity G</td></tr>
+        </tbody>
+      </table>
+      <div class="excel-copilot">
+        <div class="copilot-badge">Copilot</div>
+        <div class="chat-bubble user-bubble">Highlight and partition any invoice entries where currency rates deviate by more than 2%.</div>
+        <div class="chat-bubble bot-bubble">I found 2 invoices where currency rate deviation exceeds your 2% threshold.</div>
+        <div class="chat-bubble bot-bubble">Done! Rows 3 and 6 are flagged. Formula: <span class="formula-code">=IF(ABS(C-B)/B&gt;0.02,"FLAG","OK")</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+<div id="tab-ppt" class="tab-content active">
+<section class="app-section alt-bg">
+  <div class="section-header">
+    <div class="tag" style="color:#D35230;">COLLABORATIVE &amp; CREATIVE DELIVERY</div>
+    <h2>Copilot in PowerPoint &amp; Chat</h2>
+    <p>Translate raw data matrices into compelling slides, executive summaries, and cross-application project definitions.</p>
+  </div>
+  <div class="content-grid">
+    <div class="screenshot-container" style="display:flex;flex:1;">
+      <div style="flex:1;">
+        <div class="app-titlebar">Safe Harbor Presentation</div>
+        <div class="app-toolbar"><span>File</span><span>Home</span><span>Insert</span></div>
+        <div class="app-body">
+          <h3>Safe Harbor Risks - Q3 Presentation</h3>
+          <p>Executive Summary: This deck summarizes the current regulatory landscape regarding safe harbor provisions for cross-border tech transfers.</p>
+          <p style="font-weight:600;color:#111827;margin-top:16px;">&#8226; Slide 1: Executive Summary</p>
+          <p>We will utilize the CUP method to establish a baseline for royalty rates.</p>
+        </div>
+      </div>
+      <div class="copilot-sidebar">
+        <div class="copilot-title">Copilot</div>
+        <div class="prompt-label">Current Prompt</div>
+        <div class="prompt-text">"Create a 5-slide visual presentation deck outlining the safe harbor risks for Q3."</div>
+        <div class="prompt-label">Suggestions</div>
+        <span class="suggestion-btn">Summarize Rulings</span>
+        <span class="suggestion-btn">Rewrite &amp; Restructure</span>
+      </div>
+    </div>
+    <div class="feature-cards">
+      <div class="feature-card"><h4>Create Client Decks</h4><p>Convert tax analysis into structured, visually clean, client-ready presentations.</p></div>
+      <div class="feature-card"><h4>Prepare Leadership Updates</h4><p>Generate concise leadership slides on exposures, updates and decisions required.</p></div>
+      <div class="feature-card"><h4>Tell the Tax Story</h4><p>Organise complex positions into context, issue, risk, recommendation and next steps.</p></div>
+      <div class="feature-card"><h4>Summarise Case Strategy</h4><p>Build crisp hearing briefs, timelines and argument maps.</p></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div id="tab-outlook" class="tab-content active">
+<section class="app-section white-bg">
+  <div class="section-header">
+    <div class="tag" style="color:#0078D4;">COMMUNICATIONS &amp; AGENDAS</div>
+    <h2>Copilot in Outlook</h2>
+    <p>Summarize email threads, draft replies, and manage your inbox efficiently.</p>
+  </div>
+  <div class="content-grid">
+    <div class="screenshot-container" style="display:flex;flex:1;">
+      <div style="flex:1;">
+        <div class="app-titlebar">Inbox - Compliance Team</div>
+        <div class="app-toolbar"><span>File</span><span>Home</span><span>View</span></div>
+        <div class="app-body">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#F9FAFB;border-radius:8px;">
+            <div style="width:32px;height:32px;background:#0078D4;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;">A</div>
+            <div>
+              <div style="font-weight:600;color:#111827;">Alex Chen</div>
+              <div style="font-size:13px;color:#374151;">Re: Compliance Review for Q3 Tax Filings</div>
+              <div style="font-size:12px;color:#6B7280;">10:42 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="copilot-sidebar">
+        <div class="copilot-title">Copilot</div>
+        <div class="prompt-label">Current Prompt</div>
+        <div class="prompt-text">"Summarise this 12-email thread, listing all key approvals and unresolved items."</div>
+        <div class="prompt-label">Suggestions</div>
+        <span class="suggestion-btn">Summarize Thread</span>
+        <span class="suggestion-btn">Draft Reply</span>
+      </div>
+    </div>
+    <div class="feature-cards">
+      <div class="feature-card"><h4>Draft Client Emails</h4><p>Prepare clear professional emails for data requests, updates and follow-ups.</p></div>
+      <div class="feature-card"><h4>Manage Follow-ups</h4><p>Convert email conversations into action-oriented follow-ups.</p></div>
+      <div class="feature-card"><h4>Summarise Threads</h4><p>Extract decisions, pending inputs, responsibilities and deadlines from long chains.</p></div>
+      <div class="feature-card"><h4>Polish Tone Instantly</h4><p>Rewrite responses to sound concise, client-sensitive and executive-ready.</p></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div id="tab-m365" class="tab-content active">
+<section class="app-section alt-bg">
+  <div class="section-header">
+    <div class="tag" style="color:#185ABD;">COLATE INFORMATION FORM ACROSS M365</div>
+    <h2>Copilot in M365 Chat</h2>
+    <p>Use Copilot in M365 Chat to ask questions, get summaries, and generate content across your Microsoft 365 data.</p>
+  </div>
+  <div class="content-grid">
+    <div class="feature-cards">
+      <div class="feature-card"><h4>Search Across Work</h4><p>Find tax-related discussions, documents, emails and files across Microsoft 365.</p></div>
+      <div class="feature-card"><h4>Connect Tax Context</h4><p>Connect compliance data, research notes, email trails and presentation inputs.</p></div>
+      <div class="feature-card"><h4>Prepare Matter Briefs</h4><p>Generate briefing notes before client calls or internal reviews.</p></div>
+      <div class="feature-card"><h4>Accelerate First Drafts</h4><p>Create starting drafts for emails, memos, decks, trackers and meeting prep.</p></div>
+    </div>
+    <div class="chat-interface" style="flex:1;">
+      <div class="app-titlebar">M365 Chat</div>
+      <div class="app-toolbar"><span>File</span><span>Home</span><span>Insert</span></div>
+      <div style="padding:16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #E5E7EB;">
+        <span style="font-size:18px;font-weight:600;">Copilot</span>
+        <span style="font-size:12px;color:#6B7280;">Online</span>
+      </div>
+      <div class="chat-messages">
+        <div class="chat-msg"><div class="chat-avatar user">U</div><div class="chat-msg-text">Find all tax-related documents James shared last week and summarise the key updates across compliance and advisory.</div></div>
+        <div class="chat-msg"><div class="chat-avatar bot">&#9733;</div><div class="chat-msg-text">I found 3 documents shared by James last week. Key tax updates: Compliance: New safe harbor provisions. Advisory: Tribunal rulings on arm's length pricing.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+<section class="useful-links">
+  <h2>Useful Links</h2>
+  <p class="subtitle">Handy EY resources to check your system access, explore deeper templates, and use generative AI safely.</p>
+  <div class="links-grid">
+    <div class="link-card">
+      <div class="icon-box">&#128231;</div>
+      <h3>Outlook Copilot Resources</h3>
+      <p>Access quick reference sheets and guides for secure email automation.</p>
+      <a href="#" class="cta">View Guides &#8594;</a>
+    </div>
+    <div class="link-card">
+      <div class="icon-box">&#128218;</div>
+      <h3>EY Prompt Library</h3>
+      <p>Explore verified prompts created and vetted specifically by professional services.</p>
+      <a href="#" class="cta">Browse Library &#8594;</a>
+    </div>
+    <div class="link-card">
+      <div class="icon-box">&#10067;</div>
+      <h3>Copilot FAQs</h3>
+      <p>Find quick answers regarding workspace licenses, token limits, and prompt accuracy.</p>
+      <a href="#" class="cta">Read FAQs &#8594;</a>
+    </div>
+    <div class="link-card">
+      <div class="icon-box">&#129302;</div>
+      <h3>Explore Agents</h3>
+      <p>Discover AI agents built for specific EY workflows, from tax research to audit support.</p>
+      <a href="#" class="cta">Explore Agents &#8594;</a>
+    </div>
+    <div class="link-card">
+      <div class="icon-box">&#128274;</div>
+      <h3>Manage Access</h3>
+      <p>Review your Copilot license status, request access, or manage permissions for your team.</p>
+      <a href="#" class="cta">Manage Access &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<section class="security-section">
+  <div class="section-tag">GOVERNANCE &amp; TRUST</div>
+  <h2>Enterprise-Grade Security</h2>
+  <p class="subtitle">Before you let Copilot loose on tax data, know the ground rules. Tap any card to view it full-size.</p>
+  <div class="case-studies-grid">
+    <div class="case-card">
+      <div class="case-card-image img1"></div>
+      <div class="case-card-body"><div class="number">01</div><h3>Quick Check Before You Prompt</h3><a href="#" class="view-link">View Protocol</a></div>
+    </div>
+    <div class="case-card">
+      <div class="case-card-image img2"></div>
+      <div class="case-card-body"><div class="number">02</div><h3>Share Smartly</h3><a href="#" class="view-link">View Protocol</a></div>
+    </div>
+    <div class="case-card">
+      <div class="case-card-image img3"></div>
+      <div class="case-card-body"><div class="number">03</div><h3>Use Sensitivity Labels</h3><a href="#" class="view-link">View Protocol</a></div>
+    </div>
+    <div class="case-card">
+      <div class="case-card-image img4"></div>
+      <div class="case-card-body"><div class="number">04</div><h3>Check Who Has Access</h3><a href="#" class="view-link">View Protocol</a></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h3>EY.ai Tax Labs</h3>
+      <p>Accelerating tax performance safely through custom generative AI structures and premium prompt frameworks.</p>
+    </div>
+    <div class="footer-col">
+      <h4>M365 Apps</h4>
+      <a href="#">Word Prompts</a><a href="#">Excel Sheets</a><a href="#">PowerPoint Decks</a><a href="#">Outlook Emails</a>
+    </div>
+    <div class="footer-col">
+      <h4>Trust &amp; Security</h4>
+      <a href="#">Privacy Policy</a><a href="#">Data Governance</a><a href="#">Safe Harbor Rules</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 EY.ai Tax Labs. All rights reserved. Proprietary and confidential.</div>
+</footer>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  const map = {word:0,excel:1,ppt:2,outlook:3,m365:4};
+  document.querySelectorAll('.tab-btn')[map[tab]].classList.add('active');
+  document.querySelectorAll('.tab-content')[map[tab]].classList.add('active');
+}
+</script>
+</body>
+</html>

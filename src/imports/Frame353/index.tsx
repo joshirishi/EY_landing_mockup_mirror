@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import svgPaths from "./svg-p7dq2iziwz";
+import { SiteHeader } from "../../design-kit/SiteHeader";
+import { ModuleHeader } from "../../design-kit/LearningNav";
 import cardSvg from "../ContentArea/svg-1dplfat9j5";
 import imgBackgroundMotif from "./f5e2e2f2ea31280810b6cbd46b1af92fee8b344c.png";
 import { imgGroup, imgBackground, imgBackground1, imgBackground2, imgBackground3 } from "./svg-cx48y";
 import TimelineCard from "../TimelineCard/index";
+import CoreProcessingPipeline from "./CoreProcessingPipeline";
 
 function Div() {
   return <div className="bg-[#ffe600] h-[3px] relative shrink-0 w-full" data-name="div" />;
@@ -107,94 +111,34 @@ function Nav() {
   );
 }
 
+// Only the two site sections that actually exist in this app are shown here.
+// The rest of the original Figma export (Research & Litigation, Compliance,
+// EY Tax AI Performance, How it helps, Why EY, Responsible AI, Resources,
+// Coming soon) belonged to pages that were never built, so they're
+// intentionally omitted rather than shown as broken/disabled links.
+// Note: "Compliance" used to render hardcoded as the active (yellow) link here
+// even on the EY.ai Tax Labs pages — fixed below so "EY.ai Tax Labs" is active.
 function Frame16() {
+  const navigate = useNavigate();
   return (
-    <div className="relative shrink-0 w-full">
+    <button
+      onClick={() => navigate("/")}
+      className="relative shrink-0 w-full text-left"
+      style={{ background: "none", border: "none", cursor: "pointer" }}
+    >
       <div className="flex flex-row items-center justify-center size-full">
         <div className="content-stretch flex items-center justify-center p-[10px] relative size-full">
           <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">About EY India AI Tax Hub</p>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Frame18() {
-  return (
-    <div className="relative shrink-0 w-full">
-      <div className="flex flex-row items-center justify-center size-full">
-        <div className="content-stretch flex items-center justify-center p-[10px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">{`Research & Litigation`}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Frame15() {
-  return (
-    <div className="relative shrink-0 w-full">
-      <div className="flex flex-row items-center justify-center size-full">
-        <div className="content-stretch flex items-center justify-center p-[10px] relative size-full">
-          <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#ffe600] text-[13px] whitespace-nowrap">Compliance</p>
-        </div>
-      </div>
-    </div>
+    </button>
   );
 }
 
 function Frame19() {
   return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">EY.ai Tax Labs</p>
-    </div>
-  );
-}
-
-function Frame20() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">EY Tax AI Performance</p>
-    </div>
-  );
-}
-
-function Frame21() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">How it helps</p>
-    </div>
-  );
-}
-
-function Frame22() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Why EY</p>
-    </div>
-  );
-}
-
-function Frame23() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Responsible AI</p>
-    </div>
-  );
-}
-
-function Frame24() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Resources</p>
-    </div>
-  );
-}
-
-function Frame25() {
-  return (
-    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0">
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#c4c4cd] text-[13px] whitespace-nowrap">Coming soon</p>
+    <div className="content-stretch flex items-center justify-center p-[10px] relative shrink-0" aria-current="page">
+      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[19.5px] not-italic relative shrink-0 text-[#ffe600] text-[13px] whitespace-nowrap">EY.ai Tax Labs</p>
     </div>
   );
 }
@@ -206,32 +150,8 @@ function Frame17() {
         <div className="content-stretch flex flex-col items-start px-px relative shrink-0 w-[180px]" data-name="NavLink">
           <Frame16 />
         </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0 w-[152px]" data-name="NavLink">
-          <Frame18 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0 w-[92px]" data-name="NavLink">
-          <Frame15 />
-        </div>
         <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
           <Frame19 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame20 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame21 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame22 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame23 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame24 />
-        </div>
-        <div className="content-stretch flex flex-col items-start px-px relative shrink-0" data-name="NavLink">
-          <Frame25 />
         </div>
       </div>
     </div>
@@ -892,14 +812,10 @@ function Frame38() {
 
 function DiagramViewport() {
   return (
-    <div className="bg-[#747480] relative shrink-0 w-full" data-name="diagram-viewport">
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex gap-[31px] items-center px-[100px] py-[69px] relative size-full">
-          <LeftGroupBg />
-          <Frame35 />
-          <RightGroupBg />
-          <Frame34 />
-          <Frame38 />
+    <div className="bg-[#0c0c0f] relative shrink-0 w-full" data-name="diagram-viewport">
+      <div className="flex flex-row items-center justify-center size-full">
+        <div className="content-stretch flex items-center justify-center px-[48px] py-[40px] relative size-full">
+          <CoreProcessingPipeline />
         </div>
       </div>
     </div>
@@ -1453,7 +1369,7 @@ function ViewSwitcher({ view, onSwitch }: { view: "timeline" | "cards"; onSwitch
 }
 
 function ContentArea() {
-  const [view, setView] = useState<"timeline" | "cards">("timeline");
+  const [view, setView] = useState<"timeline" | "cards">("cards");
   return (
     <div className="bg-white content-stretch flex flex-col gap-[48px] items-start pb-[80px] relative shrink-0 w-full" data-name="Content Area">
       <Frame39 />
@@ -1775,32 +1691,20 @@ function EyAiTaxLabsPhasedEngagement() {
 
 function BackgroundMotif() {
   return (
-    <div className="absolute h-[1200px] left-0 opacity-8 top-0 w-[1720px]" data-name="Background Motif">
+    <div className="absolute h-[1200px] left-0 opacity-8 top-0 w-full pointer-events-none" data-name="Background Motif">
       <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgBackgroundMotif} />
     </div>
   );
 }
 
 function Brand() {
+  // Uses paths from /public/ey-logo.svg (ernst-young-ey-logo-svgrepo-com.svg) — white letters for dark nav
   return (
     <div className="content-stretch flex gap-[12px] items-center relative shrink-0" data-name="Brand">
-      <div className="relative shrink-0 size-[40px]" data-name="Logo">
-        <div className="absolute inset-[50.09%_59.92%_0.87%_0.85%]" data-name="Vector">
-          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 15.6919 19.6154">
-            <path d={svgPaths.p27ea6ec0} fill="var(--fill-0, #2E2E38)" id="Vector" />
-          </svg>
-        </div>
-        <div className="absolute inset-[50.09%_17.76%_0.87%_33.29%]" data-name="Vector">
-          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 19.5808 19.6154">
-            <path d={svgPaths.p35786b00} fill="var(--fill-0, #2E2E38)" id="Vector" />
-          </svg>
-        </div>
-        <div className="absolute inset-[0_3.06%_64.62%_0]" data-name="Vector">
-          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 38.7776 14.153">
-            <path d={svgPaths.p18fe2b40} fill="var(--fill-0, #FFE600)" id="Vector" />
-          </svg>
-        </div>
-      </div>
+      <svg viewBox="0 -18 217.599 217.599" style={{ height: 36, width: "auto" }} aria-label="EY logo">
+        <path fill="#FFE600" d="M0 79.4L217.599 0v41z" />
+        <path fill="#ffffff" d="M24.9 150.6h28.5v-16.5H24.9v-13h31.5L46 103H1.4v78.6h62.8v-18.1H24.9zM106.1 103l-13.3 25.7L79.4 103h-26l27.4 47.6v31h23.5v-31l27.5-47.6z" />
+      </svg>
       <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[16px] text-white whitespace-nowrap">EY.ai Tax Labs</p>
     </div>
   );
@@ -1865,188 +1769,276 @@ function Navigation() {
   );
 }
 
+// ── Phase 1 content area — redesigned per Noor / Arjun / Zara critique ──────
+// Key changes:
+//   1. Hero gets an eyebrow ("Phase 1 of 4") + progress dots — reduces navigation
+//      ambiguity without a new screen (Noor: progressive disclosure)
+//   2. Active cards get a yellow left-accent, hover states, bottom CTA
+//      (Arjun: deceptive affordance fixed; Zara: hover micro-peak claimed)
+//   3. Locked card is visually distinct: muted bg, lock badge, aria-disabled
+//      (Arjun: WCAG 2.4.6 — label describes state; no false affordance)
+
 function Hero() {
   return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[16px] items-start not-italic relative shrink-0 w-full" data-name="Hero">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[56px] relative shrink-0 text-[#2e2e38] text-[48px] whitespace-nowrap">Phase 1 - Foundational Training</p>
-      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[28px] relative shrink-0 text-[#7f7f91] text-[18px] w-[800px]">Select to begin your foundational journey into AI concepts, prompting, and M365 Copilot capabilities.</p>
+    <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
+      {/* Eyebrow + progress — tells users where they are without a click */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <p style={{ fontFamily: "'Inter:Bold',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: "0.05em", textTransform: "uppercase", color: "#B89B00", margin: 0 }}>
+          Phase 1 of 4
+        </p>
+        <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
+          {[0, 1, 2, 3].map(i => (
+            <div key={i} style={{ width: i === 0 ? 20 : 8, height: 8, borderRadius: 999, background: i === 0 ? "#2e2e38" : "#c4c4cd", transition: "width 0.2s" }} />
+          ))}
+        </div>
+      </div>
+      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[56px] relative shrink-0 text-[#2e2e38] text-[48px] whitespace-nowrap">
+        Phase 1 — Foundational Training
+      </p>
+      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[28px] relative shrink-0 text-[#7f7f91] text-[18px] w-[800px]">
+        Select a module below to begin your foundational journey into AI concepts, prompting, and M365 Copilot capabilities.
+      </p>
     </div>
   );
 }
 
-function Frame6() {
+// Reusable active course card — yellow left accent + hover-responsive CTA
+function CourseCard({ onOpen, icon, title, description, estimatedTime }: {
+  onOpen?: () => void;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  estimatedTime?: string;
+}) {
+  const [hovered, setHovered] = useState(false);
   return (
-    <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
-        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
-      </svg>
+    <div
+      className="flex-[1_0_0] min-w-px relative rounded-[8px]"
+      style={{
+        background: "#fff",
+        border: hovered ? "1.5px solid #2e2e38" : "1px solid #d7d7dc",
+        boxShadow: hovered ? "0 8px 28px rgba(0,0,0,0.09)" : "0 4px 6px rgba(0,0,0,0.05)",
+        cursor: "pointer",
+        transition: "border 0.15s, box-shadow 0.15s, transform 0.15s",
+        transform: hovered ? "translateY(-2px)" : "none",
+      }}
+      onClick={onOpen}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => (e.key === "Enter" || e.key === " ") && onOpen?.()}
+      aria-label={`Begin ${title}`}
+    >
+      {/* Yellow left accent — signals "this is active" (Noor: ONE clear primary action) */}
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: hovered ? 6 : 4, background: "#ffe600", borderRadius: "8px 0 0 8px", transition: "width 0.1s" }} />
+      <div className="content-stretch flex flex-col gap-[20px] items-start p-[32px] relative size-full">
+        {/* Icon circle */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 48, height: 48, borderRadius: 24, background: "#ffe600", flexShrink: 0 }}>
+          {icon}
+        </div>
+        {/* Title + description */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+          <p className="font-['Inter:Bold',sans-serif] font-bold text-[#2e2e38] text-[22px]" style={{ lineHeight: "1.2", margin: 0 }}>
+            {title}
+          </p>
+          <p className="font-['Inter:Regular',sans-serif] text-[#7f7f91] text-[14px]" style={{ lineHeight: "22px", margin: 0 }}>
+            {description}
+          </p>
+        </div>
+        {/* Footer: time + CTA — Zara peak-moment: hover flips CTA colors */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+          {estimatedTime && (
+            <p style={{ fontFamily: "'Inter:Regular',sans-serif", fontSize: 12, color: "#747480", margin: 0 }}>{estimatedTime}</p>
+          )}
+          <div style={{
+            marginLeft: "auto",
+            display: "inline-flex", alignItems: "center", gap: 6,
+            background: hovered ? "#2e2e38" : "#ffe600",
+            color: hovered ? "#ffffff" : "#1a1a2e",
+            padding: "8px 16px", borderRadius: 4,
+            fontFamily: "'Inter:Bold',sans-serif", fontWeight: 700, fontSize: 13,
+            transition: "background 0.15s ease-out, color 0.15s ease-out",
+          }}>
+            Begin →
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function Frame7() {
-  return (
-    <div className="bg-[#ffe600] content-stretch flex items-start px-[12px] py-[4px] relative rounded-[4px] shrink-0" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#1a1a2e] text-[12px] whitespace-nowrap">Begin</p>
-    </div>
-  );
-}
+// Two-step unlock card:
+//   Click 1 → transitions from locked → active (visual unlock animation)
+//   Click 2 → calls onNavigate() to go to the destination page
+// icon       = gray version shown in locked state
+// activeIcon = dark version shown after unlock (on yellow circle bg)
+function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description, estimatedTime }: {
+  onNavigate?: () => void;
+  icon: React.ReactNode;
+  activeIcon?: React.ReactNode;
+  title: string;
+  description: string;
+  estimatedTime?: string;
+}) {
+  const [unlocked, setUnlocked] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
-function Header() {
-  return (
-    <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-name="Header">
-      <Frame6 />
-      <Frame7 />
-    </div>
-  );
-}
+  const handleClick = () => {
+    if (!unlocked) {
+      setUnlocked(true); // Step 1: visually unlock the card
+    } else {
+      onNavigate?.();    // Step 2: navigate to the page
+    }
+  };
 
-function Frame8() {
-  return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] items-start not-italic relative shrink-0 w-full" data-name="Frame">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[normal] relative shrink-0 text-[#2e2e38] text-[24px] whitespace-nowrap">Foundational Concepts of AI</p>
-      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[22px] min-w-full relative shrink-0 text-[#7f7f91] text-[14px] w-[min-content]">Understanding AI/ML fundamentals and their application in tax workflows.</p>
-    </div>
-  );
-}
-
-function CourseCard({ onOpen }: { onOpen?: () => void }) {
-  return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]" data-name="Course Card">
-      <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[8px]" />
+  // Locked appearance — muted, clearly unavailable but clickable to unlock
+  if (!unlocked) {
+    return (
       <div
-        className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full cursor-pointer"
-        onClick={onOpen}
+        className="flex-[1_0_0] min-w-px relative rounded-[8px]"
+        style={{
+          background: "#f9f9fa", border: "1px solid #e8e8ed", cursor: "pointer",
+          transition: "box-shadow 0.15s",
+          boxShadow: hovered ? "0 4px 14px rgba(0,0,0,0.08)" : "none",
+        }}
+        onClick={handleClick}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         role="button"
         tabIndex={0}
-        onKeyDown={e => (e.key === "Enter" || e.key === " ") && onOpen?.()}
+        onKeyDown={e => (e.key === "Enter" || e.key === " ") && handleClick()}
+        aria-label={`Unlock ${title}`}
       >
-        <Header />
-        <Frame8 />
+        <div className="content-stretch flex flex-col gap-[20px] items-start p-[32px] relative size-full">
+          {/* Muted icon */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 48, height: 48, borderRadius: 24, background: "#e8e8ed", flexShrink: 0, opacity: 0.6 }}>
+            {icon}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+            <p className="font-['Inter:Bold',sans-serif] font-bold text-[22px]" style={{ lineHeight: "1.2", margin: 0, color: "#c4c4cd" }}>{title}</p>
+            <p className="font-['Inter:Regular',sans-serif] text-[14px]" style={{ lineHeight: "22px", margin: 0, color: "#c4c4cd" }}>{description}</p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+            {estimatedTime && <p style={{ fontFamily: "'Inter:Regular',sans-serif", fontSize: 12, color: "#c4c4cd", margin: 0 }}>{estimatedTime}</p>}
+            {/* Lock badge with hover hint — "click to unlock" */}
+            <div style={{
+              marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6,
+              background: hovered ? "#ffe600" : "#e8e8ed",
+              color: hovered ? "#1a1a24" : "#c4c4cd",
+              padding: "8px 16px", borderRadius: 4,
+              fontFamily: "'Inter:Bold',sans-serif", fontWeight: 700, fontSize: 13,
+              transition: "background 0.2s, color 0.2s",
+            }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              {hovered ? "Click to Unlock" : "Locked"}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Unlocked appearance — identical to CourseCard with "Begin →" CTA
+  return (
+    <div
+      className="flex-[1_0_0] min-w-px relative rounded-[8px]"
+      style={{
+        background: "#fff",
+        border: hovered ? "1.5px solid #2e2e38" : "1.5px solid #ffe600",
+        boxShadow: hovered ? "0 8px 28px rgba(0,0,0,0.09)" : "0 4px 16px rgba(255,230,0,0.2)",
+        cursor: "pointer",
+        transition: "border 0.15s, box-shadow 0.15s, transform 0.15s",
+        transform: hovered ? "translateY(-2px)" : "none",
+      }}
+      onClick={handleClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => (e.key === "Enter" || e.key === " ") && handleClick()}
+      aria-label={`Begin ${title}`}
+    >
+      {/* Yellow left accent + unlock badge */}
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: hovered ? 6 : 4, background: "#ffe600", borderRadius: "8px 0 0 8px", transition: "width 0.1s" }} />
+      {/* "Unlocked" toast badge top-right */}
+      <div style={{ position: "absolute", top: 12, right: 12, background: "#ffe600", color: "#1a1a24", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 20, fontFamily: "'Inter:Bold',sans-serif", letterSpacing: "0.05em" }}>
+        ✓ UNLOCKED
+      </div>
+      <div className="content-stretch flex flex-col gap-[20px] items-start p-[32px] relative size-full">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 48, height: 48, borderRadius: 24, background: "#ffe600", flexShrink: 0 }}>
+          {/* Use activeIcon (dark stroke) if provided, else fall back to icon */}
+          {activeIcon ?? icon}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+          <p className="font-['Inter:Bold',sans-serif] font-bold text-[#2e2e38] text-[22px]" style={{ lineHeight: "1.2", margin: 0 }}>{title}</p>
+          <p className="font-['Inter:Regular',sans-serif] text-[#7f7f91] text-[14px]" style={{ lineHeight: "22px", margin: 0 }}>{description}</p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+          {estimatedTime && <p style={{ fontFamily: "'Inter:Regular',sans-serif", fontSize: 12, color: "#747480", margin: 0 }}>{estimatedTime}</p>}
+          <div style={{
+            marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6,
+            background: hovered ? "#2e2e38" : "#ffe600",
+            color: hovered ? "#ffffff" : "#1a1a2e",
+            padding: "8px 16px", borderRadius: 4,
+            fontFamily: "'Inter:Bold',sans-serif", fontWeight: 700, fontSize: 13,
+            transition: "background 0.15s ease-out, color 0.15s ease-out",
+          }}>
+            Begin →
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function Frame9() {
+function CourseGrid({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub }: {
+  onOpenFoundational?: () => void;
+  onOpenAiTaxPrompting?: () => void;
+  onOpenCopilotHub?: () => void;
+}) {
   return (
-    <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
+    <div className="content-stretch flex gap-[24px] items-stretch relative shrink-0 w-full">
+      <UnlockableCourseCard
+        onNavigate={onOpenFoundational}
+        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}
+        activeIcon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}
+        title="Foundational Concepts of AI"
+        description="Understanding AI/ML fundamentals and their application in tax workflows."
+        estimatedTime="~45 min"
+      />
+      <UnlockableCourseCard
+        onNavigate={onOpenAiTaxPrompting}
+        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>}
+        activeIcon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>}
+        title="AI Tax Prompting"
+        description="Core principles of effective prompt engineering for tax professionals."
+        estimatedTime="~30 min"
+      />
+      <UnlockableCourseCard
+        onNavigate={onOpenCopilotHub}
+        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>}
+        activeIcon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>}
+        title="M365 Copilot Dashboard"
+        description="Hands-on exploration of Microsoft 365 Copilot capabilities across tax use cases."
+        estimatedTime="~60 min"
+      />
     </div>
   );
 }
 
-function Frame10() {
+function ContentArea1({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub }: {
+  onOpenFoundational?: () => void;
+  onOpenAiTaxPrompting?: () => void;
+  onOpenCopilotHub?: () => void;
+}) {
   return (
-    <div className="bg-[#ffe600] content-stretch flex items-start px-[12px] py-[4px] relative rounded-[4px] shrink-0" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#1a1a2e] text-[12px] whitespace-nowrap">Begin</p>
-    </div>
-  );
-}
-
-function Header1() {
-  return (
-    <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-name="Header">
-      <Frame9 />
-      <Frame10 />
-    </div>
-  );
-}
-
-function Frame11() {
-  return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] items-start not-italic relative shrink-0 w-full" data-name="Frame">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[normal] relative shrink-0 text-[#2e2e38] text-[24px] whitespace-nowrap">AI Tax Prompting</p>
-      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[22px] min-w-full relative shrink-0 text-[#7f7f91] text-[14px] w-[min-content]">Core principles of effective prompt engineering for tax professionals.</p>
-    </div>
-  );
-}
-
-function CourseCardLocked() {
-  return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]" data-name="Course Card Locked">
-      <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[8px]" />
-      <div className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full">
-        <Header1 />
-        <Frame11 />
-      </div>
-    </div>
-  );
-}
-
-function Frame12() {
-  return (
-    <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]" data-name="Frame">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
-      </svg>
-    </div>
-  );
-}
-
-function Frame13() {
-  return (
-    <div className="bg-[#ffe600] content-stretch flex items-start px-[12px] py-[4px] relative rounded-[4px] shrink-0" data-name="Frame">
-      <p className="[word-break:break-word] font-['Inter:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#1a1a2e] text-[12px] whitespace-nowrap">Begin</p>
-    </div>
-  );
-}
-
-function Header2() {
-  return (
-    <div className="content-stretch flex items-center justify-between relative shrink-0 w-full" data-name="Header">
-      <Frame12 />
-      <Frame13 />
-    </div>
-  );
-}
-
-function Frame14() {
-  return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] items-start not-italic relative shrink-0 w-full" data-name="Frame">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[normal] relative shrink-0 text-[#2e2e38] text-[24px] whitespace-nowrap">M365 Copilot Dashboard</p>
-      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[22px] min-w-full relative shrink-0 text-[#7f7f91] text-[14px] w-[min-content]">Hands-on exploration of Microsoft 365 Copilot capabilities across tax use cases.</p>
-    </div>
-  );
-}
-
-function CourseCardLocked1({ onOpen }: { onOpen?: () => void }) {
-  return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]" data-name="Course Card Locked">
-      <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[8px]" />
-      <div
-        className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full cursor-pointer"
-        onClick={onOpen}
-        role="button"
-        tabIndex={0}
-        onKeyDown={e => (e.key === "Enter" || e.key === " ") && onOpen?.()}
-      >
-        <Header2 />
-        <Frame14 />
-      </div>
-    </div>
-  );
-}
-
-function CourseGrid({ onOpenFoundational, onOpenModule1 }: { onOpenFoundational?: () => void; onOpenModule1?: () => void }) {
-  return (
-    <div className="content-stretch flex gap-[24px] items-start relative shrink-0 w-full" data-name="Course Grid">
-      <CourseCard onOpen={onOpenFoundational} />
-      <CourseCardLocked />
-      <CourseCardLocked1 onOpen={onOpenModule1} />
-    </div>
-  );
-}
-
-function ContentArea1({ onOpenFoundational, onOpenModule1 }: { onOpenFoundational?: () => void; onOpenModule1?: () => void }) {
-  return (
-    <div className="relative shrink-0 w-full" data-name="Content Area">
-      <div className="content-stretch flex flex-col gap-[48px] items-start px-[64px] py-[80px] relative size-full">
+    <div className="relative shrink-0 w-full min-w-0" data-name="Content Area">
+      <div className="content-stretch flex flex-col gap-[48px] items-stretch md:items-start px-6 md:px-[64px] py-12 md:py-[80px] relative size-full max-w-full">
         <Hero />
-        <CourseGrid onOpenFoundational={onOpenFoundational} onOpenModule1={onOpenModule1} />
+        <CourseGrid onOpenFoundational={onOpenFoundational} onOpenAiTaxPrompting={onOpenAiTaxPrompting} onOpenCopilotHub={onOpenCopilotHub} />
       </div>
     </div>
   );
@@ -2382,7 +2374,7 @@ const PHASES = [
 
 function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
   const [expandedPhase, setExpandedPhase] = useState<number>(1);
-  const [view, setView] = useState<"timeline" | "cards">("timeline");
+  const [view, setView] = useState<"timeline" | "cards">("cards");
 
   return (
     <div className="bg-white content-stretch flex flex-col gap-[48px] items-start pb-[80px] relative shrink-0 w-full">
@@ -2507,15 +2499,35 @@ export function PhasedEngagementView({ onNavigateToPhase1 }: { onNavigateToPhase
   );
 }
 
-export function Phase1View({ onNavigateToModule1, onNavigateToFoundational }: { onNavigateToModule1?: () => void; onNavigateToFoundational?: () => void } = {}) {
+export function Phase1View({
+  onNavigateToFoundational,
+  onNavigateToAiTaxPrompting,
+  onNavigateToCopilotHub,
+  onNavigate,
+}: {
+  onNavigateToFoundational?: () => void;
+  onNavigateToAiTaxPrompting?: () => void;
+  onNavigateToCopilotHub?: () => void;
+  /** App-level navigate — required for the learning header (back + module picker). */
+  onNavigate?: (path: string) => void;
+} = {}) {
+  const navigate = useNavigate();
+  const go = onNavigate ?? ((path: string) => navigate(path));
+
   return (
-    <div className="relative bg-white content-stretch flex flex-col items-start overflow-clip w-[1720px]" data-name="EY.ai Tax Labs - Phase 1">
+    <div className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden" data-name="EY.ai Tax Labs - Phase 1">
       <BackgroundMotif />
-      <Navigation />
-      <ContentArea1 onOpenFoundational={onNavigateToFoundational} onOpenModule1={onNavigateToModule1} />
+      {/* Learning chrome — full viewport width; content below may still scroll horizontally on very small screens */}
+      <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]" data-name="Top Navigation">
+        <SiteHeader variant="learning" onNavigate={go} skipLinkTarget="#phase1-content" />
+        <ModuleHeader mode="phase-overview" onNavigate={go} onBack={() => go("/phased")} />
+      </div>
+      <div id="phase1-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0 overflow-x-auto">
+        <ContentArea1 onOpenFoundational={onNavigateToFoundational} onOpenAiTaxPrompting={onNavigateToAiTaxPrompting} onOpenCopilotHub={onNavigateToCopilotHub} />
+      </div>
       <div className="bg-white h-[326px] relative shrink-0 w-full" data-name="Footer Final">
         <div className="flex flex-col items-center justify-center size-full">
-          <div className="content-stretch flex flex-col items-center justify-center px-[64px] relative size-full">
+          <div className="content-stretch flex flex-col items-center justify-center px-[24px] md:px-[64px] relative size-full">
             <Container8 />
             <Frame30 />
           </div>

@@ -157,6 +157,25 @@
   --color-ey-app-ppt: var(--ey-app-ppt);
   --color-ey-app-outlook: var(--ey-app-outlook);
   --color-ey-app-copilot: var(--ey-app-copilot);
+
+  /* ── EY Design System — canonical brand palette ── */
+  --color-ey-yellow:           #FFE600;
+  --color-ey-off-white:        #F6F6FA;
+  --color-ey-gray-02:          #C4C4CD;
+  --color-ey-gray-01:          #747480;
+  --color-ey-off-black:        #2E2E38;
+  --color-ey-confident-black:  #1A1A24;
+  /* Spectrum / Frame accent colors */
+  --color-ey-frame-orange:     #FF7D1E;
+  --color-ey-frame-red:        #FF3C00;
+  --color-ey-frame-magenta:    #FF32FF;
+  --color-ey-frame-purple:     #B400FF;
+  --color-ey-frame-lime:       #B4FF00;
+  --color-ey-frame-green:      #00C864;
+  --color-ey-frame-teal:       #32FFFF;
+  --color-ey-frame-blue:       #4696FF;
+  --color-ey-error:            #FF4136;
+  --color-ey-eyebrow-gold:     #B89B00;
 }
 
 @layer base {
