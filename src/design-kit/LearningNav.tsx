@@ -293,6 +293,8 @@ export function ModuleHeader(props: ModuleHeaderProps) {
 }
 
 function YellowBackArrow() {
+  // SVG arrow — text "←" sits off-centre once EY Interstate loads (glyph metrics).
+  // Vector keeps optical centre identical on every ModuleHeader screen.
   return (
     <span
       style={{
@@ -304,13 +306,27 @@ function YellowBackArrow() {
         borderRadius: "50%",
         border: `1.5px solid ${colors.yellow}`,
         color: colors.yellow,
-        fontSize: 14,
-        lineHeight: 1,
         flexShrink: 0,
+        boxSizing: "border-box",
       }}
       aria-hidden="true"
     >
-      ←
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ display: "block", flexShrink: 0 }}
+      >
+        <path
+          d="M7.5 2.5L4 6l3.5 3.5"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </span>
   );
 }

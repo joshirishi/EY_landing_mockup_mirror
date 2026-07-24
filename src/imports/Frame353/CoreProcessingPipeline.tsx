@@ -85,7 +85,7 @@ function PipelineCard({
   );
 }
 
-/** Center ring: exported glow halves + curved labels + Copilot Engine core. */
+/** Center ring: exported glow halves + Copilot Engine core. */
 function CopilotRing() {
   return (
     <div className="absolute left-[521px] top-[219px] size-[384px]">
@@ -103,31 +103,13 @@ function CopilotRing() {
         </div>
       </div>
 
-      {/* Curved labels (not in exported assets — match Figma screenshot) */}
-      <svg className="pointer-events-none absolute inset-0 size-full" viewBox="0 0 384 384" fill="none" aria-hidden>
-        <defs>
-          {/* Bottom→top on left so letters stay upright */}
-          <path id="pipelineLeftLabel" d="M192 320 A128 128 0 0 1 192 64" />
-          <path id="pipelineRightLabel" d="M192 64 A128 128 0 0 1 192 320" />
-        </defs>
-        <text fill="#1A1A24" fontFamily="EYInterstate, sans-serif" fontSize="12" fontWeight="700" letterSpacing="1">
-          <textPath href="#pipelineLeftLabel" startOffset="50%" textAnchor="middle">
-            Core Processing Pipeline
-          </textPath>
-        </text>
-        <text fill="#1A1A24" fontFamily="EYInterstate, sans-serif" fontSize="12" fontWeight="700" letterSpacing="1">
-          <textPath href="#pipelineRightLabel" startOffset="50%" textAnchor="middle">
-            MS 365 Copilot
-          </textPath>
-        </text>
-      </svg>
-
       {/* Inner cutout — 248px */}
       <div className="absolute left-[68px] top-[68px] size-[248px] rounded-full bg-[#1a1a24]" />
 
       <div className="absolute left-1/2 top-1/2 flex w-[120px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(255,230,0,0.2)] bg-[#2E2E38] p-3">
-          <img alt="" className="size-9" height={36} src={ASSET.bot} width={36} />
+        {/* No padding — size-11 + p-3 crushed the glyph (img max-width:100% → skewed). */}
+        <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[rgba(255,230,0,0.2)] bg-[#2E2E38]">
+          <img alt="" className="block size-6 max-w-none" height={24} src={ASSET.bot} width={24} />
         </div>
         <p className="w-[120px] shrink-0 text-center font-['EYInterstate:Bold',sans-serif] text-[15px] leading-normal text-white">
           Copilot Engine
