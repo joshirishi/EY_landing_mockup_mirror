@@ -1271,7 +1271,7 @@ function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProce
       <div aria-hidden className="absolute border border-[#d7d7dc] border-solid inset-0 pointer-events-none rounded-[8px]" />
       <div className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full">
         {/* Phase number + week */}
-        <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
+        <div className="content-stretch flex items-center justify-between relative shrink-0 w-full min-w-0">
           <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]">
             <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#1a1a2e] text-[20px] whitespace-nowrap">{phase.number}</p>
           </div>
@@ -1510,7 +1510,7 @@ function List() {
 
 function Container5() {
   return (
-    <div className="content-stretch flex flex-col items-start pb-[56.41px] pt-[30px] px-[8px] relative shrink-0 w-[608.84px]" data-name="Container">
+    <div className="content-stretch flex flex-col items-start pb-8 md:pb-[56.41px] pt-[30px] px-0 md:px-[8px] relative shrink-0 w-full md:w-auto md:max-w-[640px] min-w-0" data-name="Container">
       <List />
     </div>
   );
@@ -1518,7 +1518,7 @@ function Container5() {
 
 function Frame28() {
   return (
-    <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col md:flex-row md:items-center justify-between gap-6 relative shrink-0 w-full min-w-0">
       <Container4 />
       <Container5 />
     </div>
@@ -1527,19 +1527,17 @@ function Frame28() {
 
 function Container7() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative" data-name="Container">
-      <div className="[word-break:break-word] flex flex-col font-['EYInterstate:Light',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#747480] text-[14px] w-full">
-        <p className="leading-[20px] mb-0">{`EY refers to the global organization, and may refer to one or more, of the member firms of Ernst & Young Global`}</p>
-        <p className="leading-[20px] mb-0">{`Limited, each of which is a separate legal entity. Ernst & Young Global Limited, a UK company limited by guarantee,`}</p>
-        <p className="leading-[20px]">does not provide services to clients.</p>
-      </div>
+    <div className="content-stretch flex flex-1 flex-col items-start min-w-0 relative" data-name="Container">
+      <p className="m-0 font-['EYInterstate:Light',sans-serif] text-[#747480] text-[14px] leading-[20px] max-w-prose">
+        EY refers to the global organization, and may refer to one or more, of the member firms of Ernst & Young Global Limited, each of which is a separate legal entity. Ernst & Young Global Limited, a UK company limited by guarantee, does not provide services to clients.
+      </p>
     </div>
   );
 }
 
 function MaskGroup() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground}")` }} data-name="Background" />
     </div>
   );
@@ -1548,7 +1546,7 @@ function MaskGroup() {
 function Item() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -1560,7 +1558,7 @@ function Item() {
 
 function MaskGroup1() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground1}")` }} data-name="Background" />
     </div>
   );
@@ -1569,7 +1567,7 @@ function MaskGroup1() {
 function Item1() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -1581,7 +1579,7 @@ function Item1() {
 
 function MaskGroup2() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground2}")` }} data-name="Background" />
     </div>
   );
@@ -1590,7 +1588,7 @@ function MaskGroup2() {
 function Item2() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -1602,7 +1600,7 @@ function Item2() {
 
 function MaskGroup3() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground3}")` }} data-name="Background" />
     </div>
   );
@@ -1611,7 +1609,7 @@ function MaskGroup3() {
 function Item3() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -1623,7 +1621,7 @@ function Item3() {
 
 function List1() {
   return (
-    <div className="content-center flex flex-wrap gap-[0px_10px] items-center justify-end relative shrink-0 w-[541.33px]" data-name="List">
+    <div className="content-center flex flex-wrap gap-[0px_10px] items-center justify-start sm:justify-end relative shrink-0 w-auto max-w-full" data-name="List">
       <Item />
       <Item1 />
       <Item2 />
@@ -1634,7 +1632,7 @@ function List1() {
 
 function Frame29() {
   return (
-    <div className="content-stretch flex items-start relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col sm:flex-row sm:items-center gap-4 relative shrink-0 w-full min-w-0">
       <Container7 />
       <List1 />
     </div>
@@ -1643,8 +1641,8 @@ function Frame29() {
 
 function Container6() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="content-stretch flex flex-col items-start pb-[5px] pt-[10px] px-[8px] relative size-full">
+    <div className="relative shrink-0 w-full min-w-0" data-name="Container">
+      <div className="content-stretch flex flex-col items-start pb-[5px] pt-[10px] px-0 sm:px-[8px] relative w-full">
         <Frame29 />
       </div>
     </div>
@@ -1653,7 +1651,7 @@ function Container6() {
 
 function Frame26() {
   return (
-    <div className="content-stretch flex flex-col gap-[36px] items-center relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col gap-8 md:gap-[36px] items-stretch relative shrink-0 w-full min-w-0">
       <Frame28 />
       <Container6 />
     </div>
@@ -1662,7 +1660,7 @@ function Frame26() {
 
 function Frame27() {
   return (
-    <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
       <Frame26 />
     </div>
   );
@@ -1776,9 +1774,9 @@ function Navigation() {
 
 function Hero() {
   return (
-    <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full min-w-0">
       {/* Eyebrow + progress — tells users where they are without a click */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
         <p style={{ fontFamily: "'Inter:Bold',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: "0.05em", textTransform: "uppercase", color: "#B89B00", margin: 0 }}>
           Phase 1 of 4
         </p>
@@ -1788,10 +1786,10 @@ function Hero() {
           ))}
         </div>
       </div>
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[56px] relative shrink-0 text-[#2e2e38] text-[48px] whitespace-nowrap">
+      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[1.15] relative shrink-0 text-[#2e2e38] text-[28px] sm:text-[36px] md:text-[48px] md:leading-[56px] w-full max-w-full">
         Phase 1 — Foundational Training
       </p>
-      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[28px] relative shrink-0 text-[#7f7f91] text-[18px] w-[800px]">
+      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[26px] md:leading-[28px] relative shrink-0 text-[#7f7f91] text-[16px] md:text-[18px] w-full max-w-[800px]">
         Select a module below to begin your foundational journey into AI concepts, prompting, and M365 Copilot capabilities.
       </p>
     </div>
@@ -1809,7 +1807,7 @@ function CourseCard({ onOpen, icon, title, description, estimatedTime }: {
   const [hovered, setHovered] = useState(false);
   return (
     <div
-      className="flex-[1_0_0] min-w-px relative rounded-[8px]"
+      className="w-full min-w-0 relative rounded-[8px]"
       style={{
         background: "#fff",
         border: hovered ? "1.5px solid #2e2e38" : "1px solid #d7d7dc",
@@ -1892,7 +1890,7 @@ function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description
   if (!unlocked) {
     return (
       <div
-        className="flex-[1_0_0] min-w-px relative rounded-[8px]"
+        className="w-full min-w-0 relative rounded-[8px]"
         style={{
           background: "#f9f9fa", border: "1px solid #e8e8ed", cursor: "pointer",
           transition: "box-shadow 0.15s",
@@ -1940,7 +1938,7 @@ function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description
   // Unlocked appearance — identical to CourseCard with "Begin →" CTA
   return (
     <div
-      className="flex-[1_0_0] min-w-px relative rounded-[8px]"
+      className="w-full min-w-0 relative rounded-[8px]"
       style={{
         background: "#fff",
         border: hovered ? "1.5px solid #2e2e38" : "1.5px solid #ffe600",
@@ -1996,7 +1994,7 @@ function CourseGrid({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub
   onOpenCopilotHub?: () => void;
 }) {
   return (
-    <div className="content-stretch flex gap-[24px] items-stretch relative shrink-0 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 relative shrink-0 w-full min-w-0">
       <UnlockableCourseCard
         onNavigate={onOpenFoundational}
         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}
@@ -2042,7 +2040,7 @@ function ContentArea1({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotH
 
 function Separator1() {
   return (
-    <div className="h-px relative shrink-0 w-[1415.98px]" data-name="Separator">
+    <div className="h-px relative shrink-0 w-full" data-name="Separator">
       <div aria-hidden className="absolute border-[#c4c4cd] border-solid border-t inset-0 pointer-events-none" />
     </div>
   );
@@ -2050,7 +2048,7 @@ function Separator1() {
 
 function Container8() {
   return (
-    <div className="content-stretch flex flex-col items-start overflow-clip pb-[60px] relative shrink-0 w-[1355.98px]" data-name="Container">
+    <div className="content-stretch flex flex-col items-start overflow-clip pb-10 md:pb-[60px] relative shrink-0 w-full" data-name="Container">
       <Separator1 />
     </div>
   );
@@ -2174,7 +2172,7 @@ function List2() {
 
 function Container10() {
   return (
-    <div className="content-stretch flex flex-col items-start pb-[56.41px] pt-[30px] px-[8px] relative shrink-0 w-[608.84px]" data-name="Container">
+    <div className="content-stretch flex flex-col items-start pb-8 md:pb-[56.41px] pt-[30px] px-0 md:px-[8px] relative shrink-0 w-full md:w-auto md:max-w-[640px] min-w-0" data-name="Container">
       <List2 />
     </div>
   );
@@ -2182,7 +2180,7 @@ function Container10() {
 
 function Frame32() {
   return (
-    <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col md:flex-row md:items-center justify-between gap-6 relative shrink-0 w-full min-w-0">
       <Container9 />
       <Container10 />
     </div>
@@ -2191,19 +2189,17 @@ function Frame32() {
 
 function Container12() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative" data-name="Container">
-      <div className="[word-break:break-word] flex flex-col font-['EYInterstate:Light',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#747480] text-[14px] w-full">
-        <p className="leading-[20px] mb-0">{`EY refers to the global organization, and may refer to one or more, of the member firms of Ernst & Young Global`}</p>
-        <p className="leading-[20px] mb-0">{`Limited, each of which is a separate legal entity. Ernst & Young Global Limited, a UK company limited by guarantee,`}</p>
-        <p className="leading-[20px]">does not provide services to clients.</p>
-      </div>
+    <div className="content-stretch flex flex-1 flex-col items-start min-w-0 relative" data-name="Container">
+      <p className="m-0 font-['EYInterstate:Light',sans-serif] text-[#747480] text-[14px] leading-[20px] max-w-prose">
+        EY refers to the global organization, and may refer to one or more, of the member firms of Ernst & Young Global Limited, each of which is a separate legal entity. Ernst & Young Global Limited, a UK company limited by guarantee, does not provide services to clients.
+      </p>
     </div>
   );
 }
 
 function MaskGroup4() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground}")` }} data-name="Background" />
     </div>
   );
@@ -2212,7 +2208,7 @@ function MaskGroup4() {
 function Item4() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -2224,7 +2220,7 @@ function Item4() {
 
 function MaskGroup5() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground1}")` }} data-name="Background" />
     </div>
   );
@@ -2233,7 +2229,7 @@ function MaskGroup5() {
 function Item5() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -2245,7 +2241,7 @@ function Item5() {
 
 function MaskGroup6() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground2}")` }} data-name="Background" />
     </div>
   );
@@ -2254,7 +2250,7 @@ function MaskGroup6() {
 function Item6() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -2266,7 +2262,7 @@ function Item6() {
 
 function MaskGroup7() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground3}")` }} data-name="Background" />
     </div>
   );
@@ -2275,7 +2271,7 @@ function MaskGroup7() {
 function Item7() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -2287,7 +2283,7 @@ function Item7() {
 
 function List3() {
   return (
-    <div className="content-center flex flex-wrap gap-[0px_10px] items-center justify-end relative shrink-0 w-[541.33px]" data-name="List">
+    <div className="content-center flex flex-wrap gap-2.5 items-center justify-start sm:justify-end relative shrink-0 w-auto max-w-full" data-name="List">
       <Item4 />
       <Item5 />
       <Item6 />
@@ -2490,7 +2486,7 @@ export function PhasedEngagementView({ onNavigateToPhase1 }: { onNavigateToPhase
         <AiMs365Schematic />
         <InteractiveContentArea onProceed={onNavigateToPhase1} />
       </div>
-      <div className="bg-white content-stretch flex flex-col min-h-[240px] md:h-[326px] items-center justify-center px-4 sm:px-8 md:px-[64px] relative shrink-0 w-full" data-name="Footer Final">
+      <div className="bg-white content-stretch flex flex-col items-stretch justify-center px-4 sm:px-8 md:px-[64px] py-10 md:py-14 relative shrink-0 w-full overflow-hidden" data-name="Footer Final">
         <Container3 />
         <Frame27 />
       </div>
@@ -2521,12 +2517,12 @@ export function Phase1View({
         <SiteHeader variant="learning" onNavigate={go} skipLinkTarget="#phase1-content" />
         <ModuleHeader mode="phase-overview" onNavigate={go} onBack={() => go("/phased")} />
       </div>
-      <div id="phase1-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0 overflow-x-auto">
+      <div id="phase1-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0 overflow-x-hidden">
         <ContentArea1 onOpenFoundational={onNavigateToFoundational} onOpenAiTaxPrompting={onNavigateToAiTaxPrompting} onOpenCopilotHub={onNavigateToCopilotHub} />
       </div>
-      <div className="bg-white h-[326px] relative shrink-0 w-full" data-name="Footer Final">
-        <div className="flex flex-col items-center justify-center size-full">
-          <div className="content-stretch flex flex-col items-center justify-center px-[24px] md:px-[64px] relative size-full">
+      <div className="bg-white relative shrink-0 w-full overflow-hidden" data-name="Footer Final">
+        <div className="flex flex-col items-stretch justify-center w-full">
+          <div className="content-stretch flex flex-col items-stretch justify-center px-4 sm:px-6 md:px-[64px] py-10 md:py-14 relative w-full">
             <Container8 />
             <Frame30 />
           </div>

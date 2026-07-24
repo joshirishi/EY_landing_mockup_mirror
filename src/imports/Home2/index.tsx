@@ -66,7 +66,7 @@ function Frame20() {
 
 function FileSearchCorner() {
   return (
-    <div className="absolute left-[191px] size-[45px] top-[71px]" data-name="file-search-corner 4">
+    <div className="absolute left-1/2 -translate-x-1/2 size-[45px] top-[71px]" data-name="file-search-corner 4">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 45 45">
         <g id="file-search-corner 4">
           <path d={svgPaths.p17d3fb80} id="Vector" stroke="var(--stroke-0, #FFE600)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
@@ -82,7 +82,7 @@ function FileSearchCorner() {
 function Container5() {
   return (
     <div className="absolute bg-gradient-to-t from-[61.538%] from-[rgba(46,46,56,0)] h-[192px] left-0 to-[rgba(0,0,0,0)] top-[0.41px] w-full" data-name="Container">
-      <div className="absolute h-[284px] left-[-7px] top-[-48px] w-[502px]" data-name="ResearchLitigation 1">
+      <div className="absolute inset-0 w-full h-full" data-name="ResearchLitigation 1">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <img alt="" className="absolute max-w-none object-cover size-full" src={imgResearchLitigation1} />
           <div className="absolute bg-[rgba(0,0,0,0.5)] inset-0" />
@@ -177,7 +177,7 @@ function Frame22() {
 
 function ListChecks() {
   return (
-    <div className="absolute left-[200px] size-[45px] top-[73.41px]" data-name="list-checks 1">
+    <div className="absolute left-1/2 -translate-x-1/2 size-[45px] top-[73.41px]" data-name="list-checks 1">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 45 45">
         <g id="list-checks 1">
           <path d="M24.375 9.375H39.375" id="Vector" stroke="var(--stroke-0, #FFE600)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
@@ -194,7 +194,7 @@ function ListChecks() {
 function Container9() {
   return (
     <div className="absolute bg-[#2e2e38] h-[192px] left-0 top-0 w-full" data-name="Container">
-      <div className="absolute h-[247px] left-[-27.33px] top-[-35.59px] w-[500px]" data-name="Compliance 1">
+      <div className="absolute inset-0 w-full h-full" data-name="Compliance 1">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <img alt="" className="absolute max-w-none object-cover size-full" src={imgCompliance1} />
           <div className="absolute bg-[rgba(0,0,0,0.5)] inset-0" />
@@ -225,7 +225,7 @@ function Container8() {
 function P3() {
   return (
     <div className="content-stretch flex items-center justify-center py-px relative shrink-0" data-name="p">
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[23.996px] not-italic relative shrink-0 text-[#747480] text-[16.002px] w-[333px]">Platforms for multiple tax compliances powered by AI agents</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[23.996px] not-italic relative shrink-0 text-[#747480] text-[16.002px] w-full">Platforms for multiple tax compliances powered by AI agents</p>
     </div>
   );
 }
@@ -286,7 +286,7 @@ function Frame21() {
 
 function FlaskConical() {
   return (
-    <div className="absolute left-[190px] size-[45px] top-[73.41px]" data-name="flask-conical (1) 1">
+    <div className="absolute left-1/2 -translate-x-1/2 size-[45px] top-[73.41px]" data-name="flask-conical (1) 1">
       <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 45 45">
         <g id="flask-conical (1) 1">
           <path d={svgPaths.p110f3b80} id="Vector" stroke="var(--stroke-0, #FFE600)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
@@ -301,7 +301,7 @@ function FlaskConical() {
 function Container13() {
   return (
     <div className="absolute bg-gradient-to-t from-1/2 from-[rgba(46,46,56,0.6)] h-[192px] left-0 to-[rgba(0,0,0,0)] top-0 w-full" data-name="Container">
-      <div className="absolute h-[261px] left-[-14.66px] top-[-13.59px] w-[456px]" data-name="Tax lab 1">
+      <div className="absolute inset-0 w-full h-full" data-name="Tax lab 1">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 overflow-hidden">
             <img alt="" className="absolute h-[150.96%] left-[-30.48%] max-w-none top-[-32.57%] w-[153.51%]" src={imgTaxLab1} />
@@ -535,7 +535,7 @@ function ItemMargin4() {
 
 function List() {
   return (
-    <div className="content-center flex flex-wrap gap-0 items-center justify-end relative shrink-0 w-full" data-name="List">
+    <div className="content-center flex flex-wrap gap-2.5 items-center justify-start sm:justify-end relative shrink-0 w-auto max-w-full" data-name="List">
       <ItemMargin />
       <ItemMargin1 />
       <ItemMargin2 />
@@ -547,7 +547,7 @@ function List() {
 
 function Container17() {
   return (
-    <div className="content-stretch flex flex-col items-start pb-[56.41px] pt-[30px] px-[8px] relative shrink-0 w-[608.84px]" data-name="Container">
+    <div className="content-stretch flex flex-col items-start pb-8 md:pb-[56.41px] pt-[30px] px-0 md:px-[8px] relative shrink-0 w-full md:w-auto md:max-w-[640px] min-w-0" data-name="Container">
       <List />
     </div>
   );
@@ -555,7 +555,7 @@ function Container17() {
 
 function Frame14() {
   return (
-    <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col md:flex-row md:items-center justify-between gap-6 relative shrink-0 w-full min-w-0">
       <Container16 />
       <Container17 />
     </div>
@@ -564,19 +564,17 @@ function Frame14() {
 
 function Container19() {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col items-start min-w-px relative" data-name="Container">
-      <div className="[word-break:break-word] flex flex-col font-['EYInterstate:Light',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#747480] text-[14px] w-full">
-        <p className="leading-[20px] mb-0">{`EY refers to the global organization, and may refer to one or more, of the member firms of Ernst & Young Global`}</p>
-        <p className="leading-[20px] mb-0">{`Limited, each of which is a separate legal entity. Ernst & Young Global Limited, a UK company limited by guarantee,`}</p>
-        <p className="leading-[20px]">does not provide services to clients.</p>
-      </div>
+    <div className="content-stretch flex flex-1 flex-col items-start min-w-0 relative" data-name="Container">
+      <p className="m-0 font-['EYInterstate:Light',sans-serif] text-[#747480] text-[14px] leading-[20px] max-w-prose">
+        EY refers to the global organization, and may refer to one or more, of the member firms of Ernst & Young Global Limited, each of which is a separate legal entity. Ernst & Young Global Limited, a UK company limited by guarantee, does not provide services to clients.
+      </p>
     </div>
   );
 }
 
 function MaskGroup() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground}")` }} data-name="Background" />
     </div>
   );
@@ -585,7 +583,7 @@ function MaskGroup() {
 function Item() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -597,7 +595,7 @@ function Item() {
 
 function MaskGroup1() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground1}")` }} data-name="Background" />
     </div>
   );
@@ -606,7 +604,7 @@ function MaskGroup1() {
 function Item1() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -618,7 +616,7 @@ function Item1() {
 
 function MaskGroup2() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground2}")` }} data-name="Background" />
     </div>
   );
@@ -627,7 +625,7 @@ function MaskGroup2() {
 function Item2() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -639,7 +637,7 @@ function Item2() {
 
 function MaskGroup3() {
   return (
-    <div className="h-full relative shrink-0 w-[44px]" data-name="Mask Group">
+    <div className="size-[44px] relative shrink-0" data-name="Mask Group">
       <div className="absolute bg-[#2e2e38] inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[100%_100%]" style={{ maskImage: `url("${imgBackground3}")` }} data-name="Background" />
     </div>
   );
@@ -648,7 +646,7 @@ function MaskGroup3() {
 function Item3() {
   return (
     <div className="content-stretch flex flex-col items-start justify-center relative shrink-0 size-[44px]" data-name="Item">
-      <div className="content-stretch flex flex-[1_0_0] items-center justify-center min-h-px relative rounded-[22px] w-full" data-name="Component 7">
+      <div className="content-stretch flex items-center justify-center relative rounded-[22px] size-full" data-name="Component 7">
         <div className="absolute bg-white left-[2px] rounded-[20px] size-[40px] top-[2px]" data-name="Background+Border">
           <div aria-hidden className="absolute border border-[#c4c4cd] border-solid inset-0 pointer-events-none rounded-[20px]" />
         </div>
@@ -660,7 +658,7 @@ function Item3() {
 
 function List1() {
   return (
-    <div className="content-center flex flex-wrap gap-[0px_10px] items-center justify-end relative shrink-0 w-[541.33px]" data-name="List">
+    <div className="content-center flex flex-wrap gap-2.5 items-center justify-start sm:justify-end relative shrink-0 w-auto max-w-full" data-name="List">
       <Item />
       <Item1 />
       <Item2 />
@@ -671,7 +669,7 @@ function List1() {
 
 function Frame15() {
   return (
-    <div className="content-stretch flex items-start relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col sm:flex-row sm:items-center gap-4 relative shrink-0 w-full min-w-0">
       <Container19 />
       <List1 />
     </div>
@@ -680,8 +678,8 @@ function Frame15() {
 
 function Container18() {
   return (
-    <div className="relative shrink-0 w-full" data-name="Container">
-      <div className="content-stretch flex flex-col items-start pb-[5px] pt-[10px] px-[8px] relative size-full">
+    <div className="relative shrink-0 w-full min-w-0" data-name="Container">
+      <div className="content-stretch flex flex-col items-start pb-[5px] pt-[10px] px-0 sm:px-[8px] relative w-full">
         <Frame15 />
       </div>
     </div>
@@ -690,7 +688,7 @@ function Container18() {
 
 function Frame12() {
   return (
-    <div className="content-stretch flex flex-col gap-[36px] items-center relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col gap-8 md:gap-[36px] items-stretch relative shrink-0 w-full min-w-0">
       <Frame14 />
       <Container18 />
     </div>
@@ -710,7 +708,7 @@ function Frame({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
     <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
       <Section />
       <Section1 onOpenTaxLabs={onOpenTaxLabs} />
-      <div className="bg-white content-stretch flex flex-col min-h-[240px] md:min-h-[326px] items-center justify-center px-4 sm:px-8 md:px-[64px] relative shrink-0 w-full" data-name="Footer Final">
+      <div className="bg-white content-stretch flex flex-col items-stretch justify-center px-4 sm:px-8 md:px-[64px] py-10 md:py-14 relative shrink-0 w-full overflow-hidden" data-name="Footer Final">
         <Container15 />
         <Frame13 />
       </div>
