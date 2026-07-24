@@ -39,6 +39,7 @@ const TOKEN_BRIDGE = `
   --ey-bg-deep: ${colors.offWhite};
   --card-bg: ${colors.white};
   --text-secondary: ${colors.gray01};
+  --surface-neutral: ${colors.offWhite};
 
   /* Spacing — section rhythm from design-kit */
   --section-padding: ${spacing.sectionPadding};
@@ -49,6 +50,12 @@ const TOKEN_BRIDGE = `
   color: ${colors.offBlack};
   line-height: 1.6;
   scroll-behavior: smooth;
+}
+
+/* Reality Check — EY Off White light-grey band */
+#module-content .wrong-section,
+#module-content #reality-check {
+  background: ${colors.offWhite} !important;
 }
 
 /* Restore intended section breathing room (lesson used 90px 60px / 80px / 64px;
