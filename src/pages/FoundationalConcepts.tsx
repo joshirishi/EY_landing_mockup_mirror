@@ -202,7 +202,7 @@ const TOKEN_BRIDGE = `
 body.gva-modal-open { overflow: hidden; }
 
 #module-content .hero {
-  padding: 48px 64px 56px;
+  padding: 72px 64px 80px;
 }
 
 #module-content [id] {

@@ -1767,14 +1767,34 @@ export default function AiTaxPrompting({
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#module-content" />
       <ModuleHeader currentModuleId="ai-tax-prompting" onNavigate={onNavigate} onBack={onBack} />
 
-      {/* ── 1. HERO — dark ── */}
-      <section id="module-content" style={{
-        background: C.confidentBlack, padding: "80px 64px 72px",
-        position: "relative", overflow: "hidden",
-      }}>
+      {/* ── 1. HERO — dark + spectrum (Frame 8) ── */}
+      <section
+        id="module-content"
+        style={{
+          padding: "80px 64px 72px",
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: C.confidentBlack,
+          backgroundImage: "url('/spectrum/hero-frame-8.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "78% center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Soft left scrim so white type stays readable over the bloom */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(90deg, rgba(26,26,36,0.94) 0%, rgba(26,26,36,0.78) 45%, rgba(26,26,36,0.35) 72%, rgba(26,26,36,0.18) 100%)",
+            pointerEvents: "none",
+          }}
+        />
         {/* Spectrum accent line */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: spectrumCss(5) }} />
-        <div style={{ maxWidth: 860 }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: spectrumCss(5), zIndex: 2 }} />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 860 }}>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             background: "rgba(255,230,0,0.08)", border: "1px solid rgba(255,230,0,0.25)",
@@ -1867,19 +1887,19 @@ export default function AiTaxPrompting({
 
               <ArrowRight size={16} color={C.white} strokeWidth={2} style={{ flexShrink: 0 }} />
 
-              {/* RESULT */}
+              {/* RESULT — light success surface so dark type stays WCAG-readable */}
               <div style={{
-                background: C.gray01, border: `1.5px solid ${C.gray02}`, borderRadius: 16,
+                background: C.white, border: `1.5px solid ${C.gray02}`, borderRadius: 16,
                 width: 220, padding: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
               }}>
-                <div style={{ background: C.success + "33", borderRadius: 100, padding: 12, display: "flex" }}>
+                <div style={{ background: "rgba(0,200,100,0.12)", borderRadius: 100, padding: 12, display: "flex" }}>
                   <CheckCircle size={24} color={C.success} strokeWidth={2} />
                 </div>
                 <span style={{ fontSize: 15, color: C.offBlack, fontFamily: F.regular, lineHeight: "25.5px" }}>RESULT</span>
                 <span style={{
-                  border: `1px solid ${C.gray02}`, borderRadius: 16, padding: "2px 8px",
+                  border: `1px solid rgba(0,200,100,0.35)`, borderRadius: 16, padding: "2px 8px",
                   fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: "22.4px",
-                  background: C.gray01,
+                  background: "rgba(0,200,100,0.10)",
                 }}>Output</span>
               </div>
             </div>

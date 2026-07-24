@@ -100,7 +100,7 @@ body {
   border-bottom-color: var(--ey-yellow);
 }
 
-/* ===== HERO — Figma structure + EY LIGHT scheme + Spectrum Shape ===== */
+/* ===== HERO — dark spectrum (Frame 7), matches Copilot Hub / Prompting ─── */
 .hero {
   position: relative;
   text-align: left;
@@ -109,30 +109,19 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-02);
-  padding: 48px 64px 56px;
+  background-color: var(--confident-black);
+  background-image: url('/spectrum/hero-frame-7.png');
+  background-size: cover;
+  background-position: 70% center;
+  background-repeat: no-repeat;
+  border-bottom: none;
+  padding: 72px 64px 80px;
 }
-/*
-  EY Spectrum Shape crop (Property 1=image 4.png).
-  Note: screen-blend cannot work on white (washes to white), so we place a
-  right-side crop that fades into the light canvas — text stays readable.
-*/
+/* Full-bleed spectrum sits on .hero; keep layer for parity with markup */
 .hero-bg {
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 38%;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    #1A1A24 url('/ey-spectrum-hero.png') 70% center / cover no-repeat;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 100%);
-  mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 100%);
+  display: none;
 }
-/* Extra soft veil so type column stays pure light-scheme */
+/* Soft left scrim so white type stays readable over the bloom */
 .hero-overlay {
   display: block;
   position: absolute;
@@ -141,11 +130,10 @@ body {
   pointer-events: none;
   background: linear-gradient(
     90deg,
-    #FFFFFF 0%,
-    #FFFFFF 42%,
-    rgba(255,255,255,0.55) 55%,
-    rgba(255,255,255,0.12) 72%,
-    transparent 100%
+    rgba(26,26,36,0.94) 0%,
+    rgba(26,26,36,0.78) 42%,
+    rgba(26,26,36,0.35) 70%,
+    rgba(26,26,36,0.18) 100%
   );
 }
 .hero-inner {
@@ -160,7 +148,7 @@ body {
 }
 .hero-eyebrow {
   font-size: 12px; font-weight: 700;
-  color: var(--eyebrow-gold);
+  color: var(--ey-yellow);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 26px;
@@ -168,23 +156,23 @@ body {
 .hero-title {
   font-size: 36px; font-weight: 700;
   font-family: 'EYInterstate:Bold', Arial, sans-serif;
-  color: var(--ey-dark); line-height: 44px;
+  color: #FFFFFF; line-height: 44px;
   letter-spacing: -0.5px;
   margin-bottom: 16px;
 }
 /* Yellow highlight words — accent only, not body copy */
-.hero-title .hl { color: var(--ey-dark); box-shadow: inset 0 -0.28em 0 var(--ey-yellow); }
+.hero-title .hl { color: var(--ey-yellow); box-shadow: none; }
 .hero-subtitle {
   font-size: 16px; font-weight: 400;
-  color: var(--gray-01); line-height: 24px;
+  color: rgba(255,255,255,0.82); line-height: 24px;
   max-width: 560px; margin-bottom: 14px;
 }
 .hero-meta {
-  font-size: 14px; color: var(--muted-foreground);
+  font-size: 14px; color: var(--gray-02);
   margin-bottom: 26px;
 }
 .hero-cta { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
-/* EY web buttons — square; primary = Confident Black (never yellow fill) */
+/* Dark-hero CTAs — primary yellow for contrast; secondary white outline */
 .hero-cta button, .btn-primary, .btn-secondary {
   padding: 12px 28px; border: none; border-radius: 0;
   font-size: 14px; font-weight: 700; cursor: pointer;
@@ -192,17 +180,24 @@ body {
   letter-spacing: -0.02em; height: 48px;
   font-family: 'EYInterstate:Bold', Arial, sans-serif;
 }
+/* Light-section defaults (Confident Black primary — never yellow fill) */
 .btn-primary { background: var(--confident-black); color: var(--white); border: 1px solid var(--confident-black); }
 .btn-primary:hover { background: var(--ey-dark); border-color: var(--ey-dark); }
 .btn-secondary { background: transparent; color: var(--ey-dark); border: 1.5px solid var(--ey-dark) !important; }
 .btn-secondary:hover { border-color: var(--confident-black) !important; background: var(--off-white); }
+/* Dark-hero overrides for contrast on spectrum */
+.hero .btn-primary { background: var(--ey-yellow); color: var(--confident-black); border: 1px solid var(--ey-yellow); }
+.hero .btn-primary:hover { background: #FFE84D; border-color: #FFE84D; }
+.hero .btn-secondary { background: transparent; color: #FFFFFF; border: 1.5px solid rgba(255,255,255,0.65) !important; }
+.hero .btn-secondary:hover { border-color: #FFFFFF !important; background: rgba(255,255,255,0.08); }
 .hero-media {
   position: relative;
   width: 100%; max-width: 480px; margin-left: auto;
   aspect-ratio: 16/9;
-  background: var(--confident-black);
-  border: 1px solid var(--gray-02);
+  background: rgba(46,46,56,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
   overflow: hidden;
+  backdrop-filter: blur(8px);
 }
 .hero-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .hero-play {
@@ -233,17 +228,16 @@ body {
   padding: 4px 8px;
 }
 @media (max-width: 900px) {
-  .hero { padding: 40px 24px 48px; }
+  .hero { padding: 48px 24px 56px; background-position: center top; }
   .hero-inner { grid-template-columns: 1fr; gap: 32px; }
   .hero-media { max-width: 100%; margin: 0; }
   .hero-title { font-size: 28px; line-height: 36px; }
-  .hero-bg { background-position: center top; opacity: 0.55; }
   .hero-overlay {
     background: linear-gradient(
       180deg,
-      rgba(255,255,255,0.94) 0%,
-      rgba(255,255,255,0.75) 45%,
-      rgba(255,255,255,0.4) 100%
+      rgba(26,26,36,0.94) 0%,
+      rgba(26,26,36,0.78) 45%,
+      rgba(26,26,36,0.45) 100%
     );
   }
 }
@@ -1857,9 +1851,8 @@ body.gva-modal-open { overflow: hidden; }
 <body>
 <!-- Internal sticky nav removed — site chrome is SiteHeader + ModuleHeader outside this iframe. -->
 
-<!-- ======== HERO — Figma 3206:10348, EY light + Spectrum Shape asset ======== -->
+<!-- ======== HERO — dark spectrum (Frame 7), aligned with Copilot Hub / Prompting ======== -->
 <section class="hero" id="home" aria-label="Module 1 hero">
-  <!-- Abstract Spectrum Shape (from Property 1=image 4.png) -->
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero-overlay" aria-hidden="true"></div>
   <div class="hero-inner">
