@@ -1071,19 +1071,30 @@ body.gva-modal-open { overflow: hidden; }
   width: 100%;
 }
 /* Parent → child concentric nest (wraps the featured card) */
-.evo-builds {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-  margin: 0 0 16px;
-  font-size: 13px; line-height: 1.4; color: #C4C4CD;
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
-.evo-builds strong { color: #FFFFFF; font-weight: 700; }
-.evo-builds-chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  border: 1px solid rgba(255,230,0,0.25);
-  background: rgba(255,230,0,0.06);
-  color: var(--ey-yellow);
-  font-size: 12px; font-weight: 700;
-  padding: 6px 12px; border-radius: 999px;
+.evo-breadcrumb {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+  margin: 0 0 16px;
+}
+.evo-breadcrumb-item {
+  display: inline-flex; align-items: center;
+  background: none; border: none; padding: 5px 8px;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  color: #747480; cursor: pointer; border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.evo-breadcrumb-item:hover { color: #FFFFFF; background: rgba(255,255,255,0.06); }
+.evo-breadcrumb-item:focus-visible { outline: 2px solid var(--ey-yellow); outline-offset: 2px; }
+.evo-breadcrumb-item.is-visited { color: #C4C4CD; }
+.evo-breadcrumb-item.is-current {
+  color: #1A1A24; background: var(--ey-yellow); cursor: default;
+}
+.evo-breadcrumb-sep {
+  color: #2E2E38; font-size: 14px; line-height: 1;
 }
 .evo-concentric {
   margin: 0 0 24px;
@@ -1111,11 +1122,6 @@ body.gva-modal-open { overflow: hidden; }
   font-size: 12px; font-weight: 700; color: #C4C4CD;
   letter-spacing: 0.02em;
 }
-.evo-nest-layer .evo-nest-role {
-  margin-left: auto;
-  font-size: 11px; font-weight: 600; color: #747480;
-  text-transform: uppercase;
-}
 .evo-nest-layer.is-ancestor {
   border-color: #2E2E38;
 }
@@ -1131,11 +1137,10 @@ body.gva-modal-open { overflow: hidden; }
   border-bottom: 1px solid rgba(255,230,0,0.22);
 }
 .evo-nest-layer.is-current .evo-nest-label { color: #FFFFFF; }
-.evo-nest-layer.is-current .evo-nest-role { color: var(--ey-yellow); }
 .evo-nest-toggle { cursor: pointer; border-radius: 8px; }
 .evo-nest-toggle:hover { background: rgba(255,255,255,0.04); }
 .evo-nest-toggle:focus-visible { outline: 2px solid var(--ey-yellow); outline-offset: 2px; }
-.evo-nest-chevron { margin-left: 4px; flex-shrink: 0; transition: transform 0.25s ease; }
+.evo-nest-chevron { margin-left: auto; flex-shrink: 0; transition: transform 0.25s ease; }
 #evo-nest.is-collapsed .evo-nest-chevron { transform: rotate(-90deg); }
 /* Collapsed: fold every ring down to a single summary line above the featured card */
 #evo-nest.is-collapsed .evo-nest-layer {
@@ -2586,7 +2591,7 @@ document.addEventListener('keydown', function(e) {
   <p class="evo-sub">Each layer is a subset of the one before it — building on the last</p>
 
   <div id="evo-timeline-view">
-    <p class="evo-builds" id="evo-builds" aria-live="polite"></p>
+    <nav class="evo-breadcrumb" id="evo-breadcrumb" aria-label="AI evolution hierarchy, current layer highlighted"></nav>
 
     <div class="evo-body">
       <!-- Concentric nest: ancestor rings wrap the featured card -->
@@ -4073,11 +4078,23 @@ function toggleEvoNestCollapse() {
 }
 window.toggleEvoNestCollapse = toggleEvoNestCollapse;
 
+function renderEvoBreadcrumb(i) {
+  const el = document.getElementById('evo-breadcrumb');
+  if (!el) return;
+  el.innerHTML = EVO_ERAS.map((e, idx) => {
+    const state = idx === i ? 'is-current' : idx < i ? 'is-visited' : '';
+    const sep = idx > 0 ? '<span class="evo-breadcrumb-sep" aria-hidden="true">›</span>' : '';
+    const current = idx === i ? ' aria-current="true"' : '';
+    return `${sep}<button type="button" class="evo-breadcrumb-item ${state}" onclick="selectEra(${idx})"${current}>${e.short}</button>`;
+  }).join('');
+}
+
 function renderEvoNest(i) {
   const nest = document.getElementById('evo-nest');
-  const builds = document.getElementById('evo-builds');
   const featured = document.getElementById('evo-featured');
-  if (!nest || !builds || !featured) return;
+  if (!nest || !featured) return;
+
+  renderEvoBreadcrumb(i);
 
   // Keep the featured card alive — pull it out before rebuilding rings
   featured.remove();
@@ -4089,10 +4106,10 @@ function renderEvoNest(i) {
     const e = EVO_ERAS[depth];
     const isCurrent = depth === i;
     const role = depth === 0 && i === 0
-      ? 'Root'
+      ? 'Root layer'
       : isCurrent
         ? 'You are here'
-        : (depth === 0 ? 'Parent root' : 'Parent layer');
+        : (depth === 0 ? 'Parent (root) layer' : 'Parent layer');
 
     const layer = document.createElement('div');
     layer.className = 'evo-nest-layer ' + (isCurrent ? 'is-current' : 'is-ancestor');
@@ -4102,8 +4119,7 @@ function renderEvoNest(i) {
     row.className = 'evo-nest-row';
     row.innerHTML =
       `<span class="evo-nest-dot" style="background:${e.dot}"></span>` +
-      `<span class="evo-nest-label">${e.short} · ${e.title}</span>` +
-      `<span class="evo-nest-role">${role}</span>`;
+      `<span class="evo-nest-label">${e.short} · ${e.title}<span class="sr-only"> — ${role}</span></span>`;
 
     if (depth === 0 && i > 0) {
       row.classList.add('evo-nest-toggle');
@@ -4132,21 +4148,6 @@ function renderEvoNest(i) {
     'aria-label',
     'Nesting: ' + EVO_ERAS.slice(0, i + 1).map((e) => e.short).join(' contains ')
   );
-
-  const era = EVO_ERAS[i];
-  const child = EVO_ERAS[i + 1];
-  if (era.parent === null) {
-    builds.innerHTML = child
-      ? `<span class="evo-builds-chip">Root layer</span>
-         <span>Child tech that nests inside: <strong>${child.title}</strong></span>`
-      : `<span class="evo-builds-chip">Root layer</span>`;
-  } else {
-    const parent = EVO_ERAS[era.parent];
-    builds.innerHTML = `<span class="evo-builds-chip">Builds on ${parent.short}</span>
-      <span>Parent: <strong>${parent.title}</strong>${
-        child ? ` · next child: <strong>${child.title}</strong>` : ''
-      }</span>`;
-  }
 }
 
 function selectEra(i) {
