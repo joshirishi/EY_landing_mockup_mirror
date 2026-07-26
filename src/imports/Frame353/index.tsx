@@ -1201,37 +1201,45 @@ const PHASE_CARDS = [
     week: "Week 1-2",
     number: 1,
     title: "Foundational Training Workshops",
-    description: "2 workshops×1.5 hrs each. Covers AI concepts in Tax, Prompt engineering basics, and M365 Copilot across tax use cases.",
+    description: "Covers AI concepts in Tax, Prompt engineering basics, and M365 Copilot across tax use cases.",
     locked: false,
+    completed: false,
     coverage: ["AI concepts in Tax", "Prompt engineering (basics)", "M365 Copilot across tax use cases"],
     deliverables: ["Copilot Prompt Templates", "Adoption & Enablement Toolkit"],
+    outcome: "Workforce well-equipped with basics of AI, Prompt, M365 Copilot",
   },
   {
     week: "Week 3-4",
     number: 2,
-    title: "Brainstorming Tax Use Cases",
-    description: "Identifying high-impact tax workflows where AI can automate repetitive tasks, improve accuracy, and reduce manual effort.",
+    title: "Brainstorming Use Cases",
+    description: "Identify high-impact tax processes for AI, map current workflows, and classify opportunities between AI agents and prompts.",
     locked: true,
-    coverage: ["Document fetching automation", "Notice/Order validation", "Drafting replies"],
-    deliverables: ["Prioritized Use Case List", "ROI Estimation Framework"],
+    completed: false,
+    coverage: ["Identify 5–7 tax processes for AI", "Use cases across current tax workflow", "Agent vs Prompt classification"],
+    deliverables: ["AI first process maps for 5-7 tax use cases", "Recommendation note for Prompt vs M365 Agent"],
+    outcome: "AI first process maps with clarity on agents vs prompts",
   },
   {
     week: "Week 5-6",
     number: 3,
-    title: "Guidance in Prompts & AI Agents",
-    description: "Deep dive into advanced prompt engineering and the integration of AI agents into your existing tax workflows and systems.",
+    title: "AI Agents & Prompts",
+    description: "Advanced, hands-on training in prompt engineering and M365 Copilot agent design for the use cases identified in Phase 2.",
     locked: true,
-    coverage: ["Advanced Prompt Engineering", "AI Agent Integration", "Data Quality & Validation"],
-    deliverables: ["Agent Configuration Guide", "Validation Framework"],
+    completed: false,
+    coverage: ["Advanced prompt engineering (hands-on)", "M365 Copilot Agent design (hands-on)", "Guided Prompt Library Development"],
+    deliverables: ["Sample Prompt Templates", "Instructions for M365 Agents"],
+    outcome: "Power users capable of building no-code agents independently",
   },
   {
     week: "Week 6",
     number: 4,
-    title: "Governance & AI Reinforcement",
-    description: "Establishing the right governance structures and reinforcing AI adoption across the organization to ensure long-term success.",
+    title: "Closure & AI Reinforcement",
+    description: "Assess AI readiness, review adoption through Viva Insights, and establish governance guidance to close out the engagement responsibly.",
     locked: true,
-    coverage: ["Change Management", "Governance Framework", "Adoption Metrics"],
-    deliverables: ["Governance Policy", "Adoption Roadmap"],
+    completed: false,
+    coverage: ["AI Readiness Assessment", "Viva Insights Dashboard", "AI governance guidance"],
+    deliverables: ["Governance Playbook", "Copilot Monitoring Guidance"],
+    outcome: "Real-time visibility into AI adoption, aligned with responsible AI",
   },
 ];
 
@@ -1260,6 +1268,16 @@ function CardLockIcon() {
           <path d={cardSvg.p18f7f580} stroke="var(--stroke-0, #747480)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
           <path d={cardSvg.p4317f80} stroke="var(--stroke-0, #747480)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
         </g>
+      </svg>
+    </div>
+  );
+}
+
+function CardCheckIcon() {
+  return (
+    <div className="relative shrink-0 size-[16px]">
+      <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <path d="M13.5 4L6 11.5L2.5 8" stroke="var(--stroke-0, #FFFFFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
       </svg>
     </div>
   );
@@ -1306,12 +1324,28 @@ function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProce
               ))}
             </div>
           </div>
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Outcome</p>
+            <div className="bg-[#FFFBE0] border border-[#FFE600] rounded-[6px] px-[14px] py-[10px] relative shrink-0 w-full">
+              <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative text-[#2e2e38] text-[13px]">{phase.outcome}</p>
+            </div>
+          </div>
         </div>
         {/* CTA */}
-        {phase.locked ? (
-          <div className="bg-[#C4C4CD] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
-            <CardLockIcon />
-            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#747480] text-[16px] whitespace-nowrap">This journey is locked</p>
+        {phase.completed ? (
+          <div className="bg-[#00C864] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
+            <CardCheckIcon />
+            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-white text-[16px] whitespace-nowrap">Completed</p>
+          </div>
+        ) : phase.locked ? (
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+            <div className="bg-[#C4C4CD] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
+              <CardLockIcon />
+              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#747480] text-[16px] whitespace-nowrap">This journey is locked</p>
+            </div>
+            <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#747480] text-[12px]">
+              Complete Phase {phase.number - 1} to unlock this journey
+            </p>
           </div>
         ) : (
           <div
@@ -1365,12 +1399,10 @@ function ViewSwitcher({ view, onSwitch }: { view: "timeline" | "cards"; onSwitch
 }
 
 function ContentArea() {
-  const [view, setView] = useState<"timeline" | "cards">("cards");
   return (
     <div className="bg-white content-stretch flex flex-col gap-[48px] items-start pb-[80px] relative shrink-0 w-full" data-name="Content Area">
       <Frame39 />
-      <ViewSwitcher view={view} onSwitch={setView} />
-      {view === "timeline" ? <TimelineStack /> : <CardGrid />}
+      <CardGrid />
       <Frame4 />
     </div>
   );
@@ -1911,10 +1943,8 @@ function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
             <p className="font-['EYInterstate:Bold',sans-serif] font-bold text-[22px]" style={{ lineHeight: "1.2", margin: 0, color: "#c4c4cd" }}>{title}</p>
-            <p className="font-['EYInterstate:Regular',sans-serif] text-[14px]" style={{ lineHeight: "22px", margin: 0, color: "#c4c4cd" }}>{description}</p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-            {estimatedTime && <p style={{ fontFamily: "'EYInterstate:Regular',sans-serif", fontSize: 12, color: "#c4c4cd", margin: 0 }}>{estimatedTime}</p>}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%" }}>
             {/* Lock badge with hover hint — "click to unlock" */}
             <div style={{
               marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6,
@@ -1968,10 +1998,8 @@ function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
           <p className="font-['EYInterstate:Bold',sans-serif] font-bold text-[#2e2e38] text-[22px]" style={{ lineHeight: "1.2", margin: 0 }}>{title}</p>
-          <p className="font-['EYInterstate:Regular',sans-serif] text-[#747480] text-[14px]" style={{ lineHeight: "22px", margin: 0 }}>{description}</p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-          {estimatedTime && <p style={{ fontFamily: "'EYInterstate:Regular',sans-serif", fontSize: 12, color: "#747480", margin: 0 }}>{estimatedTime}</p>}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%" }}>
           <div style={{
             marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6,
             background: hovered ? "#2e2e38" : "#ffe600",
@@ -2000,7 +2028,7 @@ function CourseGrid({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub
         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}
         activeIcon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}
         title="Foundational Concepts of AI"
-        description="Understanding AI/ML fundamentals and their application in tax workflows."
+        description="Understanding AI fundamentals and their application in tax workflows."
         estimatedTime="~45 min"
       />
       <UnlockableCourseCard
@@ -2365,108 +2393,10 @@ const PHASES = [
 ];
 
 function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
-  const [expandedPhase, setExpandedPhase] = useState<number>(1);
-  const [view, setView] = useState<"timeline" | "cards">("cards");
-
   return (
     <div className="bg-white content-stretch flex flex-col gap-[48px] items-start pb-[80px] relative shrink-0 w-full">
       <Frame39 />
-
-      {/* ── View switcher ── */}
-      <div className="flex flex-wrap items-center gap-[8px] px-4 sm:px-8 md:px-[64px]">
-        <p className="font-['EYInterstate:Regular',sans-serif] text-[13px] leading-[20px] text-[#747480]">View:</p>
-        <button
-          onClick={() => setView("timeline")}
-          style={{
-            textDecorationColor: view === "timeline" ? "#ffe600" : "transparent",
-            textDecorationThickness: "2px",
-          }}
-          className={`font-['EYInterstate:Regular',sans-serif] text-[13px] leading-[20px] underline underline-offset-2 cursor-pointer border-none bg-transparent p-0 transition-colors ${
-            view === "timeline" ? "text-[#2e2e38] font-['EYInterstate:Bold',sans-serif]" : "text-[#747480]"
-          }`}
-        >
-          Option 1 — Timeline
-        </button>
-        <span className="font-['EYInterstate:Regular',sans-serif] text-[13px] text-[#c4c4cd] select-none">·</span>
-        <button
-          onClick={() => setView("cards")}
-          style={{
-            textDecorationColor: view === "cards" ? "#ffe600" : "transparent",
-            textDecorationThickness: "2px",
-          }}
-          className={`font-['EYInterstate:Regular',sans-serif] text-[13px] leading-[20px] underline underline-offset-2 cursor-pointer border-none bg-transparent p-0 transition-colors ${
-            view === "cards" ? "text-[#2e2e38] font-['EYInterstate:Bold',sans-serif]" : "text-[#747480]"
-          }`}
-        >
-          Option 2 — Cards
-        </button>
-      </div>
-
-      {/* ── Option 1: Timeline accordion ── */}
-      {view === "timeline" && (
-        <div className="relative shrink-0 w-full min-w-0">
-          <div className="content-stretch flex flex-col px-4 sm:px-8 md:px-[64px] relative w-full min-w-0">
-            {PHASES.map((phase, i) => {
-              const isExp = expandedPhase === phase.number;
-              return (
-                <div key={phase.number} className="content-stretch flex flex-col sm:flex-row gap-4 sm:gap-[32px] items-start relative shrink-0 w-full min-w-0">
-                  <div className="content-stretch flex gap-[16px] sm:gap-[24px] items-start relative self-stretch shrink-0 sm:w-[160px]">
-                    <div className="content-stretch flex h-[48px] items-center justify-center relative shrink-0">
-                      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">
-                        {phase.week}
-                      </p>
-                    </div>
-                    <div className="content-stretch flex flex-col h-full items-center relative shrink-0 w-[48px]">
-                      <div className="content-stretch flex items-center relative shrink-0">
-                        <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]">
-                          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#1A1A24] text-[20px] whitespace-nowrap">
-                            {phase.number}
-                          </p>
-                        </div>
-                      </div>
-                      {i < PHASES.length - 1 && (
-                        <div className="bg-[#ffe600] flex-[1_0_0] min-h-px relative w-[4px] hidden sm:block" style={{ minHeight: 24 }} />
-                      )}
-                    </div>
-                  </div>
-                  {phase.locked ? (
-                    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-0 relative rounded-[12px] mb-[16px] w-full">
-                      <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                      <div className="content-stretch flex flex-wrap gap-[16px] items-center p-5 sm:p-[32px] relative w-full">
-                        <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] leading-[28px] sm:leading-[30px] min-w-[12rem] not-italic relative text-[#2e2e38] text-[20px] sm:text-[24px]">
-                          {phase.title}
-                        </p>
-                        <div className="bg-[#c4c4cd] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] shrink-0">
-                          <div aria-hidden className="absolute border border-[#ffe600] border-solid inset-0 pointer-events-none rounded-[12px]" />
-                          <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative shrink-0 text-[#747480] text-[14px] whitespace-nowrap">
-                            Locked
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      className="flex-[1_0_0] min-w-0 mb-[16px] w-full"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setExpandedPhase(isExp ? 0 : phase.number)}
-                    >
-                      <TimelineCard
-                        expanded={isExp}
-                        onProceed={onProceed}
-                        className={`bg-white content-stretch drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex p-5 sm:p-[32px] relative rounded-[12px] w-full ${isExp ? "flex-col gap-[24px] items-start" : "gap-[16px] items-center"}`}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ── Option 2: Card grid ── */}
-      {view === "cards" && <CardGrid onProceed={onProceed} />}
-
+      <CardGrid onProceed={onProceed} />
       <Frame4 />
     </div>
   );

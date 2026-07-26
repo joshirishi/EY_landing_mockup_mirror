@@ -339,37 +339,44 @@ function P4() {
   );
 }
 
-function Frame26() {
+function Frame26({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0">
-      <div className="bg-[#C4C4CD] content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0" data-name="Link">
-        <div aria-hidden className="absolute border border-[#747480] border-solid inset-0 pointer-events-none" />
-        <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative shrink-0 text-[#1a1a24] text-[14px] whitespace-nowrap">Know more</p>
-      </div>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpenTaxLabs?.();
+        }}
+        className="bg-[#ffe600] border-0 content-stretch flex items-center justify-center px-[16px] py-[7px] relative shrink-0 cursor-pointer"
+        data-name="Get started"
+      >
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[20px] not-italic relative shrink-0 text-[#2e2e38] text-[14px] whitespace-nowrap">Get Started</p>
+      </button>
     </div>
   );
 }
 
-function Container14() {
+function Container14({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
     <div className="bg-white flex-[1_0_0] min-h-px relative w-full" data-name="Container">
       <div className="flex flex-col justify-center size-full">
         <div className="content-stretch flex flex-col items-start justify-between p-[20px] relative size-full">
           <P4 />
-          <Frame26 />
+          <Frame26 onOpenTaxLabs={onOpenTaxLabs} />
         </div>
       </div>
     </div>
   );
 }
 
-function Container11() {
+function Container11({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
     <div className="flex-[1_0_0] min-h-px relative w-full" data-name="Container">
       <div className="overflow-clip rounded-[inherit] size-full">
         <div className="content-stretch flex flex-col items-start p-px relative size-full">
           <Container12 />
-          <Container14 />
+          <Container14 onOpenTaxLabs={onOpenTaxLabs} />
         </div>
       </div>
       <div aria-hidden className="absolute border border-[#ffe600] border-solid inset-0 pointer-events-none shadow-[0px_1px_2px_0px_rgba(35,35,47,0.06),0px_4px_8px_0px_rgba(35,35,47,0.08)]" />
@@ -379,16 +386,15 @@ function Container11() {
 
 function Frame18({ onOpenTaxLabs }: { onOpenTaxLabs?: () => void }) {
   return (
-    <button
-      type="button"
+    <div
       onClick={onOpenTaxLabs}
       title="Explore EY.ai Tax Labs"
-      className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px] bg-transparent border-0 p-0 cursor-pointer text-left appearance-none"
+      className="content-stretch flex flex-col items-stretch relative w-full min-w-0 md:min-h-[391px] bg-transparent border-0 p-0 cursor-pointer text-left"
     >
       <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-[-1px] pointer-events-none" />
       <Frame21 />
-      <Container11 />
-    </button>
+      <Container11 onOpenTaxLabs={onOpenTaxLabs} />
+    </div>
   );
 }
 

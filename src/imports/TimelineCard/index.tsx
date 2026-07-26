@@ -15,13 +15,14 @@ function StatusIndicator({ className, property1 = "active" }: StatusIndicatorPro
 }
 type CtaButtonProps = {
   className?: string;
-  state?: "Open" | "Locked";
+  state?: "Open" | "Locked" | "Completed";
 };
 
 function CtaButton({ className, state = "Open" }: CtaButtonProps) {
   const isLocked = state === "Locked";
+  const isCompleted = state === "Completed";
   return (
-    <div className={className || `content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] ${isLocked ? "bg-[#C4C4CD] gap-[8px]" : "bg-[#ffe600]"}`}>
+    <div className={className || `content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] ${isLocked ? "bg-[#C4C4CD] gap-[8px]" : isCompleted ? "bg-[#00C864] gap-[8px]" : "bg-[#ffe600]"}`}>
       {state === "Open" && <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[16px] whitespace-nowrap">Click here to Proceed</p>}
       {isLocked && (
         <>
@@ -34,6 +35,16 @@ function CtaButton({ className, state = "Open" }: CtaButtonProps) {
             </svg>
           </div>
           <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[#747480] text-[16px] whitespace-nowrap">This journey is locked</p>
+        </>
+      )}
+      {isCompleted && (
+        <>
+          <div className="relative shrink-0 size-[16px]" data-name="Check Icon">
+            <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+              <path d="M13.5 4L6 11.5L2.5 8" stroke="var(--stroke-0, #FFFFFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.66667" />
+            </svg>
+          </div>
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-white text-[16px] whitespace-nowrap">Completed</p>
         </>
       )}
     </div>
@@ -61,7 +72,7 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
           </div>
           <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] items-start not-italic relative shrink-0 w-full" data-name="Card-Body">
             <p className="font-['EYInterstate:Bold',sans-serif] leading-[30px] relative shrink-0 text-[#2e2e38] text-[24px] w-full">Foundational Training Workshops</p>
-            <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[22px] relative shrink-0 text-[#747480] text-[14px] w-full">3 workshops × 1.5 hrs each. Covers essential generative AI structures, tax workflows prompt architecture, and M365 Copilot productivity.</p>
+            <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[22px] relative shrink-0 text-[#747480] text-[14px] w-full">Covers essential generative AI structures, tax workflows prompt architecture, and M365 Copilot productivity.</p>
           </div>
           <div className="content-stretch flex gap-[40px] items-start relative shrink-0 w-full" data-name="Card-Details">
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[12px] items-start min-w-px relative" data-name="Coverage-Col">
@@ -77,7 +88,7 @@ export default function TimelineCard({ className, expanded = true, onProceed }: 
                       </svg>
                     </div>
                   </div>
-                  <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">AI concepts in Tax</p>
+                  <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] min-w-px not-italic relative text-[#2e2e38] text-[14px]">AI Fundamentals for Tax</p>
                 </div>
                 <div className="content-stretch flex gap-[10px] items-center relative shrink-0 w-full" data-name="Frame">
                   <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[16px]" data-name="Bullet">

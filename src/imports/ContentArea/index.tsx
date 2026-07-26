@@ -58,7 +58,7 @@ function Frame8() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] items-start not-italic relative shrink-0 w-full" data-name="Frame">
       <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[normal] relative shrink-0 text-[#2e2e38] text-[24px] whitespace-nowrap">Foundational Training Workshops</p>
-      <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[22px] min-w-full relative shrink-0 text-[#747480] text-[14px] w-[min-content]">2 workshops×1.5 hrs each. Covers AI concepts in Tax, Prompt engineering basics, and M365 Copilot across tax use cases.</p>
+      <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[22px] min-w-full relative shrink-0 text-[#747480] text-[14px] w-[min-content]">Covers AI concepts in Tax, Prompt engineering basics, and M365 Copilot across tax use cases.</p>
     </div>
   );
 }
@@ -84,7 +84,7 @@ function Frame12() {
   return (
     <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-name="Frame">
       <Circle />
-      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[14px] whitespace-nowrap">AI concepts in Tax</p>
+      <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] font-normal leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[14px] whitespace-nowrap">AI Fundamentals for Tax</p>
     </div>
   );
 }

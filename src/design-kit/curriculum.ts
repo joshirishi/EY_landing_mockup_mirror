@@ -51,13 +51,13 @@ export const MODULES: CurriculumModule[] = [
     estimatedTime: "~45 min",
     supportsInPageNav: true,
     subModules: [
+      { id: "act-now", label: "Act Now", group: "learn" },
       { id: "rise-of-ai", label: "Understanding AI", group: "learn" },
       { id: "evolution", label: "Evolution", group: "learn" },
       { id: "terminology", label: "Key Terms", group: "learn" },
-      { id: "genai-vs-agents", label: "GenAI vs Agents", group: "learn" },
       { id: "cheatsheet", label: "Cheat Sheet", group: "apply" },
+      { id: "genai-vs-agents", label: "GenAI vs Agents", group: "learn" },
       { id: "quiz", label: "Quiz", group: "apply" },
-      { id: "act-now", label: "Velocity", group: "apply" },
     ],
   },
   {

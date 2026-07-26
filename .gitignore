@@ -1,2 +1,6 @@
 node_modules
 .vercel
+
+# Large local reference files (not part of the app, not committed)
+EY_Tax_Labs_Phase_Presentation.html
+phase1.html

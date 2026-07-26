@@ -1,0 +1,74 @@
+---
+description: Always use EY design system tokens for color, space, and typography
+alwaysApply: true
+---
+
+# EY Design System & Tokens (Required)
+
+Every UI implementation must use the EY design kit. Do not invent colors, spacing, or type styles.
+
+## Canonical sources
+
+| Concern | Source |
+|---------|--------|
+| JS tokens | `src/design-kit/tokens.ts` (`colors`, `fonts`, `typeScale`, `spacing`) |
+| CSS vars | `src/styles/theme.css` (`var(--foreground)`, `var(--ey-brand-yellow)`, etc.) |
+| Type UI | `src/design-kit/EYTypography.tsx` |
+| Kit entry | `import { colors, fonts, typeScale, spacing, EYHeading, EYBody } from '@/design-kit'` |
+
+Read `src/DESIGN.md` before building new UI. Prefer existing kit components (`EYButton`, `EYCard`, `EYFrame`, etc.) over one-off styles.
+
+## Color
+
+```tsx
+// ❌ BAD — raw hex / Tailwind palette
+style={{ color: '#2E2E38' }}
+className="bg-blue-500 text-gray-800"
+
+// ✅ GOOD — tokens or CSS vars
+import { colors } from '@/design-kit';
+style={{ color: colors.offBlack, background: colors.offWhite }}
+style={{ color: 'var(--foreground)', background: 'var(--card)' }}
+```
+
+- EY Yellow (`colors.yellow` / `var(--ey-brand-yellow)`) is a **marker/accent only** — never body text on white, never large decorative fills.
+- Prefer `var(--*)` in CSS/Tailwind theme classes; prefer `colors.*` in inline React styles.
+
+## Typography
+
+```tsx
+// ❌ BAD
+style={{ fontFamily: 'Inter', fontSize: 18, fontWeight: 500 }}
+
+// ✅ GOOD
+import { fonts, typeScale } from '@/design-kit';
+// or <EYHeading>, <EYBody>, <EYEyebrow> from the kit
+style={{
+  fontFamily: fonts.regular,
+  fontSize: typeScale.body.size,
+  fontWeight: typeScale.body.weight,
+}}
+```
+
+- Font: **EYInterstate** only (via `fonts.bold` / `fonts.regular` / `fonts.light`).
+- Weights allowed: **300 / 400 / 700** only (no 500/600).
+
+## Spacing
+
+```tsx
+// ❌ BAD
+style={{ padding: '20px 48px' }}
+
+// ✅ GOOD
+import { spacing } from '@/design-kit';
+style={{ padding: spacing.sectionPadding }} // or spacing.cardPadding
+```
+
+Use kit spacing tokens and established layout values from existing pages. Do not introduce arbitrary padding/gap scales.
+
+## Checklist before shipping UI
+
+1. No hardcoded hex/rgba except inside `tokens.ts` / `theme.css`
+2. No Tailwind color utilities (`bg-blue-*`, `text-gray-*`, `text-[#…]`)
+3. Text uses kit fonts + `typeScale` or `EYTypography` components
+4. Spacing comes from `spacing` or matching existing kit patterns

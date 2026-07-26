@@ -50,14 +50,13 @@ const CARDS = [
   },
   {
     title: "Model",
-    desc: "AI/ML model inference and prediction engine",
+    desc: "AI model inference and prediction engine",
     icon: ASSET.cpu,
   },
 ] as const;
 
 function PipelineCard({
   title,
-  desc,
   icon,
 }: {
   title: string;
@@ -71,14 +70,10 @@ function PipelineCard({
         <div className="bg-[#ffe600] flex items-center justify-center rounded-[10px] shrink-0 size-10">
           <img alt="" className="size-7" height={28} src={icon} width={28} />
         </div>
-        <div className="flex flex-1 flex-col gap-1 min-w-0">
-          <p className="font-['EYInterstate:Bold',sans-serif] leading-6 text-base text-[#2e2e38] whitespace-nowrap">
-            {title}
-          </p>
-          <p className="font-['EYInterstate:Regular',sans-serif] leading-[22.4px] text-sm text-[#1a1a24] w-[285px]">
-            {desc}
-          </p>
-        </div>
+        {/* Description removed — logo + title is self-explanatory */}
+        <p className="flex-1 min-w-0 font-['EYInterstate:Bold',sans-serif] leading-6 text-base text-[#2e2e38] whitespace-nowrap">
+          {title}
+        </p>
       </div>
       <img alt="" className="shrink-0 size-[18px]" height={18} src={ASSET.arrow} width={18} />
     </div>
@@ -111,9 +106,7 @@ function CopilotRing() {
         <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[rgba(255,230,0,0.2)] bg-[#2E2E38]">
           <img alt="" className="block size-6 max-w-none" height={24} src={ASSET.bot} width={24} />
         </div>
-        <p className="w-[120px] shrink-0 text-center font-['EYInterstate:Bold',sans-serif] text-[15px] leading-normal text-white">
-          Copilot Engine
-        </p>
+        {/* Text label removed — logo stands alone */}
         <img alt="Microsoft Copilot" className="size-[116px] shrink-0" height={116} src={ASSET.copilot} width={116} />
       </div>
     </div>
