@@ -2143,43 +2143,37 @@ document.getElementById('hero-video').addEventListener('ended', function() {
     <div class="velocity-row">
       <span class="velocity-label">Netflix</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--red" style="width:100%;"></div></div>
-        <span class="velocity-value">3.5 years</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--red" style="width:100%;"><span class="velocity-value">3.5 years</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Facebook</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--facebook" style="width:57%;"></div></div>
-        <span class="velocity-value">10 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--facebook" style="width:57%;"><span class="velocity-value">10 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Dropbox</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--dropbox" style="width:40%;"></div></div>
-        <span class="velocity-value">7 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--dropbox" style="width:40%;"><span class="velocity-value">7 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Spotify</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--green" style="width:28%;"></div></div>
-        <span class="velocity-value">5 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--green" style="width:28%; min-width:86px;"><span class="velocity-value">5 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Instagram</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--orange" style="width:16%;"></div></div>
-        <span class="velocity-value">2.5 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--orange" style="width:16%; min-width:106px;"><span class="velocity-value">2.5 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label velocity-label--accent">ChatGPT</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--accent" style="width:12%;"></div></div>
-        <span class="velocity-value">5 days</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--accent" style="width:12%; min-width:68px;"><span class="velocity-value">5 days</span></div></div>
       </div>
     </div>
 
@@ -2274,7 +2268,6 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
 }
 .velocity-bar-wrap {
   flex: 1;
@@ -2283,6 +2276,11 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 .velocity-bar {
   height: 24px;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 .velocity-bar--muted { background: var(--gray-01); }
 .velocity-bar--red { background: var(--accent-red); }
@@ -2292,11 +2290,14 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 .velocity-bar--orange { background: var(--accent-orange); }
 .velocity-bar--accent { background: var(--ey-yellow); }
 .velocity-value {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--ey-dark);
+  color: var(--white);
   white-space: nowrap;
-  flex-shrink: 0;
+  line-height: 1;
+}
+.velocity-bar--accent .velocity-value {
+  color: var(--ey-dark);
 }
 .velocity-divider {
   width: 100%;
@@ -2347,9 +2348,8 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   .velocity-section h2 { font-size: 24px; line-height: 32px; }
   .velocity-row { gap: 12px; }
   .velocity-label { width: 84px; font-size: 13px; }
-  .velocity-track { gap: 10px; }
   .velocity-bar { height: 18px; }
-  .velocity-value { font-size: 12px; }
+  .velocity-value { font-size: 11px; }
   .velocity-callout-title { font-size: 22px; }
 }
 </style>
