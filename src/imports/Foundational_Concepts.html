@@ -368,7 +368,7 @@ body {
 }
 .rise-section .rise-title .hl { color: var(--ey-yellow); }
 .rise-section .rise-sub {
-  margin: 0 0 8px;
+  margin: 0 0 24px;
   font-size: 16px;
   font-weight: 400;
   color: var(--gray-02);
@@ -472,7 +472,7 @@ body {
   text-align: center;
 }
 .wrong-section .wrong-sub {
-  margin: 0 0 8px;
+  margin: 0 0 24px;
   font-size: 16px;
   font-weight: 400;
   color: var(--gray-01);
@@ -1165,10 +1165,13 @@ body {
   align-items: center;
   gap: 16px;
   margin-top: 64px;
+  padding: 24px 32px;
+  background: var(--ey-yellow);
+  border-radius: 12px; /* matches .paths-card */
 }
 .paths-footer-msg {
   font-size: 18px; font-weight: 700;
-  color: #2e2e38;
+  color: var(--ey-dark); /* readable on EY yellow */
   margin: 0;
   text-align: center;
 }
@@ -1179,7 +1182,7 @@ body {
   gap: 8px;
   height: 36px;
   padding: 8px 14px;
-  background: #2e2e38;
+  background: var(--confident-black);
   color: var(--white);
   border-radius: 4px;
   font-size: 14px; font-weight: 400;
@@ -2569,7 +2572,7 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 <section id="rise-of-ai" class="rise-section surface-dark" aria-labelledby="rise-heading">
   <h2 id="rise-heading" class="rise-title">The <span class="hl">Meteoric Rise</span> of AI</h2>
   <p class="rise-sub">Recent headlines capturing AI's explosive growth</p>
-  <p class="rise-hint">click any card to view the full article</p>
+  <!-- <p class="rise-hint">click any card to view the full article</p> -->
 
   <div class="rise-grid">
     <article class="rise-card" onclick="openLightbox('/gov.uk.png','GOV.UK — Britain powers ahead on AI · 12 June 2026')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}">
@@ -2646,7 +2649,7 @@ document.addEventListener('keydown', function(e) {
 <section id="reality-check" class="wrong-section surface-neutral" aria-labelledby="wrong-heading">
   <h2 id="wrong-heading" class="wrong-title">The Reality Check: AI Adoption Gap</h2>
   <p class="wrong-sub">Investment has not always translated into impact</p>
-  <p class="wrong-hint">click any card to view the full article</p>
+  <!-- <p class="wrong-hint">click any card to view the full article</p> -->
 
   <div class="wrong-grid">
     <article class="wrong-card" onclick="openLightbox('/95pct.png','Times of India — 95% companies have seen zero return · 30 September 2025')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}">
@@ -2755,7 +2758,8 @@ document.addEventListener('keydown', function(e) {
   <div class="paths-footer">
     <p class="paths-footer-msg">Understanding AI is the first step toward realizing its value.</p>
     <a class="paths-cta" href="#evolution">
-      Let's Start with the Fundamentals👇
+      Let's Start with the Fundamentals
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
     </a>
   </div>
 </section>

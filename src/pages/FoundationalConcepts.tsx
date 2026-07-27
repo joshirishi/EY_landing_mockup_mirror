@@ -73,11 +73,25 @@ const TOKEN_BRIDGE = `
   background: ${colors.offWhite} !important;
 }
 
-/* Reality Check — center the intro block (title + sub + hint) */
+/* Reality Check — center the intro block (title + sub; hint commented out in HTML) */
 #module-content .wrong-title,
 #module-content .wrong-sub,
 #module-content .wrong-hint {
   text-align: center;
+}
+
+/* Strategic Divide — paths footer callout (EY yellow + kit radius) */
+#module-content .paths-footer {
+  background: ${colors.yellow};
+  border-radius: 12px;
+  padding: 24px 32px;
+}
+#module-content .paths-footer-msg {
+  color: ${colors.offBlack};
+}
+#module-content .paths-cta {
+  background: ${colors.confidentBlack};
+  color: ${colors.white};
 }
 
 /* Rise of AI — grey card surfaces (EY off-white); no yellow top bracket */
