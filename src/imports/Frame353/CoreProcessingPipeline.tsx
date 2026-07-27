@@ -3,6 +3,9 @@
  * Figma node 3543:4136 — Infographic - Core Processing Pipeline (v2)
  *
  * Renders at the designed 1200×820 size, then scales to the container width.
+ *
+ * All orbiting icons share one circle: center (CX, CY) + radius R,
+ * placed by angle (0° = east, positive = counterclockwise).
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -26,27 +29,95 @@ const ASSET = {
 const W = 1200;
 const H = 820;
 
-/** Icon-label mini-cards scattered around the ring — exact Figma positions. */
-const CARDS = [
-  { title: "Chat", left: 414, top: 86, composedIcon: ASSET.iconChat, bakedIcon: null },
-  { title: "RAG", left: 258, top: 235, composedIcon: null, bakedIcon: ASSET.iconRag },
-  { title: "Human in the Loop", left: 251, top: 406, composedIcon: ASSET.iconHuman, bakedIcon: null },
-  { title: "Model", left: 364, top: 589, composedIcon: null, bakedIcon: ASSET.iconModel },
+/** Copilot ring box: left 409, top 224, size 384 → geometric center. */
+const CX = 409 + 384 / 2; // 601
+const CY = 224 + 384 / 2; // 416
+/** Shared orbit radius for every left + right icon (outside the 192px ring). */
+const R = 300;
+
+const CARD_W = 100;
+const ICON_BOX = 67;
+/** Yellow card: circle point = icon center (label hangs below). */
+const CARD_ICON_CX = CARD_W / 2;
+const CARD_ICON_CY = ICON_BOX / 2;
+
+const MS_SIZE = 96;
+
+function degToRad(deg: number) {
+  return (deg * Math.PI) / 180;
+}
+
+/** Top-left of a box whose center sits on the shared circle at `angleDeg`. */
+function boxOnCircle(angleDeg: number, boxW: number, boxH: number) {
+  const rad = degToRad(angleDeg);
+  return {
+    left: CX + R * Math.cos(rad) - boxW / 2,
+    top: CY + R * Math.sin(rad) - boxH / 2,
+  };
+}
+
+/**
+ * Left half (Core Processing): 4 yellow icons on the left semicircle,
+ * evenly spaced from near-top to near-bottom via west.
+ * angle = -90° - (i + 0.5) / 4 * 180°
+ */
+const LEFT_CARDS = [
+  {
+    title: "Chat",
+    angle: -90 - (0 + 0.5) * 45, // -112.5°
+    composedIcon: ASSET.iconChat,
+    bakedIcon: null as string | null,
+  },
+  {
+    title: "RAG",
+    angle: -90 - (1 + 0.5) * 45, // -157.5°
+    composedIcon: null,
+    bakedIcon: ASSET.iconRag,
+  },
+  {
+    title: "Human in the Loop",
+    angle: -90 - (2 + 0.5) * 45, // -202.5° → 157.5°
+    composedIcon: ASSET.iconHuman,
+    bakedIcon: null,
+  },
+  {
+    title: "Model",
+    angle: -90 - (3 + 0.5) * 45, // -247.5° → 112.5°
+    composedIcon: null,
+    bakedIcon: ASSET.iconModel,
+  },
+] as const;
+
+/**
+ * Right half (M365): 6 Microsoft app icons on the right semicircle,
+ * evenly spaced from near-top to near-bottom via east.
+ * angle = -90° + (i + 0.5) / 6 * 180°
+ */
+const RIGHT_APPS = [
+  { alt: "Microsoft Word", src: ASSET.word, angle: -90 + (0 + 0.5) * 30 }, // -75°
+  { alt: "Microsoft Excel", src: ASSET.excel, angle: -90 + (1 + 0.5) * 30 }, // -45°
+  { alt: "Microsoft Teams", src: ASSET.teams, angle: -90 + (2 + 0.5) * 30 }, // -15°
+  { alt: "Microsoft PowerPoint", src: ASSET.powerpoint, angle: -90 + (3 + 0.5) * 30 }, // 15°
+  { alt: "Microsoft SharePoint", src: ASSET.sharepoint, angle: -90 + (4 + 0.5) * 30 }, // 45°
+  { alt: "Microsoft Outlook", src: ASSET.outlook, angle: -90 + (5 + 0.5) * 30 }, // 75°
 ] as const;
 
 function PipelineCard({
   title,
-  left,
-  top,
+  angle,
   composedIcon,
   bakedIcon,
 }: {
   title: string;
-  left: number;
-  top: number;
+  angle: number;
   composedIcon: string | null;
   bakedIcon: string | null;
 }) {
+  // Anchor the card so the icon (not the label) sits on the shared circle.
+  const rad = degToRad(angle);
+  const left = CX + R * Math.cos(rad) - CARD_ICON_CX;
+  const top = CY + R * Math.sin(rad) - CARD_ICON_CY;
+
   return (
     <div
       className="absolute flex w-[100px] flex-col items-center gap-3"
@@ -162,28 +233,22 @@ export default function CoreProcessingPipeline() {
       >
         <CopilotRing />
 
-        {CARDS.map((card) => (
+        {LEFT_CARDS.map((card) => (
           <PipelineCard key={card.title} {...card} />
         ))}
 
-        <div className="absolute" style={{ inset: "12.44% 38.9% 75.54% 53.08%" }}>
-          <img alt="Microsoft Word" className="absolute inset-0 size-full max-w-none" src={ASSET.word} />
-        </div>
-        <div className="absolute" style={{ inset: "20.34% 27.97% 67.65% 64.02%" }}>
-          <img alt="Microsoft Excel" className="absolute inset-0 size-full max-w-none" src={ASSET.excel} />
-        </div>
-        <div className="absolute left-[839px] top-[281.06px] h-[99px] w-[94px] overflow-clip">
-          <img alt="Microsoft Teams" className="absolute inset-0 size-full max-w-none" src={ASSET.teams} />
-        </div>
-        <div className="absolute" style={{ inset: "52.16% 20.91% 36.4% 71.08%" }}>
-          <img alt="Microsoft PowerPoint" className="absolute inset-0 size-full max-w-none" src={ASSET.powerpoint} />
-        </div>
-        <div className="absolute left-[768.25px] top-[536.18px] h-[108.176px] w-[96.156px] overflow-clip">
-          <img alt="Microsoft SharePoint" className="absolute inset-0 size-full max-w-none" src={ASSET.sharepoint} />
-        </div>
-        <div className="absolute left-[643.29px] top-[609.71px] h-[91.349px] w-[96.156px] overflow-clip">
-          <img alt="Microsoft Outlook" className="absolute inset-0 size-full max-w-none" src={ASSET.outlook} />
-        </div>
+        {RIGHT_APPS.map((app) => {
+          const { left, top } = boxOnCircle(app.angle, MS_SIZE, MS_SIZE);
+          return (
+            <div
+              key={app.alt}
+              className="absolute overflow-clip"
+              style={{ left, top, width: MS_SIZE, height: MS_SIZE }}
+            >
+              <img alt={app.alt} className="absolute inset-0 size-full max-w-none" src={app.src} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

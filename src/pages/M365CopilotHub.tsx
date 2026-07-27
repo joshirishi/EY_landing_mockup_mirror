@@ -1,4 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import {
+  AlertTriangle, BarChart3, Calculator, ClipboardList, Compass, FileText,
+  FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
+  PenLine, Pin, Rocket, Search, Sparkles, Target, Timer,
+} from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
@@ -64,12 +70,14 @@ function AgentGlyph({ size = 20 }: { size?: number }) {
 }
 
 // ── Tab config (exact labels from Figma 3317:15589) ──────────────────────────
+// `logo` paths match the laptop-stage / CoreProcessingPipeline MS app SVGs in
+// public/pipeline/ — real product marks, not letter-on-square placeholders.
 const TABS = [
-  { id: "word",    label: "Word Prompts",     color: C.wordBlue,   appColor: C.wordBlue,   letter: "W" },
-  { id: "excel",   label: "Excel Formulas",   color: C.excelGreen, appColor: C.excelGreen, letter: "X" },
-  { id: "ppt",     label: "PowerPoint Decks", color: C.pptOrange,  appColor: C.pptOrange,  letter: "P" },
-  { id: "outlook", label: "Outlook Threads",  color: C.outlookBlue,appColor: C.outlookBlue,letter: "O" },
-  { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,letter: "T" },
+  { id: "word",    label: "Word Prompts",     color: C.wordBlue,   appColor: C.wordBlue,   logo: "/pipeline/word.svg" },
+  { id: "excel",   label: "Excel Formulas",   color: C.excelGreen, appColor: C.excelGreen, logo: "/pipeline/excel.svg" },
+  { id: "ppt",     label: "PowerPoint Decks", color: C.pptOrange,  appColor: C.pptOrange,  logo: "/pipeline/powerpoint.svg" },
+  { id: "outlook", label: "Outlook Threads",  color: C.outlookBlue,appColor: C.outlookBlue,logo: "/pipeline/outlook.svg" },
+  { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -111,7 +119,7 @@ const LAPTOP_COMING_SOON_APPS: { label: string; logo?: string }[] = [
 const SECTION_DATA: Record<TabId, {
   eyebrow: string; eyebrowColor: string;
   h2: string; subtitle: string;
-  useCases: { icon: string; title: string; body: string }[];
+  useCases: { icon: LucideIcon; title: string; body: string }[];
   panelSubtitle: string;
   prompts: { label: string; text: string }[];
   screenshotSide: "left" | "right";
@@ -123,10 +131,10 @@ const SECTION_DATA: Record<TabId, {
     h2: "Copilot in Word",
     subtitle: "Draft documents, summarize content, and rewrite text with AI-powered assistance. Build professional issue memos and restructure client communication instantly.",
     useCases: [
-      { icon: "📄", title: "Draft Position Notes",  body: "Create first-cut tax research memos, issue notes, legal summaries and client-ready position papers." },
-      { icon: "🔍", title: "Summarise Case Laws",   body: "Condense lengthy rulings, circulars, notifications or tribunal orders into crisp facts and implications." },
-      { icon: "✍️", title: "Refine Legal Language", body: "Rewrite tax submissions and opinion drafts into a sharper, review-ready tone." },
-      { icon: "📌", title: "Track Review Points",   body: "Convert comments and inputs into action points, open items and next-step trackers." },
+      { icon: FileText, title: "Draft Position Notes",  body: "Create first-cut tax research memos, issue notes, legal summaries and client-ready position papers." },
+      { icon: Search,   title: "Summarise Case Laws",   body: "Condense lengthy rulings, circulars, notifications or tribunal orders into crisp facts and implications." },
+      { icon: PenLine,  title: "Refine Legal Language", body: "Rewrite tax submissions and opinion drafts into a sharper, review-ready tone." },
+      { icon: Pin,      title: "Track Review Points",   body: "Convert comments and inputs into action points, open items and next-step trackers." },
     ],
     panelSubtitle: "Draft, review and refine tax documents with speed and consistency.",
     prompts: [
@@ -145,10 +153,10 @@ const SECTION_DATA: Record<TabId, {
     h2: "Copilot in Excel",
     subtitle: "Analyze data, create formulas, generate charts, and uncover insights from your spreadsheets. Build clean logical checks and eliminate calculation bugs.",
     useCases: [
-      { icon: "📊", title: "Analyse Tax Data",      body: "Summarise large datasets and identify key trends, gaps, mismatches and exceptions." },
-      { icon: "🧮", title: "Build Reconciliations", body: "Create formulas and logic checks to compare books, returns and working papers." },
-      { icon: "⚠️", title: "Spot Exceptions",       body: "Detect anomalies such as missing details, rate mismatches or duplicates." },
-      { icon: "📈", title: "Visualise Compliance",  body: "Create dashboards to show status, exposures, ageing and risk movement." },
+      { icon: BarChart3,     title: "Analyse Tax Data",      body: "Summarise large datasets and identify key trends, gaps, mismatches and exceptions." },
+      { icon: Calculator,    title: "Build Reconciliations", body: "Create formulas and logic checks to compare books, returns and working papers." },
+      { icon: AlertTriangle, title: "Spot Exceptions",       body: "Detect anomalies such as missing details, rate mismatches or duplicates." },
+      { icon: LineChart,     title: "Visualise Compliance",  body: "Create dashboards to show status, exposures, ageing and risk movement." },
     ],
     panelSubtitle: "Analyse tax data, reconciliations and compliance trackers with precision.",
     prompts: [
@@ -167,10 +175,10 @@ const SECTION_DATA: Record<TabId, {
     h2: "Copilot in PowerPoint & Chat",
     subtitle: "Translate raw data matrices into compelling slides, executive summaries, and cross-application project definitions. Use Interactive Chat to coordinate answers.",
     useCases: [
-      { icon: "🎯", title: "Create Client Decks",      body: "Convert tax analysis into structured, visually clean, client-ready presentations." },
-      { icon: "🧭", title: "Tell the Tax Story",       body: "Organise complex positions into context, issue, risk, recommendation and next steps." },
-      { icon: "📣", title: "Prepare Leadership Updates", body: "Generate concise leadership slides on exposures, updates and decisions required." },
-      { icon: "🗂️", title: "Summarise Case Strategy",  body: "Build crisp hearing briefs, timelines and argument maps." },
+      { icon: Target,     title: "Create Client Decks",        body: "Convert tax analysis into structured, visually clean, client-ready presentations." },
+      { icon: Compass,    title: "Tell the Tax Story",         body: "Organise complex positions into context, issue, risk, recommendation and next steps." },
+      { icon: Megaphone,  title: "Prepare Leadership Updates", body: "Generate concise leadership slides on exposures, updates and decisions required." },
+      { icon: FolderOpen, title: "Summarise Case Strategy",    body: "Build crisp hearing briefs, timelines and argument maps." },
     ],
     panelSubtitle: "Convert tax positions and updates into leadership-ready narratives.",
     prompts: [
@@ -189,10 +197,10 @@ const SECTION_DATA: Record<TabId, {
     h2: "Copilot in Outlook",
     subtitle: "Summarize email threads, draft replies, and manage your inbox efficiently. Convert messy, sprawling client communications into actionable priorities in seconds.",
     useCases: [
-      { icon: "✉️", title: "Draft Client Emails",   body: "Prepare clear professional emails for data requests, updates and follow-ups." },
-      { icon: "🧵", title: "Summarise Threads",     body: "Extract decisions, pending inputs, responsibilities and deadlines from long chains." },
-      { icon: "⏱️", title: "Manage Follow-ups",     body: "Convert email conversations into action-oriented follow-ups." },
-      { icon: "🪄", title: "Polish Tone Instantly", body: "Rewrite responses to sound concise, client-sensitive and executive-ready." },
+      { icon: Mail,           title: "Draft Client Emails",   body: "Prepare clear professional emails for data requests, updates and follow-ups." },
+      { icon: MessagesSquare, title: "Summarise Threads",     body: "Extract decisions, pending inputs, responsibilities and deadlines from long chains." },
+      { icon: Timer,          title: "Manage Follow-ups",     body: "Convert email conversations into action-oriented follow-ups." },
+      { icon: Sparkles,       title: "Polish Tone Instantly", body: "Rewrite responses to sound concise, client-sensitive and executive-ready." },
     ],
     panelSubtitle: "Manage tax communications, follow-ups and client responses faster.",
     prompts: [
@@ -211,10 +219,10 @@ const SECTION_DATA: Record<TabId, {
     h2: "Copilot in M365 Chat",
     subtitle: "Use Copilot in M365 Chat to ask questions, get summaries, and generate content across your Microsoft 365 data. Chat brings together information from documents, emails, meetings, and contacts to give you AI-powered answers grounded in your work data.",
     useCases: [
-      { icon: "🌐", title: "Search Across Work",      body: "Find tax-related discussions, documents, emails and files across Microsoft 365." },
-      { icon: "🧾", title: "Prepare Matter Briefs",   body: "Generate briefing notes before client calls or internal reviews." },
-      { icon: "🧠", title: "Connect Tax Context",     body: "Connect compliance data, research notes, email trails and presentation inputs." },
-      { icon: "🚀", title: "Accelerate First Drafts", body: "Create starting drafts for emails, memos, decks, trackers and meeting prep." },
+      { icon: Globe,         title: "Search Across Work",      body: "Find tax-related discussions, documents, emails and files across Microsoft 365." },
+      { icon: ClipboardList, title: "Prepare Matter Briefs",   body: "Generate briefing notes before client calls or internal reviews." },
+      { icon: Link2,         title: "Connect Tax Context",     body: "Connect compliance data, research notes, email trails and presentation inputs." },
+      { icon: Rocket,        title: "Accelerate First Drafts", body: "Create starting drafts for emails, memos, decks, trackers and meeting prep." },
     ],
     panelSubtitle: "Ask cross-app questions and retrieve tax context across Microsoft 365.",
     prompts: [
@@ -230,11 +238,13 @@ const SECTION_DATA: Record<TabId, {
 };
 
 // ── Pattern 1: "use-grid" — 2-column tax use-case cards ───────────────────────
-function UseCaseCard({ icon, title, body, accent, appLabel }: { icon: string; title: string; body: string; accent: string; appLabel: string }) {
+function UseCaseCard({ icon: Icon, title, body, accent, appLabel }: { icon: LucideIcon; title: string; body: string; accent: string; appLabel: string }) {
   return (
     <div style={{ position: "relative", display: "flex", gap: 16, alignItems: "flex-start", background: C.white, borderRadius: 16, padding: "22px 22px 22px 26px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", border: "1px solid #C4C4CD", overflow: "hidden" }}>
       <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: accent }} />
-      <div style={{ width: 48, height: 48, minWidth: 48, borderRadius: 12, background: C.offWhite, border: "1px solid #C4C4CD", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{icon}</div>
+      <div style={{ width: 48, height: 48, minWidth: 48, borderRadius: 12, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
+        <Icon size={22} strokeWidth={1.75} aria-hidden />
+      </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.dark2, marginBottom: 6, lineHeight: 1.3 }}>{title}</p>
         <p style={{ fontFamily: F.regular, fontSize: 13.5, color: C.gray01, lineHeight: 1.55, marginBottom: 12 }}>{body}</p>
@@ -244,7 +254,7 @@ function UseCaseCard({ icon, title, body, accent, appLabel }: { icon: string; ti
   );
 }
 
-function UseCaseGrid({ items, accent, appLabel }: { items: { icon: string; title: string; body: string }[]; accent: string; appLabel: string }) {
+function UseCaseGrid({ items, accent, appLabel }: { items: { icon: LucideIcon; title: string; body: string }[]; accent: string; appLabel: string }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
       {items.map(item => <UseCaseCard key={item.title} icon={item.icon} title={item.title} body={item.body} accent={accent} appLabel={appLabel} />)}
@@ -288,7 +298,7 @@ function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; acc
         <div style={{ display: "flex", gap: 7, flexShrink: 0 }}>
           {[1, 0.6, 0.32].map((o, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: accent, opacity: o }} />)}
         </div>
-        <span style={{ fontFamily: F.regular, fontSize: 12, fontWeight: 600, color: C.white, flex: 1, textAlign: "center" }}>{appLabel} — blank workspace</span>
+        <span style={{ fontFamily: F.regular, fontSize: 12, fontWeight: 700, color: C.white, flex: 1, textAlign: "center" }}>{appLabel} — blank workspace</span>
         <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.gray02, border: "1px solid rgba(255,255,255,0.16)", borderRadius: 999, padding: "4px 10px", flexShrink: 0, whiteSpace: "nowrap" }}>Copilot-enabled</span>
       </div>
       {/* Ribbon-colored canvas with mock document + Copilot response */}
@@ -382,13 +392,18 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
   );
 }
 
-// ── App icon ──────────────────────────────────────────────────────────────────
-function AppIcon({ color, letter }: { color: string; letter: string }) {
+// ── App icon — real MS 365 / Office product logos from public/pipeline/ ───────
+function AppIcon({ logo, label, size = 20 }: { logo: string; label: string; size?: number }) {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" style={{ flexShrink: 0 }}>
-      <rect width="20" height="20" rx="3" fill={color} />
-      <text x="4" y="14" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>{letter}</text>
-    </svg>
+    <img
+      src={logo}
+      alt=""
+      aria-hidden
+      width={size}
+      height={size}
+      style={{ width: size, height: size, objectFit: "contain", flexShrink: 0, display: "block" }}
+      title={label}
+    />
   );
 }
 
@@ -478,14 +493,13 @@ function TabSection({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
   const tabMeta = TABS.find(t => t.id === tabId)!;
   const appLabel = APP_NAME[tabId];
-  const bg = d.altBg ? C.offWhite : C.white;
-
+  // Always offWhite so this surface matches #prompt-repository above (no color break).
   return (
-    <div style={{ background: bg, padding: `48px 0 64px` }}>
+    <div style={{ background: C.offWhite, padding: `48px 0 64px` }}>
       <div style={{ ...contentRailStyle }}>
       {/* Eyebrow with app icon */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-        <AppIcon color={tabMeta.appColor} letter={tabMeta.letter} />
+        <AppIcon logo={tabMeta.logo} label={APP_NAME[tabId]} />
         <span style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 11, letterSpacing: "1.5px", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
       </div>
       <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 28, color: C.dark2, marginBottom: 12, lineHeight: 1.2 }}>{d.h2}</p>
@@ -582,7 +596,7 @@ export default function M365CopilotHub({
         </>
       )}
 
-      {/* ── Hero — "M365 COPILOT HUB IS LIVE" (Figma: HeroSection) ─────────── */}
+      {/* ── Hero (Figma: HeroSection) ───────────────────────────────────────── */}
       {/* Spectrum: Frame 9 — EY-yellow beam, darkest left for copy readability */}
       <section
         id="module-content"
@@ -613,11 +627,6 @@ export default function M365CopilotHub({
           }}
         />
         <div style={{ position: "relative", zIndex: 1, flex: 1, maxWidth: 676 }}>
-          {/* Badge row — green active dot + label */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.frameGreen }} />
-            <span style={{ fontSize: 11, color: C.gray02, letterSpacing: "1.5px", textTransform: "uppercase", fontWeight: 700, fontFamily: F.regular }}>M365 COPILOT HUB IS LIVE</span>
-          </div>
           <h1 style={{ fontSize: 36, color: C.white, fontWeight: 700, lineHeight: 1.3, marginBottom: 20 }}>
             Explore M365 Copilot prompts in a new-age workspace
           </h1>
@@ -630,7 +639,7 @@ export default function M365CopilotHub({
       </section>
 
       {/* ── Repository Tabs — CENTERED header (Figma: RepositoryTabs) ────────── */}
-      <section id="prompt-repository" style={{ padding: `64px 0 0`, textAlign: "center", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="prompt-repository" style={{ background: C.offWhite, padding: `64px 0 0`, textAlign: "center", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
         <div style={{ ...contentRailStyle }}>
         <p style={{ fontSize: 11, color: C.gray01, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 12, fontWeight: 700 }}>EXPLORE PROMPT CATEGORIES</p>
         <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12, color: C.dark2 }}>Sample Prompt Repository for using Copilot in Tax</h2>
@@ -651,7 +660,7 @@ export default function M365CopilotHub({
                 transition: "background 0.15s, color 0.15s, box-shadow 0.15s", fontFamily: F.regular,
               }}
             >
-              <AppIcon color={t.appColor} letter={t.letter} />
+              <AppIcon logo={t.logo} label={t.label} />
               {t.label}
             </button>
           ))}

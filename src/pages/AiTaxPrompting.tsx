@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
-import { ArrowLeft, ArrowRight, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, XCircle, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, X, XCircle, Zap } from "lucide-react";
 import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss } from "../design-kit/tokens";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext } from "../design-kit/EYWhatsNext";
+import heroImg from "../../images/AdobeStock-621943361.jpeg";
 
 /** Section surface rhythm: dark → neutral → light (repeats down the page). */
 type SurfaceTone = "dark" | "neutral" | "light";
@@ -663,16 +664,44 @@ function PromptStackBuilder() {
 
   return (
     <div style={{
-      display: "grid",
-      gridTemplateColumns: "minmax(240px, 280px) 1fr",
-      gap: 24,
-      height: 560,
-      minHeight: 560,
       background: C.offWhite,
       border: `1px solid rgba(46,46,56,0.10)`,
       borderRadius: 12,
-      padding: 20,
+      overflow: "hidden",
     }}>
+      {/* Dark use-case header — matches EightElementsWizard detail strip */}
+      <div style={{
+        padding: "16px 24px",
+        background: C.confidentBlack,
+        borderBottom: `1px solid ${C.borderOnDark}`,
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        flexWrap: "wrap",
+      }}>
+        <span style={{
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+          color: C.yellow,
+          fontFamily: F.bold,
+        }}>
+          Use case
+        </span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: C.onDark, fontFamily: F.bold, lineHeight: 1.4 }}>
+          Analyzing withholding tax on software royalty payments to a US parent company
+        </span>
+      </div>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(240px, 280px) 1fr",
+        gap: 24,
+        height: 560,
+        minHeight: 560,
+        padding: 20,
+      }}>
       {/* Element picker — single column */}
       <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
         <p style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5, marginBottom: 12, flexShrink: 0 }}>
@@ -881,6 +910,7 @@ function PromptStackBuilder() {
           </div>
         </div>
         */}
+      </div>
       </div>
     </div>
   );
@@ -1263,34 +1293,74 @@ function MetaPromptSection() {
 /** Exercise 1 — one MCQ at a time, instant feedback, auto-advance, running score. */
 function ChooseBestAnswerExercise() {
   const [qIndex, setQIndex] = useState(0);
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  /** Stored choice per question index — kept when navigating back/forward. */
+  const [answers, setAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
+  const advanceTimerRef = useRef<number | null>(null);
 
   const question = CHOOSE_BEST_QUESTIONS[qIndex];
+  const selectedKey = answers[qIndex] ?? null;
   const answered = selectedKey !== null;
   const isLast = qIndex === CHOOSE_BEST_QUESTIONS.length - 1;
+  const canGoPrev = qIndex > 0;
+  /** Next advances when not last; on the last answered question it opens the score screen. */
+  const canGoNext = answered;
+
+  const clearAdvanceTimer = () => {
+    if (advanceTimerRef.current != null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  };
+
+  const goPrev = () => {
+    if (!canGoPrev) return;
+    clearAdvanceTimer();
+    setQIndex(i => i - 1);
+  };
+
+  const goNext = () => {
+    if (!canGoNext) return;
+    clearAdvanceTimer();
+    if (isLast) {
+      setFinished(true);
+    } else {
+      setQIndex(i => i + 1);
+    }
+  };
 
   const choose = (key: string) => {
     if (answered) return;
-    setSelectedKey(key);
+    setAnswers(prev => ({ ...prev, [qIndex]: key }));
     if (key === question.correctKey) setScore(s => s + 1);
-    window.setTimeout(() => {
+    clearAdvanceTimer();
+    advanceTimerRef.current = window.setTimeout(() => {
+      advanceTimerRef.current = null;
       if (isLast) {
         setFinished(true);
       } else {
         setQIndex(i => i + 1);
-        setSelectedKey(null);
       }
     }, 900);
   };
 
   const reset = () => {
+    clearAdvanceTimer();
     setQIndex(0);
-    setSelectedKey(null);
+    setAnswers({});
     setScore(0);
     setFinished(false);
   };
+
+  const navBtnStyle = (enabled: boolean) => ({
+    display: "inline-flex" as const, alignItems: "center" as const, gap: 6,
+    padding: "8px 16px", border: "1px solid rgba(46,46,56,0.15)", borderRadius: 6,
+    background: C.white, color: enabled ? C.gray01 : C.gray02,
+    fontSize: 12, fontWeight: 700, fontFamily: F.bold,
+    cursor: enabled ? "pointer" as const : "default" as const,
+    opacity: enabled ? 1 : 0.45,
+  });
 
   return (
     <div>
@@ -1318,7 +1388,7 @@ function ChooseBestAnswerExercise() {
                   width: i === qIndex ? 12 : 10,
                   height: i === qIndex ? 12 : 10,
                   borderRadius: "50%",
-                  background: i <= qIndex ? C.yellow : C.gray02,
+                  background: i === qIndex || answers[i] != null ? C.yellow : C.gray02,
                   flexShrink: 0,
                   display: "inline-block",
                   transition: "width 0.2s, height 0.2s, background 0.2s",
@@ -1370,6 +1440,30 @@ function ChooseBestAnswerExercise() {
               );
             })}
           </div>
+
+          {/* Prev / Next — answers stay in `answers` so revisiting shows the same feedback. */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, gap: 12 }}>
+            <button
+              type="button"
+              onClick={goPrev}
+              disabled={!canGoPrev}
+              aria-label="Previous question"
+              style={navBtnStyle(canGoPrev)}
+            >
+              <ArrowLeft size={14} strokeWidth={2} aria-hidden />
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!canGoNext}
+              aria-label={isLast ? "See results" : "Next question"}
+              style={navBtnStyle(canGoNext)}
+            >
+              {isLast ? "See results" : "Next"}
+              <ArrowRight size={14} strokeWidth={2} aria-hidden />
+            </button>
+          </div>
         </div>
       ) : (
         <div style={{
@@ -1404,6 +1498,32 @@ function ChooseBestAnswerExercise() {
   );
 }
 
+/** Circular Check / X badge for match feedback (line icons only). */
+function MatchResultBadge({ kind, label }: { kind: "ok" | "bad"; label: string }) {
+  const color = kind === "ok" ? C.success : C.destructive;
+  const Icon = kind === "ok" ? Check : X;
+  return (
+    <span
+      role="img"
+      aria-label={label}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 24,
+        height: 24,
+        borderRadius: "50%",
+        border: `1.5px solid ${color}`,
+        background: color + "14",
+        color,
+        flexShrink: 0,
+      }}
+    >
+      <Icon size={14} strokeWidth={2} aria-hidden />
+    </span>
+  );
+}
+
 /** Exercise 2 — select a description, then its matching term; correct pairs lock green, wrong pairs flash red. */
 function MatchDescriptionExercise() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -1429,6 +1549,7 @@ function MatchDescriptionExercise() {
     setWrongDescId(selectedId);
     setWrongTermId(id);
     setSelectedId(null);
+    // Keep wrong flash long enough to see the X badge; shake runs once (~500ms).
     window.setTimeout(() => {
       setWrongDescId(null);
       setWrongTermId(null);
@@ -1444,6 +1565,19 @@ function MatchDescriptionExercise() {
 
   return (
     <div>
+      <style>{`
+        @keyframes match-term-shake {
+          0%, 100% { transform: translateX(0); }
+          20% { transform: translateX(-5px); }
+          40% { transform: translateX(5px); }
+          60% { transform: translateX(-3px); }
+          80% { transform: translateX(3px); }
+        }
+        .match-term-jitter {
+          animation: match-term-shake 0.5s ease-in-out;
+        }
+      `}</style>
+
       <div style={{
         display: "inline-flex", alignItems: "center", gap: 8,
         background: C.white, border: "1px solid rgba(46,46,56,0.10)", borderLeft: `3px solid ${C.yellow}`,
@@ -1456,60 +1590,78 @@ function MatchDescriptionExercise() {
         <span style={{ fontSize: 12, color: C.gray01, fontFamily: F.regular }}>matched</span>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 260px", gap: 16, alignItems: "start" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {MATCH_PAIRS.map(pair => {
-            const isMatched = matchedIds[pair.id];
-            const isSelected = selectedId === pair.id;
-            const isWrong = wrongDescId === pair.id;
-            return (
+      {/* One row per index: left = description A→J, right = shuffled term at that index. Both cells stretch to equal row height. */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {MATCH_PAIRS.map((pair, index) => {
+          const termId = MATCH_TERM_ORDER[index];
+          const termPair = MATCH_PAIRS.find(p => p.id === termId)!;
+          const isDescMatched = matchedIds[pair.id];
+          const isDescSelected = selectedId === pair.id;
+          const isDescWrong = wrongDescId === pair.id;
+          const isTermMatched = matchedIds[termId];
+          const isTermWrong = wrongTermId === termId;
+          return (
+            <div
+              key={pair.id}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 280px",
+                gap: 16,
+                alignItems: "stretch",
+              }}
+            >
               <button
-                key={pair.id}
                 type="button"
                 onClick={() => selectDescription(pair.id)}
-                disabled={isMatched}
+                disabled={isDescMatched}
+                aria-pressed={isDescSelected}
                 style={{
                   display: "flex", alignItems: "flex-start", gap: 10,
+                  height: "100%", alignSelf: "stretch", boxSizing: "border-box",
                   padding: "12px 14px", borderRadius: 9, textAlign: "left",
-                  cursor: isMatched ? "default" : "pointer",
-                  background: isMatched ? C.success + "0d" : isWrong ? C.destructive + "0d" : isSelected ? C.yellowAlpha10 : C.white,
-                  border: isMatched ? `1px solid ${C.success}70` : isWrong ? `1px solid ${C.destructive}70` : isSelected ? `1px solid ${C.yellow}` : "1px solid rgba(46,46,56,0.10)",
+                  cursor: isDescMatched ? "default" : "pointer",
+                  background: isDescMatched ? C.success + "0d" : isDescWrong ? C.destructive + "0d" : isDescSelected ? C.yellowAlpha10 : C.white,
+                  border: isDescMatched ? `1px solid ${C.success}70` : isDescWrong ? `1px solid ${C.destructive}70` : isDescSelected ? `1px solid ${C.yellow}` : "1px solid rgba(46,46,56,0.10)",
                   fontFamily: F.regular,
                 }}
               >
                 <span style={{ fontSize: 12, fontWeight: 700, color: C.eyebrowGold, flexShrink: 0, width: 16, fontFamily: F.bold }}>{pair.id}</span>
                 <span style={{ flex: 1, fontSize: 13, color: C.offBlack, lineHeight: 1.5 }}>{pair.description}</span>
-                {isMatched && <CheckCircle size={16} color={C.success} strokeWidth={2.5} style={{ flexShrink: 0, marginTop: 1 }} />}
+                {isDescMatched && <MatchResultBadge kind="ok" label="Correct match" />}
+                {isDescWrong && <MatchResultBadge kind="bad" label="Incorrect match" />}
               </button>
-            );
-          })}
-        </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {MATCH_TERM_ORDER.map(id => {
-            const pair = MATCH_PAIRS.find(p => p.id === id)!;
-            const isMatched = matchedIds[id];
-            const isWrong = wrongTermId === id;
-            return (
-              <button
-                key={id}
-                type="button"
-                onClick={() => selectTerm(id)}
-                disabled={isMatched}
-                style={{
-                  padding: "12px 14px", borderRadius: 9, textAlign: "center",
-                  cursor: isMatched ? "default" : "pointer",
-                  background: isMatched ? C.success + "1a" : isWrong ? C.destructive + "1a" : C.offWhite,
-                  border: isMatched ? `1px solid ${C.success}70` : isWrong ? `1px solid ${C.destructive}70` : "1px solid rgba(46,46,56,0.10)",
-                  fontSize: 13, fontWeight: 700, fontFamily: F.bold,
-                  color: isMatched ? C.success : C.offBlack,
-                }}
-              >
-                {pair.term}
-              </button>
-            );
-          })}
-        </div>
+              <div style={{ display: "flex", alignItems: "stretch", gap: 8, minHeight: 0 }}>
+                <button
+                  type="button"
+                  onClick={() => selectTerm(termId)}
+                  disabled={isTermMatched || !!wrongTermId}
+                  className={isTermWrong ? "match-term-jitter" : undefined}
+                  aria-label={`${termPair.term}${isTermMatched ? ", matched" : isTermWrong ? ", incorrect" : ""}`}
+                  style={{
+                    flex: 1,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    height: "100%", alignSelf: "stretch", boxSizing: "border-box",
+                    padding: "12px 14px", borderRadius: 9, textAlign: "center",
+                    cursor: isTermMatched ? "default" : "pointer",
+                    background: isTermMatched ? C.success + "1a" : isTermWrong ? C.destructive + "1a" : C.gray02,
+                    border: isTermMatched ? `1px solid ${C.success}70` : isTermWrong ? `1px solid ${C.destructive}70` : "1px solid rgba(46,46,56,0.10)",
+                    fontSize: 13, fontWeight: 700, fontFamily: F.bold,
+                    color: isTermMatched ? C.success : C.offBlack,
+                  }}
+                >
+                  {termPair.term}
+                </button>
+                {/* Same circular slot: Check stays after a correct match; X shows during wrong flash then clears. */}
+                <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+                  {isTermMatched && <MatchResultBadge kind="ok" label="Correct match" />}
+                  {isTermWrong && <MatchResultBadge kind="bad" label="Incorrect match" />}
+                  {!isTermMatched && !isTermWrong && <span style={{ width: 24, flexShrink: 0 }} aria-hidden />}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {isComplete && (
@@ -1551,24 +1703,13 @@ function PromptingActivitySection() {
       scrollMarginTop: SUBNAV_SCROLL_OFFSET,
     }}>
       <div style={{ ...contentRailStyle }}>
-        <div style={{
-          display: "inline-flex", background: C.accentOrange + "14", border: `1px solid ${C.accentOrange}40`,
-          borderRadius: 20, padding: "6px 18px", marginBottom: 16,
-        }}>
-          <span style={{ color: C.accentOrange, fontSize: 11, fontWeight: 700, letterSpacing: "1.26px", textTransform: "uppercase", fontFamily: F.bold }}>
-            Interactive Activity
-          </span>
-        </div>
-        <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, marginBottom: 12, fontFamily: F.bold }}>
+        <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, marginBottom: 56, fontFamily: F.bold }}>
           Test Your Prompting Skills
         </h2>
-        <p style={{ fontSize: 16, color: C.gray01, lineHeight: 1.6, marginBottom: 56, fontFamily: F.regular, maxWidth: 650, marginLeft: "auto", marginRight: "auto" }}>
-          Two exercises to check what you&apos;ve learned about prompt elements and prompting techniques.
-        </p>
 
         <div style={{ textAlign: "left", marginBottom: 64 }}>
           <h3 style={{ fontSize: 22, fontWeight: 700, color: C.confidentBlack, marginBottom: 8, fontFamily: F.bold }}>
-            Exercise 1: Choose the Best Answer
+            Choose the Best Answer
           </h3>
           <p style={{ fontSize: 14, color: C.gray01, lineHeight: 1.6, marginBottom: 24, fontFamily: F.regular, maxWidth: 720 }}>
             For each scenario, choose the single most appropriate prompt element or prompting technique.
@@ -1580,7 +1721,7 @@ function PromptingActivitySection() {
 
         <div style={{ textAlign: "left" }}>
           <h3 style={{ fontSize: 22, fontWeight: 700, color: C.confidentBlack, marginBottom: 8, fontFamily: F.bold }}>
-            Exercise 2: Match the Description
+            Match the Description
           </h3>
           <p style={{ fontSize: 14, color: C.gray01, lineHeight: 1.6, marginBottom: 24, fontFamily: F.regular, maxWidth: 720 }}>
             Match each description with the correct Prompt Element or Prompting Technique.
@@ -1706,7 +1847,8 @@ function EightElementsWizard() {
           <div style={{ display: "flex", flexDirection: "column", background: C.white, minHeight: 0 }}>
             <div style={{
               padding: "16px 24px",
-              borderBottom: `1px solid rgba(46,46,56,0.08)`,
+              background: C.confidentBlack,
+              borderBottom: `1px solid ${C.borderOnDark}`,
               display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
               flexShrink: 0,
             }}>
@@ -1718,8 +1860,8 @@ function EightElementsWizard() {
               }}>
                 {elem.id}
               </span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold }}>{elem.name}</span>
-              <span style={{ fontSize: 11, color: elem.color, fontWeight: 600, fontFamily: F.bold }}>{elem.q}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: C.onDark, fontFamily: F.bold }}>{elem.name}</span>
+              <span style={{ fontSize: 11, color: C.yellow, fontWeight: 700, fontFamily: F.bold }}>{elem.q}</span>
             </div>
 
             <div style={{
@@ -1740,6 +1882,7 @@ function EightElementsWizard() {
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
+                        gap: 8,
                         marginBottom: 10,
                         padding: "4px 10px",
                         borderRadius: 100,
@@ -1752,6 +1895,8 @@ function EightElementsWizard() {
                         lineHeight: 1.3,
                       }}
                     >
+                      {f.key === "without" && <MatchResultBadge kind="bad" label="Without this element" />}
+                      {f.key === "with" && <MatchResultBadge kind="ok" label="With this element" />}
                       {f.label}
                     </span>
                     <p style={{
@@ -2840,7 +2985,7 @@ export default function AiTaxPrompting({
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#module-content" />
       <ModuleHeader currentModuleId="ai-tax-prompting" onNavigate={onNavigate} onBack={onBack} />
 
-      {/* ── 1. HERO — dark + spectrum (Frame 8) ── */}
+      {/* ── 1. HERO — dark + atmospheric Adobe stock ── */}
       <section
         id="module-content"
         style={{
@@ -2849,9 +2994,9 @@ export default function AiTaxPrompting({
           position: "relative",
           overflow: "hidden",
           backgroundColor: C.confidentBlack,
-          backgroundImage: "url('/spectrum/hero-frame-8.png')",
+          backgroundImage: `url(${heroImg})`,
           backgroundSize: "cover",
-          backgroundPosition: "78% center",
+          backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
         }}
       >
@@ -2862,7 +3007,7 @@ export default function AiTaxPrompting({
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(90deg, rgba(26,26,36,0.94) 0%, rgba(26,26,36,0.78) 45%, rgba(26,26,36,0.35) 72%, rgba(26,26,36,0.18) 100%)",
+              "linear-gradient(90deg, rgba(26,26,36,0.97) 0%, rgba(26,26,36,0.84) 45%, rgba(26,26,36,0.45) 72%, rgba(26,26,36,0.28) 100%)",
             pointerEvents: "none",
           }}
         />
@@ -3082,11 +3227,8 @@ export default function AiTaxPrompting({
           <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
             Build a Perfect Prompt — Piece by Piece
           </h2>
-          <p style={{ fontSize: 16, color: C.gray01, textAlign: "center", lineHeight: 1.7, marginBottom: 8, fontFamily: F.light, maxWidth: 650, marginLeft: "auto", marginRight: "auto" }}>
+          <p style={{ fontSize: 16, color: C.gray01, textAlign: "center", lineHeight: 1.7, marginBottom: 32, fontFamily: F.light, maxWidth: 650, marginLeft: "auto", marginRight: "auto" }}>
             Click each ingredient below to add it to the prompt. Watch it come together like assembling a client brief.
-          </p>
-          <p style={{ fontSize: 13, color: C.gray01, textAlign: "center", marginBottom: 32, fontFamily: F.regular }}>
-            Use case: Analyzing withholding tax on software royalty payments to a US parent company
           </p>
           <PromptStackBuilder />
         </div>
@@ -3170,11 +3312,11 @@ export default function AiTaxPrompting({
             </div>
           </div>
 
-          <div style={{ marginTop: 40, padding: "28px 32px", background: C.yellowAlpha10, border: `1px solid ${C.yellow}44`, borderRadius: 10, textAlign: "center" }}>
+          <div style={{ marginTop: 40, padding: "28px 32px", background: C.yellow, border: `1px solid ${C.gray02}`, borderRadius: 10, textAlign: "center" }}>
             <p style={{ fontSize: 20, color: C.confidentBlack, lineHeight: 1.5, fontFamily: F.bold, margin: "0 0 6px" }}>
               Better Prompts → Better Outputs → Better Decisions
             </p>
-            <p style={{ fontSize: 13, color: C.gray01, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
+            <p style={{ fontSize: 13, color: C.offBlack, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
               Clear Instructions + Context + Validation = Effective AI Usage
             </p>
           </div>
@@ -3192,11 +3334,6 @@ export default function AiTaxPrompting({
 
       {/* ── 11. WHAT'S NEXT — continue to M365 Copilot ── */}
       <WhatsNextSection onContinue={() => onNavigate("/copilot-hub")} />
-
-      {/* ── Footer — light ── */}
-      <div style={{ background: SURFACE.light.bg, borderTop: `1px solid ${SURFACE.light.border}`, padding: `24px ${contentInlinePad}`, textAlign: "center" }}>
-        <p style={{ color: C.gray01, fontSize: 12, fontFamily: F.regular }}>© 2026 EY India AI Tax Hub — Part 2: Basics of Prompting | Building a better working world</p>
-      </div>
 
     </div>
   );
