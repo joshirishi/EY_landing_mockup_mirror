@@ -151,8 +151,45 @@ const TOKEN_BRIDGE = `
   overflow-wrap: anywhere;
 }
 #module-content .cheat-columns { width: 100%; max-width: none; }
+
+/* Cheat Sheet column headers — EY dark-module surface; accents on icon/border */
+#module-content .cheat-col-head {
+  background: ${colors.eyBgCard};
+  color: ${colors.onDark};
+  border-left: 1px solid ${colors.borderOnDark};
+  border-right: 1px solid ${colors.borderOnDark};
+  border-bottom: 1px solid ${colors.borderOnDark};
+  border-radius: 0 0 8px 8px;
+  padding: 14px 16px 12px;
+}
+#module-content .cheat-chevron { color: ${colors.onDarkMuted}; }
+#module-content .cheat-col[data-tone="create"] .cheat-col-head {
+  color: ${colors.onDark};
+  border-top-color: ${colors.yellow};
+}
+#module-content .cheat-col[data-tone="create"] .cheat-col-label { color: ${colors.onDark}; }
+#module-content .cheat-col[data-tone="create"] .cheat-col-label svg { color: ${colors.yellow}; }
+#module-content .cheat-col[data-tone="understand"] .cheat-col-head {
+  color: ${colors.frameBlue};
+  border-top-color: ${colors.frameBlue};
+}
+#module-content .cheat-col[data-tone="organize"] .cheat-col-head {
+  color: ${colors.frameGreen};
+  border-top-color: ${colors.frameGreen};
+}
+#module-content .cheat-col[data-tone="think"] .cheat-col-head {
+  color: ${colors.framePurple};
+  border-top-color: ${colors.framePurple};
+}
+
 @media (max-width: 900px) {
   #module-content .cheat-columns { grid-template-columns: 1fr; }
+  #module-content .cheat-col-head {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid ${colors.borderOnDark};
+  }
 }
 
 /* Content rail — section padding already insets to layout.contentWidth;

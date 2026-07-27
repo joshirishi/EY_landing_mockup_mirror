@@ -3442,13 +3442,18 @@ function renderBeat(flipIn) {
 .cheat-col-head {
   list-style: none;
   border-top: 3px solid currentColor;
-  padding: 14px 0 4px;
+  padding: 14px 16px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   cursor: pointer;
-  color: inherit;
+  color: var(--ey-on-dark);
+  background: var(--ey-bg-card);
+  border-left: 1px solid var(--ey-border-on-dark);
+  border-right: 1px solid var(--ey-border-on-dark);
+  border-bottom: 1px solid var(--ey-border-on-dark);
+  border-radius: 0 0 8px 8px;
 }
 .cheat-col-head::-webkit-details-marker { display: none; }
 .cheat-col-label {
@@ -3463,13 +3468,14 @@ function renderBeat(flipIn) {
 .cheat-chevron {
   display: block;
   flex-shrink: 0;
-  color: var(--gray-01);
+  color: var(--ey-on-dark-72);
   transition: transform 0.2s;
 }
 .cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
 .cheat-col[data-tone="create"] { color: var(--ey-dark); }
-.cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-dark); border-top-color: var(--ey-yellow); }
-.cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-dark); }
+/* Dark header bar — accent colors stay on icon + top border only */
+.cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-on-dark); border-top-color: var(--ey-yellow); }
+.cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-on-dark); }
 .cheat-col[data-tone="create"] .cheat-col-label svg { color: var(--ey-yellow); }
 .cheat-col[data-tone="understand"] .cheat-col-head { color: var(--accent-blue); border-top-color: var(--accent-blue); }
 .cheat-col[data-tone="organize"] .cheat-col-head { color: var(--accent-green); border-top-color: var(--accent-green); }
@@ -3576,6 +3582,9 @@ function renderBeat(flipIn) {
   .cheat-col-head {
     padding: 16px 18px;
     border-top-width: 3px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
   .cheat-col-body {
     padding: 0 18px 18px;
@@ -3666,7 +3675,7 @@ function renderBeat(flipIn) {
     <span class="gva-eq-chip" data-tone="purple">Agentic AI</span>
   </div>
   -->
-  <p class="gva-eq-caption">Each level inherits everything from the previous level.</p>
+  <!-- <p class="gva-eq-caption">Each level inherits everything from the previous level.</p> -->
 
   <div class="gva-compare">
     <!-- Sticky column headers -->
