@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
@@ -73,6 +73,16 @@ const TABS = [
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
+// ── Real app display names — used in use-case tags, mock window titles, and
+// the "Ask Copilot in {App}" prompt-panel headers ────────────────────────────
+const APP_NAME: Record<TabId, string> = {
+  word: "Word",
+  excel: "Excel",
+  ppt: "PowerPoint",
+  outlook: "Outlook",
+  m365: "M365 Chat",
+};
+
 // ── Laptop stage — "What you can do" popping app widget (ported from Module1) ─
 // The 5 apps with live prompt content below "pop" with a floating animation and
 // jump straight to their tab section. The 6 apps without prompt content yet are
@@ -96,13 +106,14 @@ const LAPTOP_COMING_SOON_APPS: { label: string; logo?: string }[] = [
   { label: "MS Forms",   logo: "/pipeline/forms.svg" },
 ];
 
-// ── Exact content from Figma (3317:15589) ────────────────────────────────────
+// ── Exact content from Figma (3317:15589), upgraded with the "use-grid" +
+// "copilot scene" tax use-case & prompt content ported from copilot_dashboard.html ──
 const SECTION_DATA: Record<TabId, {
   eyebrow: string; eyebrowColor: string;
   h2: string; subtitle: string;
-  features: { title: string; body: string }[];
-  prompt: string;
-  suggestions: string[];
+  useCases: { icon: string; title: string; body: string }[];
+  panelSubtitle: string;
+  prompts: { label: string; text: string }[];
   screenshotSide: "left" | "right";
   altBg: boolean;
 }> = {
@@ -111,14 +122,20 @@ const SECTION_DATA: Record<TabId, {
     eyebrowColor: C.wordBlue,
     h2: "Copilot in Word",
     subtitle: "Draft documents, summarize content, and rewrite text with AI-powered assistance. Build professional issue memos and restructure client communication instantly.",
-    features: [
-      { title: "Draft Position Notes",   body: "Generate comprehensive first-cut tax research memos, issue analyses, and legal summaries for client reviews." },
-      { title: "Refine Legal Language",  body: "Audit and adjust draft submissions, ensuring technical precision and alignment with jurisdictional requirements." },
-      { title: "Summarize Case Laws",    body: "Quickly synthesize extensive tax court rulings, tribunal orders, and state circulars into essential facts and holdings." },
-      { title: "Track Review Points",    body: "Convert comments and inputs into action points, open items and next-step trackers." },
+    useCases: [
+      { icon: "📄", title: "Draft Position Notes",  body: "Create first-cut tax research memos, issue notes, legal summaries and client-ready position papers." },
+      { icon: "🔍", title: "Summarise Case Laws",   body: "Condense lengthy rulings, circulars, notifications or tribunal orders into crisp facts and implications." },
+      { icon: "✍️", title: "Refine Legal Language", body: "Rewrite tax submissions and opinion drafts into a sharper, review-ready tone." },
+      { icon: "📌", title: "Track Review Points",   body: "Convert comments and inputs into action points, open items and next-step trackers." },
     ],
-    prompt: '"Draft a position memo on international tax safe harbor implications for tech transfers."',
-    suggestions: ["Summarize Rulings", "Rewrite & Restructure"],
+    panelSubtitle: "Draft, review and refine tax documents with speed and consistency.",
+    prompts: [
+      { label: "Draft a Position Note",         text: "Draft a 1-page position note on the withholding tax treatment of software royalty payments to our US parent, citing the EACoE Supreme Court ruling." },
+      { label: "Summarise a Tribunal Ruling",   text: "Summarise this ITAT order in plain English — facts, issue, ruling, and what it means for our client." },
+      { label: "Tighten the Legal Language",    text: "Rewrite this tax opinion draft in a sharper, more formal tone suitable for client delivery." },
+      { label: "Build a Review Tracker",        text: "Convert the reviewer's comments in this document into a numbered action tracker with owners and due dates." },
+      { label: "Create an Executive Summary",   text: "Summarise this 12-page tax memo into a 5-bullet executive summary for the CFO." },
+    ],
     screenshotSide: "left",
     altBg: true,
   },
@@ -127,14 +144,20 @@ const SECTION_DATA: Record<TabId, {
     eyebrowColor: C.excelGreen,
     h2: "Copilot in Excel",
     subtitle: "Analyze data, create formulas, generate charts, and uncover insights from your spreadsheets. Build clean logical checks and eliminate calculation bugs.",
-    features: [
-      { title: "Analyse Tax Data",       body: "Summarise large datasets and identify key trends, gaps, mismatches and exceptions." },
-      { title: "Spot Exceptions",        body: "Detect anomalies such as missing details, rate mismatches or duplicates." },
-      { title: "Build Reconciliations",  body: "Create formulas and logic checks to compare books, returns and working papers." },
-      { title: "Visualise Compliance",   body: "Create dashboards to show status, exposures, ageing and risk movement." },
+    useCases: [
+      { icon: "📊", title: "Analyse Tax Data",      body: "Summarise large datasets and identify key trends, gaps, mismatches and exceptions." },
+      { icon: "🧮", title: "Build Reconciliations", body: "Create formulas and logic checks to compare books, returns and working papers." },
+      { icon: "⚠️", title: "Spot Exceptions",       body: "Detect anomalies such as missing details, rate mismatches or duplicates." },
+      { icon: "📈", title: "Visualise Compliance",  body: "Create dashboards to show status, exposures, ageing and risk movement." },
     ],
-    prompt: '"Highlight and partition any invoice entries where currency rates deviate by more than 2%."',
-    suggestions: ["Flag Anomalies", "Build Formula"],
+    panelSubtitle: "Analyse tax data, reconciliations and compliance trackers with precision.",
+    prompts: [
+      { label: "Reconcile Two Ledgers",           text: "Compare the GST returns and books data in these two sheets and flag every mismatch above ₹10,000." },
+      { label: "Explain This Formula",            text: "Explain what this VLOOKUP + IFERROR formula in column F is actually doing, in plain language." },
+      { label: "Spot Withholding Gaps",           text: "Scan this vendor payment sheet and flag any transaction where TDS appears under-deducted." },
+      { label: "Build a Compliance Dashboard",    text: "Turn this data into a one-page dashboard showing filing status, ageing, and open exposures by entity." },
+      { label: "Forecast the Effective Tax Rate", text: "Using this P&L, calculate the projected effective tax rate for FY26 factoring in surcharge and cess." },
+    ],
     screenshotSide: "right",
     altBg: false,
   },
@@ -143,14 +166,20 @@ const SECTION_DATA: Record<TabId, {
     eyebrowColor: C.pptOrange,
     h2: "Copilot in PowerPoint & Chat",
     subtitle: "Translate raw data matrices into compelling slides, executive summaries, and cross-application project definitions. Use Interactive Chat to coordinate answers.",
-    features: [
-      { title: "Create Client Decks",        body: "Convert tax analysis into structured, visually clean, client-ready presentations." },
-      { title: "Prepare Leadership Updates",  body: "Generate concise leadership slides on exposures, updates and decisions required." },
-      { title: "Tell the Tax Story",          body: "Organise complex positions into context, issue, risk, recommendation and next steps." },
-      { title: "Summarise Case Strategy",     body: "Build crisp hearing briefs, timelines and argument maps." },
+    useCases: [
+      { icon: "🎯", title: "Create Client Decks",      body: "Convert tax analysis into structured, visually clean, client-ready presentations." },
+      { icon: "🧭", title: "Tell the Tax Story",       body: "Organise complex positions into context, issue, risk, recommendation and next steps." },
+      { icon: "📣", title: "Prepare Leadership Updates", body: "Generate concise leadership slides on exposures, updates and decisions required." },
+      { icon: "🗂️", title: "Summarise Case Strategy",  body: "Build crisp hearing briefs, timelines and argument maps." },
     ],
-    prompt: '"Create a 5-slide visual presentation deck outlining the safe harbor risks for Q3."',
-    suggestions: ["Summarize Rulings", "Rewrite & Restructure"],
+    panelSubtitle: "Convert tax positions and updates into leadership-ready narratives.",
+    prompts: [
+      { label: "Build a Client-Ready Deck",  text: "Turn this tax position note into a 6-slide client deck with an executive summary slide." },
+      { label: "Tell the Tax Story",         text: "Structure this analysis as Context → Issue → Risk → Recommendation → Next Steps across slides." },
+      { label: "Simplify for the Board",     text: "Rewrite these slides in plain business language a non-tax board member would understand." },
+      { label: "Create a Litigation Timeline", text: "Build a visual timeline slide of this case's key hearing dates and outcomes." },
+      { label: "Design a Comparison Slide",  text: "Create a side-by-side slide comparing the old vs new GST rate structure." },
+    ],
     screenshotSide: "right",
     altBg: true,
   },
@@ -159,14 +188,20 @@ const SECTION_DATA: Record<TabId, {
     eyebrowColor: C.outlookBlue,
     h2: "Copilot in Outlook",
     subtitle: "Summarize email threads, draft replies, and manage your inbox efficiently. Convert messy, sprawling client communications into actionable priorities in seconds.",
-    features: [
-      { title: "Draft Client Emails",    body: "Prepare clear professional emails for data requests, updates and follow-ups." },
-      { title: "Manage Follow-ups",      body: "Convert email conversations into action-oriented follow-ups." },
-      { title: "Summarise Threads",      body: "Extract decisions, pending inputs, responsibilities and deadlines from long chains." },
-      { title: "Polish Tone Instantly",  body: "Rewrite responses to sound concise, client-sensitive and executive-ready." },
+    useCases: [
+      { icon: "✉️", title: "Draft Client Emails",   body: "Prepare clear professional emails for data requests, updates and follow-ups." },
+      { icon: "🧵", title: "Summarise Threads",     body: "Extract decisions, pending inputs, responsibilities and deadlines from long chains." },
+      { icon: "⏱️", title: "Manage Follow-ups",     body: "Convert email conversations into action-oriented follow-ups." },
+      { icon: "🪄", title: "Polish Tone Instantly", body: "Rewrite responses to sound concise, client-sensitive and executive-ready." },
     ],
-    prompt: '"Summarise this 12-email thread, listing all key approvals and unresolved items for the compliance team."',
-    suggestions: ["Summarize Thread", "Draft Reply"],
+    panelSubtitle: "Manage tax communications, follow-ups and client responses faster.",
+    prompts: [
+      { label: "Draft a Client Update",        text: "Draft a concise email to the client summarising the outcome of today's assessment hearing." },
+      { label: "Summarise a Long Thread",      text: "Summarise this 20-email thread into decisions made, pending items, and who owns what." },
+      { label: "Chase Outstanding Documents",  text: "Draft a polite but firm follow-up requesting the pending Form 15CA/CB documents." },
+      { label: "Soften a Firm Response",       text: "Rewrite this reply to sound more diplomatic — we're pushing back on the client's proposed position." },
+      { label: "Prepare a Cover Note",         text: "Draft a short covering email to accompany our reply to the GST show cause notice." },
+    ],
     screenshotSide: "left",
     altBg: false,
   },
@@ -175,155 +210,104 @@ const SECTION_DATA: Record<TabId, {
     eyebrowColor: C.teamsViolet,
     h2: "Copilot in M365 Chat",
     subtitle: "Use Copilot in M365 Chat to ask questions, get summaries, and generate content across your Microsoft 365 data. Chat brings together information from documents, emails, meetings, and contacts to give you AI-powered answers grounded in your work data.",
-    features: [
-      { title: "Search Across Work",     body: "Find tax-related discussions, documents, emails and files across Microsoft 365." },
-      { title: "Connect Tax Context",    body: "Connect compliance data, research notes, email trails and presentation inputs." },
-      { title: "Prepare Matter Briefs",  body: "Generate briefing notes before client calls or internal reviews." },
-      { title: "Accelerate First Drafts",body: "Create starting drafts for emails, memos, decks, trackers and meeting prep." },
+    useCases: [
+      { icon: "🌐", title: "Search Across Work",      body: "Find tax-related discussions, documents, emails and files across Microsoft 365." },
+      { icon: "🧾", title: "Prepare Matter Briefs",   body: "Generate briefing notes before client calls or internal reviews." },
+      { icon: "🧠", title: "Connect Tax Context",     body: "Connect compliance data, research notes, email trails and presentation inputs." },
+      { icon: "🚀", title: "Accelerate First Drafts", body: "Create starting drafts for emails, memos, decks, trackers and meeting prep." },
     ],
-    prompt: '"Find all tax-related documents James shared last week and summarise the key updates."',
-    suggestions: ["Search Docs", "Summarise"],
+    panelSubtitle: "Ask cross-app questions and retrieve tax context across Microsoft 365.",
+    prompts: [
+      { label: "Find Every Mention",         text: "Find every email, doc or chat this quarter that mentions the 'safe harbour' rate change." },
+      { label: "Prep for a Client Call",     text: "Pull together everything we discussed with ABC Corp on their TP matter in the last 30 days." },
+      { label: "Draft a Matter Brief",       text: "Summarise all files related to the XYZ litigation into a one-page matter brief." },
+      { label: "Check What's Still Pending", text: "What action items are still open for me across all my tax engagements this week?" },
+      { label: "Compare Team Positions",     text: "Compare how our Mumbai and Bangalore teams have each interpreted the new TDS circular." },
+    ],
     screenshotSide: "right",
     altBg: true,
   },
 };
 
-// ── Shared feature card ───────────────────────────────────────────────────────
-function FeatureCard({ title, body }: { title: string; body: string }) {
+// ── Pattern 1: "use-grid" — 2-column tax use-case cards ───────────────────────
+function UseCaseCard({ icon, title, body, accent, appLabel }: { icon: string; title: string; body: string; accent: string; appLabel: string }) {
   return (
-    <div style={{ background: C.white, borderRadius: 12, padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", borderBottom: "1px solid #C4C4CD" }}>
-      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.dark2, marginBottom: 8, lineHeight: 1.3 }}>{title}</p>
-      <p style={{ fontFamily: F.regular, fontSize: 14, color: C.gray01, lineHeight: 1.6 }}>{body}</p>
-    </div>
-  );
-}
-
-// ── Copilot sidebar (shared across app windows) ───────────────────────────────
-function AppCopilotSidebar({ prompt, suggestions }: { prompt: string; suggestions: string[] }) {
-  return (
-    <div style={{ width: 220, background: C.white, borderLeft: "1px solid #C4C4CD", padding: 16, flexShrink: 0 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-        <CopilotIcon size={22} />
-        <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 14, color: C.dark2 }}>Copilot</p>
-      </div>
-      <p style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, marginBottom: 6, fontWeight: 600, letterSpacing: "0.04em" }}>CURRENT PROMPT</p>
-      <p style={{ fontFamily: F.regular, fontSize: 12, background: C.offWhite, padding: "10px 12px", borderRadius: 8, fontStyle: "italic", color: C.dark2, lineHeight: 1.5, marginBottom: 16 }}>{prompt}</p>
-      <p style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, marginBottom: 8, fontWeight: 600, letterSpacing: "0.04em" }}>SUGGESTIONS</p>
-      {suggestions.map(s => (
-        <div key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 16, border: "1px solid #C4C4CD", fontSize: 11, color: C.dark2, marginRight: 4, marginBottom: 4, background: C.white, cursor: "default", fontFamily: F.regular }}>
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke={C.frameGreen ?? "#00C864"} /><path d="M3.5 6l1.7 1.7L8.5 4.5" stroke={C.frameGreen ?? "#00C864"} strokeWidth="1.2" strokeLinecap="round"/></svg>
-          {s}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ── Word window mock ──────────────────────────────────────────────────────────
-function WordWindow({ prompt, suggestions }: { prompt: string; suggestions: string[] }) {
-  return (
-    <div style={{ flex: 1, background: "#F6F6FA", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-      <div style={{ background: C.wordBlue, padding: "10px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#4696FF"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>W</text></svg>
-        <span style={{ color: "#FFFFFF", fontSize: 13, fontFamily: F.regular, fontWeight: 600 }}>Untitled Document</span>
-        <div style={{ marginLeft: "auto", display: "flex", gap: 16 }}>
-          {["File","Home","Insert"].map(m=><span key={m} style={{color:"rgba(255,255,255,0.85)",fontSize:11,fontFamily: F.regular}}>{m}</span>)}
-        </div>
-      </div>
-      <div style={{ display: "flex", minHeight: 320 }}>
-        <div style={{ flex: 1, padding: "24px 24px", fontFamily: F.regular, overflow: "hidden" }}>
-          <p style={{ fontWeight: 700, fontSize: 16, color: "#1A1A24", marginBottom: 12 }}>International Tax Transfer Pricing Memo</p>
-          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65", marginBottom: 12 }}>
-            Executive Summary: This document outlines the current regulatory landscape regarding safe harbor provisions for cross-border tech transfers. The following sections detail the methodology for calculating arm's length pricing and the implications of recent tribunal rulings on multinational entities.
-          </p>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A24", marginBottom: 6 }}>• Methodology</p>
-          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65" }}>
-            We will utilize the Comparable Uncontrolled Price (CUP) method to establish a baseline for royalty rates. This approach ensures compliance with OECD guidelines while providing a defensible position for audit purposes.
-          </p>
-        </div>
-        <AppCopilotSidebar prompt={prompt} suggestions={suggestions} />
+    <div style={{ position: "relative", display: "flex", gap: 16, alignItems: "flex-start", background: C.white, borderRadius: 16, padding: "22px 22px 22px 26px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", border: "1px solid #C4C4CD", overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: accent }} />
+      <div style={{ width: 48, height: 48, minWidth: 48, borderRadius: 12, background: C.offWhite, border: "1px solid #C4C4CD", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{icon}</div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.dark2, marginBottom: 6, lineHeight: 1.3 }}>{title}</p>
+        <p style={{ fontFamily: F.regular, fontSize: 13.5, color: C.gray01, lineHeight: 1.55, marginBottom: 12 }}>{body}</p>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: F.regular, fontSize: 11, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: accent }}>✦ {appLabel} + Copilot</span>
       </div>
     </div>
   );
 }
 
-// ── Excel window mock (with spreadsheet + Copilot chat overlay) ───────────────
-const EXCEL_ROWS = [
-  { n: 2, id: "INV-20240101", exp: "1.1250", act: "1.1260", flag: "OK",   ent: "DE Entity A", flagged: false, active: false },
-  { n: 3, id: "INV-20240102", exp: "1.1250", act: "1.1520", flag: "FLAG", ent: "FR Entity B", flagged: true,  active: false },
-  { n: 4, id: "INV-20240103", exp: "1.1250", act: "1.1480", flag: "FLAG", ent: "NL Entity C", flagged: false, active: true  },
-  { n: 5, id: "INV-20240104", exp: "1.1250", act: "1.1255", flag: "OK",   ent: "UK Entity D", flagged: false, active: false },
-  { n: 6, id: "INV-20240105", exp: "1.1250", act: "1.1610", flag: "FLAG", ent: "ES Entity E", flagged: true,  active: false },
-  { n: 7, id: "INV-20240106", exp: "1.1250", act: "1.1258", flag: "OK",   ent: "IT Entity F", flagged: false, active: false },
-  { n: 8, id: "INV-20240107", exp: "1.1250", act: "1.1263", flag: "OK",   ent: "PL Entity G", flagged: false, active: false, faded: true },
-];
-
-function ExcelWindow({ prompt, suggestions }: { prompt: string; suggestions: string[] }) {
+function UseCaseGrid({ items, accent, appLabel }: { items: { icon: string; title: string; body: string }[]; accent: string; appLabel: string }) {
   return (
-    <div style={{ flex: 1, background: "#FFFFFF", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-      {/* Title bar */}
-      <div style={{ background: C.excelGreen, padding: "8px 14px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#00C864"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>X</text></svg>
-        <span style={{ color: "#FFFFFF", fontSize: 12, fontFamily: F.regular, fontWeight: 600 }}>TaxAnalysis_Q4_2024.xlsx - Excel</span>
-        <div style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
-          {[C.excelGreen,"#00C864","#00C864"].map((c,i)=><div key={i} style={{ width:10,height:10,borderRadius:"50%",background:c,border:"1px solid rgba(255,255,255,0.3)" }}/>)}
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
+      {items.map(item => <UseCaseCard key={item.title} icon={item.icon} title={item.title} body={item.body} accent={accent} appLabel={appLabel} />)}
+    </div>
+  );
+}
+
+// ── Typing-reveal hook — ports the reference file's injectPrompt/typePrompt
+// character-by-character animation into a lightweight React hook ─────────────
+function useTypingPrompt() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [typedText, setTypedText] = useState("");
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); }, []);
+
+  const select = (idx: number, text: string) => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setActiveIndex(idx);
+    setTypedText("");
+    let i = 0;
+    timerRef.current = setInterval(() => {
+      i += 1;
+      setTypedText(text.slice(0, i));
+      if (i >= text.length && timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    }, 14);
+  };
+
+  return { activeIndex, typedText, select };
+}
+
+// ── Pattern 2a: mock app window — window chrome + ribbon canvas + response card ──
+function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; accent: string; typedText: string }) {
+  return (
+    <div style={{ flex: "1.05 1 0", minWidth: 0, background: `linear-gradient(180deg, ${C.dark2}, ${C.dark})`, borderRadius: 22, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.28)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column" }}>
+      {/* Window chrome */}
+      <div style={{ height: 42, background: C.dark, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", borderBottom: "1px solid rgba(255,255,255,0.08)", gap: 12 }}>
+        <div style={{ display: "flex", gap: 7, flexShrink: 0 }}>
+          {[1, 0.6, 0.32].map((o, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: accent, opacity: o }} />)}
         </div>
+        <span style={{ fontFamily: F.regular, fontSize: 12, fontWeight: 600, color: C.white, flex: 1, textAlign: "center" }}>{appLabel} — blank workspace</span>
+        <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.gray02, border: "1px solid rgba(255,255,255,0.16)", borderRadius: 999, padding: "4px 10px", flexShrink: 0, whiteSpace: "nowrap" }}>Copilot-enabled</span>
       </div>
-      {/* Ribbon */}
-      <div style={{ background: "#F6F6FA", padding: "4px 14px", display: "flex", gap: 16, borderBottom: "1px solid #C4C4CD" }}>
-        {["File","Home","Insert","Formulas","Data","Review","View","Copilot"].map(m=><span key={m} style={{ fontSize: 11, color: "#2E2E38", fontFamily: F.regular }}>{m}</span>)}
-      </div>
-      {/* Formula bar */}
-      <div style={{ background: "#FFFFFF", padding: "5px 14px", display: "flex", alignItems: "center", gap: 8, borderBottom: "1px solid #C4C4CD" }}>
-        <span style={{ background: "#F6F6FA", padding: "3px 8px", borderRadius: 4, fontSize: 10, fontFamily: "monospace", fontWeight: 600 }}>D4</span>
-        <span style={{ width: 1, height: 16, background: "#C4C4CD" }} />
-        <span style={{ fontFamily: "monospace", fontSize: 10, color: C.excelGreen }}>=IF(ABS(C4-B4)/B4&gt;0.02,"FLAG","OK")</span>
-      </div>
-      {/* Spreadsheet */}
-      <div style={{ position: "relative", overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, fontFamily: F.regular }}>
-          <thead>
-            <tr>
-              <th style={{ background: "#F6F6FA", width: 32, padding: "5px 6px", border: "1px solid #C4C4CD", color: "#747480" }}></th>
-              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Invoice ID</th>
-              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Expected Rate</th>
-              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Actual Rate</th>
-              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Variance Flag</th>
-              <th style={{ background: "#F6F6FA", padding: "5px 6px", border: "1px solid #C4C4CD", textAlign: "left", color: "#2E2E38", fontWeight: 600 }}>Entity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {EXCEL_ROWS.map(r => (
-              <tr key={r.n} style={{ background: r.active ? "rgba(16,124,65,0.06)" : r.flagged ? "rgba(192,57,43,0.04)" : "#FFFFFF", opacity: (r as any).faded ? 0.45 : 1 }}>
-                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.active ? C.excelGreen : "#747480", textAlign: "center", fontWeight: r.active ? 700 : 400 }}>{r.n}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.active ? C.excelGreen : r.flagged ? "#FF4136" : "#2E2E38" }}>{r.id}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: "#2E2E38" }}>{r.exp}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.flagged ? "#FF4136" : r.active ? C.excelGreen : "#2E2E38", fontWeight: r.flagged || r.active ? 600 : 400 }}>{r.act}</td>
-                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD" }}>
-                  <span style={{ background: r.flag === "FLAG" ? (r.active ? C.excelGreen : "rgba(192,57,43,0.12)") : "transparent", color: r.flag === "FLAG" ? (r.active ? "#FFFFFF" : "#FF4136") : C.excelGreen, padding: "2px 6px", borderRadius: 4, fontWeight: 700 }}>{r.flag}</span>
-                </td>
-                <td style={{ padding: "5px 6px", border: "1px solid #C4C4CD", color: r.active ? C.excelGreen : "#2E2E38" }}>{r.ent}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {/* Copilot chat overlay */}
-        <div style={{ background: "#FFFFFF", borderTop: "1px solid #C4C4CD", padding: 12 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
-            <CopilotIcon size={16} />
-            <span style={{ fontFamily: F.regular, fontSize: 11, fontWeight: 700, background: C.excelGreen, color: "#FFFFFF", padding: "2px 8px", borderRadius: 10 }}>Copilot</span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ fontSize: 10, fontFamily: F.regular, padding: "8px 10px", borderRadius: 8, background: "#F6F6FA", color: "#2E2E38", lineHeight: 1.5 }}>I've analysed your transaction data. I found 2 invoices where currency rate deviation exceeds your 2% threshold.</div>
-            <div style={{ fontSize: 10, fontFamily: F.regular, padding: "8px 10px", borderRadius: 8, background: C.excelGreen, color: "#FFFFFF", alignSelf: "flex-end", maxWidth: "85%", lineHeight: 1.5 }}>Highlight and partition any invoice entries where currency rates deviate by more than 2%.</div>
-            <div style={{ fontSize: 10, fontFamily: F.regular, padding: "8px 10px", borderRadius: 8, background: "#F6F6FA", color: "#2E2E38", lineHeight: 1.5 }}>
-              Done! Rows 3 and 6 are flagged. Column D formula applied:
-              <div style={{ fontFamily: "monospace", fontSize: 9, color: C.excelGreen, background: "#F6F6FA", padding: "4px 8px", borderRadius: 4, marginTop: 4 }}>=IF(ABS(C-B)/B&gt;0.02,"FLAG","OK")</div>
+      {/* Ribbon-colored canvas with mock document + Copilot response */}
+      <div style={{ flex: 1, padding: 24, display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${accent}, ${C.dark})`, minHeight: 320 }}>
+        <div style={{ width: "100%", maxWidth: 400, background: C.white, borderRadius: 16, padding: 24, boxShadow: "0 18px 44px rgba(0,0,0,0.24)" }}>
+          {["94%", "80%", "92%", "62%"].map((w, i) => (
+            <div key={i} style={{ height: 8, borderRadius: 999, background: C.offWhite, width: w, marginBottom: 12 }} />
+          ))}
+          <div style={{ marginTop: 8, background: C.offWhite, border: `1px solid ${C.yellow}`, borderRadius: 12, padding: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <CopilotIcon size={16} />
+              <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.6px", textTransform: "uppercase", color: C.dark2 }}>Copilot</span>
             </div>
-          </div>
-          <div style={{ marginTop: 8, display: "flex", alignItems: "center", background: C.offWhite, borderRadius: 8, padding: "6px 10px" }}>
-            <span style={{ flex: 1, fontFamily: F.regular, fontSize: 11, color: C.gray01 }}>Ask Copilot something...</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gray01} strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <textarea
+              readOnly
+              value={typedText}
+              placeholder="Choose a prompt on the right to see Copilot respond →"
+              style={{ width: "100%", minHeight: 100, border: "none", outline: "none", resize: "none", background: "transparent", fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55 }}
+            />
           </div>
         </div>
       </div>
@@ -331,63 +315,69 @@ function ExcelWindow({ prompt, suggestions }: { prompt: string; suggestions: str
   );
 }
 
-// ── Generic document window (PPT, Outlook) ────────────────────────────────────
-function GenericWindow({ appColor, appLetter, title, bodyContent, prompt, suggestions }: {
-  appColor: string; appLetter: string; title: string;
-  bodyContent: React.ReactNode; prompt: string; suggestions: string[];
+// ── Pattern 2b: "Ask Copilot in {App}" prompt panel — 5 real, clickable prompts ──
+function CopilotPromptPanel({ appLabel, subtitle, prompts, activeIndex, onSelect }: {
+  appLabel: string; subtitle: string; prompts: { label: string; text: string }[];
+  activeIndex: number | null; onSelect: (idx: number) => void;
 }) {
   return (
-    <div style={{ flex: 1, background: "#F6F6FA", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-      <div style={{ background: appColor, padding: "10px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill={appColor}/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>{appLetter}</text></svg>
-        <span style={{ color: "#FFFFFF", fontSize: 13, fontFamily: F.regular, fontWeight: 600 }}>{title}</span>
-        <div style={{ marginLeft: "auto", display: "flex", gap: 16 }}>
-          {["File","Home","Insert"].map(m=><span key={m} style={{color:"rgba(255,255,255,0.85)",fontSize:11,fontFamily: F.regular}}>{m}</span>)}
-        </div>
-      </div>
-      <div style={{ display: "flex", minHeight: 300 }}>
-        <div style={{ flex: 1, padding: 24, fontFamily: F.regular, overflow: "hidden" }}>
-          {bodyContent}
-        </div>
-        <AppCopilotSidebar prompt={prompt} suggestions={suggestions} />
+    <div style={{ flex: "0.95 1 0", minWidth: 0, background: `linear-gradient(160deg, ${C.dark2}, ${C.dark})`, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 22, padding: 22, boxShadow: "0 20px 50px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
+      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+        <span aria-hidden>✨</span> Ask Copilot in {appLabel}
+      </p>
+      <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray02, lineHeight: 1.5, marginBottom: 16 }}>{subtitle}</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {prompts.map((p, i) => {
+          const active = i === activeIndex;
+          return (
+            <button
+              key={p.label}
+              onClick={() => onSelect(i)}
+              style={{
+                display: "flex", alignItems: "center", gap: 12, padding: "11px 12px", borderRadius: 14,
+                background: active ? "rgba(255,230,0,0.14)" : "rgba(255,255,255,0.04)",
+                border: active ? `1px solid ${C.yellow}` : "1px solid rgba(255,255,255,0.08)",
+                cursor: "pointer", textAlign: "left", width: "100%", fontFamily: F.regular,
+                transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+              }}
+              onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.transform = "translateX(3px)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
+            >
+              <span style={{ width: 24, height: 24, minWidth: 24, borderRadius: "50%", background: active ? C.yellow : "rgba(255,255,255,0.12)", color: active ? C.dark : C.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{i + 1}</span>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: C.white, marginBottom: 2 }}>{p.label}</span>
+                <span style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.55)", lineHeight: 1.4 }}>{p.text}</span>
+              </span>
+              <span style={{ color: active ? C.yellow : "rgba(255,255,255,0.35)", fontSize: 14, flexShrink: 0 }}>→</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// ── M365 Chat window ──────────────────────────────────────────────────────────
-function M365ChatWindow() {
+// ── Pattern 2: combines the mock app window + prompt panel into one scene ────
+function CopilotScene({ tabId }: { tabId: TabId }) {
+  const d = SECTION_DATA[tabId];
+  const tabMeta = TABS.find(t => t.id === tabId)!;
+  const appLabel = APP_NAME[tabId];
+  const { activeIndex, typedText, select } = useTypingPrompt();
+
+  const mock = <CopilotAppMock appLabel={appLabel} accent={tabMeta.appColor} typedText={typedText} />;
+  const panel = (
+    <CopilotPromptPanel
+      appLabel={appLabel}
+      subtitle={d.panelSubtitle}
+      prompts={d.prompts}
+      activeIndex={activeIndex}
+      onSelect={idx => select(idx, d.prompts[idx].text)}
+    />
+  );
+
   return (
-    <div style={{ flex: 1, background: "#FFFFFF", borderRadius: 12, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.06)" }}>
-      <div style={{ background: C.teamsViolet, padding: "10px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-        <svg width="18" height="19" viewBox="0 0 18 19"><rect width="18" height="19" rx="2" fill="#B400FF"/><text x="4" y="13" fill="white" fontSize="11" fontWeight="bold" fontFamily={F.regular}>T</text></svg>
-        <span style={{ color: "#FFFFFF", fontSize: 13, fontFamily: F.regular, fontWeight: 600 }}>M365 Chat</span>
-      </div>
-      <div style={{ padding: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: 16, borderBottom: "1px solid #C4C4CD", marginBottom: 16 }}>
-          <CopilotIcon size={28} />
-          <div>
-            <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 15, color: C.dark2 }}>Copilot</p>
-            <p style={{ fontFamily: F.regular, fontSize: 12, color: C.excelGreen }}>Online</p>
-          </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div style={{ display: "flex", gap: 10 }}>
-            <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontFamily: F.regular, fontWeight: 700, fontSize: 12, color: C.dark }}>U</div>
-            <div style={{ background: "#F6F6FA", padding: "12px 14px", borderRadius: 12, fontSize: 13, color: "#2E2E38", fontFamily: F.regular, maxWidth: "85%", lineHeight: 1.6 }}>
-              Find all tax-related documents James shared last week and summarise the key updates across compliance and advisory.
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <div style={{ background: "#F6F6FA", padding: "12px 14px", borderRadius: 12, fontSize: 13, color: "#2E2E38", fontFamily: F.regular, maxWidth: "85%", lineHeight: 1.6 }}>
-              I found 3 documents shared by James last week. Here is a summary of the key tax updates:
-              <br/>• <strong>Compliance:</strong> New safe harbor provisions for cross-border tech transfers.
-              <br/>• <strong>Advisory:</strong> Tribunal rulings on arm's length pricing methodologies.
-            </div>
-            <CopilotIcon size={28} />
-          </div>
-        </div>
-      </div>
+    <div style={{ display: "flex", gap: 20, alignItems: "stretch", flexWrap: "wrap" }}>
+      {d.screenshotSide === "left" ? <>{mock}{panel}</> : <>{panel}{mock}</>}
     </div>
   );
 }
@@ -452,14 +442,14 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
       </div>
 
       {/* Coming-soon dock — apps without prompt content yet. Real logos are
-          shown at reduced opacity so they stay muted/inert next to the
-          "Soon" badge, rather than competing with the 5 live, popping apps. */}
+          shown at reduced opacity so they stay muted/inert rather than
+          competing with the 5 live, popping apps. */}
       <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", maxWidth: 500 }}>
         {LAPTOP_COMING_SOON_APPS.map(app => (
           <div
             key={app.label}
             title={`${app.label} — coming soon`}
-            style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 66, cursor: "default" }}
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 66, cursor: "default" }}
           >
             <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               {app.logo ? (
@@ -469,7 +459,6 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
               )}
             </div>
             <span style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", textAlign: "center", lineHeight: 1.2, fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
-            <span style={{ position: "absolute", top: -6, right: 2, fontSize: 8, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.dark, background: C.gray02, borderRadius: 6, padding: "1px 5px" }}>Soon</span>
           </div>
         ))}
       </div>
@@ -488,53 +477,8 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
 function TabSection({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
   const tabMeta = TABS.find(t => t.id === tabId)!;
+  const appLabel = APP_NAME[tabId];
   const bg = d.altBg ? C.offWhite : C.white;
-
-  const screenshotEl = tabId === "word" ? (
-    <WordWindow prompt={d.prompt} suggestions={d.suggestions} />
-  ) : tabId === "excel" ? (
-    <ExcelWindow prompt={d.prompt} suggestions={d.suggestions} />
-  ) : tabId === "ppt" ? (
-    <GenericWindow
-      appColor={C.pptOrange} appLetter="P" title="Safe Harbor Presentation"
-      prompt={d.prompt} suggestions={d.suggestions}
-      bodyContent={
-        <>
-          <p style={{ fontWeight: 700, fontSize: 16, color: "#1A1A24", marginBottom: 12 }}>Safe Harbor Risks — Q3 Presentation</p>
-          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65", marginBottom: 12 }}>
-            Executive Summary: This deck summarizes the current regulatory landscape regarding safe harbor provisions for cross-border tech transfers. The following slides detail the methodology for calculating arm's length pricing.
-          </p>
-          <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A24", marginBottom: 6 }}>• Slide 1: Executive Summary</p>
-          <p style={{ fontSize: 13, color: "#2E2E38", lineHeight: "1.65" }}>
-            We will utilize the Comparable Uncontrolled Price (CUP) method to establish a baseline for royalty rates. This approach ensures compliance with OECD guidelines.
-          </p>
-        </>
-      }
-    />
-  ) : tabId === "outlook" ? (
-    <GenericWindow
-      appColor={C.outlookBlue} appLetter="O" title="Inbox — Compliance Team"
-      prompt={d.prompt} suggestions={d.suggestions}
-      bodyContent={
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: 12, background: "#F6F6FA", borderRadius: 8 }}>
-          <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.outlookBlue, display: "flex", alignItems: "center", justifyContent: "center", color: "#FFFFFF", fontWeight: 700, fontSize: 15, flexShrink: 0, fontFamily: F.regular }}>A</div>
-          <div>
-            <p style={{ fontWeight: 700, fontSize: 14, color: "#1A1A24", marginBottom: 4, fontFamily: F.regular }}>Alex Chen</p>
-            <p style={{ fontSize: 13, color: "#2E2E38", fontFamily: F.regular }}>Re: Compliance Review for Q3 Tax Filings</p>
-            <p style={{ fontSize: 11, color: C.gray01, fontFamily: F.regular, marginTop: 2 }}>10:42 AM</p>
-          </div>
-        </div>
-      }
-    />
-  ) : (
-    <M365ChatWindow />
-  );
-
-  const cardsEl = (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
-      {d.features.map(f => <FeatureCard key={f.title} title={f.title} body={f.body} />)}
-    </div>
-  );
 
   return (
     <div style={{ background: bg, padding: `48px 0 64px` }}>
@@ -546,9 +490,14 @@ function TabSection({ tabId }: { tabId: TabId }) {
       </div>
       <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 28, color: C.dark2, marginBottom: 12, lineHeight: 1.2 }}>{d.h2}</p>
       <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
-      <div style={{ display: "flex", gap: 32, alignItems: "flex-start" }}>
-        {d.screenshotSide === "left" ? <>{screenshotEl}{cardsEl}</> : <>{cardsEl}{screenshotEl}</>}
+
+      {/* Pattern 1 — 2-column tax use-case grid */}
+      <div style={{ marginBottom: 48 }}>
+        <UseCaseGrid items={d.useCases} accent={tabMeta.appColor} appLabel={appLabel} />
       </div>
+
+      {/* Pattern 2 — interactive mock app window + "Ask Copilot" prompt panel */}
+      <CopilotScene tabId={tabId} />
       </div>
     </div>
   );
@@ -711,7 +660,9 @@ export default function M365CopilotHub({
       </section>
 
       {/* ── Active tab section ──────────────────────────────────────────────── */}
-      <TabSection tabId={activeTab} />
+      {/* key={activeTab} forces a clean remount per tab so the prompt-panel's
+          typing animation state doesn't leak between apps on switch. */}
+      <TabSection key={activeTab} tabId={activeTab} />
 
       {/* ── Useful Links (Figma: useful-links-section-redesign) ─────────────── */}
       <section id="useful-links" style={{ background: C.dark2, padding: `${spacing.sectionPaddingY} 0 64px`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
