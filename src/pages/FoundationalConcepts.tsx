@@ -80,13 +80,18 @@ const TOKEN_BRIDGE = `
   text-align: center;
 }
 
-/* Rise of AI — grey card surfaces (EY off-white) */
+/* Rise of AI — grey card surfaces (EY off-white); no yellow top bracket */
 #module-content .rise-card,
 #module-content .rise-card-body {
   background: ${colors.offWhite};
 }
 #module-content .rise-card {
   border-color: ${colors.gray02};
+}
+#module-content .rise-card-top--img::after {
+  content: none;
+  display: none;
+  border: none;
 }
 #module-content .rise-card-body .date {
   border-top-color: ${colors.gray02};

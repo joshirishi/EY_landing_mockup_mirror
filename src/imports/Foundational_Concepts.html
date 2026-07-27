@@ -415,16 +415,6 @@ body {
   object-position: top;
   display: block;
 }
-/* EY Insight Card signature — yellow corner bracket over the media area */
-.rise-card-top--img::after {
-  content: '';
-  position: absolute;
-  left: 14px; right: 14px; top: 14px;
-  height: 46px;
-  border: 2px solid var(--ey-yellow);
-  border-bottom: none;
-  pointer-events: none;
-}
 .rise-card-body {
   padding: 18px;
   display: flex;
@@ -796,9 +786,8 @@ body {
   color: var(--gva-text-muted);
 }
 .gva-analogy {
-  border-left: 3px solid var(--gva-yellow);
   background: var(--gva-yellow-soft);
-  border-radius: 0 6px 6px 0;
+  border-radius: 6px;
   padding: 12px 14px;
 }
 .gva-analogy .gva-cell-label { color: var(--gva-yellow); margin-bottom: 4px; }
