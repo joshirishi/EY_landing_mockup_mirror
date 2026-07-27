@@ -88,9 +88,33 @@ export const typeScale = {
   caption:    { size: 12, weight: 300, tracking: '-0.01em'  },
 } as const;
 
+// ── Layout ───────────────────────────────────────────────────────────────────
+/**
+ * Global content rail. Change `contentWidth` once — every page that uses
+ * `contentRailStyle`, `spacing.sectionPadding`, or `var(--ey-content-width)`
+ * updates together.
+ */
+export const layout = {
+  /** Main content area as a share of available screen width (e.g. '80%', '72%'). */
+  contentWidth: '80%',
+} as const;
+
+/** React style for a centered content rail at `layout.contentWidth`. */
+export const contentRailStyle = {
+  width: layout.contentWidth,
+  maxWidth: '100%',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+} as const;
+
+/** Horizontal inset that leaves `layout.contentWidth` for content. */
+export const contentInlinePad = `calc((100% - ${layout.contentWidth}) / 2)`;
+
 // ── Spacing / Layout ─────────────────────────────────────────────────────────
 export const spacing = {
-  sectionPadding: '72px 64px',
+  /** Vertical rhythm + sides sized so content is `layout.contentWidth`. */
+  sectionPadding: `72px ${contentInlinePad}`,
+  sectionPaddingY: '72px',
   cardPadding:    '18px',
   navHeight:      '60px',
 } as const;

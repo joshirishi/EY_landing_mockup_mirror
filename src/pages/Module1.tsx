@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { contentInlinePad } from "../design-kit/tokens";
 
 // ── Brand assets ─────────────────────────────────────────────────────────────
 
@@ -343,7 +344,7 @@ export default function Module1({ onBack, onNavigateToModule2 }: { onBack: () =>
         </div>
       </nav>
 
-      <main style={{ padding: "38px 38px 80px" }}>
+      <main style={{ padding: `38px ${contentInlinePad} 80px` }}>
 
         {/* ── Hero section ── */}
         <section id="homeSection" style={{ display: "grid", gridTemplateColumns: "1fr 1.18fr", alignItems: "center", minHeight: "calc(100vh - 142px)", gap: 42, position: "relative", overflow: "hidden", borderRadius: 36 }}>

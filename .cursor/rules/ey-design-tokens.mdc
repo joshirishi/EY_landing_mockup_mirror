@@ -11,10 +11,10 @@ Every UI implementation must use the EY design kit. Do not invent colors, spacin
 
 | Concern | Source |
 |---------|--------|
-| JS tokens | `src/design-kit/tokens.ts` (`colors`, `fonts`, `typeScale`, `spacing`) |
-| CSS vars | `src/styles/theme.css` (`var(--foreground)`, `var(--ey-brand-yellow)`, etc.) |
+| JS tokens | `src/design-kit/tokens.ts` (`colors`, `fonts`, `typeScale`, `spacing`, `layout`) |
+| CSS vars | `src/styles/theme.css` (`var(--foreground)`, `var(--ey-content-width)`, etc.) |
 | Type UI | `src/design-kit/EYTypography.tsx` |
-| Kit entry | `import { colors, fonts, typeScale, spacing, EYHeading, EYBody } from '@/design-kit'` |
+| Kit entry | `import { colors, fonts, typeScale, spacing, layout, contentRailStyle, EYHeading, EYBody } from '@/design-kit'` |
 
 Read `src/DESIGN.md` before building new UI. Prefer existing kit components (`EYButton`, `EYCard`, `EYFrame`, etc.) over one-off styles.
 
@@ -53,18 +53,46 @@ style={{
 - Font: **EYInterstate** only (via `fonts.bold` / `fonts.regular` / `fonts.light`).
 - Weights allowed: **300 / 400 / 700** only (no 500/600).
 
-## Spacing
+## Spacing & content width (global)
+
+**Content rail is a single token.** Default `layout.contentWidth = '80%'`. Change that one value in `src/design-kit/tokens.ts` — `main.tsx` writes it to `--ey-content-width`, so all pages update.
 
 ```tsx
-// ❌ BAD
-style={{ padding: '20px 48px' }}
+// ❌ BAD — hardcoded rails
+style={{ maxWidth: 1200, margin: '0 auto' }}
+style={{ padding: '72px 64px' }}
 
-// ✅ GOOD
-import { spacing } from '@/design-kit';
-style={{ padding: spacing.sectionPadding }} // or spacing.cardPadding
+// ✅ GOOD — tokenized rail
+import { layout, contentRailStyle, spacing, contentInlinePad } from '@/design-kit';
+<div style={contentRailStyle}>...</div>
+<section style={{ padding: spacing.sectionPadding }}>...</section>
+// or CSS: width: var(--ey-content-width); className="ey-content-rail"
 ```
 
-Use kit spacing tokens and established layout values from existing pages. Do not introduce arbitrary padding/gap scales.
+- Section **backgrounds** stay full-bleed; only the **content** sits in the rail
+- Do not invent `maxWidth: 1100/1200` wrappers — use `contentRailStyle` or `var(--ey-content-width)`
+- Side inset helper: `contentInlinePad` / `var(--ey-content-inline-pad)`
+
+## Icons (line only)
+
+All icons must be **line / stroke icons** from `lucide-react` (or an equivalent inline SVG with `fill="none"` + `stroke="currentColor"`).
+
+```tsx
+// ❌ BAD — emoji or filled/pictorial icons in CTAs, labels, nav
+<a>Let's Start with the Fundamentals👇</a>
+
+// ✅ GOOD — Lucide line icon beside the label
+import { ArrowDown } from 'lucide-react';
+<a className="paths-cta" href="#evolution">
+  Let's Start with the Fundamentals
+  <ArrowDown size={16} strokeWidth={1.75} aria-hidden />
+</a>
+```
+
+- Never use emoji as UI icons (👇 ➡️ ✅ etc.)
+- Prefer outline Lucide icons; do not use filled/solid icon sets
+- In raw HTML lessons, use a small stroke SVG matching Lucide (16–20px), not emoji
+- Icon color inherits via `currentColor` from the parent text/token color
 
 ## Checklist before shipping UI
 
@@ -72,3 +100,5 @@ Use kit spacing tokens and established layout values from existing pages. Do not
 2. No Tailwind color utilities (`bg-blue-*`, `text-gray-*`, `text-[#…]`)
 3. Text uses kit fonts + `typeScale` or `EYTypography` components
 4. Spacing comes from `spacing` or matching existing kit patterns
+5. Icons are Lucide (or Lucide-equivalent) line strokes — never emoji
+6. Content rails use `layout.contentWidth` / `contentRailStyle` / `var(--ey-content-width)` — never hardcoded `maxWidth: 1100/1200`

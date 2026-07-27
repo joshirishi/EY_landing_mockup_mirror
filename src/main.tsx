@@ -1,7 +1,10 @@
+import { createRoot } from "react-dom/client";
+import App from "./app/App.tsx";
+import "./styles/index.css";
+import { layout } from "./design-kit/tokens";
 
-  import { createRoot } from "react-dom/client";
-  import App from "./app/App.tsx";
-  import "./styles/index.css";
+// Single source of truth: tokens.ts → CSS var used by every page
+document.documentElement.style.setProperty("--ey-content-width", layout.contentWidth);
 
-  createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(<App />);
   

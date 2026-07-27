@@ -10,7 +10,7 @@
 
 import type { CSSProperties, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
-import { colors, fonts } from "./tokens";
+import { colors, contentInlinePad, fonts, spacing } from "./tokens";
 
 /** Figma dark-module palette (3455:18320) */
 const DARK = {
@@ -58,7 +58,7 @@ export function EYWhatsNext({
       aria-labelledby={`${id}-heading`}
       style={{
         background: DARK.page,
-        padding: "96px 64px",
+        padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
         textAlign: "center",
         borderTop: `1px solid ${DARK.border}`,
         ...style,

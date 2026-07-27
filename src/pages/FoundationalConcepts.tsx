@@ -13,7 +13,7 @@ import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { colors, fonts, spacing } from "../design-kit/tokens";
+import { colors, fonts, layout, spacing } from "../design-kit/tokens";
 
 /**
  * Token bridge — maps the lesson HTML's CSS custom properties onto the
@@ -40,9 +40,24 @@ const TOKEN_BRIDGE = `
   --card-bg: ${colors.white};
   --text-secondary: ${colors.gray01};
   --surface-neutral: ${colors.offWhite};
+  --accent-blue: ${colors.frameBlue};
+  --accent-green: ${colors.frameGreen};
+  --accent-purple: ${colors.framePurple};
+  --accent-orange: ${colors.frameOrange};
 
-  /* Spacing — section rhythm from design-kit */
-  --section-padding: ${spacing.sectionPadding};
+  /* Dark-module tokens (design-kit) */
+  --ey-on-dark: ${colors.onDark};
+  --ey-on-dark-72: ${colors.onDarkMuted};
+  --ey-on-dark-55: ${colors.onDarkSubtle};
+  --ey-surface-on-dark: ${colors.surfaceOnDark};
+  --ey-border-on-dark: ${colors.borderOnDark};
+  --ey-yellow-alpha-10: ${colors.yellowAlpha10};
+  --ey-bg-card: ${colors.eyBgCard};
+
+  /* Spacing + global content rail (change layout.contentWidth once → all pages) */
+  --ey-content-width: ${layout.contentWidth};
+  --ey-content-inline-pad: calc((100% - var(--ey-content-width)) / 2);
+  --section-padding: ${spacing.sectionPaddingY} var(--ey-content-inline-pad);
   --card-padding: ${spacing.cardPadding};
 
   font-family: ${fonts.regular};
@@ -64,145 +79,108 @@ const TOKEN_BRIDGE = `
 #module-content .rise-section,
 #module-content .wrong-section,
 #module-content .paths-section,
-#module-content .gva-section {
+#module-content .gva-section,
+#module-content .cheat-section {
   padding: var(--section-padding);
 }
 
-/* Ultrawide: stretch capped content rails to the full section width
-   (backgrounds already full-bleed; only the inner grids were stuck at ~1300px). */
+/* Cheat Sheet — pin EY kit surfaces so dark glass styles cannot leak back in */
+#module-content .cheat-section {
+  background: ${colors.offWhite} !important;
+  color: ${colors.offBlack};
+  border-bottom: 1px solid ${colors.gray02};
+}
+#module-content .cheat-title { color: ${colors.offBlack} !important; }
+#module-content .cheat-subtitle { color: ${colors.gray01} !important; }
+#module-content .cheat-card {
+  background: ${colors.white};
+  border: 1px solid ${colors.gray02};
+  border-radius: 8px;
+}
+#module-content .cheat-card h3 { color: ${colors.offBlack}; }
+#module-content .cheat-card-desc { color: ${colors.gray01}; }
+#module-content .cheat-card-eg {
+  background: ${colors.offWhite};
+  border: 1px solid ${colors.gray02};
+  border-left: 3px solid ${colors.yellow};
+  color: ${colors.offBlack};
+  border-radius: 6px;
+  padding: 10px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+#module-content .cheat-columns { width: 100%; max-width: none; }
+@media (max-width: 900px) {
+  #module-content .cheat-columns { grid-template-columns: 1fr; }
+}
+
+/* Content rail — section padding already insets to layout.contentWidth;
+   inner grids fill that rail (not the full viewport). */
 #module-content .rise-grid,
 #module-content .wrong-grid,
-#module-content .gva-spectrum,
-#module-content .gva-banner,
+#module-content .gva-compare,
+#module-content .gva-band-cells,
+#module-content .gva-colheads,
 #module-content .paths-row,
 #module-content .hero-inner,
 #module-content .velocity-header,
 #module-content .velocity-card,
 #module-content #evo-timeline-view,
-#module-content .news-grid {
+#module-content .news-grid,
+#module-content .cheat-columns {
   width: 100%;
   max-width: none;
   margin-left: 0;
   margin-right: 0;
 }
 
-/* Autonomy Spectrum — kept here so lesson cards always render even if
-   the embedded HTML stylesheet drifts. Mirrors Figma 3187:3460. */
-#module-content .gva-spectrum {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+/* LLM vs AI Agent vs Agentic AI — EY dark-module tokens only (no ad-hoc rgba washes) */
+#module-content .gva-section {
+  --gva-sticky-top: ${SUBNAV_SCROLL_OFFSET}px;
+  --gva-page: ${colors.confidentBlack};
+  --gva-card: ${colors.eyBgCard};
+  --gva-border: ${colors.borderOnDark};
+  --gva-surface: ${colors.surfaceOnDark};
+  --gva-text: ${colors.onDark};
+  --gva-text-muted: ${colors.onDarkMuted};
+  --gva-text-subtle: ${colors.onDarkSubtle};
+  --gva-yellow: ${colors.yellow};
+  --gva-yellow-soft: ${colors.yellowAlpha10};
+  --gva-blue: ${colors.frameBlue};
+  --gva-green: ${colors.frameGreen};
+  --gva-purple: ${colors.framePurple};
+  --gva-radius: 8px;
+  --gva-gap: 24px;
+  --gva-pad: ${spacing.cardPadding};
+  background: ${colors.confidentBlack} !important;
+  color: ${colors.onDark};
+  font-family: ${fonts.regular};
+}
+#module-content .gva-title { font-family: ${fonts.bold}; color: ${colors.onDark} !important; }
+#module-content .gva-colheads,
+#module-content .gva-band-label { background: ${colors.confidentBlack}; }
+#module-content .gva-band-label { color: ${colors.yellow}; }
+#module-content .gva-colhead,
+#module-content .gva-cell,
+#module-content .gva-summary { background: ${colors.eyBgCard}; border-color: ${colors.borderOnDark}; }
+#module-content .gva-compare,
+#module-content .gva-band-cells,
+#module-content .gva-colheads {
   width: 100%;
   max-width: none;
-  margin: 0 0 24px;
 }
-#module-content .gva-spectrum-card {
-  background: ${colors.white};
-  border: 1px solid ${colors.gray02};
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  cursor: pointer;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  width: 100%;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-#module-content .gva-spectrum-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
-}
-#module-content .gva-spectrum-head {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 20px;
-}
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-head { background: rgba(70,150,255,0.08); }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-head { background: rgba(0,200,100,0.08); }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-head { background: rgba(255,125,30,0.08); }
-#module-content .gva-spectrum-title { font-size: 18px; font-weight: 700; margin: 0; }
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-spectrum-title { color: ${colors.frameBlue}; }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-spectrum-title { color: ${colors.frameGreen}; }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-spectrum-title { color: ${colors.frameOrange}; }
-#module-content .gva-badge {
-  display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${colors.white};
-}
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-badge { background: ${colors.frameBlue}; }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-badge { background: ${colors.frameGreen}; }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-badge { background: ${colors.frameOrange}; }
-#module-content .gva-spectrum-body { display: flex; flex-direction: column; gap: 16px; padding: 20px; flex: 1; }
-#module-content .gva-spectrum-desc { margin: 0; font-size: 13px; line-height: 1.4; color: ${colors.gray01}; }
-#module-content .gva-flow {
-  border: 1px solid rgba(46,46,56,0.12); border-radius: 6px; min-height: 32px;
-  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;
-  background: ${colors.white};
-}
-#module-content .gva-spectrum-card[data-tone="blue"] .gva-flow { color: ${colors.frameBlue}; }
-#module-content .gva-spectrum-card[data-tone="green"] .gva-flow { color: ${colors.frameGreen}; }
-#module-content .gva-spectrum-card[data-tone="orange"] .gva-flow { color: ${colors.frameOrange}; }
-#module-content .gva-best-label { margin: 0; font-size: 11px; text-transform: uppercase; color: ${colors.gray01}; }
-#module-content .gva-best-value { margin: 2px 0 0; font-size: 13px; font-weight: 700; color: ${colors.offBlack}; }
-#module-content .gva-card-cta { margin-top: auto; font-size: 13px; font-weight: 700; color: ${colors.offBlack}; text-decoration: underline; text-underline-offset: 3px; }
-#module-content .gva-banner {
-  width: 100%; max-width: none; display: flex; gap: 20px; align-items: center; padding: 24px;
-  border-radius: 12px; background: ${colors.confidentBlack}; border: 1px solid rgba(255,255,255,0.08);
-}
-#module-content .gva-banner-icon {
-  width: 40px; height: 40px; border-radius: 8px; background: ${colors.yellow};
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-#module-content .gva-banner-icon img { width: 20px; height: 20px; display: block; }
-#module-content .gva-banner-title { margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #FFFFFF; }
-#module-content .gva-banner-body { margin: 0; font-size: 13px; color: ${colors.gray02}; line-height: 1.45; }
-@media (max-width: 1000px) {
-  #module-content .gva-spectrum { grid-template-columns: 1fr; }
-}
-
-/* Modal shell — also pinned here so open/close UI never loses styles */
-#module-content .gva-modal[hidden] { display: none !important; }
-#module-content .gva-modal {
-  position: fixed; inset: 0; z-index: 10050;
-  display: flex; align-items: center; justify-content: center; padding: 24px;
-}
-#module-content .gva-modal-backdrop {
-  position: absolute; inset: 0; background: rgba(26,26,36,0.72);
-}
-#module-content .gva-modal-dialog {
-  position: relative; z-index: 1; width: min(720px, 100%);
-  max-height: min(88vh, 900px); overflow: auto;
-  background: ${colors.white}; border: 1px solid ${colors.gray02};
-  border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,0.35);
-}
-#module-content .gva-modal-top {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; padding: 20px 24px; border-bottom: 1px solid ${colors.gray02};
-}
-#module-content .gva-modal-top h3 {
-  margin: 0 0 6px; font-size: 22px; font-weight: 700; color: ${colors.offBlack};
-}
-#module-content .gva-modal-close {
-  border: 1px solid ${colors.gray02}; background: ${colors.offWhite};
-  width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
-  font-size: 18px; line-height: 1; color: ${colors.offBlack}; flex-shrink: 0;
-}
-#module-content .gva-modal-content {
-  padding: 20px 24px 28px; display: flex; flex-direction: column; gap: 14px;
-}
-#module-content .gva-modal-thumb {
-  width: 100%; height: auto; object-fit: contain; object-position: center top;
-  border-radius: 8px; display: block; background: #F6F6FA;
-  border: 1px solid rgba(46, 46, 56, 0.08);
-}
-body.gva-modal-open { overflow: hidden; }
 
 #module-content .hero {
-  padding: 72px 64px 80px;
+  padding: 72px var(--ey-content-inline-pad) 80px;
+}
+#module-content .velocity-section,
+#module-content .quiz-section,
+#module-content .evo-section,
+#module-content .sim-section {
+  padding-left: var(--ey-content-inline-pad) !important;
+  padding-right: var(--ey-content-inline-pad) !important;
 }
 
 #module-content [id] {

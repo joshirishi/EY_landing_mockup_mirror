@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { fonts as F } from "../design-kit/tokens";
+import { contentInlinePad, contentRailStyle, fonts as F, spacing } from "../design-kit/tokens";
 
 // ── EY Design System tokens ───────────────────────────────────────────────────
 const C = {
@@ -416,16 +416,18 @@ function TabSection({ tabId }: { tabId: TabId }) {
   );
 
   return (
-    <div style={{ background: bg, padding: "48px 80px 64px" }}>
+    <div style={{ background: bg, padding: `48px 0 64px` }}>
+      <div style={{ ...contentRailStyle }}>
       {/* Eyebrow with app icon */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <AppIcon color={tabMeta.appColor} letter={tabMeta.letter} />
         <span style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 11, letterSpacing: "1.5px", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
       </div>
       <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 28, color: C.dark2, marginBottom: 12, lineHeight: 1.2 }}>{d.h2}</p>
-      <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, maxWidth: 1000, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
+      <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
       <div style={{ display: "flex", gap: 32, alignItems: "flex-start" }}>
         {d.screenshotSide === "left" ? <>{screenshotEl}{cardsEl}</> : <>{cardsEl}{screenshotEl}</>}
+      </div>
       </div>
     </div>
   );
@@ -511,7 +513,7 @@ export default function M365CopilotHub({
           position: "relative",
           display: "flex",
           alignItems: "center",
-          padding: "88px 80px",
+          padding: `88px ${contentInlinePad}`,
           gap: 64,
           overflow: "hidden",
           backgroundColor: C.dark,
@@ -554,7 +556,8 @@ export default function M365CopilotHub({
       </section>
 
       {/* ── Repository Tabs — CENTERED header (Figma: RepositoryTabs) ────────── */}
-      <section id="prompt-repository" style={{ padding: "64px 80px 0", textAlign: "center", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="prompt-repository" style={{ padding: `64px 0 0`, textAlign: "center", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+        <div style={{ ...contentRailStyle }}>
         <p style={{ fontSize: 11, color: C.gray01, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 12, fontWeight: 700 }}>EXPLORE PROMPT CATEGORIES</p>
         <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12, color: C.dark2 }}>Sample Prompt Repository for using Copilot in Tax</h2>
         <p style={{ fontSize: 15, color: C.gray01, marginBottom: 32 }}>Select your preferred M365 application tool below to view optimized, compliant corporate-ready prompts.</p>
@@ -579,13 +582,15 @@ export default function M365CopilotHub({
             </button>
           ))}
         </div>
+        </div>
       </section>
 
       {/* ── Active tab section ──────────────────────────────────────────────── */}
       <TabSection tabId={activeTab} />
 
       {/* ── Useful Links (Figma: useful-links-section-redesign) ─────────────── */}
-      <section id="useful-links" style={{ background: C.dark2, padding: "80px 80px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="useful-links" style={{ background: C.dark2, padding: `${spacing.sectionPaddingY} 0 64px`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+        <div style={{ ...contentRailStyle }}>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: C.white, marginBottom: 12, textAlign: "center" }}>Useful Links</h2>
         <p style={{ fontSize: 15, color: C.gray02, marginBottom: 48, textAlign: "center" }}>Handy EY resources to check your system access, explore deeper templates, and use generative AI safely.</p>
         <div style={{ display: "flex", gap: 20 }}>
@@ -600,10 +605,12 @@ export default function M365CopilotHub({
             </div>
           ))}
         </div>
+        </div>
       </section>
 
       {/* ── Security (Figma: security-case-studies — 4 horizontal cards) ─────── */}
-      <section id="security" style={{ background: C.dark, padding: "80px 80px 80px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="security" style={{ background: C.dark, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+        <div style={{ ...contentRailStyle }}>
         {/* GOVERNANCE & TRUST kicker badge */}
         <div style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,230,0,0.12)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, padding: "5px 14px", marginBottom: 24 }}>
           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: C.yellow, fontFamily: F.regular }}>GOVERNANCE &amp; TRUST</span>
@@ -639,6 +646,7 @@ export default function M365CopilotHub({
             </div>
           ))}
         </div>
+        </div>
       </section>
 
       {/* Shared dark CTA — Phase 1 complete */}
@@ -657,35 +665,36 @@ export default function M365CopilotHub({
       />
 
       {/* ── Footer (Figma: Footer — EY logo + EY.ai Tax Labs + link cols) ────── */}
-      <footer style={{ background: C.dark2, padding: "56px 80px 32px" }}>
-        <div style={{ display: "flex", gap: 80, marginBottom: 48 }}>
-          <div style={{ flex: 1, maxWidth: 280 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-              <EYLogoMark height={28} letterColor="#FFFFFF" />
-              <span style={{ color: C.white, fontWeight: 700, fontSize: 16, fontFamily: F.regular }}>EY.ai Tax Labs</span>
+      <footer style={{ background: C.dark2, padding: `56px 0 32px` }}>
+        <div style={{ ...contentRailStyle }}>
+          <div style={{ display: "flex", gap: 80, marginBottom: 48 }}>
+            <div style={{ flex: 1, maxWidth: 280 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                <EYLogoMark height={28} letterColor="#FFFFFF" />
+                <span style={{ color: C.white, fontWeight: 700, fontSize: 16, fontFamily: F.regular }}>EY.ai Tax Labs</span>
+              </div>
+              <p style={{ fontSize: 13, color: "#C4C4CD", lineHeight: 1.6 }}>Accelerating tax performance safely through custom generative AI structures and premium prompt frameworks.</p>
             </div>
-            <p style={{ fontSize: 13, color: "#C4C4CD", lineHeight: 1.6 }}>Accelerating tax performance safely through custom generative AI structures and premium prompt frameworks.</p>
+            <div>
+              <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>M365 Apps</p>
+              {["Word Prompts","Excel Sheets","PowerPoint Decks","Outlook Emails"].map(l => (
+                <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
+              ))}
+            </div>
+            <div>
+              <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>Trust &amp; Security</p>
+              {["Privacy Policy","Data Governance","Safe Harbor Rules"].map(l => (
+                <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
+              ))}
+            </div>
           </div>
-          <div>
-            <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>M365 Apps</p>
-            {["Word Prompts","Excel Sheets","PowerPoint Decks","Outlook Emails"].map(l => (
-              <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
-            ))}
-          </div>
-          <div>
-            <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>Trust &amp; Security</p>
-            {["Privacy Policy","Data Governance","Safe Harbor Rules"].map(l => (
-              <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
-            ))}
-          </div>
-        </div>
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <p style={{ fontSize: 12, color: "#C4C4CD", fontFamily: F.regular }}>© 2026 EY.ai Tax Labs. All rights reserved. Proprietary and confidential.</p>
-          {/* Social links (Figma: linkedin + twitter icons) */}
-          <div style={{ display: "flex", gap: 14 }}>
-            {["in","𝕏"].map(s => (
-              <a key={s} href="#" style={{ width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#C4C4CD", fontSize: 11, fontWeight: 700, textDecoration: "none", fontFamily: F.regular }}>{s}</a>
-            ))}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <p style={{ fontSize: 12, color: "#C4C4CD", fontFamily: F.regular }}>© 2026 EY.ai Tax Labs. All rights reserved. Proprietary and confidential.</p>
+            <div style={{ display: "flex", gap: 14 }}>
+              {["in","𝕏"].map(s => (
+                <a key={s} href="#" style={{ width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#C4C4CD", fontSize: 11, fontWeight: 700, textDecoration: "none", fontFamily: F.regular }}>{s}</a>
+              ))}
+            </div>
           </div>
         </div>
       </footer>

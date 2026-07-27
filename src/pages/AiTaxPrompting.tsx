@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
-import { ArrowRight, CheckCircle, ChevronLeft, ChevronRight, Copy, Cpu, EyeOff, FileText, Lightbulb, ListChecks, ListTree, Palette, RefreshCw, RotateCcw, Scale, Shield, Table2, Target, User, Zap } from "lucide-react";
-import { colors as C, fonts as F, spectrumCss } from "../design-kit/tokens";
+import { ArrowRight, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Palette, RotateCcw, Scale, Shield, Table2, Target, User, Zap } from "lucide-react";
+import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss } from "../design-kit/tokens";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext } from "../design-kit/EYWhatsNext";
@@ -36,7 +36,7 @@ const SURFACE: Record<SurfaceTone, { bg: string; heading: string; body: string; 
 
 const ELEMENTS = [
   { id: 1, name: "Persona", color: C.frameMagenta, border: C.frameMagenta, q: "WHO should AI be?",
-    what: "Defines who the AI should act like — setting expertise, seniority, and perspective. A tax partner writes differently from a junior analyst.",
+    what: "Defines who the AI should act like — setting its expertise, seniority, and perspective. A tax partner writes differently from a junior analyst.",
     why: "Aligns output to the expertise level you need. Without it, AI defaults to a generic voice that doesn't match your audience.",
     without: '"Explain impact of New Tax Act on MNCs."',
     with: '"You are a senior tax partner in India. Explain impact of withholding tax changes in the New Income Tax Act, 2025 on MNCs."',
@@ -47,29 +47,29 @@ const ELEMENTS = [
     without: '"Explain recent changes to transfer pricing regulations."',
     with: '"Our client in India provides IT support to its parent in Singapore. Explain recent TP Regulation changes in 2025."',
   },
-  { id: 3, name: "Instruction", color: C.frameOrange, border: C.yellow, q: "WHAT should AI do?",
+  { id: 3, name: "Instruction", color: C.yellow, border: C.yellow, q: "WHAT should AI do?",
     what: "A clear task or command — the specific action you want AI to perform. No ambiguity.",
     why: 'Define what "significant" or "recent" means — don\'t leave it to AI to guess.',
-    without: '"Summarise significant recent tax exposures of the Indian target company."',
+    without: '"Summarise significant recent tax exposures of the Indian target company"',
     with: '"Summarise tax exposures above INR 25 crore, under dispute in the last 3 assessment years."',
   },
-  { id: 4, name: "Constraints", color: C.frameBlue, border: C.frameBlue, q: "WHAT are the limits?",
+  { id: 4, name: "Constraints & Boundaries", color: C.frameBlue, border: C.frameBlue, q: "WHAT are the limits?",
     what: "Setting limits on scope, detail, or length — guardrails that keep AI focused.",
-    why: "Without limits, AI may produce 2,000 words when you needed 200.",
+    why: "Without limits, AI may produce 2000 words when you needed 200.",
     without: '"Summarise GST refund changes."',
     with: '"In under 200 words, summarise July 2025 GST refund changes for exporters."',
   },
-  { id: 5, name: "Grounding", color: C.framePurple, border: C.framePurple, q: "WHERE should AI look?",
+  { id: 5, name: "Grounding / Source Anchoring", color: C.framePurple, border: C.framePurple, q: "WHERE should AI look?",
     what: "Instructing AI to use specific statutes, circulars, or case law as its reference base.",
     why: "Prevents hallucination and ensures legal accuracy. Ungrounded output is dangerous output.",
     without: '"Explain safe harbour rules."',
     with: '"According to the Income-tax Act, 1961 and latest CBDT circulars, explain safe harbour applicability to cross-border service fees."',
   },
-  { id: 6, name: "Tone / Style", color: C.eyebrowGold, border: C.yellow, q: "HOW should it sound?",
+  { id: 6, name: "Tone / Style", color: C.yellow, border: C.yellow, q: "HOW should it sound?",
     what: "Directing AI to adopt a formal, client-ready, or simplified style matching your audience.",
     why: "A CFO needs different language than an internal audit team or ITAT bench.",
-    without: '"Draft an email to the client regarding new GST slab rates."',
-    with: '"Explain new GST slab changes in a formal and concise manner, suitable for the Tax Head of a Logistics company."',
+    without: '"Draft an email to the client regarding new GST slab rates"',
+    with: '"Explain new GST slab changes in formal and concise manner, suitable for Tax Head of a Logistics company"',
   },
   { id: 7, name: "Output Format", color: C.frameGreen, border: C.frameGreen, q: "WHAT shape should the answer take?",
     what: "Specifies desired format — table, bullets, email, memo, comparison chart, etc.",
@@ -77,38 +77,83 @@ const ELEMENTS = [
     without: '"Compare old vs new tax rates."',
     with: '"Provide a table comparing old vs new tax rates, followed by 3 bullet-point risks and recommendations."',
   },
-  { id: 8, name: "Iterative Refinement", color: C.frameOrange, border: C.frameOrange, q: "REFINE — don't restart",
-    what: "Improving output through follow-ups — treating AI conversations as iterative, not one-shot.",
-    why: "First drafts are starting points. Each refinement sharpens precision and usability.",
-    without: '"Summarize attached case law."',
-    with: 'Step 1: "Summarize facts, issues and ruling." → Step 2: "Now create 5-bullet summary for Indian MNCs."',
+];
+
+/** Golden Rules — exact copy from ai-tax-prompting1.html (Do's & Don'ts). */
+const DOS = [
+  {
+    title: "Be Specific & Give Context",
+    desc: "Mention your industry, jurisdiction (e.g. India — GST / IT Act), entity type and financial year. The more context you give, the more relevant and accurate the output.",
+    example: '"I am the Tax Head of an Indian pharma company (₹2,000 Cr turnover). Explain Section 43B(h) implications for MSME vendor payments in FY 2025-26."',
+  },
+  {
+    title: "Structure Your Ask",
+    desc: 'Use a clear format: "I am a [CFO / MD]. My situation is [X]. Please explain [Y] in simple terms." A structured prompt consistently yields a structured, usable response.',
+    example: '"I am a CFO. My company received a transfer pricing adjustment of ₹45 Cr. Explain my appeal options at CIT(A) and ITAT in 5 bullet points."',
+  },
+  {
+    title: "Define the Output Format",
+    desc: "Specify what you need — a comparison table, a bullet checklist, or an executive summary. AI will match the format you request, saving you editing time.",
+    example: '"Provide a table comparing old vs new GST rates for logistics services, with columns: Service, Old Rate, New Rate, Effective Date, Impact."',
+  },
+  {
+    title: "Iterate and Refine",
+    desc: 'Treat it as a dialogue. Follow up with "Simplify this", "Focus only on MSME applicability" or "Add a practical example." Each refinement improves precision.',
+    example: '"That\'s good, but simplify the language for a board presentation. Remove all section references and focus on business impact only."',
+  },
+  {
+    title: "Anonymise Sensitive Data",
+    desc: "Replace actual PAN, GSTIN, client names and financials with dummy figures before prompting. You still get meaningful insights without compromising confidentiality.",
+    example: '"Company A (manufacturing, turnover ₹X Cr) has paid ₹Y Cr to Company B (US parent) as management fees. Analyze withholding obligations."',
+  },
+  {
+    title: "Validate With Your Advisor",
+    desc: "Use AI for first-level research and drafting only. All final decisions on filings, compliance positions and strategy must be confirmed with your qualified tax advisor.",
+    example: '"Use this AI output as a starting point for discussion with your EY tax team — never as standalone advice for filings or board decisions."',
   },
 ];
 
-const DOS = [
-  { title: "Be specific about your role", desc: 'Say "You are a senior tax manager in India" not just "You are a tax professional."' },
-  { title: "State the output format", desc: "Ask for bullet points, table, 1-page memo, or email — whatever you'll actually use." },
-  { title: "Set word or length limits", desc: '"Under 200 words" prevents unnecessary padding and forces concision.' },
-  { title: "Reference specific statutes", desc: "Cite Acts, circulars, or sections to keep the AI legally grounded." },
-  { title: "Iterate — don't restart", desc: "Ask follow-ups like 'Make it more concise' or 'Add a risk table.' Build on the conversation." },
-];
-
 const DONTS = [
-  { title: "Don't share confidential data", desc: "Never input client names, PAN numbers, or deal-specific financials into a public AI tool." },
-  { title: "Don't accept output without review", desc: "AI can hallucinate statutes or dates. Always verify legal citations before use." },
-  { title: "Don't use one-word prompts", desc: '"Explain GST" will produce a textbook. Ask for what you actually need, for whom.' },
-  { title: "Don't ignore the tool's knowledge cutoff", desc: "AI may not know about the latest Finance Act amendments. Ground it or verify freshness." },
-  { title: "Don't forget tone and audience", desc: "An internal memo for a partner reads very differently from a client advisory note." },
+  {
+    title: "Don't Be Vague",
+    desc: '"Tell me about taxes" produces generic output. Instead: "Explain the impact of Section 43B(h) on MSME vendor payments for FY 2024-25 for a private limited company."',
+    example: '❌ "What are the latest tax changes?" → AI doesn\'t know which country, which tax, which year, or which entity type you mean.',
+  },
+  {
+    title: "Don't Stack Multiple Questions",
+    desc: "Asking ten questions in one prompt produces ten diluted answers. Break it down — one focused question at a time delivers sharper, actionable output.",
+    example: '❌ "Explain GST, income tax changes, TDS rates, advance tax dates and MAT provisions for 2025-26" — this will get shallow answers on everything.',
+  },
+  {
+    title: "Don't Enter Confidential Data",
+    desc: "Real PAN, GSTIN, client names, account numbers and actual financial data must never be entered into a public AI tool. Data confidentiality is non-negotiable.",
+    example: '❌ Never type: "PAN: AABCX1234Z, GSTIN: 27AABCX1234Z1ZP, actual assessment order details" into ChatGPT or Gemini.',
+  },
+  {
+    title: "Don't Treat AI as Final Authority",
+    desc: "AI can generate plausible but incorrect information, including outdated tax provisions. Never use AI output directly for returns, filings, or board-level decisions.",
+    example: "❌ AI may confidently cite a section number that was amended or a circular that was superseded. Always cross-verify with current law.",
+  },
+  {
+    title: "Don't Omit Jurisdiction",
+    desc: "Tax rules vary significantly by country, state and entity type. Without a clear jurisdiction, AI defaults to generic — and often inapplicable — answers.",
+    example: '❌ "What\'s the capital gains tax rate?" — For whom? India resident? NRI? Company? On what asset? Which holding period? Specify everything.',
+  },
+  {
+    title: "Don't Accept the First Response as Final",
+    desc: 'Always probe the output. Ask "Which section covers this?" or "Is this current for AY 2025-26?" Critical review of AI responses is part of responsible usage.',
+    example: "❌ Copy-pasting AI's first draft into a client email without reviewing for accuracy, tone, and completeness is a professional risk.",
+  },
 ];
 
 type AdvancedTechnique = {
   id: string;
   name: string;
+  tagline: string;
   what: string;
-  does: string;
+  does: string; // "Why it matters" copy from reference
   without: string;
   with: string;
-  taxUse: string;
 };
 
 type AdvancedCategory = {
@@ -119,126 +164,153 @@ type AdvancedCategory = {
   techniques: AdvancedTechnique[];
 };
 
+/** Prompt like a Pro — Techniques (exact copy from ai-tax-prompting1.html). */
 const ADVANCED_CATEGORIES: AdvancedCategory[] = [
   {
-    id: "context",
-    name: "Context & Audience",
-    color: C.frameTeal,
-    summary: "Shape who the answer is for and how examples guide format.",
+    id: "techniques",
+    name: "Pro Techniques",
+    color: C.frameBlue,
+    summary: "Now that you know the elements, here are 8 techniques to level up your prompting game.",
     techniques: [
-      {
-        id: "audience",
-        name: "Audience Prompting",
-        what: "Telling AI who the output is intended for.",
-        does: "Adjusts language, depth and terminology for the reader.",
-        without: '"Explain POEM provisions."',
-        with: '"Explain POEM provisions for a CEO with no tax background using simple business language and examples."',
-        taxUse: "Turn a dense POEM memo into a board-ready summary without losing the tax position.",
-      },
       {
         id: "few-shot",
-        name: "Zero-Shot / Few-Shot",
-        what: "Providing no examples (Zero-Shot) or sample examples (Few-Shot) to guide the AI.",
-        does: "Guides the format and quality of the response.",
-        without: '"Summarize this tax judgment."',
-        with: '"Example Format: Issue → Taxpayer Argument → Revenue Argument → Decision → Key Takeaway. Now summarize this judgment using the same format."',
-        taxUse: "Standardize ITAT ruling summaries across the team using one worked example as the template.",
-      },
-    ],
-  },
-  {
-    id: "iterate",
-    name: "Iterative Flow",
-    color: C.frameOrange,
-    summary: "Build, question, and refine — don't restart from scratch.",
-    techniques: [
-      {
-        id: "iterative",
-        name: "Iterative Prompting",
-        what: "Improving the output through a series of follow-up prompts.",
-        does: "Refines the response step by step until it meets your needs.",
-        without: '"Draft a note on GST implications."',
-        with: '"Draft a note on GST implications." → "Make it user-friendly." → "Reduce it to one page." → "Add a summary table."',
-        taxUse: "Draft a GST advisory in passes — scope first, then tone, then a partner-ready one-pager.",
+        name: "Few-Shot Prompting",
+        tagline: "SHOW AI what good looks like",
+        what: "Providing 1-3 examples of ideal input-output pairs before asking your actual question — so AI learns the pattern you want.",
+        does: "Like showing a new associate a sample memo before asking them to draft one — the output matches your style and standard.",
+        without: '"Draft a tax equalisation policy for employees relocating from India to the US."',
+        with: '"Here is a sample tax equalisation policy [attached]. Using the same format and structure, draft a policy for India-to-US relocations."',
       },
       {
-        id: "flipped",
-        name: "Flipped Prompting",
-        what: "Asking AI to ask questions before answering.",
-        does: "Helps gather missing context and improve accuracy.",
-        without: '"Prepare a tax advisory note on this transaction."',
-        with: '"Before preparing the advisory note, ask me all relevant questions regarding the transaction, jurisdictions, parties, objectives and timeline."',
-        taxUse: "Surface missing facts on a cross-border deal before AI drafts the opinion.",
+        id: "iteration",
+        name: "Iteration",
+        tagline: "BUILD on what AI gives you",
+        what: "Using multi-turn conversations — asking AI to improve, expand, or restructure its own previous output step by step.",
+        does: "First drafts are starting points. Each follow-up sharpens precision — like reviewing a junior's memo through rounds of feedback.",
+        without: '"Summarize this SC ruling and draft a client memo."',
+        with: 'Turn 1: "Summarize the facts and ruling." → Turn 2: "Now draft a 1-page client memo." → Turn 3: "Simplify for a non-tax CFO audience."',
+      },
+      {
+        id: "cot",
+        name: "Chain of Thought",
+        tagline: "MAKE AI show its reasoning",
+        what: 'Asking AI to "think step by step" — making it show its reasoning before giving the final answer so you can verify the logic.',
+        does: "Like asking an associate to show their workings, not just the conclusion. You can spot errors in reasoning before they reach the client.",
+        without: '"What is the effective tax rate for MNCs with royalty payments?"',
+        with: '"Think step by step: First identify applicable provisions, then calculate base rate, add surcharge and cess, factor in DTAA, and arrive at the effective rate for MNCs with royalty payments."',
+      },
+      {
+        id: "meta",
+        name: "Meta Prompt",
+        tagline: "ASK AI to write the prompt for you",
+        what: "A prompt that instructs AI to generate an optimised prompt for you — describe your use case and let AI craft the perfect structured instruction.",
+        does: "You don't need to remember every technique. Describe what you need and let AI build the optimal prompt structure for you.",
+        without: '"Help me respond to a GST show cause notice on product classification."',
+        with: '"You are an expert prompt crafter. My use case: I\'m a Tax Head responding to a GST SCN on misclassification. Craft me an optimal prompt that includes persona, context, task, constraints, and step-back reasoning."',
       },
       {
         id: "refinement",
-        name: "Refinement Prompting",
-        what: "Asking AI to improve your question before attempting the task.",
-        does: "Helps identify gaps and creates a stronger, more effective prompt.",
-        without: '"Summarize the GST implications of this transaction."',
-        with: '"Review my prompt and suggest a better version before answering. Highlight any missing context, assumptions or instructions that would improve the quality of the response."',
-        taxUse: "Catch vague scope or missing grounding before the model produces a wrong GST analysis.",
-      },
-    ],
-  },
-  {
-    id: "reasoning",
-    name: "Structured Reasoning",
-    color: C.frameBlue,
-    summary: "Step through complex tax analysis with deliberate structure.",
-    techniques: [
-      {
-        id: "cot",
-        name: "Chain-of-Thought",
-        what: "Asking AI to reason through a problem step by step.",
-        does: "Improves structured thinking and analysis.",
-        without: '"Does this arrangement create a Permanent Establishment risk?"',
-        with: '"Assess this arrangement step-by-step: identify key facts, evaluate PE indicators, analyze supporting and opposing arguments, then conclude."',
-        taxUse: "PE determinations where facts, indicators, and counter-arguments must be shown in sequence.",
+        name: "Refinement",
+        tagline: "SHARPEN the output after review",
+        what: "Asking AI to critique and improve its own output — reviewing as a partner would, fixing gaps, strengthening arguments.",
+        does: "AI catches its own weak spots. Like asking an associate to self-review before submitting — the second pass is always stronger.",
+        without: '"Draft a TP memo for IT services." (accept whatever comes back)',
+        with: '"Now review your own draft as if you are the reviewing partner. Identify gaps in legal reasoning, strengthen weak arguments, and produce an improved version."',
       },
       {
         id: "expansion",
         name: "Creative Expansion",
-        what: "Asking AI to challenge assumptions and identify gaps.",
-        does: "Generates additional perspectives and uncovers blind spots.",
-        without: '"Review this restructuring proposal."',
-        with: '"Review this restructuring proposal and identify 10 risks, unanswered questions or issues the team may have overlooked."',
-        taxUse: "Stress-test a restructuring memo before partner sign-off — find what the first draft missed.",
+        tagline: "EXPLORE angles you haven't considered",
+        what: "Asking AI to brainstorm alternative approaches, counterarguments, or edge cases you may not have considered.",
+        does: "Uncovers blind spots in your analysis. Like having a second opinion from a specialist in a different tax domain.",
+        without: '"Analyze the tax implications of this cross-border restructuring."',
+        with: '"Analyze the restructuring, then list 5 risks I might be overlooking — including GAAR, PE exposure, and indirect transfer provisions that a revenue officer might raise."',
       },
-    ],
-  },
-  {
-    id: "meta",
-    name: "Meta & Craft",
-    color: C.framePurple,
-    summary: "Let AI help you design the prompt itself.",
-    techniques: [
       {
-        id: "meta",
-        name: "Meta Prompting",
-        what: "Asking AI to create or improve the prompt itself.",
-        does: "Combines multiple prompting techniques and helps build stronger prompts.",
-        without: '"Summarize this judgment."',
-        with: '"Create the most effective prompt for summarizing a Supreme Court tax judgment for a Tax Partner. Incorporate persona, audience, format and key takeaway requirements."',
-        taxUse: "Generate a reusable prompt template for Supreme Court tax ruling summaries.",
+        id: "audience",
+        name: "Audience Targeting",
+        tagline: "TAILOR for who will read it",
+        what: "Explicitly telling AI who the reader is — so it adjusts complexity, jargon level, and depth accordingly.",
+        does: "A board presentation needs different language than an ITAT submission. Name your reader and AI writes for them.",
+        without: '"Explain POEM rules under Section 6(3)."',
+        with: '"Explain POEM rules under Section 6(3) in simple language for a CFO with no tax background. Avoid section references — focus on business impact and what action they need to take."',
+      },
+      {
+        id: "flipped",
+        name: "Flipped Prompting",
+        tagline: "LET AI ask YOU the questions",
+        what: "Instead of you writing the prompt, ask AI to interview you — it asks clarifying questions first, then produces a tailored output.",
+        does: "When you don't know how to frame the problem, let AI guide you. It surfaces context you might have forgotten to include.",
+        without: '"Help me with a tax restructuring advisory." (dumps everything at once, misses key details)',
+        with: '"I need help with a restructuring advisory. Before you start, ask me 5 clarifying questions about the entities, jurisdictions, transaction type, timeline, and key concerns."',
       },
     ],
   },
 ];
 
-type FacetKey = "what" | "does" | "without" | "with" | "taxUse";
+type FacetKey = "what" | "does" | "without" | "with";
 
 const FACETS: { key: FacetKey; label: string; color: string }[] = [
   { key: "what", label: "What it is", color: C.frameBlue },
-  { key: "does", label: "What it does", color: C.frameOrange },
+  { key: "does", label: "Why it matters", color: C.frameOrange },
   { key: "without", label: "Without", color: C.destructive },
   { key: "with", label: "With", color: C.success },
-  { key: "taxUse", label: "Tax use case", color: C.eyebrowGold },
 ];
 
-const ALL_ADVANCED_TECHNIQUES = ADVANCED_CATEGORIES.flatMap(cat =>
-  cat.techniques.map(t => ({ ...t, category: cat.name, categoryColor: cat.color })),
-);
+/** Level Up — Advanced Techniques catalog (exact copy from reference). */
+const LEVEL_UP_GROUPS: {
+  id: string;
+  name: string;
+  color: string;
+  rows: { name: string; does: string; taxUse: string }[];
+}[] = [
+  {
+    id: "cot",
+    name: "Chain of Thought (CoT)",
+    color: C.frameBlue,
+    rows: [
+      { name: "Step-back Prompting", does: "Asks AI to consider the broader principle first, then apply it to the specific question", taxUse: "Before analyzing a GAAR provision, ask AI to first outline general anti-avoidance principles globally, then apply to the Indian context" },
+      { name: "Analogical Prompting", does: "Draws parallels from a familiar domain to solve a novel problem", taxUse: "Compare India's equalisation levy treatment to how the EU's digital services tax works to find strategic gaps" },
+      { name: "Thread of Thought", does: "Maintains reasoning continuity across a multi-turn conversation without losing context", taxUse: "Multi-turn TP analysis — first define the transaction, then benchmark, then apply safe harbour, building on each prior response" },
+      { name: "Tabular CoT", does: "Organizes step-by-step reasoning into a structured table for clarity", taxUse: "Break down withholding tax obligation by category (royalty, FTS, interest) with rate, treaty, and section in columns" },
+      { name: "Active CoT", does: "Selects the most informative examples to demonstrate reasoning before answering", taxUse: "Provide 2–3 ITAT rulings as worked examples, then ask AI to analyze your case using the same reasoning pattern" },
+      { name: "Auto CoT", does: "AI automatically generates its own chain-of-thought demonstrations before solving", taxUse: '"First show me how you would approach a PE determination, then apply that framework to our client\'s facts"' },
+      { name: "Complexity-based CoT", does: "Uses the most complex reasoning chains as demonstrations for harder problems", taxUse: "For multi-layered cross-border restructuring, show AI a complex worked example before asking it to handle yours" },
+      { name: "Contrastive CoT", does: "Shows both correct and incorrect reasoning paths to improve accuracy", taxUse: '"Here\'s a wrong application of Section 9(1)(vi). Here\'s the correct one. Now analyze this new scenario."' },
+      { name: "Memory of Thought", does: "Retains and reuses reasoning patterns from previously solved problems", taxUse: "Refer back to AI's earlier analysis of Client A's DTAA position when analyzing Client B's similar structure" },
+      { name: "Uncertainty Routed CoT", does: "Triggers more detailed step-by-step reasoning when AI is uncertain about an answer", taxUse: '"If you\'re less than 80% confident, show your full reasoning with alternative positions and cite sources"' },
+    ],
+  },
+  {
+    id: "decomposition",
+    name: "Decomposition",
+    color: C.frameOrange,
+    rows: [
+      { name: "Tree of Thoughts", does: "Explores multiple reasoning paths in a branching tree structure, evaluating each branch before choosing the best", taxUse: "For tax restructuring — explore 3 parallel structures (merger, demerger, slump sale), evaluate tax cost of each path, then recommend" },
+      { name: "Graph of Thoughts", does: "Extends tree thinking into a graph where reasoning paths can merge, split, and reconnect", taxUse: "Analyze circular shareholding structures where entities have multiple cross-holdings — map tax implications as interconnected nodes" },
+    ],
+  },
+  {
+    id: "ensembling",
+    name: "Ensembling",
+    color: C.frameTeal,
+    rows: [
+      { name: "Multiple Runs", does: "Generates multiple outputs for the same prompt and selects the most consistent or highest-quality result", taxUse: "Run your TP benchmarking question 3 times with slight variations, then pick the analysis that's most aligned with OECD guidelines" },
+      { name: "Synthesise", does: "Combines multiple AI outputs into a single refined, comprehensive answer", taxUse: "Generate separate analyses for direct tax, indirect tax, and TP angles of a transaction, then ask AI to synthesize into one unified advisory" },
+    ],
+  },
+  {
+    id: "self-criticism",
+    name: "Self-Criticism",
+    color: C.framePurple,
+    rows: [
+      { name: "Self-Calibration", does: "AI assesses its own confidence level and flags areas where it may be unreliable", taxUse: '"Rate your confidence (1-10) for each position in this tax opinion. For anything below 7, flag it for human review."' },
+      { name: "Self-Refine", does: "AI iteratively critiques and improves its own output without human intervention", taxUse: '"Draft a client memo, then review it as if you are the reviewing partner. Improve the draft based on your own feedback."' },
+      { name: "Chain of Verification", does: "AI generates verification questions to fact-check its own claims before presenting", taxUse: '"After your analysis, list 5 factual claims you made and verify each against the attached statute. Correct any errors."' },
+      { name: "Reversed CoT", does: "Works backward from the conclusion to verify whether the reasoning actually supports it", taxUse: '"You concluded no PE exists. Now work backward — what facts would need to change for a PE to be established? Does our case pass?"' },
+    ],
+  },
+];
 
 type AdvancedView = "wizard" | "table";
 
@@ -250,7 +322,6 @@ const RECAP = [
   { element: "Grounding", question: "Which sources apply?", example: "Income-tax Act, 1961 + CBDT circulars" },
   { element: "Tone", question: "How should it sound?", example: "Formal, client-ready" },
   { element: "Output", question: "What format?", example: "Table + 3 bullet risks" },
-  { element: "Iterate", question: "How do you refine?", example: 'Follow up: "Now make it 5 bullets for MNCs"' },
 ];
 
 const RECAP_CARDS: { icon: LucideIcon; name: string; color: string; bg: string; desc: string }[] = [
@@ -261,7 +332,6 @@ const RECAP_CARDS: { icon: LucideIcon; name: string; color: string; bg: string; 
   { icon: Scale, name: "Grounding", color: C.framePurple, bg: "rgba(180,0,255,0.06)", desc: 'Tell AI WHERE to look. Like saying "only use THIS textbook for answers" — prevents it from making things up.' },
   { icon: Palette, name: "Tone / Style", color: C.yellow, bg: "rgba(255,230,0,0.08)", desc: 'Tell AI HOW to sound. Like asking someone: "Explain it like I\'m presenting to a CFO" vs "Explain it to a 5-year-old." Same info, different packaging.' },
   { icon: Table2, name: "Output Format", color: C.frameGreen, bg: "rgba(0,200,100,0.08)", desc: 'Tell AI WHAT SHAPE the answer should take. Like saying "give me a table, not a paragraph" — saves you 20 minutes of reformatting.' },
-  { icon: RefreshCw, name: "Iterative Refinement", color: C.frameOrange, bg: "rgba(255,125,30,0.08)", desc: 'Don\'t restart — refine. Like editing a draft: "Make it shorter", "Add a table", "Simplify for the board." Each follow-up makes it better.' },
 ];
 
 const STRONG_BRIEF_FIELDS = [
@@ -356,6 +426,7 @@ function scoreMessageFor(tab: MatchTab, correct: number): string {
     : "These are tricky! Revisit the Advanced Techniques section and give it another go.";
 }
 
+/** Anatomy layer texts — exact copy from ai-tax-prompting1.html promptLayers. */
 const PROMPT_STACK = ELEMENTS.map(e => ({
   id: e.id,
   name: e.name.replace(" / ", " · "),
@@ -365,14 +436,13 @@ const PROMPT_STACK = ELEMENTS.map(e => ({
   color: e.color,
   border: e.border,
   fragment: [
-    "You are a senior tax partner in India.",
-    "Our client in India provides IT support to its parent in Singapore.",
-    "Summarise tax exposures above INR 25 crore, under dispute in the last 3 assessment years.",
-    "Keep the response under 200 words.",
-    "According to the Income-tax Act, 1961 and latest CBDT circulars.",
-    "Use a formal, client-ready tone suitable for the Tax Head.",
-    "Provide a table followed by 3 bullet-point risks and recommendations.",
-    'Then refine: "Now create a 5-bullet summary for Indian MNCs."',
+    "You are an Indian Tax Professional specializing in the Indian Income-tax Act and allied laws, with expertise in cross-border withholding tax and software royalty transactions.",
+    'ABC Software Solutions Pvt. Ltd. (Pune, India) pays software license fees to its US parent XYZ Inc. The company needs clarity on whether these payments constitute "royalty" under the Income-tax Act and the India-US DTAA.',
+    "1. Analyze the SC ruling in Engineering Analysis Centre of Excellence and categorize the EULAs.\n2. Analyze the attached Software License EULA clause by clause.\n3. Draft a client memo covering background, EULA analysis, documentation checklist, and withholding tax position.",
+    "Scope: Withholding tax implications only. Do not cover GST, corporate tax, or transfer pricing. Keep the memo under 3 pages.",
+    "Base your analysis strictly on the Income Tax Act 1961, Income Tax Rules 1962, the SC ruling in EACoE (2022), and applicable DTAA provisions. Do not cite tribunal decisions unless directly relevant.",
+    "Draft in a formal, client-ready advisory style suitable for the Tax Head of a software company. Use professional language, avoid jargon where possible.",
+    "Present the EULA analysis as a table (Term | SC Interpretation). Provide clause analysis in a 3-column table (Clause | Description | SC Ruling). End with a numbered action checklist.",
   ][e.id - 1],
 }));
 
@@ -430,7 +500,7 @@ function PromptStackBuilder() {
       {/* Element picker — single column */}
       <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
         <p style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5, marginBottom: 12, flexShrink: 0 }}>
-          Tap to add. Tap again to remove.
+          Click to add each layer:
         </p>
         <div
           role="group"
@@ -504,7 +574,7 @@ function PromptStackBuilder() {
           {sortedStacked.length === 0 ? (
             <div style={{ height: "100%", minHeight: 160, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <p style={{ fontSize: 14, color: C.gray01, fontFamily: F.regular, margin: 0, textAlign: "center", maxWidth: 320, lineHeight: 1.6 }}>
-                Pick elements on the left — each one appears here as a tagged line.
+                Click the ingredients on the left to build your prompt layer by layer. Each layer adds a colored block. Watch the prompt grow from vague to precise.
               </p>
             </div>
           ) : (
@@ -545,6 +615,7 @@ function PromptStackBuilder() {
                     color: C.offBlack,
                     fontFamily: F.regular,
                     flex: 1,
+                    whiteSpace: "pre-line",
                   }}>
                     {item.fragment}
                   </p>
@@ -639,8 +710,8 @@ function PromptStackBuilder() {
 function TeamBriefingSection() {
   const missingItems = ["What issue?", "Which jurisdiction?", "What output?", "By when?"];
   return (
-    <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+    <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <div style={{ ...contentRailStyle }}>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Brief AI Like You Brief Your Team
         </h2>
@@ -672,7 +743,7 @@ function TeamBriefingSection() {
               <div style={{ background: C.destructive + "0a", border: `1px dashed ${C.destructive}33`, borderRadius: 8, padding: 14, marginTop: "auto" }}>
                 <div style={{ color: C.destructive, fontSize: 10, fontWeight: 700, letterSpacing: "1px", marginBottom: 6, fontFamily: F.bold }}>↓ OUTCOME</div>
                 <p style={{ color: C.gray01, fontSize: 12, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
-                  <strong style={{ color: C.destructive }}>Generic response</strong> — vague, incomplete, and needs a full rewrite.
+                  <strong style={{ color: C.destructive }}>Generic response</strong>
                 </p>
               </div>
             </div>
@@ -701,7 +772,7 @@ function TeamBriefingSection() {
               <div style={{ background: C.success + "0a", border: `1px dashed ${C.success}33`, borderRadius: 8, padding: 14, marginTop: "auto" }}>
                 <div style={{ color: C.success, fontSize: 10, fontWeight: 700, letterSpacing: "1px", marginBottom: 6, fontFamily: F.bold }}>↓ OUTCOME</div>
                 <p style={{ color: C.gray01, fontSize: 12, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
-                  <strong style={{ color: C.success }}>Focused response</strong> — ready to use, right scope, right audience.
+                  <strong style={{ color: C.success }}>Focused response</strong>
                 </p>
               </div>
             </div>
@@ -722,8 +793,8 @@ function TeamBriefingSection() {
 
 function AiLazyProSection() {
   return (
-    <section id="lazy-vs-pro" style={{ background: SURFACE.neutral.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+    <section id="lazy-vs-pro" style={{ background: SURFACE.neutral.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <div style={{ ...contentRailStyle }}>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Same AI. Two Very Different Results.
         </h2>
@@ -788,6 +859,30 @@ function AiLazyProSection() {
             </div>
           </div>
         </div>
+
+        {/* Prompting Equation — exact copy from reference */}
+        <div style={{
+          marginTop: 40, textAlign: "center", padding: "24px 32px",
+          background: C.yellowAlpha10, border: `1px solid ${C.yellow}33`, borderRadius: 12,
+        }}>
+          <p style={{ color: C.eyebrowGold, fontSize: 16, fontWeight: 700, marginBottom: 12, fontFamily: F.bold }}>The Prompting Equation</p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+            {["Role", "Context", "Task", "Format"].map((part, i) => (
+              <span key={part} style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+                {i > 0 && <span style={{ color: C.eyebrowGold, fontSize: 18, fontWeight: 700 }}>+</span>}
+                <span style={{
+                  padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 700, fontFamily: F.bold,
+                  background: C.white, border: `1px solid rgba(46,46,56,0.12)`, color: C.offBlack,
+                }}>{part}</span>
+              </span>
+            ))}
+            <span style={{ color: C.success, fontSize: 18, fontWeight: 700 }}>=</span>
+            <span style={{
+              padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 700, fontFamily: F.bold,
+              background: C.success + "14", border: `1px solid ${C.success}4d`, color: C.success,
+            }}>Client-Ready Output</span>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -798,10 +893,10 @@ function RecapInNutshellSection() {
   return (
     <section id="recap" style={{
       background: s.bg,
-      padding: "100px 64px",
+      padding: `100px 0`,
       scrollMarginTop: SUBNAV_SCROLL_OFFSET,
     }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
+      <div style={{ ...contentRailStyle, textAlign: "center" }}>
         <div style={{
           display: "inline-flex", alignItems: "center", justifyContent: "center",
           background: C.yellow, border: `1px solid ${C.gray02}`,
@@ -815,7 +910,7 @@ function RecapInNutshellSection() {
           Putting your <span style={{ color: C.yellow, fontStyle: "italic" }}>#BestPrompt Forward</span>
         </h2>
         <p style={{ fontSize: 16, color: s.body, lineHeight: 1.6, marginBottom: 50, fontFamily: F.light }}>
-          Your 8-element checklist. Before you hit Send, make sure you&apos;ve covered these.
+          Your 7-element checklist. Before you hit Send, make sure you&apos;ve covered these.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, textAlign: "left" }}>
@@ -863,13 +958,120 @@ function WhatsNextSection({ onContinue }: { onContinue: () => void }) {
       title="Prompting skills — unlocked."
       description={
         <>
-          The next module takes you into Microsoft 365 Copilot — where you&apos;ll apply these skills across Word, Excel, Outlook, and Teams with real tax use cases.
+          Now see them in action with M365 Copilot. The next module takes you into Microsoft 365 Copilot — where you&apos;ll apply these skills across Word, Excel, Outlook, and Teams with real tax use cases.
         </>
       }
-      ctaLabel="Continue to Part 3: M365 Copilot Deep Dive"
+      ctaLabel="Continue to Part 3: M365 Copilot Deep Dive →"
       onContinue={onContinue}
       meta="Part 3 covers: Copilot in Word, Excel, Outlook, Teams, and real tax workflows"
     />
+  );
+}
+
+/** Meta Prompt workshop — exact content from ai-tax-prompting1.html #meta-prompt. */
+function MetaPromptSection() {
+  const steps = [
+    { n: "1", title: "TELL AI WHO YOU ARE", body: '"I\'m a Tax Head dealing with a GST show cause notice on misclassification"' },
+    { n: "2", title: "ASK AI TO BUILD THE PROMPT", body: '"Craft me the best prompt to get a comprehensive reply with legal backing"' },
+    { n: "3", title: "USE THE GENERATED PROMPT", body: "Paste AI's crafted prompt into any platform → get expert-level output instantly" },
+  ];
+  const template = [
+    { n: "①", title: "WHO IS AI IN THIS SCENARIO?", body: '"You are an expert prompt crafter who understands advanced prompting frameworks like Chain of Thought, Step-back Prompting, and Analogical reasoning."' },
+    { n: "②", title: "WHAT'S YOUR SITUATION? (Plain English)", body: '"I\'m the Tax Head of a manufacturing company (₹3,000 Cr turnover). We got a GST show cause notice saying our products are misclassified. I need to prepare a legally-backed reply, find weak spots in our position, and create an action plan."' },
+    { n: "③", title: "WHAT DO YOU WANT AI TO DO?", body: '"Craft me the best possible prompt I can paste into ChatGPT/Gemini to get a comprehensive analysis and reply for this situation."' },
+    { n: "④", title: "WHAT SHOULD THE PROMPT INCLUDE?", body: '"Make sure the generated prompt includes:" Persona · Context · Clear Task · Tone · Constraints · Step-back Reasoning · Output Format' },
+  ];
+
+  return (
+    <section id="meta-prompt" style={{ background: SURFACE.neutral.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <div style={{ ...contentRailStyle }}>
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <p style={{ color: C.eyebrowGold, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 12 }}>
+            🪄 The Ultimate Shortcut
+          </p>
+          <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold, margin: "0 0 12px", lineHeight: 1.25 }}>
+            Don&apos;t Write a Prompt.<br />Ask AI to Write It For You.
+          </h2>
+          <p style={{ fontSize: 16, color: C.gray01, fontFamily: F.light, lineHeight: 1.7, maxWidth: 680, margin: "0 auto" }}>
+            Think of it like this: instead of cooking yourself, you hand a chef your ingredient list and dietary preferences — and they design the perfect recipe. That&apos;s a Meta Prompt.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 48px 1fr", gap: 0, alignItems: "stretch", marginBottom: 48 }}>
+          <div style={{ border: `1px solid ${C.destructive}33`, borderRadius: 12, padding: 22, background: C.white }}>
+            <p style={{ margin: "0 0 10px", fontSize: 12, fontWeight: 700, color: C.destructive, fontFamily: F.bold }}>😰 WITHOUT META PROMPT</p>
+            <p style={{ margin: "0 0 12px", fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: 1.6 }}>
+              You spend 10 minutes trying to remember all the elements, get the structure right, include the right techniques...
+            </p>
+            <p style={{ margin: 0, fontSize: 13, fontStyle: "italic", color: C.gray01, fontFamily: F.light }}>
+              &ldquo;Ugh, did I include persona? What about grounding? Should I add chain of thought here?&rdquo;
+            </p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", color: C.gray01, fontWeight: 700 }}>→</div>
+          <div style={{ border: `1px solid ${C.success}33`, borderRadius: 12, padding: 22, background: C.white }}>
+            <p style={{ margin: "0 0 10px", fontSize: 12, fontWeight: 700, color: C.success, fontFamily: F.bold }}>😎 WITH META PROMPT</p>
+            <p style={{ margin: "0 0 12px", fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: 1.6 }}>
+              You describe your problem in plain English. AI builds the perfect structured prompt for you. Done in 30 seconds.
+            </p>
+            <p style={{ margin: 0, fontSize: 13, fontStyle: "italic", color: C.gray01, fontFamily: F.light }}>
+              &ldquo;Hey AI, write me the best prompt to solve this GST notice issue.&rdquo;
+            </p>
+          </div>
+        </div>
+
+        <h3 style={{ fontSize: 22, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold, textAlign: "center", margin: "0 0 8px" }}>
+          How It Works — 3 Simple Steps
+        </h3>
+        <p style={{ textAlign: "center", fontSize: 14, color: C.gray01, margin: "0 0 28px", fontFamily: F.light }}>
+          Like briefing a senior partner who then briefs the associate perfectly.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 48 }}>
+          {steps.map(s => (
+            <div key={s.n} style={{ background: C.white, border: `1px solid rgba(46,46,56,0.10)`, borderRadius: 12, padding: 20 }}>
+              <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.yellow, color: C.confidentBlack, fontWeight: 800, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.bold, marginBottom: 12 }}>{s.n}</div>
+              <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", color: C.offBlack, fontFamily: F.bold }}>{s.title}</p>
+              <p style={{ margin: 0, fontSize: 13, color: C.gray01, fontFamily: F.light, lineHeight: 1.55, fontStyle: "italic" }}>{s.body}</p>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ background: C.white, border: `1px solid rgba(46,46,56,0.10)`, borderRadius: 12, padding: 28, marginBottom: 32 }}>
+          <p style={{ margin: "0 0 6px", fontSize: 15, fontWeight: 700, fontFamily: F.bold, color: C.confidentBlack }}>📋 Copy-Paste This Template</p>
+          <p style={{ margin: "0 0 20px", fontSize: 12, color: C.gray01, fontFamily: F.regular }}>Works on ChatGPT / Gemini / Copilot</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {template.map(t => (
+              <div key={t.n}>
+                <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: C.eyebrowGold, fontFamily: F.bold }}>{t.n} {t.title}</p>
+                <p style={{ margin: 0, fontSize: 13, color: C.offBlack, fontFamily: F.regular, lineHeight: 1.6 }}>{t.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ background: C.offWhite, border: `1px solid rgba(46,46,56,0.08)`, borderRadius: 12, padding: 24, marginBottom: 24 }}>
+          <p style={{ margin: "0 0 8px", fontSize: 14, fontWeight: 700, fontFamily: F.bold, color: C.confidentBlack }}>✨ What Happens Next</p>
+          <p style={{ margin: 0, fontSize: 14, color: C.gray01, fontFamily: F.regular, lineHeight: 1.65 }}>
+            AI gives you back a perfectly structured, multi-paragraph prompt — complete with persona, context, step-by-step task breakdown, grounding references, tone settings, and guardrails. You then paste that prompt into any AI platform and get an analysis that would&apos;ve taken hours to write manually.
+          </p>
+        </div>
+
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <p style={{ margin: "0 0 8px", fontSize: 14, fontWeight: 700, fontFamily: F.bold, color: C.confidentBlack }}>💡 Why Does This Work So Well?</p>
+          <p style={{ margin: 0, fontSize: 14, color: C.gray01, fontFamily: F.regular, lineHeight: 1.65, maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
+            You tell a senior partner your problem in 2 sentences = They brief the associate with perfect detail and structure. The meta prompt is your senior partner. It takes your rough problem → turns it into a structured brief → that produces client-ready output.
+          </p>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+          {["🎯 Complex multi-area tasks", "⚡ Don't remember all techniques? Let AI handle it", "🔁 Save as template — reuse for every new matter"].map(t => (
+            <span key={t} style={{
+              padding: "8px 14px", borderRadius: 100, fontSize: 12, fontFamily: F.bold, fontWeight: 700,
+              background: C.white, border: `1px solid rgba(46,46,56,0.10)`, color: C.offBlack,
+            }}>{t}</span>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -954,11 +1156,11 @@ function MatchPromptActivity() {
   return (
     <section id="match-activity" style={{
       background: SURFACE.neutral.bg,
-      padding: "100px 64px",
+      padding: `100px 0`,
       textAlign: "center",
       scrollMarginTop: SUBNAV_SCROLL_OFFSET,
     }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+      <div style={{ ...contentRailStyle }}>
         <div style={{
           display: "inline-flex", background: C.accentOrange + "14", border: `1px solid ${C.accentOrange}40`,
           borderRadius: 20, padding: "6px 18px", marginBottom: 16,
@@ -1109,277 +1311,146 @@ function MatchPromptActivity() {
   );
 }
 
-// ── 8 Elements wizard (Figma Section Elements) ───────────────────────────────
+// ── 7 Elements — tabbed cards (Figma Section Elements) ───────────────────────
 
-const STEP_SUBTITLES: Record<number, string> = {
-  1: "WHO should AI be?",
-  2: "What is the background?",
-  3: "What should AI do?",
-  4: "What are the limits?",
-  5: "Where should AI look?",
-  6: "How should it sound?",
-  7: "What shape should it take?",
-  8: "How do you refine?",
-};
+type ElemPanelKey = "what" | "why" | "without" | "with";
 
-const PERSONA_WIZARD = {
-  description: "Assigning a specific persona primes the AI's perspective, knowledge base, and tone. It shifts the response from a generic search engine summary to a contextual expert analysis.",
-  whyMatters: 'Without a specified persona, the LLM treats your inquiry through a generalist average lens. Specifying "Tax Partner" ensures it highlights liabilities and focuses precisely on structural risk mitigation.',
-  without: '"Explain the GST applicability on supply of services under Section 7 of CGST Act."',
-  with: '"Act as a Senior Indian Tax Partner specializing in indirect taxation. Analyze Section 7 of the CGST Act..."',
-  withoutNote: "⚠️ Result: Produces a generic textbook definition without practical corporate tax planning implications.",
-  withNote: "🌟 Result: Generates corporate advisory-level insights, highlighting risks, recent rulings, and planning loopholes.",
-  fieldLabel: "Define the AI Persona below:",
-  fieldPlaceholder: "AI Persona Definition",
-  fieldTip: "Tip: Mention years of experience, field of mastery, and context-specific credentials.",
-  proTips: [
-    '• Authority: Reference specific professional bodies or titles (e.g., "Chartered Accountant", "Audit Partner").',
-    '• Tone Setting: Give it constraints (e.g., "Be analytical, skeptical, and prioritize regulatory safety").',
-  ],
-};
+const ELEM_TABS: {
+  key: ElemPanelKey;
+  label: string;
+  color: string;
+  panelBg: string;
+  panelBorder: string;
+  italic?: boolean;
+}[] = [
+  { key: "what", label: "WHAT IT IS", color: C.frameBlue, panelBg: C.offWhite, panelBorder: C.gray02 },
+  { key: "why", label: "WHY IT MATTERS", color: C.frameOrange, panelBg: C.offWhite, panelBorder: C.gray02 },
+  { key: "without", label: "❌ WITHOUT", color: C.destructive, panelBg: C.offWhite, panelBorder: C.gray02, italic: true },
+  { key: "with", label: "✅ WITH", color: C.success, panelBg: C.offWhite, panelBorder: C.gray02, italic: true },
+];
 
-function EightElementsWizard() {
-  const [activeStep, setActiveStep] = useState(0);
-  const [fieldValues, setFieldValues] = useState<Record<number, string>>({});
+function ElementCard({ elem }: { elem: (typeof ELEMENTS)[number] }) {
+  // Panels stay open once clicked (toggle independently)
+  const [open, setOpen] = useState<Record<ElemPanelKey, boolean>>({
+    what: false, why: false, without: false, with: false,
+  });
 
-  const elem = ELEMENTS[activeStep];
-  const fieldValue = fieldValues[elem.id] ?? "";
-  const isPersona = elem.id === 1;
-  const description = isPersona ? PERSONA_WIZARD.description : elem.what;
-  const whyMatters = isPersona ? PERSONA_WIZARD.whyMatters : elem.why;
-  const withoutPrompt = isPersona ? PERSONA_WIZARD.without : elem.without;
-  const withPrompt = isPersona ? PERSONA_WIZARD.with : elem.with;
-  const withoutNote = isPersona ? PERSONA_WIZARD.withoutNote : "⚠️ Result: Output stays generic and misses the specifics of your tax situation.";
-  const withNote = isPersona ? PERSONA_WIZARD.withNote : "🌟 Result: Output becomes precise, professional, and ready to use in your workflow.";
-  const fieldLabel = isPersona ? PERSONA_WIZARD.fieldLabel : `Define the ${elem.name} below:`;
-  const fieldPlaceholder = isPersona ? PERSONA_WIZARD.fieldPlaceholder : `${elem.name} definition`;
-  const fieldTip = isPersona ? PERSONA_WIZARD.fieldTip : `Tip: Be explicit about ${elem.name.toLowerCase()} so the AI knows exactly what you need.`;
-  const proTips = isPersona ? PERSONA_WIZARD.proTips : [`• Apply ${elem.name.toLowerCase()} clearly in your opening sentence before the main task.`];
-  const elementTag = elem.name.replace(" / ", " ").toUpperCase();
+  const content: Record<ElemPanelKey, string> = {
+    what: elem.what,
+    why: elem.why,
+    without: elem.without,
+    with: elem.with,
+  };
 
   return (
-    <section id="elements" style={{ background: SURFACE.dark.bg, padding: "80px 80px 48px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexDirection: "column", gap: 8 }}>
-        {/* Header */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, marginBottom: 8 }}>
-          <div style={{ background: C.yellow, border: `1px solid ${C.gray02}`, borderRadius: 100, padding: "6px 16px" }}>
-            <span style={{ fontSize: 14, color: C.offBlack, fontFamily: F.regular }}>METHODOLOGY</span>
-          </div>
-          <h2 style={{ fontSize: 32, fontWeight: 700, color: SURFACE.dark.heading, fontFamily: F.bold, letterSpacing: "-0.32px", textAlign: "center", margin: 0 }}>
-            Prompt like a Pro — The 8 Elements
-          </h2>
-          <p style={{ fontSize: 16, color: SURFACE.dark.body, fontFamily: F.light, lineHeight: "24px", textAlign: "center", maxWidth: 760, margin: 0 }}>
-            The more context and structural anchors you provide, the better the final output.
-          </p>
-        </div>
-
-        {/* Stepper */}
-        <div style={{ padding: "40px 0 20px", overflowX: "auto" }}>
-          <div style={{
-            background: C.offWhite, border: `1px solid ${C.gray02}`, borderRadius: 16,
-            padding: 24, display: "inline-flex", minWidth: "min(100%, 1232px)",
-          }}>
-            <div style={{ display: "flex", alignItems: "flex-start" }}>
-              {ELEMENTS.map((step, index) => {
-                const isActive = index === activeStep;
-                return (
-                  <div key={step.id} style={{ display: "flex", alignItems: "flex-start" }}>
-                    <button
-                      type="button"
-                      onClick={() => setActiveStep(index)}
-                      style={{
-                        background: isActive ? C.offWhite : "transparent",
-                        border: "none", borderRadius: 8, padding: 8, cursor: "pointer",
-                        display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start",
-                        textAlign: "left", fontFamily: F.regular,
-                      }}
-                    >
-                      <div style={{
-                        width: 28, height: 28, borderRadius: 14,
-                        background: isActive ? C.yellow : C.offBlack,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 14, fontWeight: 800, color: isActive ? C.confidentBlack : C.white,
-                        fontFamily: F.bold,
-                      }}>
-                        {step.id}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 14, color: C.offBlack, lineHeight: "22px", whiteSpace: "nowrap" }}>{step.name}</div>
-                        <div style={{ fontSize: 12, color: C.gray01, lineHeight: "19.2px", whiteSpace: "nowrap" }}>{STEP_SUBTITLES[step.id]}</div>
-                      </div>
-                    </button>
-                    {index < ELEMENTS.length - 1 && (
-                      <div style={{ padding: "14px 16px 0 8px", display: "flex", alignItems: "center" }}>
-                        <ChevronRight size={14} color={C.gray01} strokeWidth={2} />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Workspace */}
+    <div style={{
+      background: C.white,
+      border: `1px solid ${C.gray02}`,
+      borderRadius: 8,
+      overflow: "hidden",
+      borderTop: `3px solid ${elem.border}`,
+      display: "flex",
+      flexDirection: "column",
+      textAlign: "left",
+    }}>
+      <div style={{ padding: "22px 24px 16px", display: "flex", alignItems: "center", gap: 14 }}>
         <div style={{
-          display: "flex", gap: 40, alignItems: "stretch", justifyContent: "center",
-          flexWrap: "wrap", paddingTop: 12,
+          width: 38, height: 38, borderRadius: "50%", background: C.yellow,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 17, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold, flexShrink: 0,
         }}>
-          {/* Active step card */}
-          <div style={{
-            flex: "1 1 560px", maxWidth: 760, background: C.confidentBlack,
-            border: `1px solid ${C.gray02}`, borderRadius: 20, padding: 40,
-            display: "flex", flexDirection: "column", gap: 32,
-            boxShadow: "0 16px 16px rgba(0,0,0,0.25)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <div style={{
-                width: 44, height: 44, borderRadius: 22, background: C.yellow,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 22, fontWeight: 800, color: C.confidentBlack, fontFamily: F.bold, flexShrink: 0,
-              }}>
-                {elem.id}
-              </div>
-              <div>
-                <div style={{ fontSize: 28, fontWeight: 700, color: C.white, fontFamily: F.bold, lineHeight: 1.1 }}>{elem.name}</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: C.white, fontFamily: F.bold, lineHeight: "28px" }}>{STEP_SUBTITLES[elem.id]}</div>
-              </div>
-            </div>
-
-            <p style={{ margin: 0, fontSize: 15, lineHeight: "25.5px", color: C.white, fontFamily: F.regular }}>{description}</p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <label style={{ fontSize: 16, fontWeight: 700, color: C.white, fontFamily: F.bold }}>{fieldLabel}</label>
-              <textarea
-                value={fieldValue}
-                onChange={e => setFieldValues(prev => ({ ...prev, [elem.id]: e.target.value }))}
-                placeholder={fieldPlaceholder}
-                maxLength={2000}
-                style={{
-                  width: "100%", minHeight: 118, resize: "vertical",
-                  background: C.confidentBlack, border: `1px solid ${C.yellow}`, borderRadius: 4,
-                  padding: "8px 12px", fontSize: 14, lineHeight: "20px", color: C.white,
-                  fontFamily: F.light, outline: "none",
-                }}
-              />
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 24, alignItems: "flex-start" }}>
-                <p style={{ margin: 0, flex: 1, fontSize: 12, lineHeight: "18px", color: C.gray01, fontFamily: F.light }}>{fieldTip}</p>
-                <span style={{ fontSize: 12, color: C.white, fontFamily: F.light, whiteSpace: "nowrap" }}>{fieldValue.length}/2000</span>
-              </div>
-            </div>
-
-            <div style={{
-              background: C.offWhite, border: `1px solid ${C.gray02}`, borderRadius: 12, padding: 20,
-              display: "flex", flexDirection: "column", gap: 12,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <Lightbulb size={20} color={C.gray01} strokeWidth={2} />
-                <span style={{ fontSize: 16, fontWeight: 700, color: C.gray01, fontFamily: F.bold }}>Pro {elem.name} Tips:</span>
-              </div>
-              {proTips.map(tip => (
-                <p key={tip} style={{ margin: 0, fontSize: 14, lineHeight: "22.4px", color: C.gray01, fontFamily: F.regular }}>{tip}</p>
-              ))}
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-              <button
-                type="button"
-                onClick={() => setFieldValues(prev => ({ ...prev, [elem.id]: "" }))}
-                style={{ background: "none", border: "none", color: C.white, fontSize: 16, cursor: "pointer", fontFamily: F.regular, padding: "10px 16px" }}
-              >
-                Reset Field
-              </button>
-              <div style={{ display: "flex", gap: 12 }}>
-                <button
-                  type="button"
-                  disabled={activeStep === 0}
-                  onClick={() => setActiveStep(s => Math.max(0, s - 1))}
-                  style={{
-                    height: 44, padding: "10px 16px", borderRadius: 4, cursor: activeStep === 0 ? "not-allowed" : "pointer",
-                    border: `1px solid ${C.gray02}`, background: "transparent",
-                    color: activeStep === 0 ? C.onDarkSubtle : C.white, fontSize: 16, fontFamily: F.regular,
-                  }}
-                >
-                  Back
-                </button>
-                {activeStep < ELEMENTS.length - 1 ? (
-                  <button
-                    type="button"
-                    onClick={() => setActiveStep(s => Math.min(ELEMENTS.length - 1, s + 1))}
-                    style={{
-                      height: 44, padding: "10px 16px", borderRadius: 4, border: "none",
-                      background: C.yellow, color: C.confidentBlack, fontSize: 16, fontWeight: 700,
-                      cursor: "pointer", fontFamily: F.bold,
-                    }}
-                  >
-                    Next Step: {ELEMENTS[activeStep + 1].name}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setActiveStep(0)}
-                    style={{
-                      height: 44, padding: "10px 16px", borderRadius: 4, border: "none",
-                      background: C.yellow, color: C.confidentBlack, fontSize: 16, fontWeight: 700,
-                      cursor: "pointer", fontFamily: F.bold,
-                    }}
-                  >
-                    Start Over
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Help panel */}
-          <div style={{ flex: "0 1 480px", display: "flex", flexDirection: "column", gap: 16, minWidth: 280 }}>
-            <div style={{
-              background: C.yellow, border: `1px solid ${C.gray02}`, borderRadius: 16, padding: 24,
-              display: "flex", flexDirection: "column", gap: 16,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <Lightbulb size={20} color={C.offBlack} strokeWidth={2} />
-                <span style={{ fontSize: 20, fontWeight: 700, color: C.offBlack, fontFamily: F.bold }}>Why it matters</span>
-              </div>
-              <p style={{ margin: 0, fontSize: 15, lineHeight: "25.5px", color: C.offBlack, fontFamily: F.regular }}>{whyMatters}</p>
-            </div>
-
-            <div style={{
-              background: C.offWhite, border: `1px solid ${C.gray02}`, borderRadius: 16, padding: 24,
-              display: "flex", flexDirection: "column", gap: 16,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <span style={{ background: "rgba(255,107,107,0.1)", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 700, color: C.gray02, fontFamily: F.bold }}>
-                  ❌ WITHOUT {elementTag}
-                </span>
-                <span style={{ fontSize: 14, color: C.gray01, fontFamily: F.regular }}>The Generic Way</span>
-              </div>
-              <div style={{ background: C.confidentBlack, borderRadius: 8, padding: 16 }}>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: "22.4px", color: C.white, fontFamily: F.regular, fontStyle: "italic" }}>{withoutPrompt}</p>
-              </div>
-              <p style={{ margin: 0, fontSize: 12, lineHeight: "19.2px", color: C.gray01, fontFamily: F.regular }}>{withoutNote}</p>
-            </div>
-
-            <div style={{
-              background: C.offWhite, border: `1px solid ${C.gray02}`, borderRadius: 16, padding: 24,
-              display: "flex", flexDirection: "column", gap: 16,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <span style={{ background: "rgba(46,204,113,0.1)", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 700, color: C.gray02, fontFamily: F.bold }}>
-                  ✅ WITH {elementTag}
-                </span>
-                <span style={{ fontSize: 14, color: C.gray01, fontFamily: F.regular }}>The Expert Way</span>
-              </div>
-              <div style={{ background: C.confidentBlack, borderRadius: 8, padding: 16 }}>
-                <p style={{ margin: 0, fontSize: 14, lineHeight: "22.4px", color: C.white, fontFamily: F.regular, fontStyle: "italic" }}>{withPrompt}</p>
-              </div>
-              <p style={{ margin: 0, fontSize: 12, lineHeight: "19.2px", color: C.gray01, fontFamily: F.regular }}>{withNote}</p>
-            </div>
-          </div>
+          {elem.id}
         </div>
+        <div>
+          <div style={{ color: C.offBlack, fontSize: 19, fontWeight: 700, fontFamily: F.bold }}>{elem.name}</div>
+          <div style={{ color: elem.color, fontSize: 11, fontWeight: 700, fontFamily: F.bold, letterSpacing: "0.02em" }}>{elem.q}</div>
+        </div>
+      </div>
 
-        <div style={{ paddingTop: 24 }}>
-          <div style={{ height: 1, background: SURFACE.dark.border, width: "100%" }} />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", borderTop: `1px solid ${C.gray02}` }}>
+        {ELEM_TABS.map((tab, i) => {
+          const isOpen = open[tab.key];
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setOpen(prev => ({ ...prev, [tab.key]: !prev[tab.key] }))}
+              style={{
+                padding: "10px 8px",
+                background: isOpen ? C.yellowAlpha10 : C.offWhite,
+                border: "none",
+                borderRight: i < ELEM_TABS.length - 1 ? `1px solid ${C.gray02}` : "none",
+                borderBottom: isOpen ? `2px solid ${tab.color}` : "2px solid transparent",
+                cursor: "pointer",
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.5px",
+                color: tab.color,
+                fontFamily: F.bold,
+                transition: "background 0.2s",
+              }}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div>
+        {ELEM_TABS.map(tab => (
+          open[tab.key] ? (
+            <div
+              key={tab.key}
+              style={{
+                padding: "14px 24px",
+                background: tab.panelBg,
+                borderTop: `1px solid ${tab.panelBorder}`,
+                minHeight: 70,
+              }}
+            >
+              <p style={{
+                margin: 0,
+                color: C.gray01,
+                fontSize: 13,
+                lineHeight: 1.6,
+                fontFamily: F.regular,
+                fontStyle: tab.italic ? "italic" : "normal",
+              }}>
+                {content[tab.key]}
+              </p>
+            </div>
+          ) : null
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EightElementsWizard() {
+  const s = SURFACE.neutral;
+  return (
+    <section id="elements" style={{ background: s.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <div style={{ ...contentRailStyle, textAlign: "center" }}>
+        <h2 style={{ fontSize: 32, fontWeight: 700, color: s.heading, fontFamily: F.bold, letterSpacing: "-0.02em", margin: "0 0 12px", textAlign: "center" }}>
+          Prompt like a Pro - Elements
+        </h2>
+        <p style={{ fontSize: 16, color: s.body, fontFamily: F.light, lineHeight: "24px", margin: "0 auto 12px", maxWidth: 720, textAlign: "center" }}>
+          Each element is a lever — pull the right ones for the right task.
+        </p>
+        <p style={{ textAlign: "center", color: s.body, fontSize: 12, margin: "0 0 40px", fontFamily: F.regular }}>
+          Click any tab below each element to reveal details — they stay open once clicked.
+        </p>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
+          gap: 22,
+          alignItems: "stretch",
+          textAlign: "left",
+        }}>
+          {ELEMENTS.map(elem => (
+            <ElementCard key={elem.id} elem={elem} />
+          ))}
         </div>
       </div>
     </section>
@@ -1389,14 +1460,14 @@ function EightElementsWizard() {
 function AdvancedViewToggle({ view, onChange, onDark = false }: { view: AdvancedView; onChange: (v: AdvancedView) => void; onDark?: boolean }) {
   const focusRing = `2px solid ${C.yellow}`;
   const options: { id: AdvancedView; label: string; Icon: typeof Table2; hint: string }[] = [
-    { id: "wizard", label: "Wizard", Icon: ListTree, hint: "One technique at a time" },
-    { id: "table", label: "Table", Icon: Table2, hint: "Scan all techniques" },
+    { id: "wizard", label: "Techniques", Icon: ListTree, hint: "8 pro techniques — one at a time" },
+    { id: "table", label: "Level Up", Icon: Table2, hint: "Advanced catalog with tax use cases" },
   ];
 
   return (
     <div
       role="tablist"
-      aria-label="Advanced techniques view"
+      aria-label="Techniques view"
       style={{
         display: "inline-flex",
         background: onDark ? C.white : C.offWhite,
@@ -1445,38 +1516,51 @@ function AdvancedViewToggle({ view, onChange, onDark = false }: { view: Advanced
 
 function AdvancedTechniquesTable() {
   return (
-    <div style={{ overflowX: "auto" }}>
-      <div style={{ border: `1px solid rgba(46,46,56,0.10)`, borderRadius: 10, overflow: "hidden", minWidth: 860 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1.4fr 1.4fr 2fr 2fr", background: C.confidentBlack, padding: "14px 20px", gap: 16 }}>
-          {["Technique", "Category", "What it is", "What it does", "Without", "With"].map((h, i) => (
-            <span key={h} style={{
-              color: i === 0 ? C.yellow : i >= 4 ? (i === 4 ? C.destructive : C.success) : C.gray02,
-              fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: F.bold,
-            }}>{h}</span>
+    <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+      <div>
+        <p style={{ fontSize: 18, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold, margin: "0 0 8px" }}>
+          🚀 Level Up — Advanced Techniques
+        </p>
+        <p style={{ fontSize: 14, color: C.gray01, fontFamily: F.light, lineHeight: 1.7, margin: 0, maxWidth: 820 }}>
+          The fundamentals will handle 80% of your prompting needs. But for complex tax analysis, multi-step reasoning, and mission-critical accuracy — these advanced techniques take you from competent to exceptional.
+        </p>
+      </div>
+
+      {LEVEL_UP_GROUPS.map(group => (
+        <div key={group.id} style={{ border: `1px solid rgba(46,46,56,0.10)`, borderRadius: 10, overflow: "hidden" }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10, padding: "14px 20px",
+            background: C.confidentBlack,
+          }}>
+            <span style={{
+              fontSize: 12, fontWeight: 700, fontFamily: F.bold, color: group.color,
+              background: group.color + "22", border: `1px solid ${group.color}55`,
+              borderRadius: 4, padding: "3px 8px",
+            }}>{group.rows.length} techniques</span>
+            <span style={{ color: C.white, fontSize: 15, fontWeight: 700, fontFamily: F.bold }}>{group.name}</span>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1.6fr 2fr", background: C.offWhite, padding: "12px 20px", gap: 16 }}>
+            {["Technique", "What it does", "Tax Use Case"].map(h => (
+              <span key={h} style={{
+                color: C.gray01, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em",
+                textTransform: "uppercase", fontFamily: F.bold,
+              }}>{h}</span>
+            ))}
+          </div>
+          {group.rows.map((row, i) => (
+            <div key={row.name} style={{
+              display: "grid", gridTemplateColumns: "1.2fr 1.6fr 2fr",
+              padding: "16px 20px", gap: 16, alignItems: "start",
+              background: i % 2 === 0 ? C.white : C.offWhite,
+              borderTop: `1px solid rgba(46,46,56,0.07)`,
+            }}>
+              <span style={{ color: C.confidentBlack, fontSize: 13, fontWeight: 700, fontFamily: F.bold, lineHeight: 1.4 }}>{row.name}</span>
+              <span style={{ color: C.gray01, fontSize: 13, fontFamily: F.regular, lineHeight: 1.6 }}>{row.does}</span>
+              <span style={{ color: C.offBlack, fontSize: 13, fontFamily: F.regular, lineHeight: 1.6 }}>{row.taxUse}</span>
+            </div>
           ))}
         </div>
-
-        {ALL_ADVANCED_TECHNIQUES.map((row, i) => (
-          <div key={row.id} style={{
-            display: "grid", gridTemplateColumns: "1.2fr 1fr 1.4fr 1.4fr 2fr 2fr",
-            padding: "18px 20px", gap: 16, alignItems: "start",
-            background: i % 2 === 0 ? C.white : C.offWhite,
-            borderTop: `1px solid rgba(46,46,56,0.07)`,
-          }}>
-            <span style={{ color: C.confidentBlack, fontSize: 13, fontWeight: 700, fontFamily: F.bold, lineHeight: 1.4 }}>{row.name}</span>
-            <span style={{
-              display: "inline-block", width: "fit-content",
-              fontSize: 10, fontWeight: 700, fontFamily: F.bold,
-              color: row.categoryColor, background: row.categoryColor + "14",
-              border: `1px solid ${row.categoryColor}33`, borderRadius: 4, padding: "3px 8px",
-            }}>{row.category}</span>
-            <span style={{ color: C.gray01, fontSize: 13, fontFamily: F.regular, lineHeight: 1.6 }}>{row.what}</span>
-            <span style={{ color: C.gray01, fontSize: 13, fontFamily: F.regular, lineHeight: 1.6 }}>{row.does}</span>
-            <span style={{ color: C.destructive, fontSize: 12, fontStyle: "italic", fontFamily: F.light, lineHeight: 1.65, background: C.destructive + "0a", borderRadius: 6, padding: "8px 12px", display: "block" }}>{row.without}</span>
-            <span style={{ color: C.success, fontSize: 12, fontStyle: "italic", fontFamily: F.light, lineHeight: 1.65, background: C.success + "0a", borderRadius: 6, padding: "8px 12px", display: "block" }}>{row.with}</span>
-          </div>
-        ))}
-      </div>
+      ))}
     </div>
   );
 }
@@ -1497,8 +1581,8 @@ function AdvancedTechniquesSection({ onDark = false }: { onDark?: boolean }) {
       }}>
         <p style={{ fontSize: 11, color: muted, margin: 0, fontFamily: F.regular, flex: 1, minWidth: 220 }}>
           {view === "wizard"
-            ? "Wizard — decompose left, walk through one facet at a time."
-            : "Table — compare all techniques side by side for quick reference."}
+            ? "Click any technique to reveal details."
+            : "Level Up catalog — Technique, What it does, and Tax Use Case."}
         </p>
         <AdvancedViewToggle view={view} onChange={setView} onDark={onDark} />
       </div>
@@ -1514,18 +1598,13 @@ function AdvancedDecomposition() {
     categoryId: ADVANCED_CATEGORIES[0].id,
     techniqueId: ADVANCED_CATEGORIES[0].techniques[0].id,
   });
-  const [facetIdx, setFacetIdx] = useState(0);
 
   const category = ADVANCED_CATEGORIES.find(c => c.id === selected.categoryId)!;
   const technique = category.techniques.find(t => t.id === selected.techniqueId)!;
-  const facet = FACETS[facetIdx];
-  const facetValue = technique[facet.key];
-  const isExample = facet.key === "without" || facet.key === "with";
 
   const selectTechnique = (categoryId: string, techniqueId: string) => {
     setSelected({ categoryId, techniqueId });
     setOpenCategoryId(categoryId);
-    setFacetIdx(0);
   };
 
   const focusRing = `2px solid ${C.yellow}`;
@@ -1548,10 +1627,10 @@ function AdvancedDecomposition() {
       }}>
         <div style={{ padding: "0 20px 16px", borderBottom: `1px solid rgba(46,46,56,0.08)` }}>
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.gray01, fontFamily: F.bold, marginBottom: 4 }}>
-            Decompose by topic
+            Prompt like a Pro — Techniques
           </div>
           <div style={{ fontSize: 13, color: C.offBlack, fontFamily: F.regular, lineHeight: 1.5 }}>
-            Pick a branch, then one technique.
+            Pick a technique to explore.
           </div>
         </div>
 
@@ -1641,111 +1720,69 @@ function AdvancedDecomposition() {
         </div>
       </nav>
 
-      <div style={{ display: "flex", flexDirection: "column", background: C.white }}>
+      {/* Detail pane — all facets stacked (no secondary tab/stepper) */}
+      <div style={{ display: "flex", flexDirection: "column", background: C.white, minHeight: 0 }}>
         <div style={{
           padding: "16px 24px",
           borderBottom: `1px solid rgba(46,46,56,0.08)`,
           display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+          flexShrink: 0,
         }}>
-          <span style={{ fontSize: 11, color: category.color, fontWeight: 700, fontFamily: F.bold }}>{category.name}</span>
-          <ChevronRight size={12} color={C.gray02} />
           <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold }}>{technique.name}</span>
-          <span style={{ marginLeft: "auto", fontSize: 11, color: C.gray01, fontFamily: F.regular }}>
-            Step {facetIdx + 1} of {FACETS.length}
-          </span>
-        </div>
-
-        <div style={{ display: "flex", gap: 6, padding: "12px 24px", borderBottom: `1px solid rgba(46,46,56,0.06)` }}>
-          {FACETS.map((f, i) => (
-            <button
-              key={f.key}
-              type="button"
-              aria-label={`View ${f.label}`}
-              aria-current={i === facetIdx ? "step" : undefined}
-              onClick={() => setFacetIdx(i)}
-              style={{
-                flex: 1,
-                height: 4,
-                borderRadius: 2,
-                border: "none",
-                cursor: "pointer",
-                background: i === facetIdx ? f.color : i < facetIdx ? f.color + "66" : "rgba(46,46,56,0.10)",
-                transition: "background 0.15s",
-              }}
-              onFocus={e => { e.currentTarget.style.outline = focusRing; e.currentTarget.style.outlineOffset = "2px"; }}
-              onBlur={e => { e.currentTarget.style.outline = "none"; }}
-            />
-          ))}
-        </div>
-
-        <div style={{ flex: 1, padding: "28px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <div style={{
-            fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-            color: facet.color, fontFamily: F.bold, marginBottom: 12,
-          }}>
-            {facet.label}
-          </div>
-          <p style={{
-            fontSize: facet.key === "taxUse" ? 15 : isExample ? 14 : 16,
-            lineHeight: 1.7,
-            color: facet.key === "without" ? C.destructive : facet.key === "with" ? C.success : C.offBlack,
-            fontFamily: isExample ? F.light : F.regular,
-            fontStyle: isExample ? "italic" : "normal",
-            margin: 0,
-            maxWidth: 560,
-            padding: isExample ? "16px 20px" : 0,
-            background: isExample
-              ? facet.key === "without" ? C.destructive + "0a" : C.success + "0a"
-              : "transparent",
-            borderRadius: isExample ? 8 : 0,
-            borderLeft: isExample ? `3px solid ${facet.color}` : "none",
-          }}>
-            {facetValue}
-          </p>
+          <span style={{ fontSize: 11, color: category.color, fontWeight: 600, fontFamily: F.bold }}>{technique.tagline}</span>
         </div>
 
         <div style={{
-          padding: "14px 24px",
-          borderTop: `1px solid rgba(46,46,56,0.08)`,
-          display: "flex", justifyContent: "space-between", alignItems: "center",
+          flex: 1,
+          overflowY: "auto",
+          padding: "24px 28px 32px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 20,
         }}>
-          <button
-            type="button"
-            disabled={facetIdx === 0}
-            onClick={() => setFacetIdx(i => i - 1)}
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "8px 14px", borderRadius: 6,
-              border: `1px solid rgba(46,46,56,0.15)`,
-              background: facetIdx === 0 ? C.offWhite : C.white,
-              color: facetIdx === 0 ? C.gray02 : C.offBlack,
-              cursor: facetIdx === 0 ? "not-allowed" : "pointer",
-              fontSize: 13, fontFamily: F.regular,
-            }}
-            onFocus={e => { if (facetIdx > 0) e.currentTarget.style.outline = focusRing; }}
-            onBlur={e => { e.currentTarget.style.outline = "none"; }}
-          >
-            <ChevronLeft size={16} /> Previous
-          </button>
-          <span style={{ fontSize: 12, color: C.gray01, fontFamily: F.regular }}>{facet.label}</span>
-          <button
-            type="button"
-            disabled={facetIdx === FACETS.length - 1}
-            onClick={() => setFacetIdx(i => i + 1)}
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "8px 14px", borderRadius: 6,
-              border: `1px solid rgba(46,46,56,0.15)`,
-              background: facetIdx === FACETS.length - 1 ? C.offWhite : C.confidentBlack,
-              color: facetIdx === FACETS.length - 1 ? C.gray02 : C.white,
-              cursor: facetIdx === FACETS.length - 1 ? "not-allowed" : "pointer",
-              fontSize: 13, fontFamily: F.bold,
-            }}
-            onFocus={e => { if (facetIdx < FACETS.length - 1) e.currentTarget.style.outline = focusRing; }}
-            onBlur={e => { e.currentTarget.style.outline = "none"; }}
-          >
-            Next <ChevronRight size={16} />
-          </button>
+          {FACETS.map(f => {
+            const isExample = f.key === "without" || f.key === "with";
+            return (
+              <section key={f.key} aria-labelledby={`facet-${technique.id}-${f.key}`}>
+                <span
+                  id={`facet-${technique.id}-${f.key}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    marginBottom: 10,
+                    padding: "4px 10px",
+                    borderRadius: 100,
+                    border: `1px solid ${f.color}55`,
+                    background: f.color + "14",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: f.color,
+                    fontFamily: F.bold,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {f.label}
+                </span>
+                <p style={{
+                  fontSize: isExample ? 14 : 16,
+                  lineHeight: 1.7,
+                  color: f.key === "without" ? C.destructive : f.key === "with" ? C.success : C.offBlack,
+                  fontFamily: isExample ? F.light : F.regular,
+                  fontStyle: isExample ? "italic" : "normal",
+                  margin: 0,
+                  maxWidth: 560,
+                  padding: isExample ? "14px 18px" : 0,
+                  background: isExample
+                    ? f.key === "without" ? C.destructive + "0a" : C.success + "0a"
+                    : "transparent",
+                  borderRadius: isExample ? 8 : 0,
+                  borderLeft: isExample ? `3px solid ${f.color}` : "none",
+                }}>
+                  {technique[f.key]}
+                </p>
+              </section>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -1771,7 +1808,7 @@ export default function AiTaxPrompting({
       <section
         id="module-content"
         style={{
-          padding: "80px 64px 72px",
+          padding: `${spacing.sectionPaddingY} ${contentInlinePad} 72px`,
           position: "relative",
           overflow: "hidden",
           backgroundColor: C.confidentBlack,
@@ -1806,23 +1843,23 @@ export default function AiTaxPrompting({
             </span>
           </div>
           <h1 style={{ fontSize: 52, fontWeight: 700, color: C.white, lineHeight: 1.15, marginBottom: 20, fontFamily: F.bold }}>
-            Basics of{" "}
-            <span style={{ color: C.yellow }}>Prompting</span>
+            The Difference Is the{" "}
+            <span style={{ color: C.yellow }}>Prompt</span>
           </h1>
           <p style={{ fontSize: 19, color: C.gray02, fontWeight: 300, lineHeight: 1.7, maxWidth: 660, fontFamily: F.light }}>
-            The quality of your AI output is a direct function of your input. Learn the 8 elements of a great prompt — and how to use them in your daily tax work.
+            A prompt isn&apos;t just a question — it&apos;s a structured instruction that determines the quality of everything AI gives you back.
           </p>
           <div style={{ display: "flex", gap: 12, marginTop: 36 }}>
             <span style={{ padding: "6px 16px", background: "rgba(255,230,0,0.10)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, color: C.yellow, fontSize: 12, fontFamily: F.bold }}>~30 min</span>
-            <span style={{ padding: "6px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, color: C.gray02, fontSize: 12, fontFamily: F.regular }}>8 Elements</span>
+            <span style={{ padding: "6px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, color: C.gray02, fontSize: 12, fontFamily: F.regular }}>7 Elements</span>
             <span style={{ padding: "6px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, color: C.gray02, fontSize: 12, fontFamily: F.regular }}>Interactive</span>
           </div>
         </div>
       </section>
 
       {/* ── 2. THE PIPELINE — neutral ── */}
-      <section id="pipeline" style={{ background: SURFACE.neutral.bg, padding: "80px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: "column", gap: 48, alignItems: "center" }}>
+      <section id="pipeline" style={{ background: SURFACE.neutral.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+        <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column", gap: 48, alignItems: "center" }}>
           {/* Header */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, width: "100%" }}>
             <div style={{
@@ -1841,7 +1878,7 @@ export default function AiTaxPrompting({
               fontSize: 16, color: C.offBlack, fontFamily: F.light, lineHeight: "24px",
               textAlign: "center", maxWidth: 760, margin: 0,
             }}>
-              AI responds to the instructions you provide. Better instructions produce better results.
+              AI responds to the instructions you provide. Better instructions produce better results
             </p>
           </div>
 
@@ -1867,9 +1904,12 @@ export default function AiTaxPrompting({
                 }}>Instruction</span>
               </div>
 
-              <ArrowRight size={16} color={C.white} strokeWidth={2} style={{ flexShrink: 0 }} />
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, flexShrink: 0 }}>
+                <span style={{ fontSize: 10, color: C.gray01, fontFamily: F.regular }}>sends prompt</span>
+                <ArrowRight size={16} color={C.white} strokeWidth={2} />
+              </div>
 
-              {/* AI ENGINE */}
+              {/* AI */}
               <div style={{
                 background: C.yellow, border: `1.5px solid ${C.gray02}`, borderRadius: 16,
                 width: 220, padding: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
@@ -1877,7 +1917,7 @@ export default function AiTaxPrompting({
                 <div style={{ background: C.yellow, borderRadius: 100, padding: 12, display: "flex" }}>
                   <Cpu size={24} color={C.offBlack} strokeWidth={2} />
                 </div>
-                <span style={{ fontSize: 15, color: C.offBlack, fontFamily: F.regular, lineHeight: "25.5px" }}>AI ENGINE</span>
+                <span style={{ fontSize: 15, color: C.offBlack, fontFamily: F.regular, lineHeight: "25.5px" }}>AI</span>
                 <span style={{
                   border: `1px solid ${C.gray02}`, borderRadius: 16, padding: "2px 8px",
                   fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: "22.4px",
@@ -1885,7 +1925,10 @@ export default function AiTaxPrompting({
                 }}>Processes</span>
               </div>
 
-              <ArrowRight size={16} color={C.white} strokeWidth={2} style={{ flexShrink: 0 }} />
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, flexShrink: 0 }}>
+                <span style={{ fontSize: 10, color: C.gray01, fontFamily: F.regular }}>returns output</span>
+                <ArrowRight size={16} color={C.white} strokeWidth={2} />
+              </div>
 
               {/* RESULT — light success surface so dark type stays WCAG-readable */}
               <div style={{
@@ -1927,71 +1970,72 @@ export default function AiTaxPrompting({
       {/* ── 3. TEAM BRIEFING — brief a colleague, not an AI agent ── */}
       <TeamBriefingSection />
 
-      {/* ── 4. 8 ELEMENTS — Figma Section Elements ── */}
+      {/* ── 4. 7 ELEMENTS — Figma Section Elements ── */}
       <EightElementsWizard />
 
       {/* ── 5. AI PARALLEL — Same AI, Lazy Ask vs Pro Ask ── */}
       <AiLazyProSection />
 
       {/* ── 6. PROMPT STACK BUILDER — light ── */}
-      <section id="stack-builder" style={{ background: SURFACE.light.bg, padding: "80px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <section id="stack-builder" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+        <div style={{ ...contentRailStyle }}>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
             Build a Perfect Prompt — Piece by Piece
           </h2>
           <p style={{ fontSize: 16, color: C.gray01, textAlign: "center", lineHeight: 1.7, marginBottom: 8, fontFamily: F.light, maxWidth: 650, marginLeft: "auto", marginRight: "auto" }}>
-            Click each ingredient below to add it to the prompt stack. Watch your prompt assemble in real time.
+            Click each ingredient below to add it to the prompt. Watch it come together like assembling a client brief.
           </p>
           <p style={{ fontSize: 13, color: C.gray01, textAlign: "center", marginBottom: 32, fontFamily: F.regular }}>
-            Use case: Analyzing withholding tax on software royalty payments from India to the US
+            Use case: Analyzing withholding tax on software royalty payments to a US parent company
           </p>
           <PromptStackBuilder />
         </div>
       </section>
 
-      {/* ── 7. ADVANCED TECHNIQUES — dark ── */}
-      <section id="advanced" style={{ background: SURFACE.dark.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <p style={{ color: SURFACE.dark.eyebrow, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 10 }}>
-            NEXT LEVEL
-          </p>
+      {/* ── 7. TECHNIQUES + LEVEL UP — dark ── */}
+      <section id="advanced" style={{ background: SURFACE.dark.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+        <div style={{ ...contentRailStyle }}>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: SURFACE.dark.heading, marginBottom: 8, fontFamily: F.bold }}>
-            Advanced Prompting Techniques
+            Prompt like a Pro — Techniques
           </h2>
           <p style={{ fontSize: 16, color: SURFACE.dark.body, lineHeight: 1.7, marginBottom: 12, fontFamily: F.light, maxWidth: 680 }}>
-            Once you've mastered the 8 elements, these techniques help you get more precise, structured, and creative output.
+            Now that you know the elements, here are 8 techniques to level up your prompting game.
           </p>
           <AdvancedTechniquesSection onDark />
         </div>
       </section>
 
-      {/* ── 8. MATCH THE PROMPT — interactive activity (Figma 3215:5657) ── */}
+      {/* ── 8. META PROMPT — temporarily hidden ── */}
+      {/* <MetaPromptSection /> */}
+
+      {/* ── 9. MATCH THE PROMPT — interactive activity (Figma 3215:5657) ── */}
       <MatchPromptActivity />
 
-      {/* ── 9. DOS AND DON'TS — light ── */}
-      <section id="dos-donts" style={{ background: SURFACE.light.bg, padding: "72px 64px", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      {/* ── 10. GOLDEN RULES — Do's & Don'ts ── */}
+      <section id="dos-donts" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+        <div style={{ ...contentRailStyle }}>
           <p style={{ color: SURFACE.light.eyebrow, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 10 }}>
-            GUARDRAILS
+            The Golden Rules
           </p>
-          <h2 style={{ fontSize: 36, fontWeight: 700, color: SURFACE.light.heading, marginBottom: 48, fontFamily: F.bold }}>
-            Do's & Don'ts
+          <h2 style={{ fontSize: 36, fontWeight: 700, color: SURFACE.light.heading, marginBottom: 8, fontFamily: F.bold }}>
+            Prompt Engineering — Do&apos;s &amp; Don&apos;ts
           </h2>
+          <p style={{ fontSize: 15, color: C.gray01, marginBottom: 40, fontFamily: F.light, lineHeight: 1.6 }}>
+            A practical guide for tax professionals. Each card includes a real example.
+          </p>
 
           <div>
-            {/* Column headers */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, marginBottom: 16 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 18px", background: C.success + "1a", border: `1px solid ${C.success}40`, borderRadius: 8 }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.success} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span style={{ color: C.success, fontSize: 14, fontWeight: 700, fontFamily: F.bold }}>DO THIS</span>
+                <span style={{ color: C.success, fontSize: 14, fontWeight: 700, fontFamily: F.bold }}>✅ Do&apos;s</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 18px", background: C.destructive + "1a", border: `1px solid ${C.destructive}40`, borderRadius: 8 }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.destructive} strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                <span style={{ color: C.destructive, fontSize: 14, fontWeight: 700, fontFamily: F.bold }}>DON'T DO THIS</span>
+                <span style={{ color: C.destructive, fontSize: 14, fontWeight: 700, fontFamily: F.bold }}>❌ Don&apos;ts</span>
               </div>
             </div>
 
-            {/* Paired rows — each Do/Don't card stretches to the same height */}
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {DOS.map((doItem, i) => {
                 const dontItem = DONTS[i];
@@ -2003,20 +2047,22 @@ export default function AiTaxPrompting({
                       padding: "16px 18px", background: SURFACE.neutral.bg, borderRadius: 8,
                       border: `1px solid ${SURFACE.light.border}`,
                       borderLeft: `3px solid ${C.success}`,
-                      display: "flex", flexDirection: "column",
+                      display: "flex", flexDirection: "column", gap: 8,
                     }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: C.success, marginBottom: 5, fontFamily: F.bold }}>{doItem.title}</div>
-                      <div style={{ fontSize: 13, color: SURFACE.light.body, lineHeight: 1.6, fontFamily: F.regular, flex: 1 }}>{doItem.desc}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: C.success, fontFamily: F.bold }}>{doItem.title}</div>
+                      <div style={{ fontSize: 13, color: SURFACE.light.body, lineHeight: 1.6, fontFamily: F.regular }}>{doItem.desc}</div>
+                      <div style={{ fontSize: 12, color: C.gray01, lineHeight: 1.55, fontFamily: F.light, fontStyle: "italic", marginTop: "auto", paddingTop: 8 }}>{doItem.example}</div>
                     </div>
                     <div style={{
                       height: "100%",
                       padding: "16px 18px", background: SURFACE.neutral.bg, borderRadius: 8,
                       border: `1px solid ${SURFACE.light.border}`,
                       borderLeft: `3px solid ${C.destructive}`,
-                      display: "flex", flexDirection: "column",
+                      display: "flex", flexDirection: "column", gap: 8,
                     }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: C.destructive, marginBottom: 5, fontFamily: F.bold }}>{dontItem.title}</div>
-                      <div style={{ fontSize: 13, color: SURFACE.light.body, lineHeight: 1.6, fontFamily: F.regular, flex: 1 }}>{dontItem.desc}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: C.destructive, fontFamily: F.bold }}>{dontItem.title}</div>
+                      <div style={{ fontSize: 13, color: SURFACE.light.body, lineHeight: 1.6, fontFamily: F.regular }}>{dontItem.desc}</div>
+                      <div style={{ fontSize: 12, color: C.gray01, lineHeight: 1.55, fontFamily: F.light, fontStyle: "italic", marginTop: "auto", paddingTop: 8 }}>{dontItem.example}</div>
                     </div>
                   </div>
                 );
@@ -2024,10 +2070,9 @@ export default function AiTaxPrompting({
             </div>
           </div>
 
-          {/* Disclaimer */}
           <div style={{ marginTop: 40, padding: "14px 22px", background: C.yellowAlpha10, border: `1px solid ${C.yellow}33`, borderRadius: 8, textAlign: "center" }}>
-            <p style={{ fontSize: 12, color: C.eyebrowGold, lineHeight: 1.6, fontFamily: F.regular }}>
-              ⚠️ AI tools are assistants, not advisors. All output must be reviewed by a qualified tax professional before client delivery. Never input confidential or personally identifiable information into public AI platforms.
+            <p style={{ fontSize: 12, color: C.eyebrowGold, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
+              ⚠️ FOR INFORMATIONAL PURPOSES ONLY. ALWAYS CONSULT YOUR QUALIFIED TAX ADVISOR BEFORE ACTING ON ANY AI-GENERATED OUTPUT.
             </p>
           </div>
         </div>
@@ -2040,8 +2085,8 @@ export default function AiTaxPrompting({
       <WhatsNextSection onContinue={() => onNavigate("/copilot-hub")} />
 
       {/* ── Footer — light ── */}
-      <div style={{ background: SURFACE.light.bg, borderTop: `1px solid ${SURFACE.light.border}`, padding: "24px 64px", textAlign: "center" }}>
-        <p style={{ color: C.gray01, fontSize: 12, fontFamily: F.regular }}>EY.ai Tax Labs · AI Tax Prompting Module · For internal training use only. Not for external distribution.</p>
+      <div style={{ background: SURFACE.light.bg, borderTop: `1px solid ${SURFACE.light.border}`, padding: `24px ${contentInlinePad}`, textAlign: "center" }}>
+        <p style={{ color: C.gray01, fontSize: 12, fontFamily: F.regular }}>© 2026 EY India AI Tax Hub — Part 2: Basics of Prompting | Building a better working world</p>
       </div>
 
     </div>
