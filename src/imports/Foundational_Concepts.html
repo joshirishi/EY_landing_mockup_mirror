@@ -42,6 +42,8 @@
   --accent-blue: #4696FF;
   --accent-orange: #FF7D1E;
   --accent-purple: #B400FF;
+  --facebook-blue: #1877F2; /* chart comparison only — Facebook brand */
+  --dropbox-blue: #0061FF; /* chart comparison only — Dropbox brand */
 
   /* Section surface cycle — Light → Neutral → Dark */
   --surface-light: var(--white);
@@ -366,7 +368,7 @@ body {
 }
 .rise-section .rise-title .hl { color: var(--ey-yellow); }
 .rise-section .rise-sub {
-  margin: 0 0 8px;
+  margin: 0 0 24px;
   font-size: 16px;
   font-weight: 400;
   color: var(--gray-02);
@@ -470,7 +472,7 @@ body {
   text-align: center;
 }
 .wrong-section .wrong-sub {
-  margin: 0 0 8px;
+  margin: 0 0 24px;
   font-size: 16px;
   font-weight: 400;
   color: var(--gray-01);
@@ -1199,10 +1201,13 @@ body {
   align-items: center;
   gap: 16px;
   margin-top: 64px;
+  padding: 24px 32px;
+  background: var(--ey-yellow);
+  border-radius: 12px; /* matches .paths-card */
 }
 .paths-footer-msg {
   font-size: 18px; font-weight: 700;
-  color: #2e2e38;
+  color: var(--ey-dark); /* readable on EY yellow */
   margin: 0;
   text-align: center;
 }
@@ -1213,7 +1218,7 @@ body {
   gap: 8px;
   height: 36px;
   padding: 8px 14px;
-  background: #2e2e38;
+  background: var(--confident-black);
   color: var(--white);
   border-radius: 4px;
   font-size: 14px; font-weight: 400;
@@ -1771,6 +1776,11 @@ body {
   padding: 2px 10px;
   border-radius: 999px;
 }
+.quiz-spot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 .quiz-spot-card {
   background: var(--white);
   border: 1px solid var(--gray-02);
@@ -1779,6 +1789,23 @@ body {
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .quiz-spot-card:hover { border-color: rgba(70,150,255,0.35); }
+.quiz-spot-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+.quiz-spot-prompt {
+  color: var(--ey-dark);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+.quiz-spot-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
 .quiz-spot-num {
   background: rgba(70,150,255,0.12);
   color: var(--accent-blue);
@@ -1880,7 +1907,8 @@ body {
 @media (max-width: 720px) {
   .quiz-ex-panel { padding: 24px 18px; }
   #quiz [style*="grid-template-columns:1fr 200px"],
-  #quiz [style*="grid-template-columns:1fr 1fr"] {
+  #quiz [style*="grid-template-columns:1fr 1fr"],
+  .quiz-spot-grid {
     grid-template-columns: 1fr !important;
   }
 }
@@ -2177,43 +2205,37 @@ document.getElementById('hero-video').addEventListener('ended', function() {
     <div class="velocity-row">
       <span class="velocity-label">Netflix</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--muted" style="width:100%;"></div></div>
-        <span class="velocity-value">3.5 years</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--red" style="width:100%;"><span class="velocity-value">3.5 years</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Facebook</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--muted" style="width:57%;"></div></div>
-        <span class="velocity-value">10 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--facebook" style="width:57%;"><span class="velocity-value">10 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Dropbox</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--muted" style="width:40%;"></div></div>
-        <span class="velocity-value">7 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--dropbox" style="width:40%;"><span class="velocity-value">7 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Spotify</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--muted" style="width:28%;"></div></div>
-        <span class="velocity-value">5 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--green" style="width:28%; min-width:86px;"><span class="velocity-value">5 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label">Instagram</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--muted" style="width:16%;"></div></div>
-        <span class="velocity-value">2.5 months</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--orange" style="width:16%; min-width:106px;"><span class="velocity-value">2.5 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
       <span class="velocity-label velocity-label--accent">ChatGPT</span>
       <div class="velocity-track">
-        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--accent" style="width:12%;"></div></div>
-        <span class="velocity-value">5 days</span>
+        <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--accent" style="width:12%; min-width:68px;"><span class="velocity-value">5 days</span></div></div>
       </div>
     </div>
 
@@ -2308,7 +2330,6 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
 }
 .velocity-bar-wrap {
   flex: 1;
@@ -2317,15 +2338,28 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 .velocity-bar {
   height: 24px;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 .velocity-bar--muted { background: var(--gray-01); }
+.velocity-bar--red { background: var(--accent-red); }
+.velocity-bar--facebook { background: var(--facebook-blue); }
+.velocity-bar--dropbox { background: var(--dropbox-blue); }
+.velocity-bar--green { background: var(--accent-green); }
+.velocity-bar--orange { background: var(--accent-orange); }
 .velocity-bar--accent { background: var(--ey-yellow); }
 .velocity-value {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--ey-dark);
+  color: var(--white);
   white-space: nowrap;
-  flex-shrink: 0;
+  line-height: 1;
+}
+.velocity-bar--accent .velocity-value {
+  color: var(--ey-dark);
 }
 .velocity-divider {
   width: 100%;
@@ -2376,9 +2410,8 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   .velocity-section h2 { font-size: 24px; line-height: 32px; }
   .velocity-row { gap: 12px; }
   .velocity-label { width: 84px; font-size: 13px; }
-  .velocity-track { gap: 10px; }
   .velocity-bar { height: 18px; }
-  .velocity-value { font-size: 12px; }
+  .velocity-value { font-size: 11px; }
   .velocity-callout-title { font-size: 22px; }
 }
 </style>
@@ -2598,7 +2631,7 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 <section id="rise-of-ai" class="rise-section surface-dark" aria-labelledby="rise-heading">
   <h2 id="rise-heading" class="rise-title">The <span class="hl">Meteoric Rise</span> of AI</h2>
   <p class="rise-sub">Recent headlines capturing AI's explosive growth</p>
-  <p class="rise-hint">click any card to view the full article</p>
+  <!-- <p class="rise-hint">click any card to view the full article</p> -->
 
   <div class="rise-grid">
     <article class="rise-card" onclick="openLightbox('/gov.uk.png','GOV.UK — Britain powers ahead on AI · 12 June 2026')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}">
@@ -2675,7 +2708,7 @@ document.addEventListener('keydown', function(e) {
 <section id="reality-check" class="wrong-section surface-neutral" aria-labelledby="wrong-heading">
   <h2 id="wrong-heading" class="wrong-title">The Reality Check: AI Adoption Gap</h2>
   <p class="wrong-sub">Investment has not always translated into impact</p>
-  <p class="wrong-hint">click any card to view the full article</p>
+  <!-- <p class="wrong-hint">click any card to view the full article</p> -->
 
   <div class="wrong-grid">
     <article class="wrong-card" onclick="openLightbox('/95pct.png','Times of India — 95% companies have seen zero return · 30 September 2025')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}">
@@ -2784,7 +2817,8 @@ document.addEventListener('keydown', function(e) {
   <div class="paths-footer">
     <p class="paths-footer-msg">Understanding AI is the first step toward realizing its value.</p>
     <a class="paths-cta" href="#evolution">
-      Let's Start with the Fundamentals👇
+      Let's Start with the Fundamentals
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
     </a>
   </div>
 </section>
@@ -3491,13 +3525,18 @@ function renderBeat(flipIn) {
 .cheat-col-head {
   list-style: none;
   border-top: 3px solid currentColor;
-  padding: 14px 0 4px;
+  padding: 14px 16px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   cursor: pointer;
-  color: inherit;
+  color: var(--ey-on-dark);
+  background: var(--ey-bg-card);
+  border-left: 1px solid var(--ey-border-on-dark);
+  border-right: 1px solid var(--ey-border-on-dark);
+  border-bottom: 1px solid var(--ey-border-on-dark);
+  border-radius: 0 0 8px 8px;
   user-select: none;
 }
 .cheat-col-head::-webkit-details-marker { display: none; }
@@ -3513,13 +3552,14 @@ function renderBeat(flipIn) {
 .cheat-chevron {
   display: block;
   flex-shrink: 0;
-  color: var(--gray-01);
+  color: var(--ey-on-dark-72);
   transition: transform 0.2s;
 }
 .cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
 .cheat-col[data-tone="create"] { color: var(--ey-dark); }
-.cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-dark); border-top-color: var(--ey-yellow); }
-.cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-dark); }
+/* Dark header bar — accent colors stay on icon + top border only */
+.cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-on-dark); border-top-color: var(--ey-yellow); }
+.cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-on-dark); }
 .cheat-col[data-tone="create"] .cheat-col-label svg { color: var(--ey-yellow); }
 .cheat-col[data-tone="understand"] .cheat-col-head { color: var(--accent-blue); border-top-color: var(--accent-blue); }
 .cheat-col[data-tone="organize"] .cheat-col-head { color: var(--accent-green); border-top-color: var(--accent-green); }
@@ -3529,9 +3569,12 @@ function renderBeat(flipIn) {
 .cheat-col[data-tone="organize"] .cheat-card-icon { color: var(--accent-green); }
 .cheat-col[data-tone="think"] .cheat-card-icon { color: var(--accent-purple); }
 .cheat-col-body {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 12px;
+}
+.cheat-col[open] > .cheat-col-body {
+  display: flex;
 }
 .cheat-card {
   background: var(--white);
@@ -3623,6 +3666,9 @@ function renderBeat(flipIn) {
   .cheat-col-head {
     padding: 16px 18px;
     border-top-width: 3px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
   .cheat-col-body {
     padding: 0 18px 18px;
@@ -3641,10 +3687,12 @@ function renderBeat(flipIn) {
   var cols = Array.prototype.slice.call(root.querySelectorAll('.cheat-col'));
   var mq = window.matchMedia('(max-width: 900px)');
 
+  // Default: all columns closed (desktop + mobile), enforced defensively in
+  // case any `open` attribute slips into the markup.
   function syncMode() {
-    // Default: all columns closed (desktop + mobile)
     cols.forEach(function (col) { col.open = false; });
   }
+  syncMode();
 
   cols.forEach(function (col) {
     col.addEventListener('toggle', function () {
@@ -3691,13 +3739,12 @@ function renderBeat(flipIn) {
     resizeTimer = setTimeout(equalizeCardRows, 100);
   }
 
-  syncMode();
   equalizeCardRows();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeCardRows);
   window.addEventListener('load', equalizeCardRows);
   window.addEventListener('resize', scheduleEqualize);
-  if (mq.addEventListener) mq.addEventListener('change', function () { syncMode(); equalizeCardRows(); });
-  else if (mq.addListener) mq.addListener(function () { syncMode(); equalizeCardRows(); });
+  if (mq.addEventListener) mq.addEventListener('change', equalizeCardRows);
+  else if (mq.addListener) mq.addListener(equalizeCardRows);
 })();
 </script>
 
@@ -4028,7 +4075,7 @@ function renderBeat(flipIn) {
 <!-- ======== INTERACTIVE EXERCISES ======== -->
 <section class="section surface-neutral quiz-section" id="quiz" style="padding:100px 60px;">
   <h2>Test Your Understanding</h2>
-  <p class="section-subtitle">Two exercises to check what you have learned.</p>
+  <!-- <p class="section-subtitle">Two exercises to check what you have learned.</p> -->
 
   <!-- â”€â”€ EXERCISE 1: Match the Explanation â”€â”€ -->
   <div class="quiz-ex-panel">
@@ -4038,7 +4085,7 @@ function renderBeat(flipIn) {
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B89B00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 10h2a2 2 0 0 1 0 4h-2"/><line x1="6" y1="12" x2="10" y2="12"/></svg>
       </div>
       <div>
-        <div class="quiz-ex-eyebrow is-yellow">Exercise 1</div>
+        <!-- <div class="quiz-ex-eyebrow is-yellow">Exercise 1</div> -->
         <h3 style="color:var(--ey-dark); font-size:21px; font-weight:700; margin:0;">Match the Explanation</h3>
       </div>
     </div>
@@ -4151,7 +4198,7 @@ function renderBeat(flipIn) {
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="22" y1="12" x2="15" y2="12"/><line x1="9" y1="12" x2="2" y2="12"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/></svg>
       </div>
       <div>
-        <div class="quiz-ex-eyebrow is-blue">Exercise 2</div>
+        <!-- <div class="quiz-ex-eyebrow is-blue">Exercise 2</div> -->
         <h3 style="color:var(--ey-dark); font-size:21px; font-weight:700; margin:0;">Spot the Right Technology</h3>
       </div>
     </div>
@@ -4164,15 +4211,15 @@ function renderBeat(flipIn) {
       <span style="color:var(--gray-01); font-size:12px;">correct</span>
     </div>
 
-    <!-- Scenarios 1-5 -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+    <!-- Interleaved scenarios (easy + formerly tricky) in one 2-col grid -->
+    <div class="quiz-spot-grid">
 
       <div id="sc1" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
+        <div class="quiz-spot-head">
           <span class="quiz-spot-num">1</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A traffic signal automatically changes from green to red based on programmed timing rules.</p>
+          <p class="quiz-spot-prompt">A traffic signal automatically changes from green to red based on programmed timing rules.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc1','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc1','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc1','DL')">Deep Learning</button>
@@ -4182,87 +4229,12 @@ function renderBeat(flipIn) {
         <div id="sc1-reveal" class="spot-reveal"><strong>Artificial Intelligence</strong></div>
       </div>
 
-      <div id="sc2" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
+      <div id="sc6" class="quiz-spot-card">
+        <div class="quiz-spot-head">
           <span class="quiz-spot-num">2</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A shopping app recommends products based on a customer's previous purchases.</p>
+          <p class="quiz-spot-prompt">A chatbot answers questions from a company's HR policy documents.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc2','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc2','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc2','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc2','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc2','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc2-reveal" class="spot-reveal"><strong>Machine Learning</strong></div>
-      </div>
-
-      <div id="sc3" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span class="quiz-spot-num">3</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A smartphone unlocks when it recognizes its owner's face.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc3','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc3','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc3','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc3','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc3','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc3-reveal" class="spot-reveal"><strong>Deep Learning</strong></div>
-      </div>
-
-      <div id="sc4" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span class="quiz-spot-num">4</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A user asks Copilot to draft an email explaining GST implications.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc4','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc4','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc4','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc4','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc4','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc4-reveal" class="spot-reveal"><strong>Generative AI</strong></div>
-      </div>
-
-      <div id="sc5" style="background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 18px; grid-column:1/-1;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span class="quiz-spot-num">5</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A system monitors tax notices, identifies deadlines, gathers supporting documents and prepares a review package.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc5','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc5','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc5','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc5','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc5','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc5-reveal" class="spot-reveal"><strong>Agentic AI</strong></div>
-      </div>
-
-    </div>
-
-    <!-- Tricky Scenarios divider -->
-    <div style="display:flex; align-items:center; gap:12px; margin:4px 0 20px;">
-      <div style="flex:1; height:1px; background:var(--white);"></div>
-      <div style="display:flex; align-items:center; gap:7px; background:rgba(255,107,107,0.07); border:1px solid rgba(255,107,107,0.18); border-radius:20px; padding:5px 14px;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span style="color:#FF4136; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px;">Tricky Scenarios</span>
-      </div>
-      <div style="flex:1; height:1px; background:var(--white);"></div>
-    </div>
-
-    <!-- Scenarios 6-10 -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-
-      <div id="sc6" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">6</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A chatbot answers questions from a company's HR policy documents.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc6','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc6','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc6','DL')">Deep Learning</button>
@@ -4275,12 +4247,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc7" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">7</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A bank detects unusual spending activity on a credit card.</p>
+      <div id="sc2" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">3</span>
+          <p class="quiz-spot-prompt">A shopping app recommends products based on a customer's previous purchases.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc2','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc2','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc2','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc2','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc2','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc2-reveal" class="spot-reveal"><strong>Machine Learning</strong></div>
+      </div>
+
+      <div id="sc7" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">4</span>
+          <p class="quiz-spot-prompt">A bank detects unusual spending activity on a credit card.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc7','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc7','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc7','DL')">Deep Learning</button>
@@ -4293,12 +4280,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc8" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">8</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A system extracts values from scanned invoices with different formats and layouts.</p>
+      <div id="sc3" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">5</span>
+          <p class="quiz-spot-prompt">A smartphone unlocks when it recognizes its owner's face.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc3','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc3','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc3','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc3','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc3','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc3-reveal" class="spot-reveal"><strong>Deep Learning</strong></div>
+      </div>
+
+      <div id="sc8" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">6</span>
+          <p class="quiz-spot-prompt">A system extracts values from scanned invoices with different formats and layouts.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc8','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc8','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc8','DL')">Deep Learning</button>
@@ -4311,12 +4313,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc9" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">9</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A user uploads a GST notice and asks AI to summarize the key issues.</p>
+      <div id="sc4" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">7</span>
+          <p class="quiz-spot-prompt">A user asks Copilot to draft an email explaining GST implications.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc4','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc4','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc4','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc4','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc4','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc4-reveal" class="spot-reveal"><strong>Generative AI</strong></div>
+      </div>
+
+      <div id="sc9" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">8</span>
+          <p class="quiz-spot-prompt">A user uploads a GST notice and asks AI to summarize the key issues.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc9','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc9','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc9','DL')">Deep Learning</button>
@@ -4329,12 +4346,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc10" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px; grid-column:1/-1;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">10</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A virtual assistant receives a goal, reviews a notice, checks internal guidance, drafts responses, requests missing documents and updates a tracker automatically.</p>
+      <div id="sc5" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">9</span>
+          <p class="quiz-spot-prompt">A system monitors tax notices, identifies deadlines, gathers supporting documents and prepares a review package.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc5','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc5','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc5','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc5','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc5','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc5-reveal" class="spot-reveal"><strong>Agentic AI</strong></div>
+      </div>
+
+      <div id="sc10" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">10</span>
+          <p class="quiz-spot-prompt">A virtual assistant receives a goal, reviews a notice, checks internal guidance, drafts responses, requests missing documents and updates a tracker automatically.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc10','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc10','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc10','DL')">Deep Learning</button>
