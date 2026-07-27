@@ -66,7 +66,7 @@ function PipelineCard({
   );
 }
 
-/** Curved ring labels — "Core Processing Pipeline" (left, gray half) / "MS 365 Copilot" (right, white half). */
+/** Curved ring labels — "Core Processing Pipeline" (left, gray half) / "M365" (right, white half). */
 function RingLabels() {
   return (
     <svg
@@ -94,11 +94,11 @@ function RingLabels() {
         fontFamily="EYInterstate:Bold, sans-serif"
         fontWeight={700}
         fontSize={13.5}
-        letterSpacing="0.5"
+        letterSpacing="4"
         fill="#1a1a24"
       >
         <textPath href="#ring-label-right" startOffset="50%" textAnchor="middle">
-          MS 365 Copilot
+          M365
         </textPath>
       </text>
     </svg>
