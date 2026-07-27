@@ -1201,7 +1201,7 @@ const PHASE_CARDS = [
     week: "Week 1-2",
     number: 1,
     title: "Foundational Training Workshops",
-    description: "Covers AI concepts in Tax, Prompt engineering basics, and M365 Copilot across tax use cases.",
+    description: "2 workshops 1.5 hours each",
     locked: false,
     completed: false,
     coverage: ["AI concepts in Tax", "Prompt engineering (basics)", "M365 Copilot across tax use cases"],
@@ -1212,7 +1212,8 @@ const PHASE_CARDS = [
     week: "Week 3-4",
     number: 2,
     title: "Brainstorming Use Cases",
-    description: "Identify high-impact tax processes for AI, map current workflows, and classify opportunities between AI agents and prompts.",
+    // description: "Identify high-impact tax processes for AI, map current workflows, and classify opportunities between AI agents and prompts.",
+    description: "1 workshop + 2 followups",
     locked: true,
     completed: false,
     coverage: ["Identify 5–7 tax processes for AI", "Use cases across current tax workflow", "Agent vs Prompt classification"],
@@ -1223,7 +1224,8 @@ const PHASE_CARDS = [
     week: "Week 5-6",
     number: 3,
     title: "AI Agents & Prompts",
-    description: "Advanced, hands-on training in prompt engineering and M365 Copilot agent design for the use cases identified in Phase 2.",
+    // description: "Advanced, hands-on training in prompt engineering and M365 Copilot agent design for the use cases identified in Phase 2.",
+    description: "2 workshops 1.5 hours each",
     locked: true,
     completed: false,
     coverage: ["Advanced prompt engineering (hands-on)", "M365 Copilot Agent design (hands-on)", "Guided Prompt Library Development"],
@@ -1234,7 +1236,8 @@ const PHASE_CARDS = [
     week: "Week 6",
     number: 4,
     title: "Closure & AI Reinforcement",
-    description: "Assess AI readiness, review adoption through Viva Insights, and establish governance guidance to close out the engagement responsibly.",
+    // description: "Assess AI readiness, review adoption through Viva Insights, and establish governance guidance to close out the engagement responsibly.",
+    description: "1 call/meeting x 2 hours",
     locked: true,
     completed: false,
     coverage: ["AI Readiness Assessment", "Viva Insights Dashboard", "AI governance guidance"],
@@ -1364,7 +1367,7 @@ function CardGrid({ onProceed }: { onProceed?: () => void }) {
   return (
     <div className="relative shrink-0 w-full min-w-0">
       <div className="content-stretch flex flex-col gap-[24px] items-stretch px-4 sm:px-8 md:px-[64px] relative size-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[24px] relative shrink-0 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-[24px] relative shrink-0 w-full">
           <PhaseCard phase={PHASE_CARDS[0]} onProceed={onProceed} />
           <PhaseCard phase={PHASE_CARDS[1]} />
           <PhaseCard phase={PHASE_CARDS[2]} />
