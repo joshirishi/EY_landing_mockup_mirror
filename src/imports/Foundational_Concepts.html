@@ -1740,6 +1740,11 @@ body {
   padding: 2px 10px;
   border-radius: 999px;
 }
+.quiz-spot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 .quiz-spot-card {
   background: var(--white);
   border: 1px solid var(--gray-02);
@@ -1748,6 +1753,23 @@ body {
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .quiz-spot-card:hover { border-color: rgba(70,150,255,0.35); }
+.quiz-spot-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+.quiz-spot-prompt {
+  color: var(--ey-dark);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+.quiz-spot-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
 .quiz-spot-num {
   background: rgba(70,150,255,0.12);
   color: var(--accent-blue);
@@ -1849,7 +1871,8 @@ body {
 @media (max-width: 720px) {
   .quiz-ex-panel { padding: 24px 18px; }
   #quiz [style*="grid-template-columns:1fr 200px"],
-  #quiz [style*="grid-template-columns:1fr 1fr"] {
+  #quiz [style*="grid-template-columns:1fr 1fr"],
+  .quiz-spot-grid {
     grid-template-columns: 1fr !important;
   }
 }
@@ -3912,7 +3935,7 @@ function renderBeat(flipIn) {
 <!-- ======== INTERACTIVE EXERCISES ======== -->
 <section class="section surface-neutral quiz-section" id="quiz" style="padding:100px 60px;">
   <h2>Test Your Understanding</h2>
-  <p class="section-subtitle">Two exercises to check what you have learned.</p>
+  <!-- <p class="section-subtitle">Two exercises to check what you have learned.</p> -->
 
   <!-- â”€â”€ EXERCISE 1: Match the Explanation â”€â”€ -->
   <div class="quiz-ex-panel">
@@ -3922,7 +3945,7 @@ function renderBeat(flipIn) {
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B89B00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 10h2a2 2 0 0 1 0 4h-2"/><line x1="6" y1="12" x2="10" y2="12"/></svg>
       </div>
       <div>
-        <div class="quiz-ex-eyebrow is-yellow">Exercise 1</div>
+        <!-- <div class="quiz-ex-eyebrow is-yellow">Exercise 1</div> -->
         <h3 style="color:var(--ey-dark); font-size:21px; font-weight:700; margin:0;">Match the Explanation</h3>
       </div>
     </div>
@@ -4035,7 +4058,7 @@ function renderBeat(flipIn) {
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="22" y1="12" x2="15" y2="12"/><line x1="9" y1="12" x2="2" y2="12"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/></svg>
       </div>
       <div>
-        <div class="quiz-ex-eyebrow is-blue">Exercise 2</div>
+        <!-- <div class="quiz-ex-eyebrow is-blue">Exercise 2</div> -->
         <h3 style="color:var(--ey-dark); font-size:21px; font-weight:700; margin:0;">Spot the Right Technology</h3>
       </div>
     </div>
@@ -4048,15 +4071,15 @@ function renderBeat(flipIn) {
       <span style="color:var(--gray-01); font-size:12px;">correct</span>
     </div>
 
-    <!-- Scenarios 1-5 -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+    <!-- Interleaved scenarios (easy + formerly tricky) in one 2-col grid -->
+    <div class="quiz-spot-grid">
 
       <div id="sc1" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
+        <div class="quiz-spot-head">
           <span class="quiz-spot-num">1</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A traffic signal automatically changes from green to red based on programmed timing rules.</p>
+          <p class="quiz-spot-prompt">A traffic signal automatically changes from green to red based on programmed timing rules.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc1','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc1','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc1','DL')">Deep Learning</button>
@@ -4066,87 +4089,12 @@ function renderBeat(flipIn) {
         <div id="sc1-reveal" class="spot-reveal"><strong>Artificial Intelligence</strong></div>
       </div>
 
-      <div id="sc2" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
+      <div id="sc6" class="quiz-spot-card">
+        <div class="quiz-spot-head">
           <span class="quiz-spot-num">2</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A shopping app recommends products based on a customer's previous purchases.</p>
+          <p class="quiz-spot-prompt">A chatbot answers questions from a company's HR policy documents.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc2','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc2','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc2','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc2','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc2','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc2-reveal" class="spot-reveal"><strong>Machine Learning</strong></div>
-      </div>
-
-      <div id="sc3" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span class="quiz-spot-num">3</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A smartphone unlocks when it recognizes its owner's face.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc3','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc3','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc3','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc3','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc3','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc3-reveal" class="spot-reveal"><strong>Deep Learning</strong></div>
-      </div>
-
-      <div id="sc4" class="quiz-spot-card">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span class="quiz-spot-num">4</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A user asks Copilot to draft an email explaining GST implications.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc4','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc4','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc4','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc4','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc4','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc4-reveal" class="spot-reveal"><strong>Generative AI</strong></div>
-      </div>
-
-      <div id="sc5" style="background:var(--white); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px 18px; grid-column:1/-1;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span class="quiz-spot-num">5</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A system monitors tax notices, identifies deadlines, gathers supporting documents and prepares a review package.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
-          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc5','AI')">Artificial Intelligence</button>
-          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc5','ML')">Machine Learning</button>
-          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc5','DL')">Deep Learning</button>
-          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc5','GenAI')">Generative AI</button>
-          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc5','AgenticAI')">Agentic AI</button>
-        </div>
-        <div id="sc5-reveal" class="spot-reveal"><strong>Agentic AI</strong></div>
-      </div>
-
-    </div>
-
-    <!-- Tricky Scenarios divider -->
-    <div style="display:flex; align-items:center; gap:12px; margin:4px 0 20px;">
-      <div style="flex:1; height:1px; background:var(--white);"></div>
-      <div style="display:flex; align-items:center; gap:7px; background:rgba(255,107,107,0.07); border:1px solid rgba(255,107,107,0.18); border-radius:20px; padding:5px 14px;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF4136" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <span style="color:#FF4136; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px;">Tricky Scenarios</span>
-      </div>
-      <div style="flex:1; height:1px; background:var(--white);"></div>
-    </div>
-
-    <!-- Scenarios 6-10 -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-
-      <div id="sc6" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">6</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A chatbot answers questions from a company's HR policy documents.</p>
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc6','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc6','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc6','DL')">Deep Learning</button>
@@ -4159,12 +4107,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc7" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">7</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A bank detects unusual spending activity on a credit card.</p>
+      <div id="sc2" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">3</span>
+          <p class="quiz-spot-prompt">A shopping app recommends products based on a customer's previous purchases.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc2','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc2','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc2','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc2','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc2','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc2-reveal" class="spot-reveal"><strong>Machine Learning</strong></div>
+      </div>
+
+      <div id="sc7" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">4</span>
+          <p class="quiz-spot-prompt">A bank detects unusual spending activity on a credit card.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc7','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc7','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc7','DL')">Deep Learning</button>
@@ -4177,12 +4140,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc8" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">8</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A system extracts values from scanned invoices with different formats and layouts.</p>
+      <div id="sc3" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">5</span>
+          <p class="quiz-spot-prompt">A smartphone unlocks when it recognizes its owner's face.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc3','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc3','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc3','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc3','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc3','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc3-reveal" class="spot-reveal"><strong>Deep Learning</strong></div>
+      </div>
+
+      <div id="sc8" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">6</span>
+          <p class="quiz-spot-prompt">A system extracts values from scanned invoices with different formats and layouts.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc8','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc8','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc8','DL')">Deep Learning</button>
@@ -4195,12 +4173,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc9" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">9</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A user uploads a GST notice and asks AI to summarize the key issues.</p>
+      <div id="sc4" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">7</span>
+          <p class="quiz-spot-prompt">A user asks Copilot to draft an email explaining GST implications.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc4','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc4','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc4','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc4','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc4','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc4-reveal" class="spot-reveal"><strong>Generative AI</strong></div>
+      </div>
+
+      <div id="sc9" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">8</span>
+          <p class="quiz-spot-prompt">A user uploads a GST notice and asks AI to summarize the key issues.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc9','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc9','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc9','DL')">Deep Learning</button>
@@ -4213,12 +4206,27 @@ function renderBeat(flipIn) {
         </div>
       </div>
 
-      <div id="sc10" style="background:var(--white); border:1px solid rgba(255,107,107,0.12); border-radius:10px; padding:16px 18px; grid-column:1/-1;">
-        <div style="display:flex; align-items:flex-start; gap:9px; margin-bottom:12px;">
-          <span style="background:rgba(255,107,107,0.1); color:#FF4136; font-size:11px; font-weight:700; border-radius:5px; padding:2px 7px; flex-shrink:0; margin-top:2px;">10</span>
-          <p style="color:var(--ey-dark); font-size:13px; line-height:1.6; margin:0;">A virtual assistant receives a goal, reviews a notice, checks internal guidance, drafts responses, requests missing documents and updates a tracker automatically.</p>
+      <div id="sc5" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">9</span>
+          <p class="quiz-spot-prompt">A system monitors tax notices, identifies deadlines, gathers supporting documents and prepares a review package.</p>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:7px;">
+        <div class="quiz-spot-choices">
+          <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc5','AI')">Artificial Intelligence</button>
+          <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc5','ML')">Machine Learning</button>
+          <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc5','DL')">Deep Learning</button>
+          <button class="spot-btn" data-val="GenAI" onclick="spotAnswer('sc5','GenAI')">Generative AI</button>
+          <button class="spot-btn" data-val="AgenticAI" onclick="spotAnswer('sc5','AgenticAI')">Agentic AI</button>
+        </div>
+        <div id="sc5-reveal" class="spot-reveal"><strong>Agentic AI</strong></div>
+      </div>
+
+      <div id="sc10" class="quiz-spot-card">
+        <div class="quiz-spot-head">
+          <span class="quiz-spot-num">10</span>
+          <p class="quiz-spot-prompt">A virtual assistant receives a goal, reviews a notice, checks internal guidance, drafts responses, requests missing documents and updates a tracker automatically.</p>
+        </div>
+        <div class="quiz-spot-choices">
           <button class="spot-btn" data-val="AI" onclick="spotAnswer('sc10','AI')">Artificial Intelligence</button>
           <button class="spot-btn" data-val="ML" onclick="spotAnswer('sc10','ML')">Machine Learning</button>
           <button class="spot-btn" data-val="DL" onclick="spotAnswer('sc10','DL')">Deep Learning</button>
