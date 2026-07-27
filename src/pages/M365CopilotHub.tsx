@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Bot, Users, FolderOpen, Cloud, NotebookText, ClipboardList } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
@@ -56,6 +57,27 @@ const TABS = [
   { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,letter: "T" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
+
+// ── Laptop stage — "What you can do" popping app widget (ported from Module1) ─
+// The 5 apps with live prompt content below "pop" with a floating animation and
+// jump straight to their tab section. The 6 apps without prompt content yet are
+// shown as a muted, inert "coming soon" dock underneath.
+const LAPTOP_CORE_APPS: { id: TabId; label: string; color: string; letter: string; pos: React.CSSProperties }[] = [
+  { id: "word",    label: "Word",        color: C.wordBlue,    letter: "W", pos: { top: 47, left: 42 } },
+  { id: "excel",   label: "Excel",       color: C.excelGreen,  letter: "X", pos: { top: 34, right: 68, animationDelay: "0.4s" } },
+  { id: "ppt",     label: "PowerPoint",  color: C.pptOrange,   letter: "P", pos: { bottom: 121, right: 25, animationDelay: "0.8s" } },
+  { id: "outlook", label: "Outlook",     color: C.outlookBlue, letter: "O", pos: { bottom: 121, left: 35, animationDelay: "1.2s" } },
+  { id: "m365",    label: "M365 Chat",   color: C.teamsViolet, letter: "T", pos: { top: 0, left: "44%", animationDelay: "1.6s" } },
+];
+
+const LAPTOP_COMING_SOON_APPS: { label: string; icon: typeof Bot }[] = [
+  { label: "M365 Agent", icon: Bot },
+  { label: "MS Teams",   icon: Users },
+  { label: "SharePoint", icon: FolderOpen },
+  { label: "OneDrive",   icon: Cloud },
+  { label: "OneNote",    icon: NotebookText },
+  { label: "MS Forms",   icon: ClipboardList },
+];
 
 // ── Exact content from Figma (3317:15589) ────────────────────────────────────
 const SECTION_DATA: Record<TabId, {
@@ -363,6 +385,82 @@ function AppIcon({ color, letter }: { color: string; letter: string }) {
   );
 }
 
+// ── Laptop stage widget — "What you can do" (Figma/legacy pattern from Module1) ─
+function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
+  return (
+    <div style={{ position: "relative", zIndex: 1, width: 560, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+      {/* Laptop mockup + popping apps */}
+      <div style={{ position: "relative", width: "100%", minHeight: 400, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {/* Keyboard base */}
+        <div style={{ position: "absolute", bottom: 38, width: "94%", maxWidth: 472, height: 50, background: `linear-gradient(180deg, ${C.dark2}, ${C.dark})`, borderRadius: "6px 6px 20px 20px", transform: "rotateX(55deg)", boxShadow: "0 24px 44px rgba(0,0,0,0.5)" }} />
+        {/* Laptop screen */}
+        <div style={{ width: "min(430px, 94%)", height: 260, background: `linear-gradient(145deg, ${C.dark}, ${C.dark2})`, border: `3px solid ${C.dark2}`, borderRadius: "18px 18px 10px 10px", boxShadow: "0 30px 70px rgba(0,0,0,0.55), 0 0 28px rgba(180,0,255,0.18)", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 12, borderRadius: 12, background: C.dark }} />
+          <div style={{ position: "absolute", zIndex: 5, width: "78%", textAlign: "center", left: "50%", top: "50%", transform: "translate(-50%, -46%)", pointerEvents: "none" }}>
+            <p style={{ color: C.yellow, fontSize: "clamp(19px, 2.2vw, 26px)", fontWeight: 700, marginBottom: 8, lineHeight: 1.15, fontFamily: F.regular }}>What you can do</p>
+            <p style={{ color: "rgba(255,255,255,0.72)", fontSize: 12, lineHeight: 1.5, fontFamily: F.regular }}>Click the popping Apps to explore the M365 copilot use cases in Tax</p>
+          </div>
+        </div>
+
+        {/* Floating (popping) apps — jump to matching prompt tab */}
+        {LAPTOP_CORE_APPS.map(app => (
+          <button
+            key={app.id}
+            onClick={() => onOpenApp(app.id)}
+            title={`Open ${app.label} tax use cases`}
+            style={{
+              position: "absolute",
+              width: 64, height: 64,
+              borderRadius: 18,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              border: "1px solid rgba(255,255,255,0.28)",
+              cursor: "pointer",
+              background: app.color,
+              boxShadow: "0 14px 30px rgba(0,0,0,0.4)",
+              zIndex: 20,
+              animation: "laptopStageFloat 5s ease-in-out infinite",
+              transition: "transform 0.2s, box-shadow 0.2s",
+              ...app.pos,
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.12) translateY(-3px)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
+          >
+            <span style={{ color: C.white, fontFamily: F.regular, fontWeight: 700, fontSize: 22 }}>{app.letter}</span>
+            <span style={{ position: "absolute", bottom: -22, fontSize: 11, color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap", fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Coming-soon dock — apps without prompt content yet */}
+      <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", maxWidth: 500 }}>
+        {LAPTOP_COMING_SOON_APPS.map(app => {
+          const Icon = app.icon;
+          return (
+            <div
+              key={app.label}
+              title={`${app.label} — coming soon`}
+              style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 66, cursor: "default" }}
+            >
+              <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Icon size={20} strokeWidth={1.75} color={C.gray02} aria-hidden />
+              </div>
+              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", textAlign: "center", lineHeight: 1.2, fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
+              <span style={{ position: "absolute", top: -6, right: 2, fontSize: 8, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.dark, background: C.gray02, borderRadius: 6, padding: "1px 5px" }}>Soon</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <style>{`
+        @keyframes laptopStageFloat {
+          0%, 100% { translate: 0 0; }
+          50% { translate: 0 -12px; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // ── Full tab section ──────────────────────────────────────────────────────────
 function TabSection({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
@@ -495,6 +593,13 @@ export default function M365CopilotHub({
 }) {
   const [activeTab, setActiveTab] = useState<TabId>("word");
 
+  const openApp = (id: TabId) => {
+    setActiveTab(id);
+    setTimeout(() => {
+      document.getElementById("prompt-repository")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+  };
+
   return (
     <div style={{ fontFamily: F.regular, color: C.dark2, background: C.white, minHeight: "100vh" }}>
 
@@ -513,7 +618,7 @@ export default function M365CopilotHub({
           position: "relative",
           display: "flex",
           alignItems: "center",
-          minHeight: "420px",
+          minHeight: "620px",
           padding: `64px ${contentInlinePad}`,
           gap: 64,
           overflow: "hidden",
@@ -548,12 +653,8 @@ export default function M365CopilotHub({
             Step into an interactive M365 learning space where you can find what wonders the age-old MS apps can do just by adding a magical element called M365.
           </p>
         </div>
-        {/* Video placeholder (Figma: VideoPlaceholder 540×269) */}
-        <div style={{ position: "relative", zIndex: 1, width: 540, height: 269, background: "rgba(46,46,56,0.55)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ width: 0, height: 0, borderLeft: "22px solid #FFFFFF", borderTop: "13px solid transparent", borderBottom: "13px solid transparent", marginLeft: 5 }} />
-          </div>
-        </div>
+        {/* Laptop stage — "What you can do" popping app widget (ported from Module1) */}
+        <LaptopStage onOpenApp={openApp} />
       </section>
 
       {/* ── Repository Tabs — CENTERED header (Figma: RepositoryTabs) ────────── */}
