@@ -76,7 +76,8 @@ export const MODULES: CurriculumModule[] = [
       { id: "advanced", label: "Techniques", group: "learn" },
       { id: "match-activity", label: "Activity", group: "apply" },
       { id: "dos-donts", label: "Do's & Don'ts", group: "apply" },
-      { id: "recap", label: "Cheat Sheet", group: "apply" },
+      // "Cheat Sheet" tab hidden — links to RecapInNutshellSection in AiTaxPrompting.tsx, which is currently disabled.
+      // { id: "recap", label: "Cheat Sheet", group: "apply" },
     ],
   },
   {
