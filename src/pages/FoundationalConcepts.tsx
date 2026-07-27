@@ -184,12 +184,18 @@ const TOKEN_BRIDGE = `
   font-family: ${fonts.regular};
 }
 #module-content .gva-title { font-family: ${fonts.bold}; color: ${colors.onDark} !important; }
-#module-content .gva-colheads,
-#module-content .gva-band-label { background: ${colors.confidentBlack}; }
-#module-content .gva-band-label { color: ${colors.yellow}; }
+#module-content .gva-colheads { background: ${colors.confidentBlack}; }
+#module-content .gva-band-label {
+  background: ${colors.eyBgCard};
+  color: ${colors.yellow};
+  border-color: ${colors.borderOnDark};
+}
 #module-content .gva-colhead,
 #module-content .gva-cell,
 #module-content .gva-summary { background: ${colors.eyBgCard}; border-color: ${colors.borderOnDark}; }
+#module-content .gva-cell.gva-cell-static { background: transparent; border: none; }
+#module-content .gva-band-cells { background: ${colors.confidentBlack}; border-color: ${colors.borderOnDark}; }
+#module-content .gva-band-mantras .gva-band-cells { background: transparent; border: none; }
 #module-content .gva-compare,
 #module-content .gva-band-cells,
 #module-content .gva-colheads {

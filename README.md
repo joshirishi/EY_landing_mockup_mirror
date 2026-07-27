@@ -25,6 +25,8 @@ LLM vs AI Agent vs Agentic AI (`#genai-vs-agents`) matches [Figma 3519:3747](htt
 
 `/ai-tax-prompting` **Elements** (`#elements`) shows **7 prompt elements** as a 2-column tabbed card grid (WHAT IT IS / WHY IT MATTERS / WITHOUT / WITH). Tabs stay open once clicked. Styled with EY dark-module tokens. **Iterative Refinement** lives under Techniques (`#advanced`), not Elements.
 
+The **Activity** (`#match-activity`) now runs two exercises sourced from the prompting exercise brief: a 5-question "Choose the Best Answer" MCQ (one question at a time, instant feedback, running score) and a 10-pair "Match the Description" match game (select a description, then its matching term; live "n / 10" score). **Golden Rules** (`#dos-donts`) now lists 7 Do's and 7 Don'ts plus a "Better Prompts → Better Outputs → Better Decisions" Final Rule strip. In **Techniques** (`#advanced`), the "Techniques" wizard tab is temporarily disabled (commented out, not deleted) pending a redesign into a nested 4-step framework (Chain of Thought, Decomposition, Ensemble, Self-Criticism) — the "Level Up" table remains as the interim view.
+
 ## Echo feedback
 
 The Echo comment SDK is loaded from `index.html`. After the app opens in a browser, you should see a blue feedback button (FAB) in the bottom-right. Click it to leave a comment; threads show up in your Echo AppDetails page.

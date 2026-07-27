@@ -707,38 +707,62 @@ body {
   color: var(--gva-text);
 }
 
-.gva-band { margin: 0 0 4px; }
+.gva-band { margin: 0 0 8px; }
 .gva-band-label {
-  position: sticky;
-  top: calc(var(--gva-sticky-top) + var(--gva-colhead-h));
-  z-index: 4;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin: 0;
-  padding: 10px 4px;
+  padding: 12px 14px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--gva-yellow);
-  background: var(--gva-page);
-  border-bottom: 1px solid var(--gva-border);
+  background: var(--gva-card);
+  border: 1px solid var(--gva-border);
+  border-radius: var(--gva-radius);
+  cursor: pointer;
+  user-select: none;
+}
+.gva-band-label::-webkit-details-marker { display: none; }
+.gva-band[open] > .gva-band-label {
+  border-radius: var(--gva-radius) var(--gva-radius) 0 0;
+  border-bottom-color: transparent;
 }
 .gva-band-cells {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--gva-gap);
-  align-items: stretch;
+  align-items: start;
+  padding: 12px;
+  background: var(--gva-page);
+  border: 1px solid var(--gva-border);
+  border-top: none;
+  border-radius: 0 0 var(--gva-radius) var(--gva-radius);
+}
+.gva-band-mantras .gva-band-cells {
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 .gva-cell {
-  padding: var(--gva-pad);
-  border-left: 1px solid var(--gva-border);
-  border-right: 1px solid var(--gva-border);
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--gva-border);
+  border-radius: var(--gva-radius);
   background: var(--gva-card);
-  min-height: 100%;
   color: var(--gva-text);
+  min-width: 0;
+  overflow: hidden;
 }
-.gva-band:last-of-type .gva-cell {
-  border-bottom: 1px solid var(--gva-border);
-  border-radius: 0 0 var(--gva-radius) var(--gva-radius);
+.gva-cell.gva-cell-static {
+  border: none;
+  background: transparent;
+  overflow: visible;
 }
 .gva-cell[data-tone="blue"],
 .gva-cell[data-tone="green"],
@@ -746,14 +770,38 @@ body {
   background: var(--gva-card);
   border-color: var(--gva-border);
 }
-
+.gva-cell-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+  border-top: 3px solid currentColor;
+}
+.gva-cell-summary::-webkit-details-marker { display: none; }
+.gva-cell[data-tone="blue"] > .gva-cell-summary { color: var(--gva-blue); }
+.gva-cell[data-tone="green"] > .gva-cell-summary { color: var(--gva-green); }
+.gva-cell[data-tone="purple"] > .gva-cell-summary { color: var(--gva-purple); }
+.gva-cell-body { padding: 0 14px 14px; }
 .gva-cell-label {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  color: inherit;
+}
+.gva-chevron {
+  flex-shrink: 0;
   color: var(--gva-text-subtle);
+  transition: transform 0.2s;
+}
+.gva-band[open] > .gva-band-label > .gva-chevron,
+.gva-cell[open] > .gva-cell-summary > .gva-chevron {
+  transform: rotate(180deg);
 }
 .gva-check-list {
   list-style: none;
@@ -947,7 +995,7 @@ body {
   border-bottom: none;
   background: var(--gva-card);
 }
-.gva-band-mantras.gva-band:last-of-type .gva-mantra {
+.gva-band-mantras .gva-mantra {
   border-radius: 0 0 var(--gva-radius) var(--gva-radius);
   border-bottom: 1px solid var(--gva-border);
 }
@@ -981,8 +1029,7 @@ body {
 
 @media (max-width: 1000px) {
   .gva-section { padding: 56px 24px !important; }
-  .gva-colheads,
-  .gva-band-label { position: static; }
+  .gva-colheads { position: static; }
   .gva-colheads,
   .gva-band-cells,
   .gva-mantras { grid-template-columns: 1fr; gap: 12px; }
@@ -991,17 +1038,6 @@ body {
     border: 1px solid var(--gva-border);
     border-top-width: 3px;
   }
-  .gva-band-label {
-    padding: 16px 0 8px;
-    background: transparent;
-    border: none;
-    color: var(--gva-yellow);
-  }
-  .gva-cell {
-    border-radius: var(--gva-radius);
-    border: 1px solid var(--gva-border);
-  }
-  .gva-band:last-of-type .gva-cell { border-radius: var(--gva-radius); }
   .gva-equation { gap: 8px; }
   .gva-eq-chip { padding: 10px 14px; font-size: 12px; }
   .gva-summary { padding: 24px 18px; }
@@ -2947,9 +2983,13 @@ document.addEventListener('keydown', function(e) {
 .beat-flip-out { animation:flipOutY 0.32s ease-in forwards; transform-style:preserve-3d; transform-origin:center; }
 .beat-flip-in { animation:flipInY 0.4s ease-out forwards; transform-style:preserve-3d; transform-origin:center; }
 #pipeline-cta-card:focus-visible { outline:2px solid var(--ey-yellow); outline-offset:2px; }
+@keyframes slideUpIn { 0% { opacity:0; transform:translateY(28px); } 100% { opacity:1; transform:translateY(0); } }
+@keyframes pulseThinking { 0%,100% { box-shadow:0 0 0 0 rgba(70,150,255,0.22); border-color:rgba(70,150,255,0.1); } 50% { box-shadow:0 0 0 5px rgba(70,150,255,0); border-color:rgba(70,150,255,0.4); } }
+.thinking-highlight { animation:pulseThinking 1.7s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .beat-flip-out { animation:fadeOutMsg 0.15s ease forwards; }
   .beat-flip-in { animation:fadeInMsg 0.25s ease forwards; }
+  .thinking-highlight { animation:none; border-color:rgba(70,150,255,0.4); }
 }
 @keyframes pulseRed { 0%,100%{background:rgba(255,65,54,0.15)} 50%{background:rgba(255,65,54,0.3)} }
 #copilot-window.is-hallucinating { animation:pulseRedBorder 2s ease-in-out infinite; }
@@ -3016,7 +3056,7 @@ function showThinking(text) {
   const t = document.createElement('div');
   t.id = 'thinking-indicator';
   t.style.cssText = 'display:flex; gap:14px; margin-bottom:20px; align-items:center; animation:fadeInMsg 0.3s ease-out forwards; opacity:0;';
-  t.innerHTML = `<div style="width:30px;height:30px;border-radius:50%;background:rgba(70,150,255,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent-blue);flex-shrink:0;">AI</div><div style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:12px;"><div style="display:flex;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.2s;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.4s;"></span></div><span style="color:var(--text-dim);font-size:12px;font-style:italic;">${text||'Thinking...'}</span></div>`;
+  t.innerHTML = `<div style="width:30px;height:30px;border-radius:50%;background:rgba(70,150,255,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent-blue);flex-shrink:0;">AI</div><div id="thinking-bubble" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:12px;"><div style="display:flex;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.2s;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.4s;"></span></div><span style="color:var(--text-dim);font-size:12px;font-style:italic;">${text||'Thinking...'}</span></div>`;
   chatEl.appendChild(t);
   chatEl.scrollTop = chatEl.scrollHeight;
 }
@@ -3070,6 +3110,7 @@ function backBeat() {
 
 function resetDemo() {
   if (window._typer) clearInterval(window._typer);
+  if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;margin-bottom:8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
   document.getElementById('demo-actions').style.display = 'none';
   var bar = document.getElementById('copilot-input-bar'); if (bar) bar.style.display = 'none';
@@ -3122,6 +3163,7 @@ function selectInsideTab(id, el) {
 function renderBeat(flipIn) {
   updateActionBar();
   if (window._typer) clearInterval(window._typer);
+  if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = '';
   var barEl = document.getElementById('copilot-input-bar');
   var inputEl = document.getElementById('copilot-input');
@@ -3148,16 +3190,34 @@ function renderBeat(flipIn) {
     barEl.style.display = 'none';
     inputEl.value = ''; inputEl.style.color = 'var(--text-secondary)'; inputEl.style.borderColor = 'rgba(46,46,56,0.08)';
     addChatBubble('You', 'Summarize the GST implications for an online seller selling goods across multiple Indian states');
-    var cta = document.createElement('div');
-    cta.id = 'pipeline-cta-card';
-    cta.setAttribute('role', 'button');
-    cta.setAttribute('tabindex', '0');
-    cta.style.cssText = 'margin:2px 0 20px 0;cursor:pointer;animation:fadeInMsg 0.5s ease-out 0.2s forwards;opacity:0;';
-    cta.onclick = function () { continueBeat(); };
-    cta.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); continueBeat(); } };
-    cta.innerHTML = `<div style="border:1px solid rgba(255,230,0,0.3);border-radius:14px;overflow:hidden;background:linear-gradient(135deg,var(--white),var(--off-white));transition:transform 0.2s ease,box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(255,230,0,0.18)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'"><div style="padding:16px 20px;display:flex;align-items:center;gap:14px;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(255,230,0,0.14);border:1px solid rgba(255,230,0,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div style="flex:1;"><div style="color:var(--ey-dark);font-size:14px;font-weight:700;margin-bottom:3px;">What's happening right now: the pipeline at a glance</div><div style="color:var(--gray-01);font-size:12px;line-height:1.5;">Your prompt just triggered 7 invisible steps — tap to watch them unfold.</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>`;
-    chatEl.appendChild(cta);
     chatEl.scrollTop = chatEl.scrollHeight;
+
+    // Thinking… → Processing… keeps running (and gets highlighted) instead of
+    // being swapped out — the CTA slides up underneath it while the AI is
+    // still "at work", reusing the existing typing-indicator styling.
+    showThinking('Thinking…');
+    window._sentThinkingTimers = [
+      setTimeout(function () {
+        var ti = document.getElementById('thinking-indicator');
+        var label = ti && ti.querySelector('span[style*="font-style:italic"]');
+        if (label) label.textContent = 'Processing…';
+        var bubble = document.getElementById('thinking-bubble');
+        if (bubble) bubble.classList.add('thinking-highlight');
+      }, 650),
+      setTimeout(function () {
+        if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return; // demo moved on / reset mid-animation
+        var cta = document.createElement('div');
+        cta.id = 'pipeline-cta-card';
+        cta.setAttribute('role', 'button');
+        cta.setAttribute('tabindex', '0');
+        cta.style.cssText = 'margin:2px 0 20px 0;cursor:pointer;animation:slideUpIn 0.45s ease-out forwards;opacity:0;';
+        cta.onclick = function () { continueBeat(); };
+        cta.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); continueBeat(); } };
+        cta.innerHTML = `<div style="border:1px solid rgba(255,230,0,0.3);border-radius:14px;overflow:hidden;background:linear-gradient(135deg,var(--white),var(--off-white));transition:transform 0.2s ease,box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(255,230,0,0.18)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'"><div style="padding:16px 20px;display:flex;align-items:center;gap:14px;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(70,150,255,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent-blue);flex-shrink:0;">AI</div><div style="flex:1;"><div style="color:var(--ey-dark);font-size:14px;font-weight:700;margin-bottom:3px;">What's happening right now: the pipeline at a glance</div><!-- <div style="color:var(--gray-01);font-size:12px;line-height:1.5;">Your prompt just triggered 7 invisible steps — tap to watch them unfold.</div> --></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>`;
+        chatEl.appendChild(cta);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      }, 1400)
+    ];
 
   } else if (beat === 'pipeline') {
     barEl.style.display = 'none';
@@ -3215,7 +3275,7 @@ function renderBeat(flipIn) {
 
   <div class="cheat-columns" aria-label="GenAI capability cheat sheet">
     <!-- CREATE -->
-    <details class="cheat-col" data-tone="create" open>
+    <details class="cheat-col" data-tone="create">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
@@ -3258,7 +3318,7 @@ function renderBeat(flipIn) {
     </details>
 
     <!-- UNDERSTAND -->
-    <details class="cheat-col" data-tone="understand" open>
+    <details class="cheat-col" data-tone="understand">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -3301,7 +3361,7 @@ function renderBeat(flipIn) {
     </details>
 
     <!-- ORGANIZE -->
-    <details class="cheat-col" data-tone="organize" open>
+    <details class="cheat-col" data-tone="organize">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
@@ -3344,7 +3404,7 @@ function renderBeat(flipIn) {
     </details>
 
     <!-- THINK -->
-    <details class="cheat-col" data-tone="think" open>
+    <details class="cheat-col" data-tone="think">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6H8c-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/><path d="M10 17h4"/></svg>
@@ -3436,8 +3496,9 @@ function renderBeat(flipIn) {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  cursor: default;
+  cursor: pointer;
   color: inherit;
+  user-select: none;
 }
 .cheat-col-head::-webkit-details-marker { display: none; }
 .cheat-col-label {
@@ -3450,11 +3511,12 @@ function renderBeat(flipIn) {
   letter-spacing: 0.12em;
 }
 .cheat-chevron {
-  display: none;
+  display: block;
   flex-shrink: 0;
   color: var(--gray-01);
   transition: transform 0.2s;
 }
+.cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
 .cheat-col[data-tone="create"] { color: var(--ey-dark); }
 .cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-dark); border-top-color: var(--ey-yellow); }
 .cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-dark); }
@@ -3560,11 +3622,8 @@ function renderBeat(flipIn) {
   }
   .cheat-col-head {
     padding: 16px 18px;
-    cursor: pointer;
     border-top-width: 3px;
   }
-  .cheat-chevron { display: block; }
-  .cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
   .cheat-col-body {
     padding: 0 18px 18px;
     gap: 10px;
@@ -3583,25 +3642,20 @@ function renderBeat(flipIn) {
   var mq = window.matchMedia('(max-width: 900px)');
 
   function syncMode() {
-    var mobile = mq.matches;
-    cols.forEach(function (col, i) {
-      if (mobile) {
-        // Accordion: first open, others closed
-        col.open = i === 0;
-      } else {
-        // Desktop grid: all columns expanded
-        col.open = true;
-      }
-    });
+    // Default: all columns closed (desktop + mobile)
+    cols.forEach(function (col) { col.open = false; });
   }
 
   cols.forEach(function (col) {
     col.addEventListener('toggle', function () {
-      if (!mq.matches || !col.open) return;
-      // One open panel at a time on small screens
-      cols.forEach(function (other) {
-        if (other !== col) other.open = false;
-      });
+      if (mq.matches && col.open) {
+        // One open panel at a time on small screens
+        cols.forEach(function (other) {
+          if (other !== col) other.open = false;
+        });
+      }
+      // Re-align card heights when desktop columns open/close
+      equalizeCardRows();
     });
   });
 
@@ -3652,19 +3706,6 @@ function renderBeat(flipIn) {
   <h2 id="gva-heading" class="gva-title">LLM vs AI Agent vs Agentic AI</h2>
   <p class="gva-sub">Each level builds on the previous by adding new capabilities. Understanding the difference helps you choose the right tool for the job.</p>
 
-  <div class="gva-equation" aria-label="Capability evolution equation">
-    <span class="gva-eq-chip" data-tone="blue">LLM (GenAI)</span>
-    <span class="gva-eq-op" aria-hidden="true">+</span>
-    <span class="gva-eq-chip" data-tone="yellow">Tools &amp; Actions</span>
-    <span class="gva-eq-op is-eq" aria-hidden="true">=</span>
-    <span class="gva-eq-chip" data-tone="green">AI Agent</span>
-    <span class="gva-eq-op" aria-hidden="true">+</span>
-    <span class="gva-eq-chip" data-tone="yellow">Planning &amp; Workflow</span>
-    <span class="gva-eq-op is-eq" aria-hidden="true">=</span>
-    <span class="gva-eq-chip" data-tone="purple">Agentic AI</span>
-  </div>
-  <p class="gva-eq-caption">Each level inherits everything from the previous level.</p>
-
   <div class="gva-compare">
     <!-- Sticky column headers -->
     <div class="gva-colheads" aria-hidden="false">
@@ -3697,158 +3738,228 @@ function renderBeat(flipIn) {
       </div>
     </div>
 
-    <!-- Capabilities -->
-    <section class="gva-band" aria-labelledby="gva-band-cap">
-      <h4 id="gva-band-cap" class="gva-band-label">Capabilities</h4>
+    <!-- Nested accordion: parent band → child column cards -->
+    <details class="gva-band">
+      <summary class="gva-band-label" id="gva-band-cap">
+        <span>Capabilities</span>
+        <svg class="gva-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
       <div class="gva-band-cells">
-        <div class="gva-cell" data-tone="blue">
-          <p class="gva-cell-label">What it gives you</p>
-          <ul class="gva-check-list">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Answer</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Draft</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Summary</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Email</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Presentation content</li>
-          </ul>
-        </div>
-        <div class="gva-cell" data-tone="green">
-          <p class="gva-cell-label">What is added?</p>
-          <ul class="gva-check-list">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> LLM Capability</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Access to tools</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Ability to take actions</li>
-          </ul>
-        </div>
-        <div class="gva-cell" data-tone="purple">
-          <p class="gva-cell-label">What is added?</p>
-          <ul class="gva-check-list">
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> LLM</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Tools</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Planning</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Decision-making</li>
-            <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Multi-step workflow management</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- What it does -->
-    <section class="gva-band" aria-labelledby="gva-band-does">
-      <h4 id="gva-band-does" class="gva-band-label">What it does</h4>
-      <div class="gva-band-cells">
-        <div class="gva-cell" data-tone="blue"><p class="gva-body">Answers questions and creates content.</p></div>
-        <div class="gva-cell" data-tone="green"><p class="gva-body">Not only answers — but also does things.</p></div>
-        <div class="gva-cell" data-tone="purple"><p class="gva-body">Manages an entire objective from start to finish.</p></div>
-      </div>
-    </section>
-
-    <!-- Think of it as -->
-    <section class="gva-band" aria-labelledby="gva-band-think">
-      <h4 id="gva-band-think" class="gva-band-label">Think of it as</h4>
-      <div class="gva-band-cells">
-        <div class="gva-cell" data-tone="blue"><div class="gva-analogy"><p class="gva-cell-label">Think of it as</p><p class="gva-body">A knowledgeable assistant.</p></div></div>
-        <div class="gva-cell" data-tone="green"><div class="gva-analogy"><p class="gva-cell-label">Think of it as</p><p class="gva-body">A virtual team member.</p></div></div>
-        <div class="gva-cell" data-tone="purple"><div class="gva-analogy"><p class="gva-cell-label">Think of it as</p><p class="gva-body">A project manager.</p></div></div>
-      </div>
-    </section>
-
-    <!-- Example -->
-    <section class="gva-band" aria-labelledby="gva-band-ex">
-      <h4 id="gva-band-ex" class="gva-band-label">Example</h4>
-      <div class="gva-band-cells">
-        <div class="gva-cell" data-tone="blue">
-          <div class="gva-example">
-            <p class="gva-cell-label">Example</p>
-            <p class="gva-quote">"Summarize the GST implications for e-commerce sellers."</p>
-            <p class="gva-body">AI returns an answer.</p>
-          </div>
-        </div>
-        <div class="gva-cell" data-tone="green">
-          <div class="gva-example">
-            <p class="gva-cell-label">Example</p>
-            <p class="gva-example-note">Instead of:</p>
-            <p class="gva-example-quote-plain">Summarize this GST notice</p>
-            <p class="gva-example-note">The Agent:</p>
-            <ul class="gva-steps">
-              <li>— reads the notice</li>
-              <li>— extracts key facts</li>
-              <li>— drafts a summary</li>
-              <li>— stores it in the correct folder</li>
+        <details class="gva-cell" data-tone="blue">
+          <summary class="gva-cell-summary">
+            <span class="gva-cell-label">What it gives you</span>
+            <svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="gva-cell-body">
+            <ul class="gva-check-list">
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Answer</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Draft</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Summary</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Email</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Presentation content</li>
             </ul>
           </div>
-        </div>
-        <div class="gva-cell" data-tone="purple">
-          <div class="gva-example">
-            <p class="gva-cell-label">Example</p>
-            <p class="gva-example-note">Goal:</p>
-            <p class="gva-body" style="font-style:italic;margin-bottom:10px;">Prepare an initial response package for a GST notice.</p>
-            <p class="gva-example-note">Agentic AI can:</p>
-            <ul class="gva-steps">
-              <li>1. Review the notice</li>
-              <li>2. Identify due dates</li>
-              <li>3. Gather supporting documents</li>
-              <li>4. Draft response points</li>
-              <li>5. Create a review package</li>
+        </details>
+        <details class="gva-cell" data-tone="green">
+          <summary class="gva-cell-summary">
+            <span class="gva-cell-label">What is added?</span>
+            <svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="gva-cell-body">
+            <ul class="gva-check-list">
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> LLM Capability</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Access to tools</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Ability to take actions</li>
             </ul>
           </div>
-        </div>
+        </details>
+        <details class="gva-cell" data-tone="purple">
+          <summary class="gva-cell-summary">
+            <span class="gva-cell-label">What is added?</span>
+            <svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <div class="gva-cell-body">
+            <ul class="gva-check-list">
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> LLM</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Tools</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Planning</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Decision-making</li>
+              <li><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Multi-step workflow management</li>
+            </ul>
+          </div>
+        </details>
       </div>
-    </section>
+    </details>
 
-    <!-- Best used when -->
-    <section class="gva-band" aria-labelledby="gva-band-best">
-      <h4 id="gva-band-best" class="gva-band-label">Best Used When</h4>
+    <details class="gva-band">
+      <summary class="gva-band-label" id="gva-band-does">
+        <span>What it does</span>
+        <svg class="gva-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
       <div class="gva-band-cells">
-        <div class="gva-cell" data-tone="blue">
-          <ul class="gva-bullets">
-            <li><span class="gva-dash">—</span><span>You need information</span></li>
-            <li><span class="gva-dash">—</span><span>You need a draft</span></li>
-            <li><span class="gva-dash">—</span><span>You need ideas</span></li>
-          </ul>
-        </div>
-        <div class="gva-cell" data-tone="green">
-          <ul class="gva-bullets">
-            <li><span class="gva-dash">—</span><span>Tasks are repetitive</span></li>
-            <li><span class="gva-dash">—</span><span>Multiple actions are required</span></li>
-            <li><span class="gva-dash">—</span><span>The process is still relatively simple</span></li>
-          </ul>
-        </div>
-        <div class="gva-cell" data-tone="purple">
-          <ul class="gva-bullets">
-            <li><span class="gva-dash">—</span><span>Multiple steps are involved</span></li>
-            <li><span class="gva-dash">—</span><span>Decisions need to be made</span></li>
-            <li><span class="gva-dash">—</span><span>Several tasks must be coordinated</span></li>
-          </ul>
-        </div>
+        <details class="gva-cell" data-tone="blue">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">LLM (GenAI)</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><p class="gva-body">Answers questions and creates content.</p></div>
+        </details>
+        <details class="gva-cell" data-tone="green">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">AI Agent</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><p class="gva-body">Not only answers — but also does things.</p></div>
+        </details>
+        <details class="gva-cell" data-tone="purple">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">Agentic AI</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><p class="gva-body">Manages an entire objective from start to finish.</p></div>
+        </details>
       </div>
-    </section>
+    </details>
 
-    <!-- New capability -->
-    <section class="gva-band" aria-labelledby="gva-band-new">
-      <h4 id="gva-band-new" class="gva-band-label">New Capability Introduced</h4>
+    <details class="gva-band">
+      <summary class="gva-band-label" id="gva-band-think">
+        <span>Think of it as</span>
+        <svg class="gva-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
       <div class="gva-band-cells">
-        <div class="gva-cell" data-tone="blue"><span class="gva-cap-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Creates content</span></div>
-        <div class="gva-cell" data-tone="green"><span class="gva-cap-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Takes action</span></div>
-        <div class="gva-cell" data-tone="purple"><span class="gva-cap-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Plans and coordinates work</span></div>
+        <details class="gva-cell" data-tone="blue">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">LLM (GenAI)</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><div class="gva-analogy"><p class="gva-body">A knowledgeable assistant.</p></div></div>
+        </details>
+        <details class="gva-cell" data-tone="green">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">AI Agent</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><div class="gva-analogy"><p class="gva-body">A virtual team member.</p></div></div>
+        </details>
+        <details class="gva-cell" data-tone="purple">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">Agentic AI</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><div class="gva-analogy"><p class="gva-body">A project manager.</p></div></div>
+        </details>
       </div>
-    </section>
+    </details>
 
-    <!-- Mantras as column footers (moved from bottom gva-summary strip) -->
+    <details class="gva-band">
+      <summary class="gva-band-label" id="gva-band-ex">
+        <span>Example</span>
+        <svg class="gva-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="gva-band-cells">
+        <details class="gva-cell" data-tone="blue">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">LLM (GenAI)</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body">
+            <div class="gva-example">
+              <p class="gva-quote">"Summarize the GST implications for e-commerce sellers."</p>
+              <p class="gva-body">AI returns an answer.</p>
+            </div>
+          </div>
+        </details>
+        <details class="gva-cell" data-tone="green">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">AI Agent</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body">
+            <div class="gva-example">
+              <p class="gva-example-note">Instead of:</p>
+              <p class="gva-example-quote-plain">Summarize this GST notice</p>
+              <p class="gva-example-note">The Agent:</p>
+              <ul class="gva-steps">
+                <li>— reads the notice</li>
+                <li>— extracts key facts</li>
+                <li>— drafts a summary</li>
+                <li>— stores it in the correct folder</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="gva-cell" data-tone="purple">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">Agentic AI</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body">
+            <div class="gva-example">
+              <p class="gva-example-note">Goal:</p>
+              <p class="gva-body" style="font-style:italic;margin-bottom:10px;">Prepare an initial response package for a GST notice.</p>
+              <p class="gva-example-note">Agentic AI can:</p>
+              <ul class="gva-steps">
+                <li>1. Review the notice</li>
+                <li>2. Identify due dates</li>
+                <li>3. Gather supporting documents</li>
+                <li>4. Draft response points</li>
+                <li>5. Create a review package</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </details>
+
+    <details class="gva-band">
+      <summary class="gva-band-label" id="gva-band-best">
+        <span>Best Used When</span>
+        <svg class="gva-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="gva-band-cells">
+        <details class="gva-cell" data-tone="blue">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">LLM (GenAI)</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body">
+            <ul class="gva-bullets">
+              <li><span class="gva-dash">—</span><span>You need information</span></li>
+              <li><span class="gva-dash">—</span><span>You need a draft</span></li>
+              <li><span class="gva-dash">—</span><span>You need ideas</span></li>
+            </ul>
+          </div>
+        </details>
+        <details class="gva-cell" data-tone="green">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">AI Agent</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body">
+            <ul class="gva-bullets">
+              <li><span class="gva-dash">—</span><span>Tasks are repetitive</span></li>
+              <li><span class="gva-dash">—</span><span>Multiple actions are required</span></li>
+              <li><span class="gva-dash">—</span><span>The process is still relatively simple</span></li>
+            </ul>
+          </div>
+        </details>
+        <details class="gva-cell" data-tone="purple">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">Agentic AI</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body">
+            <ul class="gva-bullets">
+              <li><span class="gva-dash">—</span><span>Multiple steps are involved</span></li>
+              <li><span class="gva-dash">—</span><span>Decisions need to be made</span></li>
+              <li><span class="gva-dash">—</span><span>Several tasks must be coordinated</span></li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </details>
+
+    <details class="gva-band">
+      <summary class="gva-band-label" id="gva-band-new">
+        <span>New Capability Introduced</span>
+        <svg class="gva-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="gva-band-cells">
+        <details class="gva-cell" data-tone="blue">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">LLM (GenAI)</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><span class="gva-cap-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Creates content</span></div>
+        </details>
+        <details class="gva-cell" data-tone="green">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">AI Agent</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><span class="gva-cap-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Takes action</span></div>
+        </details>
+        <details class="gva-cell" data-tone="purple">
+          <summary class="gva-cell-summary"><span class="gva-cell-label">Agentic AI</span><svg class="gva-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="gva-cell-body"><span class="gva-cap-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Plans and coordinates work</span></div>
+        </details>
+      </div>
+    </details>
+
+    <!-- Mantras stay visible as column footers -->
     <section class="gva-band gva-band-mantras" aria-label="In short">
       <div class="gva-band-cells">
-        <div class="gva-cell" data-tone="blue">
+        <div class="gva-cell gva-cell-static" data-tone="blue">
           <div class="gva-mantra" data-tone="blue">
             <p class="gva-mantra-kicker">LLM</p>
             <p class="gva-mantra-text">"Tell me."</p>
           </div>
         </div>
-        <div class="gva-cell" data-tone="green">
+        <div class="gva-cell gva-cell-static" data-tone="green">
           <div class="gva-mantra" data-tone="green">
             <p class="gva-mantra-kicker">AI Agent</p>
             <p class="gva-mantra-text">"Do it."</p>
           </div>
         </div>
-        <div class="gva-cell" data-tone="purple">
+        <div class="gva-cell gva-cell-static" data-tone="purple">
           <div class="gva-mantra" data-tone="purple">
             <p class="gva-mantra-kicker">Agentic AI</p>
             <p class="gva-mantra-text">"Own it."</p>
@@ -3894,6 +4005,23 @@ function renderBeat(flipIn) {
   } else {
     window.addEventListener('resize', sync);
   }
+})();
+
+(function initGvaAccordion() {
+  var root = document.querySelector('#genai-vs-agents .gva-compare');
+  if (!root || root.dataset.gvaAccReady === '1') return;
+  root.dataset.gvaAccReady = '1';
+  var bands = Array.prototype.slice.call(root.querySelectorAll('details.gva-band'));
+
+  // One parent band open at a time
+  bands.forEach(function (band) {
+    band.addEventListener('toggle', function () {
+      if (!band.open) return;
+      bands.forEach(function (other) {
+        if (other !== band) other.open = false;
+      });
+    });
+  });
 })();
 </script>
 
