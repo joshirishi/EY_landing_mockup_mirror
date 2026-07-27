@@ -387,7 +387,7 @@ body {
   max-width: none;
 }
 .rise-card {
-  background: var(--white);
+  background: var(--off-white);
   border: 1px solid var(--gray-02);
   overflow: hidden;
   cursor: pointer;
@@ -405,7 +405,7 @@ body {
   position: relative;
   height: 120px;
   padding: 0;
-  background: var(--off-white);
+  background: var(--gray-02);
   overflow: hidden;
 }
 .rise-card-top--img img {
@@ -425,7 +425,14 @@ body {
   border-bottom: none;
   pointer-events: none;
 }
-.rise-card-body { padding: 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.rise-card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  background: var(--off-white);
+}
 .rise-card-meta {
   display: flex; justify-content: space-between; align-items: baseline;
   font-size: 11px; margin: 0;
@@ -446,7 +453,7 @@ body {
   color: var(--gray-01);
   margin-top: 4px;
   padding-top: 8px;
-  border-top: 1px solid var(--off-white);
+  border-top: 1px solid var(--gray-02);
 }
 @media (max-width: 1100px) {
   .rise-section { padding: 56px 24px; }
@@ -477,12 +484,14 @@ body {
   font-size: 16px;
   font-weight: 400;
   color: var(--gray-01);
+  text-align: center;
 }
 .wrong-section .wrong-hint {
   margin: 0 0 40px;
   font-size: 14px;
   font-style: italic;
   color: var(--gray-01);
+  text-align: center;
 }
 .wrong-grid {
   display: grid;
@@ -2193,7 +2202,8 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
 }
 .velocity-section h2 {
   font-size: 32px;
@@ -2202,14 +2212,15 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   line-height: 40px;
   color: var(--ey-dark);
   margin: 0;
-  text-align: left;
+  text-align: center;
 }
 .velocity-sub {
-  margin: 0;
+  margin: 0 auto;
   max-width: 720px;
   font-size: 16px;
   line-height: 1.5;
   color: var(--gray-01);
+  text-align: center;
 }
 .velocity-card {
   width: 100%;
@@ -2299,14 +2310,20 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   max-width: 720px;
 }
 .velocity-source {
-  margin: 0;
+  margin: 24px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-02);
   font-size: 12px;
+  font-weight: 300;
+  font-style: italic;
   line-height: 1.5;
+  letter-spacing: -0.01em;
   color: var(--gray-01);
 }
 .velocity-source a {
-  color: var(--ey-dark);
+  color: var(--gray-01);
   text-decoration: underline;
+  font-style: italic;
 }
 @media (max-width: 768px) {
   .velocity-section { padding: 72px 24px; }
@@ -2764,6 +2781,7 @@ document.addEventListener('keydown', function(e) {
       <div class="evo-previews" id="evo-previews"></div>
     </div>
 
+    <!-- Cabinet Analogy entry — temporarily removed from page
     <div class="evo-cabinet">
       <p>Need a simpler explanation? Let us use the Cabinet Analogy</p>
       <button type="button" class="btn-open" onclick="toggleEasyView(true)">
@@ -2771,6 +2789,7 @@ document.addEventListener('keydown', function(e) {
         <img src="/icons/arrow-right.svg" alt="" width="20" height="20">
       </button>
     </div>
+    -->
   </div>
 
   <!-- ===== EASY EXPLANATION SLIDESHOW (hidden by default) ===== -->

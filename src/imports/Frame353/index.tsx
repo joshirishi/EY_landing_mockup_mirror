@@ -835,7 +835,7 @@ function Frame2() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-[#2e2e38] w-full" data-name="Frame">
       <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-[24px] sm:text-[28px] md:text-[32px] md:leading-[40px]">Phased Approach</p>
-      <p className="font-['EYInterstate:Regular',sans-serif] leading-[24px] relative shrink-0 text-[15px] md:text-[16px] w-full">{`A progressive journey from understanding to application to adoption, tailored for your organization's specific tax needs.`}</p>
+      <p className="font-['EYInterstate:Regular',sans-serif] leading-[24px] relative shrink-0 text-[15px] md:text-[16px] w-full">{`A progressive journey from understanding to application.`}</p>
     </div>
   );
 }

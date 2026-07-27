@@ -13,7 +13,7 @@ import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { colors, fonts, layout, spacing } from "../design-kit/tokens";
+import { colors, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
 
 /**
  * Token bridge — maps the lesson HTML's CSS custom properties onto the
@@ -71,6 +71,26 @@ const TOKEN_BRIDGE = `
 #module-content .wrong-section,
 #module-content #reality-check {
   background: ${colors.offWhite} !important;
+}
+
+/* Reality Check — center the intro block (title + sub + hint) */
+#module-content .wrong-title,
+#module-content .wrong-sub,
+#module-content .wrong-hint {
+  text-align: center;
+}
+
+/* Rise of AI — grey card surfaces (EY off-white) */
+#module-content .rise-card,
+#module-content .rise-card-body {
+  background: ${colors.offWhite};
+}
+#module-content .rise-card {
+  border-color: ${colors.gray02};
+}
+#module-content .rise-card-body .date {
+  border-top-color: ${colors.gray02};
+  color: ${colors.gray01};
 }
 
 /* Restore intended section breathing room (lesson used 90px 60px / 80px / 64px;
@@ -181,6 +201,25 @@ const TOKEN_BRIDGE = `
 #module-content .sim-section {
   padding-left: var(--ey-content-inline-pad) !important;
   padding-right: var(--ey-content-inline-pad) !important;
+}
+
+/* Act Now — credit / attribution footnote */
+#module-content .velocity-source {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid ${colors.gray02};
+  font-family: ${fonts.light};
+  font-size: ${typeScale.caption.size}px;
+  font-weight: ${typeScale.caption.weight};
+  font-style: italic;
+  letter-spacing: ${typeScale.caption.tracking};
+  line-height: 1.5;
+  color: ${colors.gray01};
+}
+#module-content .velocity-source a {
+  color: ${colors.gray01};
+  text-decoration: underline;
+  font-style: italic;
 }
 
 #module-content [id] {

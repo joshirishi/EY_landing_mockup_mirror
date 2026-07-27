@@ -29,8 +29,8 @@ export interface EYWhatsNextProps {
   eyebrow?: string;
   /** Main headline. Pass a string, or React nodes for a yellow highlight span. */
   title: ReactNode;
-  /** Supporting paragraph under the title */
-  description: ReactNode;
+  /** Supporting paragraph under the title (temporarily not rendered) */
+  description?: ReactNode;
   /** Primary CTA label */
   ctaLabel: string;
   /** Called when the yellow CTA is clicked */
@@ -45,10 +45,10 @@ export interface EYWhatsNextProps {
 export function EYWhatsNext({
   eyebrow = "What's Next",
   title,
-  description,
+  description: _description,
   ctaLabel,
   onContinue,
-  meta,
+  meta: _meta,
   id = "whats-next",
   style,
 }: EYWhatsNextProps) {
@@ -105,7 +105,7 @@ export function EYWhatsNext({
         <h2
           id={`${id}-heading`}
           style={{
-            margin: "0 0 14px",
+            margin: "0 0 28px",
             fontSize: 32,
             lineHeight: "38px",
             fontWeight: 700,
@@ -116,6 +116,7 @@ export function EYWhatsNext({
           {title}
         </h2>
 
+        {/* Body paragraph temporarily hidden — keep heading + CTA only
         <p
           style={{
             margin: "0 0 28px",
@@ -125,8 +126,9 @@ export function EYWhatsNext({
             fontFamily: fonts.regular,
           }}
         >
-          {description}
+          {_description}
         </p>
+        */}
 
         <button
           type="button"
@@ -152,7 +154,8 @@ export function EYWhatsNext({
           <ArrowRight size={16} aria-hidden />
         </button>
 
-        {meta ? (
+        {/* Meta fine-print temporarily hidden — keep heading + CTA only
+        {_meta ? (
           <p
             style={{
               margin: "18px 0 0",
@@ -162,9 +165,10 @@ export function EYWhatsNext({
               fontFamily: fonts.regular,
             }}
           >
-            {meta}
+            {_meta}
           </p>
         ) : null}
+        */}
       </div>
     </section>
   );

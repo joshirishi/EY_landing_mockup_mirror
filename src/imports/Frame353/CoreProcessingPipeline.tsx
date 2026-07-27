@@ -15,7 +15,6 @@ const ASSET = {
   iconRag: "/pipeline/v2/icon-rag.svg",
   iconHuman: "/pipeline/v2/icon-human.svg",
   iconModel: "/pipeline/v2/icon-model.svg",
-  info: "/pipeline/info.svg",
   word: "/pipeline/word.svg",
   excel: "/pipeline/excel.svg",
   teams: "/pipeline/teams.svg",
@@ -184,13 +183,6 @@ export default function CoreProcessingPipeline() {
         </div>
         <div className="absolute left-[643.29px] top-[609.71px] h-[91.349px] w-[96.156px] overflow-clip">
           <img alt="Microsoft Outlook" className="absolute inset-0 size-full max-w-none" src={ASSET.outlook} />
-        </div>
-
-        <div className="absolute bottom-0 left-0 flex h-12 w-full items-center justify-center gap-2 bg-[#2E2E38] px-8">
-          <img alt="" className="size-4" height={16} src={ASSET.info} width={16} />
-          <p className="font-['EYInterstate:Regular',sans-serif] text-sm leading-[22.4px] text-[#c4c4cd] whitespace-nowrap">
-            EY AI Tax Hub · Core Processing Pipeline · Confidential
-          </p>
         </div>
       </div>
     </div>
