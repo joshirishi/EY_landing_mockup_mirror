@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Bot, Users, FolderOpen, Cloud, NotebookText, ClipboardList } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
@@ -48,6 +47,22 @@ function CopilotIcon({ size = 20 }: { size?: number }) {
   );
 }
 
+// ── Agent glyph — muted line icon for "M365 Agent" coming-soon slot ──────────
+// No distinct public M365 Agent logo exists yet; Copilot's icon is already used
+// for "M365 Chat" above, so this stays a neutral gray line glyph (EY gray02).
+function AgentGlyph({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={C.gray02} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="4" y="9" width="16" height="11" rx="3" />
+      <path d="M12 9V5" />
+      <circle cx="12" cy="3.5" r="1.4" fill={C.gray02} stroke="none" />
+      <circle cx="9" cy="14.5" r="1.2" fill={C.gray02} stroke="none" />
+      <circle cx="15" cy="14.5" r="1.2" fill={C.gray02} stroke="none" />
+      <path d="M4 13H2M22 13h-2" />
+    </svg>
+  );
+}
+
 // ── Tab config (exact labels from Figma 3317:15589) ──────────────────────────
 const TABS = [
   { id: "word",    label: "Word Prompts",     color: C.wordBlue,   appColor: C.wordBlue,   letter: "W" },
@@ -62,21 +77,23 @@ type TabId = (typeof TABS)[number]["id"];
 // The 5 apps with live prompt content below "pop" with a floating animation and
 // jump straight to their tab section. The 6 apps without prompt content yet are
 // shown as a muted, inert "coming soon" dock underneath.
-const LAPTOP_CORE_APPS: { id: TabId; label: string; color: string; letter: string; pos: React.CSSProperties }[] = [
-  { id: "word",    label: "Word",        color: C.wordBlue,    letter: "W", pos: { top: 47, left: 42 } },
-  { id: "excel",   label: "Excel",       color: C.excelGreen,  letter: "X", pos: { top: 34, right: 68, animationDelay: "0.4s" } },
-  { id: "ppt",     label: "PowerPoint",  color: C.pptOrange,   letter: "P", pos: { bottom: 121, right: 25, animationDelay: "0.8s" } },
-  { id: "outlook", label: "Outlook",     color: C.outlookBlue, letter: "O", pos: { bottom: 121, left: 35, animationDelay: "1.2s" } },
-  { id: "m365",    label: "M365 Chat",   color: C.teamsViolet, letter: "T", pos: { top: 0, left: "44%", animationDelay: "1.6s" } },
+const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSSProperties }[] = [
+  { id: "word",    label: "Word",        logo: "/pipeline/word.svg",         pos: { top: 47, left: 42 } },
+  { id: "excel",   label: "Excel",       logo: "/pipeline/excel.svg",        pos: { top: 34, right: 68, animationDelay: "0.4s" } },
+  { id: "ppt",     label: "PowerPoint",  logo: "/pipeline/powerpoint.svg",   pos: { bottom: 121, right: 25, animationDelay: "0.8s" } },
+  { id: "outlook", label: "Outlook",     logo: "/pipeline/outlook.svg",      pos: { bottom: 121, left: 35, animationDelay: "1.2s" } },
+  { id: "m365",    label: "M365 Chat",   logo: "/pipeline/copilot-icon.svg", pos: { top: 0, left: "44%", animationDelay: "1.6s" } },
 ];
 
-const LAPTOP_COMING_SOON_APPS: { label: string; icon: typeof Bot }[] = [
-  { label: "M365 Agent", icon: Bot },
-  { label: "MS Teams",   icon: Users },
-  { label: "SharePoint", icon: FolderOpen },
-  { label: "OneDrive",   icon: Cloud },
-  { label: "OneNote",    icon: NotebookText },
-  { label: "MS Forms",   icon: ClipboardList },
+// `logo` is a real MS app SVG path; when absent (M365 Agent — no public logo
+// exists yet), the dock falls back to the muted AgentGlyph line icon.
+const LAPTOP_COMING_SOON_APPS: { label: string; logo?: string }[] = [
+  { label: "M365 Agent" },
+  { label: "MS Teams",   logo: "/pipeline/teams.svg" },
+  { label: "SharePoint", logo: "/pipeline/sharepoint.svg" },
+  { label: "OneDrive",   logo: "/pipeline/onedrive.svg" },
+  { label: "OneNote",    logo: "/pipeline/onenote.svg" },
+  { label: "MS Forms",   logo: "/pipeline/forms.svg" },
 ];
 
 // ── Exact content from Figma (3317:15589) ────────────────────────────────────
@@ -402,7 +419,10 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
           </div>
         </div>
 
-        {/* Floating (popping) apps — jump to matching prompt tab */}
+        {/* Floating (popping) apps — jump to matching prompt tab. Real MS app
+            logos sit on a white tile (they're full-color, transparent-bg SVGs
+            that would disappear or clash on a colored/dark fill — same reason
+            CoreProcessingPipeline.tsx keeps them on a neutral backdrop). */}
         {LAPTOP_CORE_APPS.map(app => (
           <button
             key={app.id}
@@ -413,9 +433,9 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
               width: 64, height: 64,
               borderRadius: 18,
               display: "flex", alignItems: "center", justifyContent: "center",
-              border: "1px solid rgba(255,255,255,0.28)",
+              border: "1px solid rgba(255,255,255,0.5)",
               cursor: "pointer",
-              background: app.color,
+              background: C.white,
               boxShadow: "0 14px 30px rgba(0,0,0,0.4)",
               zIndex: 20,
               animation: "laptopStageFloat 5s ease-in-out infinite",
@@ -425,30 +445,33 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.12) translateY(-3px)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
           >
-            <span style={{ color: C.white, fontFamily: F.regular, fontWeight: 700, fontSize: 22 }}>{app.letter}</span>
+            <img src={app.logo} alt={app.label} style={{ width: 40, height: 40, objectFit: "contain" }} />
             <span style={{ position: "absolute", bottom: -22, fontSize: 11, color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap", fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
           </button>
         ))}
       </div>
 
-      {/* Coming-soon dock — apps without prompt content yet */}
+      {/* Coming-soon dock — apps without prompt content yet. Real logos are
+          shown at reduced opacity so they stay muted/inert next to the
+          "Soon" badge, rather than competing with the 5 live, popping apps. */}
       <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", maxWidth: 500 }}>
-        {LAPTOP_COMING_SOON_APPS.map(app => {
-          const Icon = app.icon;
-          return (
-            <div
-              key={app.label}
-              title={`${app.label} — coming soon`}
-              style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 66, cursor: "default" }}
-            >
-              <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Icon size={20} strokeWidth={1.75} color={C.gray02} aria-hidden />
-              </div>
-              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", textAlign: "center", lineHeight: 1.2, fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
-              <span style={{ position: "absolute", top: -6, right: 2, fontSize: 8, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.dark, background: C.gray02, borderRadius: 6, padding: "1px 5px" }}>Soon</span>
+        {LAPTOP_COMING_SOON_APPS.map(app => (
+          <div
+            key={app.label}
+            title={`${app.label} — coming soon`}
+            style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 66, cursor: "default" }}
+          >
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {app.logo ? (
+                <img src={app.logo} alt={app.label} style={{ width: 24, height: 24, objectFit: "contain", opacity: 0.6 }} />
+              ) : (
+                <AgentGlyph size={20} />
+              )}
             </div>
-          );
-        })}
+            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", textAlign: "center", lineHeight: 1.2, fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
+            <span style={{ position: "absolute", top: -6, right: 2, fontSize: 8, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.dark, background: C.gray02, borderRadius: 6, padding: "1px 5px" }}>Soon</span>
+          </div>
+        ))}
       </div>
 
       <style>{`
