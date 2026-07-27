@@ -1415,6 +1415,9 @@ body {
   background: rgba(255,230,0,0.1);
   border-bottom: 1px solid rgba(255,230,0,0.22);
 }
+.evo-nest-layer.is-current > .evo-nest-row.evo-nest-row-nav:hover {
+  background: rgba(255,230,0,0.16);
+}
 .evo-nest-layer.is-current .evo-nest-label { color: #FFFFFF; }
 .evo-nest-toggle { cursor: pointer; border-radius: 8px; }
 .evo-nest-toggle:hover { background: rgba(255,255,255,0.04); }
@@ -3049,7 +3052,7 @@ document.addEventListener('keydown', function(e) {
 
       <!-- Beat progress indicator — hidden until demo starts -->
       <div id="beat-indicator" style="display:none; align-items:center; justify-content:space-between; padding:6px 20px; background:rgba(30,30,38,0.97); border-bottom:1px solid rgba(255,255,255,0.06);">
-        <div id="beat-dots" style="display:flex; align-items:center; gap:5px;"></div>
+        <div id="beat-dots" style="display:flex; align-items:center; gap:7px;"></div>
         <span id="beat-counter" style="color:rgba(255,255,255,0.45); font-size:10px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase;"></span>
       </div>
 
@@ -3134,7 +3137,8 @@ document.addEventListener('keydown', function(e) {
 </style>
 <script>
 let currentBeat = -1;
-const BEATS = ['ask','sent','pipeline','inside','output','hallucination','you','better'];
+// Walkthrough order: prompt → processing/CTA → tabs → 7-steps overview → AI reply → hallucination → human loop → recap
+const BEATS = ['ask','sent','inside','pipeline','output','hallucination','you','better'];
 const chatEl = document.getElementById('copilot-chat');
 
 function addMessage(role, html) {
@@ -3170,8 +3174,8 @@ function addChatBubble(role, text, tone) {
 const BEAT_STATUS = {
   ask: 'Composing your prompt…',
   sent: 'Sending your question…',
-  pipeline: 'Tracing the invisible steps…',
   inside: 'Breaking down how it works…',
+  pipeline: 'Tracing the invisible steps…',
   output: 'Drafting a response…',
   hallucination: 'Double-checking the answer…',
   you: 'Handing off for review…',
@@ -3237,15 +3241,19 @@ function updateBeatIndicator(beatIdx, totalBeats) {
   var counter = document.getElementById('beat-counter');
   if (!bar || !dots || !counter) return;
   bar.style.display = 'flex';
+  bar.setAttribute('role', 'navigation');
+  bar.setAttribute('aria-label', 'Walkthrough progress');
   dots.innerHTML = '';
   for (var i = 0; i < totalBeats; i++) {
     var d = document.createElement('span');
     var active = i === beatIdx;
     var done = i < beatIdx;
-    d.style.cssText = 'display:inline-block;transition:all 0.3s ease;border-radius:3px;' +
-      (active ? 'width:18px;height:6px;background:var(--ey-yellow);' :
-       done   ? 'width:6px;height:6px;background:rgba(255,230,0,0.45);' :
-                'width:6px;height:6px;background:rgba(255,255,255,0.15);');
+    d.setAttribute('aria-hidden', 'true');
+    // Filled yellow = current / done; hollow ring = upcoming
+    d.style.cssText = 'display:inline-block;box-sizing:border-box;border-radius:50%;transition:all 0.3s ease;' +
+      (active ? 'width:8px;height:8px;background:var(--ey-yellow);border:1.5px solid var(--ey-yellow);box-shadow:0 0 0 3px rgba(255,230,0,0.22);' :
+       done   ? 'width:7px;height:7px;background:var(--ey-yellow);border:1.5px solid var(--ey-yellow);opacity:0.55;' :
+                'width:7px;height:7px;background:transparent;border:1.5px solid rgba(255,255,255,0.35);');
     dots.appendChild(d);
   }
   counter.textContent = 'Step ' + (beatIdx + 1) + ' of ' + totalBeats;
@@ -3386,11 +3394,22 @@ function renderBeat(flipIn) {
         cta.style.cssText = 'margin:2px 0 20px 0;cursor:pointer;animation:slideUpIn 0.45s ease-out forwards;opacity:0;';
         cta.onclick = function () { continueBeat(); };
         cta.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); continueBeat(); } };
-        cta.innerHTML = `<div style="border:1px solid rgba(255,230,0,0.3);border-radius:14px;overflow:hidden;background:linear-gradient(135deg,var(--white),var(--off-white));transition:transform 0.2s ease,box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(255,230,0,0.18)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'"><div style="padding:16px 20px;display:flex;align-items:center;gap:14px;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(70,150,255,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent-blue);flex-shrink:0;">AI</div><div style="flex:1;"><div style="color:var(--ey-dark);font-size:14px;font-weight:700;margin-bottom:3px;">What's happening right now: the pipeline at a glance</div><!-- <div style="color:var(--gray-01);font-size:12px;line-height:1.5;">Your prompt just triggered 7 invisible steps — tap to watch them unfold.</div> --></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>`;
+        cta.innerHTML = `<div style="border:1px solid rgba(255,230,0,0.3);border-radius:14px;overflow:hidden;background:linear-gradient(135deg,var(--white),var(--off-white));transition:transform 0.2s ease,box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(255,230,0,0.18)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'"><div style="padding:16px 20px;display:flex;align-items:center;gap:14px;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(70,150,255,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent-blue);flex-shrink:0;">AI</div><div style="flex:1;"><div style="color:var(--ey-dark);font-size:14px;font-weight:700;margin-bottom:3px;">See what happened behind the scenes</div><!-- <div style="color:var(--gray-01);font-size:12px;line-height:1.5;">Your prompt just triggered 7 invisible steps — tap to watch them unfold.</div> --></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div></div>`;
         chatEl.appendChild(cta);
         chatEl.scrollTop = chatEl.scrollHeight;
       }, 1400)
     ];
+
+  } else if (beat === 'inside') {
+    barEl.style.display = 'none';
+    if (inputEl) { inputEl.value = ''; inputEl.style.color = 'var(--text-secondary)'; inputEl.style.borderColor = 'rgba(46,46,56,0.08)'; }
+    var acc = document.createElement('div');
+    acc.style.cssText = 'animation:' + (flipIn ? 'flipInY 0.4s ease-out forwards' : 'fadeInMsg 0.5s ease-out forwards') + ';opacity:0;';
+    if (flipIn) acc.className = 'beat-flip-in';
+    acc.innerHTML = buildInsideAccordion();
+    chatEl.appendChild(acc);
+    appendBeatNext('See the 7 invisible steps');
+    chatEl.scrollTop = chatEl.scrollHeight;
 
   } else if (beat === 'pipeline') {
     barEl.style.display = 'none';
@@ -3400,15 +3419,6 @@ function renderBeat(flipIn) {
     exp.style.cssText = 'margin:0 0 16px 0; opacity:0; animation:fadeInMsg 0.6s ease-out forwards;';
     exp.innerHTML = `<div style="border:1px solid rgba(46,46,56,0.07);border-radius:14px;overflow:hidden;background:linear-gradient(135deg,var(--white),var(--off-white));"><div style="padding:18px 20px 4px;"><p style="color:var(--gray-01);font-size:13px;line-height:1.7;margin:0 0 18px;">Every AI response travels through <strong style="color:var(--ey-dark);">7 invisible steps</strong> before reaching you</p><div style="display:flex;align-items:flex-start;gap:0;margin-bottom:8px;overflow-x:auto;padding-bottom:2px;justify-content:center;"><div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;"><div style="width:36px;height:36px;border-radius:50%;background:rgba(255,230,0,0.12);border:1.5px solid rgba(255,230,0,0.45);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><span style="color:rgba(255,230,0,0.9);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Prompt</span></div><div style="display:flex;align-items:center;padding-bottom:19px;"><div style="width:18px;height:1px;background:linear-gradient(90deg,rgba(255,230,0,0.4),rgba(70,150,255,0.3));"></div><svg width="8" height="8" viewBox="0 0 8 8" fill="none" style="margin-bottom:0;"><path d="M1 4h6M4 1l3 3-3 3" stroke="rgba(46,46,56,0.2)" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;"><div style="width:42px;height:42px;border-radius:50%;background:rgba(70,150,255,0.18);border:2px solid var(--accent-blue);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(70,150,255,0.12);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.25"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg></div><span style="color:var(--accent-blue);font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;">Tokens</span></div><div style="display:flex;align-items:center;padding-bottom:19px;"><div style="width:18px;height:1px;background:var(--card-border);"></div><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4h6M4 1l3 3-3 3" stroke="rgba(46,46,56,0.15)" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;"><div style="width:36px;height:36px;border-radius:50%;background:rgba(0,200,100,0.08);border:1.5px dashed rgba(0,200,100,0.35);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6h-8c-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg></div><span style="color:rgba(0,200,100,0.7);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">LLM</span></div><div style="display:flex;align-items:center;padding-bottom:19px;"><div style="width:18px;height:1px;background:var(--card-border);"></div><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4h6M4 1l3 3-3 3" stroke="rgba(46,46,56,0.15)" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;"><div style="width:36px;height:36px;border-radius:50%;background:rgba(255,125,30,0.08);border:1.5px dashed rgba(255,125,30,0.35);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><span style="color:rgba(255,125,30,0.7);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">RAG</span></div><div style="display:flex;align-items:center;padding-bottom:19px;"><div style="width:18px;height:1px;background:var(--card-border);"></div><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4h6M4 1l3 3-3 3" stroke="rgba(46,46,56,0.15)" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;"><div style="width:36px;height:36px;border-radius:50%;background:rgba(70,150,255,0.08);border:1.5px dashed rgba(70,150,255,0.35);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span style="color:rgba(70,150,255,0.7);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Output</span></div><div style="display:flex;align-items:center;padding-bottom:19px;"><div style="width:18px;height:1px;background:var(--card-border);"></div><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4h6M4 1l3 3-3 3" stroke="rgba(46,46,56,0.15)" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;"><div style="width:36px;height:36px;border-radius:50%;background:rgba(255,65,54,0.08);border:1.5px dashed rgba(255,65,54,0.35);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div><span style="color:rgba(255,65,54,0.7);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Risk?</span></div><div style="display:flex;align-items:center;padding-bottom:19px;"><div style="width:18px;height:1px;background:var(--card-border);"></div><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4h6M4 1l3 3-3 3" stroke="rgba(46,46,56,0.15)" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;"><div style="width:36px;height:36px;border-radius:50%;background:rgba(0,200,100,0.08);border:1.5px dashed rgba(0,200,100,0.35);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span style="color:rgba(0,200,100,0.7);font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">You</span></div></div></div><div style="height:1px;background:rgba(46,46,56,0.06);margin:4px 20px 0;"></div><div style="padding:16px 20px 20px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg><span style="color:var(--accent-blue);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Zooming in: how tokenization actually worked</span></div><div style="background:var(--off-white);border-radius:10px;padding:14px 16px;"><div style="font-size:11px;color:var(--gray-01);margin-bottom:10px;font-style:italic;line-height:1.5;padding:7px 10px;background:var(--white);border-radius:5px;border-left:2px solid rgba(46,46,56,0.06);">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;"><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.1s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">Summar</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.2s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">ize</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.35s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-green);font-weight:600;font-family:monospace;">the</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.5s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">G</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.65s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">ST</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.8s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-orange);font-weight:600;font-family:monospace;">impl</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.95s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-orange);font-weight:600;font-family:monospace;">ications</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.1s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-green);font-weight:600;font-family:monospace;">online</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.25s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-red);font-weight:600;font-family:monospace;">sell</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.4s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-red);font-weight:600;font-family:monospace;">er</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.55s both;align-self:center;"><span style="color:rgba(46,46,56,0.25);font-size:18px;letter-spacing:3px;">···</span></span></div><div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--text-dim);font-size:10px;">16 words</span><span style="color:var(--text-dim);">→</span><span style="color:var(--accent-blue);font-size:10px;font-weight:600;">~21 tokens</span></div></div></div></div>`;
     chatEl.appendChild(exp);
-    appendBeatNext('See how it works');
-    chatEl.scrollTop = chatEl.scrollHeight;
-
-  } else if (beat === 'inside') {
-    barEl.style.display = 'none';
-    var acc = document.createElement('div');
-    acc.style.cssText = 'animation:fadeInMsg 0.5s ease-out forwards;opacity:0;';
-    acc.innerHTML = buildInsideAccordion();
-    chatEl.appendChild(acc);
     appendBeatNext('See the AI response');
     chatEl.scrollTop = chatEl.scrollHeight;
 
@@ -4924,6 +4934,7 @@ function renderEvoNest(i) {
     const chevronRight = '<svg class="evo-nest-nav-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
 
     if (depth === 0 && i > 0) {
+      // Root ancestor — collapse/expand the nest rings (chevron rotates when collapsed)
       row.classList.add('evo-nest-toggle');
       row.setAttribute('role', 'button');
       row.setAttribute('tabindex', '0');
@@ -4935,7 +4946,7 @@ function renderEvoNest(i) {
         if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleEvoNestCollapse(); }
       });
     } else if (!isCurrent) {
-      // Ancestor row — clicking drills to that era (chevron-right = go deeper / jump)
+      // Ancestor row — jump back up to that era
       row.classList.add('evo-nest-row-nav');
       row.setAttribute('role', 'button');
       row.setAttribute('tabindex', '0');
@@ -4947,8 +4958,22 @@ function renderEvoNest(i) {
         if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); selectEra(d); }
       });
     } else {
-      // Current layer — expand chevron always visible as the nest-frame affordance
-      row.insertAdjacentHTML('beforeend', chevronDown);
+      // Current layer — drill into the next nested child when one exists
+      const hasChild = i < EVO_ERAS.length - 1;
+      if (hasChild) {
+        const child = EVO_ERAS[i + 1];
+        const next = i + 1;
+        row.classList.add('evo-nest-row-nav');
+        row.setAttribute('role', 'button');
+        row.setAttribute('tabindex', '0');
+        row.setAttribute('aria-label', 'Go deeper into ' + child.title);
+        row.insertAdjacentHTML('beforeend', chevronRight);
+        row.addEventListener('click', function () { selectEra(next); });
+        row.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); selectEra(next); }
+        });
+      }
+      // Leaf era (Agentic) — no chevron; nowhere deeper to go
     }
     layer.appendChild(row);
 
