@@ -3226,7 +3226,7 @@ function renderBeat(flipIn) {
 
   <div class="cheat-columns" aria-label="GenAI capability cheat sheet">
     <!-- CREATE -->
-    <details class="cheat-col" data-tone="create" open>
+    <details class="cheat-col" data-tone="create">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
@@ -3269,7 +3269,7 @@ function renderBeat(flipIn) {
     </details>
 
     <!-- UNDERSTAND -->
-    <details class="cheat-col" data-tone="understand" open>
+    <details class="cheat-col" data-tone="understand">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -3312,7 +3312,7 @@ function renderBeat(flipIn) {
     </details>
 
     <!-- ORGANIZE -->
-    <details class="cheat-col" data-tone="organize" open>
+    <details class="cheat-col" data-tone="organize">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
@@ -3355,7 +3355,7 @@ function renderBeat(flipIn) {
     </details>
 
     <!-- THINK -->
-    <details class="cheat-col" data-tone="think" open>
+    <details class="cheat-col" data-tone="think">
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6H8c-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/><path d="M10 17h4"/></svg>
@@ -3447,7 +3447,7 @@ function renderBeat(flipIn) {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  cursor: default;
+  cursor: pointer;
   color: inherit;
 }
 .cheat-col-head::-webkit-details-marker { display: none; }
@@ -3461,11 +3461,12 @@ function renderBeat(flipIn) {
   letter-spacing: 0.12em;
 }
 .cheat-chevron {
-  display: none;
+  display: block;
   flex-shrink: 0;
   color: var(--gray-01);
   transition: transform 0.2s;
 }
+.cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
 .cheat-col[data-tone="create"] { color: var(--ey-dark); }
 .cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-dark); border-top-color: var(--ey-yellow); }
 .cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-dark); }
@@ -3478,9 +3479,12 @@ function renderBeat(flipIn) {
 .cheat-col[data-tone="organize"] .cheat-card-icon { color: var(--accent-green); }
 .cheat-col[data-tone="think"] .cheat-card-icon { color: var(--accent-purple); }
 .cheat-col-body {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 12px;
+}
+.cheat-col[open] > .cheat-col-body {
+  display: flex;
 }
 .cheat-card {
   background: var(--white);
@@ -3571,11 +3575,8 @@ function renderBeat(flipIn) {
   }
   .cheat-col-head {
     padding: 16px 18px;
-    cursor: pointer;
     border-top-width: 3px;
   }
-  .cheat-chevron { display: block; }
-  .cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
   .cheat-col-body {
     padding: 0 18px 18px;
     gap: 10px;
@@ -3593,26 +3594,16 @@ function renderBeat(flipIn) {
   var cols = Array.prototype.slice.call(root.querySelectorAll('.cheat-col'));
   var mq = window.matchMedia('(max-width: 900px)');
 
-  function syncMode() {
-    var mobile = mq.matches;
-    cols.forEach(function (col, i) {
-      if (mobile) {
-        // Accordion: first open, others closed
-        col.open = i === 0;
-      } else {
-        // Desktop grid: all columns expanded
-        col.open = true;
-      }
-    });
-  }
-
+  // Columns start closed (no `open` attribute). Native <details> toggles on click.
   cols.forEach(function (col) {
     col.addEventListener('toggle', function () {
-      if (!mq.matches || !col.open) return;
-      // One open panel at a time on small screens
-      cols.forEach(function (other) {
-        if (other !== col) other.open = false;
-      });
+      if (mq.matches && col.open) {
+        // One open panel at a time on small screens
+        cols.forEach(function (other) {
+          if (other !== col) other.open = false;
+        });
+      }
+      equalizeCardRows();
     });
   });
 
@@ -3648,13 +3639,12 @@ function renderBeat(flipIn) {
     resizeTimer = setTimeout(equalizeCardRows, 100);
   }
 
-  syncMode();
   equalizeCardRows();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeCardRows);
   window.addEventListener('load', equalizeCardRows);
   window.addEventListener('resize', scheduleEqualize);
-  if (mq.addEventListener) mq.addEventListener('change', function () { syncMode(); equalizeCardRows(); });
-  else if (mq.addListener) mq.addListener(function () { syncMode(); equalizeCardRows(); });
+  if (mq.addEventListener) mq.addEventListener('change', equalizeCardRows);
+  else if (mq.addListener) mq.addListener(equalizeCardRows);
 })();
 </script>
 
