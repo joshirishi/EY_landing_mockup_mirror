@@ -942,6 +942,26 @@ body {
   max-width: 700px;
   margin: 0 auto;
 }
+/* Mantras as column footers inside the comparison grid */
+.gva-band-mantras .gva-cell {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+}
+.gva-band-mantras .gva-mantra {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  background: var(--gva-card);
+}
+.gva-band-mantras.gva-band:last-of-type .gva-mantra {
+  border-radius: 0 0 var(--gva-radius) var(--gva-radius);
+  border-bottom: 1px solid var(--gva-border);
+}
 .gva-mantra {
   text-align: center;
   padding: var(--gva-pad);
@@ -3823,8 +3843,33 @@ function renderBeat(flipIn) {
         <div class="gva-cell" data-tone="purple"><span class="gva-cap-pill"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 9 17 20 7"/></svg> Plans and coordinates work</span></div>
       </div>
     </section>
+
+    <!-- Mantras as column footers (moved from bottom gva-summary strip) -->
+    <section class="gva-band gva-band-mantras" aria-label="In short">
+      <div class="gva-band-cells">
+        <div class="gva-cell" data-tone="blue">
+          <div class="gva-mantra" data-tone="blue">
+            <p class="gva-mantra-kicker">LLM</p>
+            <p class="gva-mantra-text">"Tell me."</p>
+          </div>
+        </div>
+        <div class="gva-cell" data-tone="green">
+          <div class="gva-mantra" data-tone="green">
+            <p class="gva-mantra-kicker">AI Agent</p>
+            <p class="gva-mantra-text">"Do it."</p>
+          </div>
+        </div>
+        <div class="gva-cell" data-tone="purple">
+          <div class="gva-mantra" data-tone="purple">
+            <p class="gva-mantra-kicker">Agentic AI</p>
+            <p class="gva-mantra-text">"Own it."</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
+  <!-- Hidden: When Should I Use Which? heading + decision table (former bottom summary strip)
   <div class="gva-summary">
     <p class="gva-summary-title">When Should I Use Which?</p>
     <div class="gva-table" role="table" aria-label="When should I use which">
@@ -3837,21 +3882,8 @@ function renderBeat(flipIn) {
       <div class="gva-table-c" role="cell">Manage a process with multiple steps</div>
       <div class="gva-table-c" data-tone="purple" role="cell"><strong>Agentic AI</strong></div>
     </div>
-    <div class="gva-mantras">
-      <div class="gva-mantra" data-tone="blue">
-        <p class="gva-mantra-kicker">LLM</p>
-        <p class="gva-mantra-text">"Tell me."</p>
-      </div>
-      <div class="gva-mantra" data-tone="green">
-        <p class="gva-mantra-kicker">AI Agent</p>
-        <p class="gva-mantra-text">"Do it."</p>
-      </div>
-      <div class="gva-mantra" data-tone="purple">
-        <p class="gva-mantra-kicker">Agentic AI</p>
-        <p class="gva-mantra-text">"Own it."</p>
-      </div>
-    </div>
   </div>
+  -->
 </section>
 
 
