@@ -3057,7 +3057,7 @@ document.addEventListener('keydown', function(e) {
       </div>
 
       <!-- Chat body -->
-      <div id="copilot-chat" style="padding:28px; min-height:420px; max-height:600px; overflow-y:auto; background:var(--white);">
+      <div id="copilot-chat" style="padding:28px; min-height:200px; max-height:340px; overflow-y:auto; background:var(--white);">
         <div id="copilot-welcome" style="text-align:center; padding:60px 20px;">
           <h3 style="color:var(--ey-dark); font-size:20px; font-weight:700; margin-bottom:8px;">Welcome to EY.ai Copilot</h3>
           <p style="color:var(--gray-01); font-size:14px; max-width:400px; margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p>
@@ -3072,6 +3072,9 @@ document.addEventListener('keydown', function(e) {
         <input id="copilot-input" type="text" placeholder="Ask me about tax..." readonly onkeydown="if(event.key==='Enter'){event.preventDefault();continueBeat();}" style="flex:1; background:var(--white); border:1px solid rgba(46,46,56,0.08); border-radius:10px; padding:12px 16px; color:var(--gray-01); font-size:13px; outline:none;">
         <button type="button" onclick="continueBeat()" aria-label="Send" style="width:38px; height:38px; border-radius:8px; background:var(--ey-yellow); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--ey-dark)"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
       </div>
+
+      <!-- Ask-beat explainer — sits directly below the input bar, rising in once typing finishes -->
+      <div id="ask-explainer" style="padding:0 20px;"></div>
 
       <!-- Bottom action bar: single primary Continue, secondary Back, quiet Restart -->
       <div id="demo-actions" style="display:none; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; background:var(--off-white); border-top:1px solid rgba(46,46,56,0.05); flex-wrap:wrap;">
@@ -3360,6 +3363,8 @@ function renderBeat(flipIn) {
   if (window._typer) clearInterval(window._typer);
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = '';
+  var askExplainerEl = document.getElementById('ask-explainer');
+  if (askExplainerEl) askExplainerEl.innerHTML = '';
   var barEl = document.getElementById('copilot-input-bar');
   var inputEl = document.getElementById('copilot-input');
   var winEl = document.getElementById('copilot-window');
@@ -3370,17 +3375,25 @@ function renderBeat(flipIn) {
   if (beat === 'ask') {
     barEl.style.display = 'flex';
     inputEl.value = ''; inputEl.style.color = 'var(--ey-dark)'; inputEl.style.borderColor = 'rgba(255,230,0,0.35)';
+    // Continue button stays hidden until the prompt finishes typing and the
+    // explainer card has risen in — nothing to advance to before then.
+    var contBtnAsk = document.getElementById('demo-continue-btn');
+    if (contBtnAsk) contBtnAsk.style.display = 'none';
     var promptTxt = 'Summarize the GST implications for an online seller selling goods across multiple Indian states';
     var ti = 0;
     window._typer = setInterval(function () {
-      if (ti < promptTxt.length) { inputEl.value += promptTxt[ti]; ti++; } else { clearInterval(window._typer); }
+      if (ti < promptTxt.length) { inputEl.value += promptTxt[ti]; ti++; return; }
+      clearInterval(window._typer);
+      if (currentBeat < 0 || BEATS[currentBeat] !== 'ask') return; // demo moved on / reset mid-typing
+      // Card only appears once the prompt has fully finished typing, rising up
+      // from directly below the (now fully-typed) input bar — not inside the
+      // scrollable chat log above it.
+      var ann = document.createElement('div');
+      ann.style.cssText = 'padding:16px 0 4px;animation:slideUpIn 0.45s ease-out forwards;opacity:0;';
+      ann.innerHTML =`<div style="border:1px solid rgba(255,230,0,0.25);border-radius:12px;overflow:hidden;background:var(--white);"><div style="background:rgba(255,230,0,0.07);border-bottom:1px solid rgba(255,230,0,0.15);padding:10px 18px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">What is a Prompt?</span></div><div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;"><div><p style="color:var(--ey-dark);font-size:14px;font-weight:700;margin:0 0 6px;line-height:1.4;">This is the instruction given to AI.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.6;margin:0 0 14px;">The clearer the instruction, the better the answer.</p><div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,100,0.1);border:1px solid rgba(0,200,100,0.25);padding:7px 14px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:12px;font-weight:700;">Prompt = What you ask AI to do</span></div></div><div style="background:var(--off-white);border:1px solid rgba(255,230,0,0.15);border-left:3px solid var(--ey-yellow);border-radius:8px;padding:14px 16px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Everyday Analogy</span></div><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin:0 0 6px;line-height:1.4;">Like giving directions to a cab driver.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.5;margin:0;">A specific destination leads to a better journey.</p></div></div></div>`;
+      if (askExplainerEl) askExplainerEl.appendChild(ann);
+      appendBeatNext('See what happened next');
     }, 30);
-    var ann = document.createElement('div');
-    ann.style.cssText = 'margin:0 0 20px 0;animation:fadeInMsg 0.6s ease-out 0.3s forwards;opacity:0;';
-    ann.innerHTML = `<div style="border:1px solid rgba(255,230,0,0.25);border-radius:12px;overflow:hidden;background:var(--white);"><div style="background:rgba(255,230,0,0.07);border-bottom:1px solid rgba(255,230,0,0.15);padding:10px 18px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">What is a Prompt?</span></div><div style="padding:18px 20px;display:grid;grid-template-columns:1fr;gap:18px;align-items:start;"><div><p style="color:var(--ey-dark);font-size:14px;font-weight:700;margin:0 0 6px;line-height:1.4;">This is the instruction given to AI.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.6;margin:0 0 14px;">The clearer the instruction, the better the answer.</p><div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,100,0.1);border:1px solid rgba(0,200,100,0.25);padding:7px 14px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:12px;font-weight:700;">Prompt = What you ask AI to do</span></div></div><div style="background:var(--off-white);border:1px solid rgba(255,230,0,0.15);border-left:3px solid var(--ey-yellow);border-radius:8px;padding:14px 16px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Everyday Analogy</span></div><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin:0 0 6px;line-height:1.4;">Like giving directions to a cab driver.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.5;margin:0;">A specific destination leads to a better journey.</p></div></div></div>`;
-    chatEl.appendChild(ann);
-    chatEl.scrollTop = chatEl.scrollHeight;
-    appendBeatNext('See what happened next');
 
   } else if (beat === 'sent') {
     barEl.style.display = 'none';
