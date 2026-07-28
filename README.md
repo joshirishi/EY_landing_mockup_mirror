@@ -9,6 +9,23 @@ Run `npm i` to install the dependencies.
 
 Run `npm run dev` to start the development server.
 
+## Project layout
+
+| Path | Purpose |
+|------|---------|
+| `src/app/` | Router and app shell |
+| `src/pages/` | Live module pages (Foundational, Prompting, Copilot Hub) |
+| `src/design-kit/` | EY tokens, typography, shared UI components |
+| `src/imports/` | Figma-exported views and HTML lesson sources |
+| `src/assets/` | Bundled images and static assets |
+| `public/` | Static files served at `/` (icons, pipeline SVGs, lesson images) |
+| `Fonts/` | Source EY Interstate font files (copied to `public/fonts/`) |
+| `docs/` | Product docs, plans, content briefs, design notes |
+| `reference/` | Original HTML/CSS prototypes and design exports (not part of the app) |
+| `skills/` | Agent skills for design and implementation workflows |
+
+See `docs/WHAT_WE_ARE_BUILDING.md` for product intent and curriculum map.
+
 ## Global content width
 
 Page content rails use one token: `layout.contentWidth` in `src/design-kit/tokens.ts` (default **80%**). Change that value and it applies across pages via `contentRailStyle`, `spacing.sectionPadding`, and CSS `--ey-content-width`.

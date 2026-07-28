@@ -31,10 +31,11 @@ export { EYCard } from './EYCard';
 export { EYFrame } from './EYFrame';
 export { SiteHeader, PlatformModeBadge } from './SiteHeader';
 export type { SiteSection } from './SiteHeader';
-export { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_OFFSET } from './LearningNav';
+export { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from './LearningNav';
 export { EYWhatsNext, EYWhatsNextHighlight } from './EYWhatsNext';
 export {
   MODULES,
+  PHASES,
   PHASE_LABEL,
   PHASE_NUMBER,
   PHASE_PATH,
@@ -42,8 +43,13 @@ export {
   TOTAL_MODULES,
   TOTAL_PHASES,
   getModule,
+  getPhase,
+  getCurrentPhase,
+  getAllModules,
   getAdjacentModules,
   getSubModuleGroups,
+  moduleSectionPath,
+  isModuleAvailable,
 } from './curriculum';
 export {
   EYEyebrow,
@@ -58,4 +64,4 @@ export {
 
 // ── Types re-exported for convenience ────────────────────────────────────────
 export type { NavItem } from './EYNavbar';
-export type { ModuleId, CurriculumModule, SubModule } from './curriculum';
+export type { ModuleId, CurriculumModule, SubModule, CurriculumPhase } from './curriculum';

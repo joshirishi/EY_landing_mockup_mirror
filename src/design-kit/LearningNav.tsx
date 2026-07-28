@@ -6,7 +6,8 @@
  *   Row A — Circular yellow back + "Tax Labs" › [Foundational Training Workshops ▾]
  *           › current page title, plus a progress pill (+ optional section status).
  *   Row B — "Learn" / "Apply" tab clusters (module pages only) that jump to
- *           in-page sections, with scroll-spy highlighting.
+ *           in-page sections within the current module, with scroll-spy highlighting.
+ *           Sub-module sections live here — not in the workshop dropdown (Row A).
  *
  * Usage (Phase 1 overview):
  *   <SiteHeader variant="learning" onNavigate={navigate} />
@@ -21,15 +22,16 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { colors, fonts } from "./tokens";
 import {
-  MODULES,
-  PHASE_LABEL,
   PHASE_NUMBER,
   PHASE_PATH,
   TOTAL_MODULES,
   TOTAL_PHASES,
   getAdjacentModules,
+  getCurrentPhase,
   getModule,
   getSubModuleGroups,
+  isModuleAvailable,
+  type CurriculumModule,
   type ModuleId,
 } from "./curriculum";
 
@@ -37,7 +39,7 @@ import {
 export const SUBNAV_SCROLL_OFFSET = 156;
 
 const FOCUS_RING = `2px solid ${colors.yellow}`;
-const WORKSHOP_LABEL = PHASE_LABEL.replace(/^Phase 1: /, "");
+const WORKSHOP_LABEL = getCurrentPhase().label.replace(/^Phase \d+: /, "");
 
 function applyFocusRing(e: React.FocusEvent<HTMLElement>) {
   e.currentTarget.style.outline = FOCUS_RING;
@@ -185,45 +187,12 @@ export function ModuleHeader(props: ModuleHeaderProps) {
             </button>
 
             {pickerOpen && (
-              <div
-                role="menu"
-                aria-label="Jump to module"
-                style={{
-                  position: "absolute",
-                  top: "calc(100% + 8px)",
-                  left: 0,
-                  minWidth: 260,
-                  maxWidth: "min(90vw, 320px)",
-                  background: colors.confidentBlack,
-                  border: "1px solid rgba(255,255,255,0.14)",
-                  borderRadius: 8,
-                  boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
-                  padding: 6,
-                  zIndex: 300,
-                }}
-              >
-                <PickerItem
-                  label={`Module ${PHASE_NUMBER} Overview`}
-                  isCurrent={isPhaseOverview}
-                  order={null}
-                  onClick={() => {
-                    setPickerOpen(false);
-                    if (!isPhaseOverview) onNavigate(PHASE_PATH);
-                  }}
-                />
-                {MODULES.map((mod) => (
-                  <PickerItem
-                    key={mod.id}
-                    label={mod.title}
-                    isCurrent={mod.id === currentModuleId}
-                    order={mod.order}
-                    onClick={() => {
-                      setPickerOpen(false);
-                      if (mod.id !== currentModuleId) onNavigate(mod.path);
-                    }}
-                  />
-                ))}
-              </div>
+              <ModulePickerMenu
+                isPhaseOverview={isPhaseOverview}
+                currentModuleId={currentModuleId}
+                onNavigate={onNavigate}
+                onClose={() => setPickerOpen(false)}
+              />
             )}
           </div>
 
@@ -454,21 +423,125 @@ function ChevronSep() {
   );
 }
 
+/** Scroll to `#section` after cross-module navigation (hash in URL). */
+export function useModuleSectionHashScroll(onSectionClick?: (sectionId: string) => void) {
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+
+    const scrollToSection = () => {
+      if (onSectionClick) {
+        onSectionClick(hash);
+        return;
+      }
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const timer = window.setTimeout(scrollToSection, 120);
+    return () => window.clearTimeout(timer);
+  }, [onSectionClick]);
+}
+
+function ModulePickerMenu({
+  isPhaseOverview,
+  currentModuleId,
+  onNavigate,
+  onClose,
+}: {
+  isPhaseOverview: boolean;
+  currentModuleId: ModuleId | null;
+  onNavigate: (path: string) => void;
+  onClose: () => void;
+}) {
+  const phase = getCurrentPhase();
+
+  const goToModule = (mod: CurriculumModule) => {
+    if (!isModuleAvailable(mod)) return;
+    onClose();
+    if (mod.id !== currentModuleId) onNavigate(mod.path);
+  };
+
+  return (
+    <div
+      role="menu"
+      aria-label="Jump to module"
+      style={{
+        position: "absolute",
+        top: "calc(100% + 8px)",
+        left: 0,
+        minWidth: 280,
+        maxWidth: "min(92vw, 360px)",
+        background: colors.confidentBlack,
+        border: "1px solid rgba(255,255,255,0.14)",
+        borderRadius: 8,
+        boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
+        padding: 6,
+        zIndex: 300,
+        display: "flex",
+        flexDirection: "column",
+        maxHeight: "min(70vh, 480px)",
+      }}
+    >
+      <PickerItem
+        label="Workshop overview"
+        isCurrent={isPhaseOverview}
+        order={null}
+        onClick={() => {
+          onClose();
+          if (!isPhaseOverview) onNavigate(phase.path);
+        }}
+      />
+
+      <div
+        style={{
+          overflowY: "auto",
+          marginTop: 4,
+          paddingTop: 4,
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
+        {phase.modules.map((mod) => (
+          <PickerItem
+            key={mod.id}
+            label={mod.title}
+            isCurrent={mod.id === currentModuleId}
+            order={mod.order}
+            disabled={!isModuleAvailable(mod)}
+            meta={isModuleAvailable(mod) ? undefined : "Coming soon"}
+            onClick={() => goToModule(mod)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PickerItem({
   label,
   isCurrent,
   order,
   onClick,
+  disabled = false,
+  meta,
+  style,
 }: {
   label: string;
   isCurrent: boolean;
   order: number | null;
   onClick: () => void;
+  disabled?: boolean;
+  meta?: string;
+  style?: CSSProperties;
 }) {
   return (
     <button
       role="menuitem"
       aria-current={isCurrent ? "page" : undefined}
+      aria-disabled={disabled || undefined}
+      disabled={disabled}
       onClick={onClick}
       style={{
         width: "100%",
@@ -479,17 +552,19 @@ function PickerItem({
         border: "none",
         borderRadius: 6,
         padding: "10px 10px",
-        cursor: isCurrent ? "default" : "pointer",
+        cursor: disabled ? "not-allowed" : isCurrent ? "default" : "pointer",
         textAlign: "left",
         fontFamily: isCurrent ? fonts.bold : fonts.regular,
         fontSize: 13,
-        color: isCurrent ? colors.yellow : colors.white,
+        color: disabled ? colors.gray01 : isCurrent ? colors.yellow : colors.white,
+        opacity: disabled ? 0.55 : 1,
+        ...style,
       }}
       onMouseEnter={(e) => {
-        if (!isCurrent) e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+        if (!isCurrent && !disabled) e.currentTarget.style.background = "rgba(255,255,255,0.08)";
       }}
       onMouseLeave={(e) => {
-        if (!isCurrent) e.currentTarget.style.background = "none";
+        if (!isCurrent && !disabled) e.currentTarget.style.background = "none";
       }}
       onFocus={applyFocusRing}
       onBlur={clearFocusRing}
@@ -514,7 +589,20 @@ function PickerItem({
           {order}
         </span>
       )}
-      {label}
+      <span style={{ flex: 1, minWidth: 0, lineHeight: 1.3 }}>{label}</span>
+      {meta ? (
+        <span
+          style={{
+            fontSize: 10,
+            color: colors.gray01,
+            fontFamily: fonts.regular,
+            whiteSpace: "nowrap",
+            flexShrink: 0,
+          }}
+        >
+          {meta}
+        </span>
+      ) : null}
     </button>
   );
 }
@@ -530,15 +618,26 @@ function TabCluster({
   activeSectionId: string | null;
   onSectionClick?: (sectionId: string) => void;
 }) {
+  const isApply = label.toLowerCase() === "apply";
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6, flexShrink: 0 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
       <span
         style={{
+          display: "inline-flex",
+          alignItems: "center",
+          alignSelf: "flex-start",
           fontFamily: fonts.bold,
-          fontSize: 10,
+          fontSize: 11,
           letterSpacing: "0.06em",
           textTransform: "uppercase",
-          color: colors.gray01,
+          color: colors.offBlack,
+          background: isApply ? colors.yellowAlpha12 : colors.white,
+          border: `1px solid ${isApply ? "rgba(255, 230, 0, 0.4)" : "rgba(46, 46, 56, 0.16)"}`,
+          borderRadius: 999,
+          padding: "5px 12px",
+          lineHeight: 1.2,
+          boxShadow: "0 1px 2px rgba(26, 26, 36, 0.06)",
         }}
       >
         {label}

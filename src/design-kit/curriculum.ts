@@ -7,7 +7,12 @@
  * so labels never drift from the cards users unlock on /phase1.
  */
 
-export type ModuleId = "foundational" | "ai-tax-prompting" | "copilot-hub";
+export type ModuleId =
+  | "foundational"
+  | "ai-tax-prompting"
+  | "copilot-hub"
+  | "ai-governance"
+  | "advanced-workflows";
 
 export interface SubModule {
   /** Anchor id of the <section> inside the module page (same-document scroll). */
@@ -24,12 +29,19 @@ export interface CurriculumModule {
   path: string;
   order: number;
   estimatedTime: string;
-  /** Whether ModuleHeader should render the Learn/Apply section tabs for this module.
-   * All three modules currently support it — "foundational" routes clicks through
-   * ModuleHeader's `onSectionClick` (its content lives in an iframe, so section ids
-   * aren't reachable via a plain same-document anchor scroll). */
+  /** When "coming-soon", shown in nav but not navigable yet. */
+  status?: "available" | "coming-soon";
+  /** Whether ModuleHeader should render the Learn/Apply section tabs for this module. */
   supportsInPageNav: boolean;
   subModules: SubModule[];
+}
+
+/** Top-level curriculum unit — scales to Phase 2, 3, 4 without restructuring nav. */
+export interface CurriculumPhase {
+  number: number;
+  label: string;
+  path: string;
+  modules: CurriculumModule[];
 }
 
 export const PHASE_LABEL = "Phase 1: Foundational Training Workshops";
@@ -93,10 +105,55 @@ export const MODULES: CurriculumModule[] = [
       { id: "security", label: "Security & Governance", group: "apply" },
     ],
   },
+  {
+    id: "ai-governance",
+    title: "AI Governance in Tax",
+    path: "/ai-governance",
+    order: 4,
+    estimatedTime: "~25 min",
+    status: "coming-soon",
+    supportsInPageNav: false,
+    subModules: [],
+  },
+  {
+    id: "advanced-workflows",
+    title: "Advanced Tax Workflows",
+    path: "/advanced-workflows",
+    order: 5,
+    estimatedTime: "~40 min",
+    status: "coming-soon",
+    supportsInPageNav: false,
+    subModules: [],
+  },
 ];
 
+/** Ordered phases — add Phase 2+ here; ModuleHeader picker reads this tree. */
+export const PHASES: CurriculumPhase[] = [
+  {
+    number: PHASE_NUMBER,
+    label: PHASE_LABEL,
+    path: PHASE_PATH,
+    modules: MODULES,
+  },
+];
+
+export function getPhase(number: number): CurriculumPhase {
+  const found = PHASES.find((p) => p.number === number);
+  if (!found) throw new Error(`Unknown phase number: ${number}`);
+  return found;
+}
+
+export function getCurrentPhase(): CurriculumPhase {
+  return getPhase(PHASE_NUMBER);
+}
+
+/** Flat list of every module across all phases (for prev/next, counts, etc.). */
+export function getAllModules(): CurriculumModule[] {
+  return PHASES.flatMap((p) => p.modules);
+}
+
 export function getModule(id: ModuleId): CurriculumModule {
-  const found = MODULES.find((m) => m.id === id);
+  const found = getAllModules().find((m) => m.id === id);
   if (!found) throw new Error(`Unknown module id: ${id}`);
   return found;
 }
@@ -105,13 +162,16 @@ export function getAdjacentModules(id: ModuleId): {
   prev: CurriculumModule | null;
   next: CurriculumModule | null;
 } {
-  const current = getModule(id);
-  const prev = MODULES.find((m) => m.order === current.order - 1) ?? null;
-  const next = MODULES.find((m) => m.order === current.order + 1) ?? null;
-  return { prev, next };
+  const all = getAllModules().filter((m) => m.status !== "coming-soon");
+  const idx = all.findIndex((m) => m.id === id);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    prev: idx > 0 ? all[idx - 1]! : null,
+    next: idx < all.length - 1 ? all[idx + 1]! : null,
+  };
 }
 
-export const TOTAL_MODULES = MODULES.length;
+export const TOTAL_MODULES = getAllModules().filter((m) => m.status !== "coming-soon").length;
 
 /** Splits a module's sub-modules into the "Learn" and "Apply" tab clusters. */
 export function getSubModuleGroups(id: ModuleId): { learn: SubModule[]; apply: SubModule[] } {
@@ -120,4 +180,13 @@ export function getSubModuleGroups(id: ModuleId): { learn: SubModule[]; apply: S
     learn: subModules.filter((s) => s.group === "learn"),
     apply: subModules.filter((s) => s.group === "apply"),
   };
+}
+
+/** Build navigation path — appends #section when jumping to a sub-module. */
+export function moduleSectionPath(mod: CurriculumModule, sectionId?: string): string {
+  return sectionId ? `${mod.path}#${sectionId}` : mod.path;
+}
+
+export function isModuleAvailable(mod: CurriculumModule): boolean {
+  return mod.status !== "coming-soon";
 }

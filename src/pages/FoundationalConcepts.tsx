@@ -10,7 +10,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
-import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { colors, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
@@ -341,6 +341,7 @@ export default function FoundationalConcepts({
   );
   const contentRef = useRef<HTMLDivElement>(null);
   const scriptsRan = useRef(false);
+  useModuleSectionHashScroll();
 
   // Inline onclick="" handlers work via innerHTML; <script> blocks do not —
   // re-run them once after the markup is in the DOM.

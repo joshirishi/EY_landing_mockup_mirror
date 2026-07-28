@@ -11,6 +11,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { colors, contentInlinePad, fonts, spacing } from "./tokens";
+import whatsNextBg from "../assets/images/GettyImages-1399150019.jpg";
 
 /** Figma dark-module palette (3455:18320) */
 const DARK = {
@@ -57,13 +58,33 @@ export function EYWhatsNext({
       id={id}
       aria-labelledby={`${id}-heading`}
       style={{
-        background: DARK.page,
+        position: "relative",
+        overflow: "hidden",
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
         textAlign: "center",
         borderTop: `1px solid ${DARK.border}`,
         ...style,
       }}
     >
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `url(${whatsNextBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `linear-gradient(180deg, rgba(26, 26, 36, 0.82) 0%, rgba(26, 26, 36, 0.68) 100%)`,
+        }}
+      />
+      <div style={{ position: "relative", zIndex: 1 }}>
       <div
         style={{
           maxWidth: 640,
@@ -169,6 +190,7 @@ export function EYWhatsNext({
           </p>
         ) : null}
         */}
+      </div>
       </div>
     </section>
   );

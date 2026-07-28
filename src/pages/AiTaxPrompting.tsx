@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, X, XCircle, Zap } from "lucide-react";
 import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss } from "../design-kit/tokens";
-import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext } from "../design-kit/EYWhatsNext";
-import heroImg from "../../images/AdobeStock-621943361.jpeg";
+import heroImg from "../assets/images/AdobeStock-621943361.jpeg";
 
 /** Section surface rhythm: dark → neutral → light (repeats down the page). */
 type SurfaceTone = "dark" | "neutral" | "light";
@@ -2979,6 +2979,8 @@ export default function AiTaxPrompting({
   onBack: () => void;
   onNavigate: (path: string) => void;
 }) {
+  useModuleSectionHashScroll();
+
   return (
     <div style={{ position: "fixed", inset: 0, overflowY: "auto", background: C.white }}>
 

@@ -5,7 +5,7 @@ import {
   FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
   PenLine, Pin, Rocket, Search, Sparkles, Target, Timer,
 } from "lucide-react";
-import { ModuleHeader, SUBNAV_SCROLL_OFFSET } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { contentInlinePad, contentRailStyle, fonts as F, spacing } from "../design-kit/tokens";
@@ -31,16 +31,6 @@ const C = {
   outlookBlue:    "#4696FF",
   teamsViolet:    "#B400FF",
 };
-
-// ── EY Logo mark — paths from /public/ey-logo.svg ────────────────────────────
-function EYLogoMark({ height = 32, letterColor = "#FFFFFF" }: { height?: number; letterColor?: string }) {
-  return (
-    <svg viewBox="0 -18 217.599 217.599" width={height * (217.599 / 181.599)} height={height} aria-label="EY logo">
-      <path fill={C.yellow} d="M0 79.4L217.599 0v41z" />
-      <path fill={letterColor} d="M24.9 150.6h28.5v-16.5H24.9v-13h31.5L46 103H1.4v78.6h62.8v-18.1H24.9zM106.1 103l-13.3 25.7L79.4 103h-26l27.4 47.6v31h23.5v-31l27.5-47.6z" />
-    </svg>
-  );
-}
 
 // ── Copilot icon (simplified sparkle — replaces expired Figma asset) ──────────
 function CopilotIcon({ size = 20 }: { size?: number }) {
@@ -577,6 +567,7 @@ export default function M365CopilotHub({
   onBack?: () => void;
   onNavigate?: (path: string) => void;
 }) {
+  useModuleSectionHashScroll();
   const [activeTab, setActiveTab] = useState<TabId>("word");
 
   const openApp = (id: TabId) => {
@@ -749,40 +740,6 @@ export default function M365CopilotHub({
         meta="Phase 1 covered: AI foundations, tax prompting, and M365 Copilot"
       />
 
-      {/* ── Footer (Figma: Footer — EY logo + EY.ai Tax Labs + link cols) ────── */}
-      <footer style={{ background: C.dark2, padding: `56px 0 32px` }}>
-        <div style={{ ...contentRailStyle }}>
-          <div style={{ display: "flex", gap: 80, marginBottom: 48 }}>
-            <div style={{ flex: 1, maxWidth: 280 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                <EYLogoMark height={28} letterColor="#FFFFFF" />
-                <span style={{ color: C.white, fontWeight: 700, fontSize: 16, fontFamily: F.regular }}>EY.ai Tax Labs</span>
-              </div>
-              <p style={{ fontSize: 13, color: "#C4C4CD", lineHeight: 1.6 }}>Accelerating tax performance safely through custom generative AI structures and premium prompt frameworks.</p>
-            </div>
-            <div>
-              <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>M365 Apps</p>
-              {["Word Prompts","Excel Sheets","PowerPoint Decks","Outlook Emails"].map(l => (
-                <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
-              ))}
-            </div>
-            <div>
-              <p style={{ fontSize: 14, color: C.white, fontWeight: 700, marginBottom: 14, fontFamily: F.regular }}>Trust &amp; Security</p>
-              {["Privacy Policy","Data Governance","Safe Harbor Rules"].map(l => (
-                <a key={l} href="#" style={{ display: "block", fontSize: 13, color: "#C4C4CD", textDecoration: "none", marginBottom: 8, fontFamily: F.regular }}>{l}</a>
-              ))}
-            </div>
-          </div>
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <p style={{ fontSize: 12, color: "#C4C4CD", fontFamily: F.regular }}>© 2026 EY.ai Tax Labs. All rights reserved. Proprietary and confidential.</p>
-            <div style={{ display: "flex", gap: 14 }}>
-              {["in","𝕏"].map(s => (
-                <a key={s} href="#" style={{ width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#C4C4CD", fontSize: 11, fontWeight: 700, textDecoration: "none", fontFamily: F.regular }}>{s}</a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
