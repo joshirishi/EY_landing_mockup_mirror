@@ -3363,6 +3363,9 @@ function renderBeat(flipIn) {
   if (window._typer) clearInterval(window._typer);
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = '';
+  // Reset chat height instantly (no transition) when switching beats
+  chatEl.style.transition = 'none';
+  chatEl.style.height = '620px';
   var askExplainerEl = document.getElementById('ask-explainer');
   if (askExplainerEl) askExplainerEl.innerHTML = '';
   var barEl = document.getElementById('copilot-input-bar');
@@ -3394,6 +3397,12 @@ function renderBeat(flipIn) {
       setTimeout(function () {
         if (currentBeat < 0 || BEATS[currentBeat] !== 'ask') return;
         if (askExplainerEl) askExplainerEl.appendChild(ann);
+        // Shrink chat area by the card height so parent window stays the same total height
+        requestAnimationFrame(function () {
+          var cardH = askExplainerEl.scrollHeight;
+          chatEl.style.transition = 'height 0.45s ease-out';
+          chatEl.style.height = Math.max(160, 620 - cardH) + 'px';
+        });
         appendBeatNext('See what happened next');
       }, 800);
     }, 30);
