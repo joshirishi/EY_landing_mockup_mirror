@@ -3409,20 +3409,35 @@ function renderBeat(flipIn) {
     // Thinking… → Processing… keeps running (and gets highlighted) instead of
     // being swapped out — the Continue button reveals underneath it while the AI is
     // still "at work", reusing the existing typing-indicator styling.
-    showThinking('Thinking…');
-    window._sentThinkingTimers = [
-      setTimeout(function () {
+    showThinking('Parsing your query…');
+    var _thinkingStages = [
+      'Parsing your query…',
+      'Tokenizing prompt…',
+      'Retrieving tax precedents…',
+      'Cross-referencing GST schedules…',
+      'Checking litigation history…',
+      'Applying jurisdictional rules…',
+      'Validating regulatory citations…',
+      'Weighing appellate rulings…',
+      'Drafting response…',
+      'Processing…',
+    ];
+    var _stageIdx = 0;
+    window._sentThinkingTimers = [];
+    _thinkingStages.forEach(function(stage, i) {
+      window._sentThinkingTimers.push(setTimeout(function () {
+        if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return;
         var ti = document.getElementById('thinking-indicator');
         var label = ti && ti.querySelector('span[style*="font-style:italic"]');
-        if (label) label.textContent = 'Processing…';
+        if (label) label.textContent = stage;
         var bubble = document.getElementById('thinking-bubble');
         if (bubble) bubble.classList.add('thinking-highlight');
-      }, 650),
-      setTimeout(function () {
-        if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return; // demo moved on / reset mid-animation
-        appendBeatNext('See what happened behind the scenes');
-      }, 1400)
-    ];
+      }, 400 + i * 620));
+    });
+    window._sentThinkingTimers.push(setTimeout(function () {
+      if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return;
+      appendBeatNext('See what happened behind the scenes');
+    }, 400 + _thinkingStages.length * 620));
 
   } else if (beat === 'inside') {
     barEl.style.display = 'none';
