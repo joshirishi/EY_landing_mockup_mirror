@@ -2,7 +2,7 @@
 
 :root {
   /* Global content rail — keep in sync with layout.contentWidth in tokens.ts */
-  --ey-content-width: 80%;
+  --ey-content-width: min(90%, 1440px);
   --ey-content-inline-pad: calc((100% - var(--ey-content-width)) / 2);
 
   /* EY Primary — replaces default shadcn neutrals */

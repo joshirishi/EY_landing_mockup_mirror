@@ -96,7 +96,7 @@ export const typeScale = {
  */
 export const layout = {
   /** Main content area as a share of available screen width (e.g. '80%', '72%'). */
-  contentWidth: '80%',
+  contentWidth: 'min(90%, 1440px)',
 } as const;
 
 /** React style for a centered content rail at `layout.contentWidth`. */
