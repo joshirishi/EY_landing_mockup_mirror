@@ -211,30 +211,39 @@ body {
 .hero-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .hero-play {
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 18px;
   cursor: pointer; background: rgba(26,26,36,0.35);
   transition: background 0.25s;
 }
 .hero-play:hover { background: rgba(26,26,36,0.2); }
+.hero-play:hover .hero-play-btn {
+  transform: scale(1.04);
+  box-shadow: 0 0 36px rgba(255,230,0,0.45);
+}
 .hero-play-btn {
-  width: 64px; height: 64px;
+  width: 92px; height: 92px;
   background: var(--ey-yellow);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 28px rgba(255,230,0,0.35);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 .hero-play-btn::after {
   content: '';
   width: 0; height: 0;
   border-style: solid;
-  border-width: 10px 0 10px 18px;
+  border-width: 14px 0 14px 24px;
   border-color: transparent transparent transparent var(--ey-dark);
-  margin-left: 4px;
+  margin-left: 5px;
 }
 .hero-duration {
-  position: absolute; bottom: 16px; right: 16px;
-  background: rgba(0,0,0,0.5);
-  color: #FFFFFF; font-size: 11px; font-weight: 700;
-  padding: 4px 8px;
+  color: rgba(255,255,255,0.88);
+  font-size: 16px; font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  text-align: center;
 }
 @media (max-width: 900px) {
   .hero { padding: 48px 24px 56px; background-position: center top; }
@@ -579,6 +588,7 @@ body {
   --gva-text: var(--ey-on-dark, var(--white));
   --gva-text-muted: var(--ey-on-dark-72, var(--gray-02));
   --gva-text-subtle: var(--ey-on-dark-55, var(--gray-01));
+  --gva-label: var(--color-ey-gray-01, #747480);
   --gva-yellow: var(--ey-yellow);
   --gva-yellow-soft: var(--ey-yellow-alpha-10, rgba(255, 230, 0, 0.10));
   --gva-blue: var(--accent-blue);
@@ -657,9 +667,6 @@ body {
   text-align: left;
 }
 .gva-colheads {
-  position: sticky;
-  top: var(--gva-sticky-top);
-  z-index: 5;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--gva-gap);
@@ -738,12 +745,21 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--gva-gap);
-  align-items: start;
+  align-items: stretch;
   padding: 12px;
   background: var(--gva-page);
   border: 1px solid var(--gva-border);
   border-top: none;
   border-radius: 0 0 var(--gva-radius) var(--gva-radius);
+}
+.gva-band-cells > .gva-cell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-self: stretch;
+}
+.gva-band-cells > .gva-cell > .gva-cell-body {
+  flex: 1;
 }
 .gva-band-mantras .gva-band-cells {
   padding: 0;
@@ -784,9 +800,9 @@ body {
   border-top: 3px solid currentColor;
 }
 .gva-cell-summary::-webkit-details-marker { display: none; }
-.gva-cell[data-tone="blue"] > .gva-cell-summary { color: var(--gva-blue); }
-.gva-cell[data-tone="green"] > .gva-cell-summary { color: var(--gva-green); }
-.gva-cell[data-tone="purple"] > .gva-cell-summary { color: var(--gva-purple); }
+.gva-cell[data-tone="blue"] > .gva-cell-summary { border-top-color: var(--gva-blue); }
+.gva-cell[data-tone="green"] > .gva-cell-summary { border-top-color: var(--gva-green); }
+.gva-cell[data-tone="purple"] > .gva-cell-summary { border-top-color: var(--gva-purple); }
 .gva-cell-body { padding: 0 14px 14px; }
 .gva-cell-label {
   margin: 0;
@@ -795,6 +811,24 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: inherit;
+}
+.gva-cell-summary .gva-cell-label { color: var(--gva-label); }
+/* Band cell body copy — white on dark cards (titles stay grey in summary) */
+.gva-band-cells .gva-cell-body,
+.gva-band-cells .gva-body,
+.gva-band-cells .gva-check-list li,
+.gva-band-cells .gva-bullets li,
+.gva-band-cells .gva-quote,
+.gva-band-cells .gva-example-note,
+.gva-band-cells .gva-example-quote-plain,
+.gva-band-cells .gva-steps li,
+.gva-band-cells .gva-cap-pill {
+  color: var(--gva-text);
+}
+.gva-band-cells .gva-cell[data-tone="blue"] .gva-cap-pill,
+.gva-band-cells .gva-cell[data-tone="green"] .gva-cap-pill,
+.gva-band-cells .gva-cell[data-tone="purple"] .gva-cap-pill {
+  color: var(--gva-text);
 }
 .gva-chevron {
   flex-shrink: 0;
@@ -1031,7 +1065,6 @@ body {
 
 @media (max-width: 1000px) {
   .gva-section { padding: 56px 24px !important; }
-  .gva-colheads { position: static; }
   .gva-colheads,
   .gva-band-cells,
   .gva-mantras { grid-template-columns: 1fr; gap: 12px; }
@@ -1246,7 +1279,7 @@ body {
 .evo-section {
   background: var(--surface-dark);
   border-top: 1px solid var(--surface-dark-border);
-  padding: 96px 64px;
+  padding: 56px 64px;
   text-align: left;
   color: #FFFFFF;
 }
@@ -1267,14 +1300,14 @@ body {
   font-size: 32px; font-weight: 700;
   color: #FFFFFF;
   line-height: 40px;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   width: 100%;
 }
 .evo-sub {
   font-size: 18px; font-weight: 400;
-  color: #C4C4CD;
+  color: var(--gray-02);
   line-height: 28px;
-  margin: 0 0 20px;
+  margin: 0 0 28px;
   width: 100%;
 }
 /* Parent → child concentric nest (wraps the featured card) */
@@ -1283,25 +1316,29 @@ body {
   padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
-/* ===== BREADCRUMB → TIMELINE BAR (Figma 3320:3603) ===== */
+/* ===== BREADCRUMB → TIMELINE BAR (rectangular pills + connector) ===== */
 .evo-breadcrumb {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   position: relative;
-  margin: 0 0 36px;
-  padding: 10px 0 28px; /* bottom room for the era-count label */
-  gap: 8px;
+  margin: 0 0 24px;
+  padding: 0 0 30px; /* room for connector line + era-count label */
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ey-border-on-dark) transparent;
 }
-/* Horizontal connector line behind the circle track */
+/* Thin horizontal connector running beneath the pill row */
 .evo-breadcrumb::before {
   content: '';
   position: absolute;
-  top: 46px; /* padding-top(10px) + half of 72px circle */
-  left: 36px;
-  right: 36px;
-  height: 2px;
-  background: var(--ey-bg-card); /* #2E2E38 — nearest to Figma #2a2a2a */
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  height: 1px;
+  background: var(--ey-border-on-dark);
   z-index: 0;
 }
 /* Static era-count label below the track */
@@ -1320,60 +1357,94 @@ body {
 .evo-breadcrumb-sep {
   display: none;
 }
-/* Circle timeline nodes — full era names, wrap to 2 lines when needed */
+/* Horizontal rectangular era pills — full labels inside */
 .evo-breadcrumb-item {
-  width: 72px;
-  height: 72px;
-  min-width: 72px;
-  border-radius: 50%;
+  flex: 1 1 0;
+  min-width: 0;
+  height: auto;
+  min-height: 36px;
+  border-radius: 2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: inherit;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.01em;
-  line-height: 1.15;
-  white-space: normal;
+  line-height: 1.2;
+  white-space: nowrap;
   text-align: center;
-  background: var(--confident-black); /* #1A1A24 ≈ Figma #111116 */
-  border: 1.5px solid var(--ey-bg-card); /* #2E2E38 ≈ Figma #2e2e3a */
-  color: var(--ey-on-dark-55); /* rgba(255,255,255,.55) ≈ Figma #a0a0b0 */
+  background: var(--confident-black);
+  border: 1px solid var(--ey-border-on-dark);
+  color: var(--ey-on-dark-55);
   cursor: pointer;
   position: relative;
   z-index: 1;
-  padding: 8px 6px;
+  padding: 8px 10px;
+  margin-bottom: 10px; /* gap above connector; active tab fills this space */
   transition: var(--transition);
   flex-shrink: 0;
   box-sizing: border-box;
 }
 .evo-breadcrumb-item:hover {
-  border-color: var(--ey-border-on-dark);
-  color: var(--ey-on-dark);
+  border-color: var(--gray-02);
+  color: var(--ey-on-dark-72);
   background: var(--ey-surface-on-dark);
 }
 .evo-breadcrumb-item:focus-visible { outline: 2px solid var(--ey-yellow); outline-offset: 2px; }
 /* Visited (already navigated through) */
 .evo-breadcrumb-item.is-visited {
-  color: var(--gray-02); /* #C4C4CD — slightly brighter than inactive */
-  border-color: var(--ey-bg-card);
+  color: var(--gray-02);
+  border-color: var(--ey-border-on-dark);
 }
-/* Active / current era */
+/* Active / current era — yellow fill + downward tab to connector */
 .evo-breadcrumb-item.is-current {
   background: var(--ey-yellow);
   border-color: var(--ey-yellow);
-  color: var(--confident-black); /* #1A1A24 — dark text on yellow */
+  color: var(--ey-dark);
   cursor: default;
 }
-/* Narrow: full-name circles wrap to a second row instead of overflowing */
-@media (max-width: 700px) {
+.evo-breadcrumb-item.is-current::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 10px;
+  background: var(--ey-yellow);
+  z-index: 2;
+}
+/* Narrow: horizontal scroll keeps connector + tab visible */
+@media (max-width: 900px) {
+  .evo-breadcrumb {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 8px;
+    padding-bottom: 34px;
+  }
+  .evo-breadcrumb-item {
+    flex: 0 0 auto;
+    min-width: 108px;
+    font-size: 10px;
+    padding: 7px 8px;
+  }
+}
+@media (max-width: 560px) {
   .evo-breadcrumb {
     flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 12px;
-    padding: 8px 0 30px;
+    align-items: stretch;
+    row-gap: 10px;
+    overflow-x: visible;
   }
   .evo-breadcrumb::before { display: none; }
+  .evo-breadcrumb-item {
+    flex: 1 1 calc(50% - 4px);
+    min-width: calc(50% - 4px);
+    margin-bottom: 0;
+    white-space: normal;
+  }
+  .evo-breadcrumb-item.is-current::after { display: none; }
 }
 .evo-concentric {
   margin: 0 0 24px;
@@ -1455,7 +1526,9 @@ body {
 }
 #evo-nest.is-collapsed > .evo-nest-layer > .evo-nest-row { display: flex; padding: 0; }
 .evo-featured {
-  display: flex; gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   background: #1A1A24;
   border: none;
   border-radius: 0 0 14px 14px;
@@ -1469,10 +1542,10 @@ body {
   border-radius: 12px;
 }
 .evo-featured-img {
-  width: 520px; max-width: 45%;
+  width: 100%;
   flex-shrink: 0;
   position: relative;
-  min-height: 420px;
+  min-height: 240px;
 }
 .evo-featured-img img {
   position: absolute; inset: 0;
@@ -1480,9 +1553,18 @@ body {
   object-fit: cover;
 }
 .evo-featured-body {
-  flex: 1; padding: 24px;
-  display: flex; flex-direction: column; gap: 16px;
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   min-width: 0;
+}
+.evo-featured-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 24px 24px;
 }
 .evo-year-display {
   font-family: Georgia, "Times New Roman", serif;
@@ -1540,7 +1622,7 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 32px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 .evo-body > .evo-concentric {
   flex: 1 1 auto;
@@ -1617,10 +1699,90 @@ body {
 .evo-cabinet .btn-open img { width: 20px; height: 20px; display: block; }
 .evo-cabinet .btn-open:hover { filter: brightness(0.97); }
 
+/* Desktop: fit full #evolution section in ~1000px viewport (below sticky ModuleHeader) */
+@media (min-width: 1101px) {
+  .evo-section {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+  .evo-featured {
+    display: grid;
+    grid-template-columns: min(520px, 45%) 1fr;
+    grid-template-rows: minmax(400px, auto);
+    gap: 0 24px;
+    min-height: 400px;
+    position: relative;
+  }
+  .evo-featured-img {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    max-width: none;
+    min-height: 400px;
+  }
+  .evo-featured-img::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 62%;
+    background: linear-gradient(
+      to top,
+      rgba(26, 26, 36, 0.98) 0%,
+      rgba(26, 26, 36, 0.84) 38%,
+      rgba(26, 26, 36, 0.35) 68%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+  .evo-featured-body {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    padding: 18px 20px 188px;
+    gap: 12px;
+  }
+  .evo-featured-foot {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    align-self: end;
+    z-index: 2;
+    padding: 0 18px 18px;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .evo-featured-foot > * {
+    pointer-events: auto;
+  }
+  .evo-featured-foot > div:has(.evo-examples-label) {
+    background: rgba(26, 26, 36, 0.94);
+    border: 1px solid #2E2E38;
+    border-radius: 12px;
+    padding: 12px 14px;
+    backdrop-filter: blur(6px);
+  }
+  .evo-nest-layer.is-current > .evo-nest-row {
+    padding: 8px 12px;
+  }
+  .evo-analogy {
+    padding: 12px 14px;
+    background: rgba(26, 26, 36, 0.94);
+    backdrop-filter: blur(6px);
+  }
+  .evo-analogy-h {
+    margin-bottom: 8px;
+  }
+  .evo-examples-label {
+    margin: 0 0 8px;
+  }
+}
+
 @media (max-width: 1100px) {
   .evo-section { padding: 64px 24px; }
-  .evo-featured { flex-direction: column; }
-  .evo-featured-img { width: 100%; max-width: none; min-height: 240px; }
+  .evo-featured-img { min-height: 240px; }
+  .evo-featured-foot { padding: 0 24px 24px; }
   .evo-body { flex-direction: column; }
   .evo-previews { width: 100%; flex: 1 1 auto; }
   .evo-year-display { font-size: 48px; }
@@ -2934,6 +3096,8 @@ document.addEventListener('keydown', function(e) {
               </div>
             </div>
             <p class="evo-desc" id="evo-feat-desc"></p>
+          </div>
+          <div class="evo-featured-foot">
             <div class="evo-analogy">
               <div class="evo-analogy-h"><span class="bar"></span><span>Analogy</span></div>
               <p id="evo-feat-analogy"></p>
@@ -3038,53 +3202,52 @@ document.addEventListener('keydown', function(e) {
 
   <div style="max-width:1400px; margin:0 auto;">
 
-    <!-- Copilot Window -->
-    <div id="copilot-window" style="background:var(--off-white); border:1px solid var(--gray-02); border-radius:16px; overflow:hidden; box-shadow:0 24px 60px rgba(46,46,56,0.12);">
+    <!-- Copilot Window — Figma: total chrome 480px (header + progress + body + footer) -->
+    <div id="copilot-window" style="display:flex; flex-direction:column; height:480px; max-height:480px; background:var(--off-white); border:1px solid var(--gray-02); border-radius:16px; overflow:hidden; box-shadow:0 24px 60px rgba(46,46,56,0.12);">
 
       <!-- Title bar — reflects what's happening in the window right now -->
-      <div style="display:flex; align-items:center; padding:12px 20px; background:var(--confident-black); border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div style="display:flex; align-items:center; padding:12px 20px; background:var(--confident-black); border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0;">
         <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="1.5" style="flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span id="copilot-status" style="color:#FFFFFF; font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">EY.ai Copilot</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span id="copilot-status" style="color:var(--white); font-size:14px; font-weight:400; line-height:22.4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">EY.ai Copilot</span>
         </div>
-        <span style="margin-left:auto; flex-shrink:0; font-size:10px; color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.08); padding:3px 10px; border-radius:10px;">GPT-4o • EY Secure</span>
+        <span style="margin-left:auto; flex-shrink:0; font-size:10px; line-height:16px; color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.08); padding:3px 10px; border-radius:10px;">GPT-4o • EY Secure</span>
       </div>
 
       <!-- Beat progress indicator — hidden until demo starts -->
-      <div id="beat-indicator" style="display:none; align-items:center; justify-content:space-between; padding:6px 20px; background:rgba(30,30,38,0.97); border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div id="beat-indicator" style="display:none; align-items:center; justify-content:flex-start; padding:6px 20px; background:rgba(30,30,38,0.97); border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0;">
         <div id="beat-dots" style="display:flex; align-items:center; gap:7px;"></div>
-        <span id="beat-counter" style="color:rgba(255,255,255,0.45); font-size:10px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase;"></span>
       </div>
 
-      <!-- Chat body -->
-      <div id="copilot-chat" style="padding:28px; height:620px; overflow-y:auto; background:var(--white);">
+      <!-- Chat body — flexes inside the 480px window; scrolls when content overflows -->
+      <div id="copilot-chat" style="flex:1 1 auto; min-height:0; overflow-y:auto; background:var(--white);">
         <div id="copilot-welcome" style="text-align:center; padding:60px 20px;">
-          <h3 style="color:var(--ey-dark); font-size:20px; font-weight:700; margin-bottom:8px;">Welcome to EY.ai Copilot</h3>
-          <p style="color:var(--gray-01); font-size:14px; max-width:400px; margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p>
+          <h3 style="color:var(--ey-dark); font-size:20px; font-weight:700; line-height:30px; margin:0 0 8px;">Welcome to EY.ai Copilot</h3>
+          <p style="color:var(--gray-01); font-size:14px; line-height:22.4px; max-width:400px; margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p>
           <button onclick="startDemo()" style="background:var(--ey-yellow); color:var(--ey-dark); border:none; padding:14px 32px; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,230,0,0.3)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough
           </button>
         </div>
       </div>
 
       <!-- Input bar — visible only in the Ask beat -->
-      <div id="copilot-input-bar" style="display:none; align-items:center; gap:12px; padding:14px 20px; background:var(--off-white); border-top:1px solid rgba(46,46,56,0.05);">
-        <input id="copilot-input" type="text" placeholder="Ask me about tax..." readonly onkeydown="if(event.key==='Enter'){event.preventDefault();continueBeat();}" style="flex:1; background:var(--white); border:1px solid rgba(46,46,56,0.08); border-radius:10px; padding:12px 16px; color:var(--gray-01); font-size:13px; outline:none;">
-        <button type="button" onclick="continueBeat()" aria-label="Send" style="width:38px; height:38px; border-radius:8px; background:var(--ey-yellow); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="var(--ey-dark)"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+      <div id="copilot-input-bar" style="display:none; align-items:center; gap:12px; padding:15px 20px 14px; background:var(--off-white); border-top:1px solid rgba(46,46,56,0.05); flex-shrink:0;">
+        <input id="copilot-input" type="text" placeholder="Ask me about tax..." readonly onkeydown="if(event.key==='Enter'){event.preventDefault();continueBeat();}" style="flex:1; background:var(--white); border:1px solid rgba(255,230,0,0.35); border-radius:10px; padding:13px 17px; color:var(--gray-01); font-size:13px; outline:none;">
+        <button type="button" onclick="continueBeat()" aria-label="Send" style="width:38px; height:38px; border-radius:8px; background:var(--ey-yellow); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </div>
 
       <!-- Ask-beat explainer — sits directly below the input bar, rising in once typing finishes -->
-      <div id="ask-explainer" style="padding:0 20px;"></div>
+      <div id="ask-explainer" style="padding:0 28px 20px; flex-shrink:0;"></div>
 
       <!-- Bottom action bar: single primary Continue, secondary Back, quiet Restart -->
-      <div id="demo-actions" style="display:none; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; background:var(--off-white); border-top:1px solid rgba(46,46,56,0.05); flex-wrap:wrap;">
-        <button id="demo-back-btn" onclick="backBeat()" disabled style="background:none; border:none; color:var(--gray-01); font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; opacity:0.35; transition:opacity 0.3s; padding:8px 4px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back
+      <div id="demo-actions" style="display:none; align-items:center; justify-content:space-between; gap:12px; padding:15px 20px 14px; background:var(--off-white); border-top:1px solid rgba(46,46,56,0.05); flex-wrap:wrap; flex-shrink:0;">
+        <button id="demo-back-btn" onclick="backBeat()" disabled style="background:none; border:none; color:var(--gray-01); font-size:13px; font-weight:400; cursor:pointer; display:flex; align-items:center; gap:6px; opacity:0.35; transition:opacity 0.3s; padding:8px 4px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-01)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back
         </button>
         <div style="display:flex; align-items:center; gap:18px;">
-          <button id="demo-restart-btn" onclick="resetDemo()" style="display:none; background:none; border:none; color:var(--gray-01); font-size:12px; font-weight:600; cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:8px 4px;">Restart demo</button>
+          <button id="demo-restart-btn" onclick="resetDemo()" style="display:none; background:none; border:none; color:var(--gray-01); font-size:12px; font-weight:400; cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:8px 4px;">Restart demo</button>
           <button id="demo-continue-btn" onclick="continueBeat()" style="display:none; background:var(--ey-yellow); color:var(--ey-dark); border:none; padding:11px 26px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; align-items:center; gap:8px; transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(255,230,0,0.3)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
-            <span id="demo-continue-label">Next</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ey-dark)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <span id="demo-continue-label">Next</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
       </div>
@@ -3099,14 +3262,35 @@ document.addEventListener('keydown', function(e) {
 .sim-label { font-size:12px; font-weight:700; color:var(--eyebrow-gold); letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
 #demo-back-btn:not(:disabled):hover { opacity:0.75 !important; }
 #demo-restart-btn:hover { color:var(--ey-dark) !important; }
+#ask-explainer:empty { display:none; padding:0 !important; }
+#copilot-window { box-sizing:border-box; }
 .inside-acc-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; background:transparent; border:none; border-top:1px solid rgba(46,46,56,0.06); cursor:pointer; text-align:left; }
 .inside-acc-toggle:hover { background:rgba(46,46,56,0.02); }
 .acc-chev { transition:transform 0.25s ease; flex-shrink:0; }
-.inside-tab-strip { display:flex; gap:4px; padding:10px 10px 0; overflow-x:auto; }
-.inside-tab-btn { flex:1 1 0; white-space:nowrap; padding:9px 10px; font-size:11px; font-weight:700; font-family:inherit; border-radius:8px 8px 0 0; border:1px solid transparent; border-bottom:none; background:transparent; color:var(--text-dim); cursor:pointer; transition:background 0.15s ease, color 0.15s ease; }
+.inside-tab-strip { display:flex; gap:2px; padding:0 8px; overflow-x:auto; background:var(--off-white); border-bottom:1px solid rgba(46,46,56,0.08); flex-shrink:0; }
+.inside-tab-btn { flex:1 1 0; white-space:nowrap; padding:6px 8px; font-size:10px; font-weight:400; font-family:inherit; border-radius:8px 8px 0 0; border:1px solid transparent; border-bottom:none; background:transparent; color:var(--gray-01); cursor:pointer; transition:background 0.15s ease, color 0.15s ease; }
 .inside-tab-btn:hover { background:rgba(46,46,56,0.03); }
-.inside-tab-btn.is-active { background:var(--white); color:var(--tab-color, var(--ey-dark)); border-color:rgba(46,46,56,0.08); }
-.inside-tab-panel { padding:16px; border-top:1px solid rgba(46,46,56,0.08); background:var(--white); }
+.inside-tab-btn.is-active { background:var(--white); color:var(--tab-color, var(--ey-dark)); border-color:rgba(46,46,56,0.08); font-weight:700; box-shadow:inset 0 -2px 0 var(--tab-color, var(--accent-blue)); }
+.inside-tab-panel { padding:8px 10px; background:var(--white); flex:1 1 auto; min-height:0; overflow-y:auto; }
+/* Chat padding lives in CSS so inside-beat can override without fighting inline styles */
+#copilot-chat { padding:28px; box-sizing:border-box; }
+/* Inside beat: 16px chat padding; flip wrap + concepts card fill available chat height */
+#copilot-chat.is-inside-beat { padding:16px; display:flex; flex-direction:column; }
+#copilot-chat.is-inside-beat > .inside-beat-wrap {
+  flex:1 1 auto; min-height:0; height:100%; align-self:stretch;
+  display:flex; flex-direction:column;
+}
+#copilot-chat.is-inside-beat .inside-concepts-card {
+  flex:1 1 auto; min-height:0; height:100%; align-self:stretch;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+/* RAG how-it-works: one horizontal line of compact nodes */
+.rag-flow-row { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:4px; flex-wrap:nowrap; }
+.rag-flow-row .rag-node { flex:0 1 auto; white-space:nowrap; border-radius:6px; padding:5px 8px; text-align:center; font-size:10px; font-weight:700; line-height:1.2; }
+.rag-flow-row .rag-arrow { flex-shrink:0; color:var(--gray-01); opacity:0.45; }
+@media (max-width: 640px) {
+  .rag-flow-row { flex-wrap:wrap; justify-content:flex-start; }
+}
 @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
 @keyframes tokenPop { 0%{transform:scale(0.3); opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1); opacity:1} }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
@@ -3118,6 +3302,17 @@ document.addEventListener('keydown', function(e) {
 @keyframes slideUpIn { 0% { opacity:0; transform:translateY(28px); } 100% { opacity:1; transform:translateY(0); } }
 @keyframes pulseThinking { 0%,100% { box-shadow:0 0 0 0 rgba(70,150,255,0.22); border-color:rgba(70,150,255,0.1); } 50% { box-shadow:0 0 0 5px rgba(70,150,255,0); border-color:rgba(70,150,255,0.4); } }
 .thinking-highlight { animation:pulseThinking 1.7s ease-in-out infinite; }
+/* Sent-beat yellow reflection bar doubles as the Next control */
+#sent-prompt-cta button {
+  display:block; width:100%; background:var(--ey-yellow); border:1px solid rgba(255,230,0,0.3);
+  border-radius:4px; padding:12px 16px; box-shadow:0 4px 12px rgba(0,0,0,0.12);
+  text-align:center; cursor:pointer; font:inherit; transition:transform 0.2s, box-shadow 0.2s;
+}
+#sent-prompt-cta button:hover,
+#sent-prompt-cta button:focus-visible {
+  transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,230,0,0.35); outline:none;
+}
+#sent-prompt-cta button p { margin:0; color:var(--ey-dark); font-size:14px; line-height:1.7; font-weight:400; }
 @media (prefers-reduced-motion: reduce) {
   .beat-flip-out { animation:fadeOutMsg 0.15s ease forwards; }
   .beat-flip-in { animation:fadeInMsg 0.25s ease forwards; }
@@ -3151,6 +3346,8 @@ document.addEventListener('keydown', function(e) {
 @media (max-width: 640px) {
   #demo-actions { padding:12px 16px; }
   #demo-actions > div { gap:12px; }
+  #copilot-window { height:auto; max-height:none; min-height:420px; }
+  #ask-explainer [style*="grid-template-columns"] { grid-template-columns:1fr !important; }
 }
 </style>
 <script>
@@ -3216,7 +3413,7 @@ function showThinking(text) {
   const t = document.createElement('div');
   t.id = 'thinking-indicator';
   t.style.cssText = 'display:flex; gap:14px; margin-bottom:20px; align-items:center; animation:fadeInMsg 0.3s ease-out forwards; opacity:0;';
-  t.innerHTML = `<div style="width:30px;height:30px;border-radius:50%;background:rgba(70,150,255,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent-blue);flex-shrink:0;">AI</div><div id="thinking-bubble" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:12px;"><div style="display:flex;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.2s;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.4s;"></span></div><span style="color:var(--text-dim);font-size:12px;font-style:italic;">${text||'Thinking...'}</span></div>`;
+  t.innerHTML = `<div style="width:30px;height:30px;border-radius:50%;background:rgba(70,150,255,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent-blue);flex-shrink:0;">AI</div><div id="thinking-bubble" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.37);border-radius:12px;"><div style="display:flex;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.2s;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-blue);animation:bounce 1.4s infinite 0.4s;"></span></div><span style="color:var(--gray-01);font-size:12px;font-style:italic;">${text||'Thinking...'}</span></div>`;
   chatEl.appendChild(t);
   chatEl.scrollTop = chatEl.scrollHeight;
 }
@@ -3256,8 +3453,7 @@ function appendBeatNext(label) {
 function updateBeatIndicator(beatIdx, totalBeats) {
   var bar = document.getElementById('beat-indicator');
   var dots = document.getElementById('beat-dots');
-  var counter = document.getElementById('beat-counter');
-  if (!bar || !dots || !counter) return;
+  if (!bar || !dots) return;
   bar.style.display = 'flex';
   bar.setAttribute('role', 'navigation');
   bar.setAttribute('aria-label', 'Walkthrough progress');
@@ -3267,14 +3463,13 @@ function updateBeatIndicator(beatIdx, totalBeats) {
     var active = i === beatIdx;
     var done = i < beatIdx;
     d.setAttribute('aria-hidden', 'true');
-    // Filled yellow = current / done; hollow ring = upcoming
-    d.style.cssText = 'display:inline-block;box-sizing:border-box;border-radius:50%;transition:all 0.3s ease;' +
-      (active ? 'width:8px;height:8px;background:var(--ey-yellow);border:1.5px solid var(--ey-yellow);box-shadow:0 0 0 3px rgba(255,230,0,0.22);' :
-       done   ? 'width:7px;height:7px;background:var(--ey-yellow);border:1.5px solid var(--ey-yellow);opacity:0.55;' :
-                'width:7px;height:7px;background:transparent;border:1.5px solid rgba(255,255,255,0.35);');
+    // Filled yellow = current / done; hollow ring = upcoming (Figma: slightly rounded squares)
+    d.style.cssText = 'display:inline-block;box-sizing:border-box;transition:all 0.3s ease;' +
+      (active ? 'width:8px;height:8px;border-radius:4px;background:var(--ey-yellow);border:1.5px solid var(--ey-yellow);' :
+       done   ? 'width:7px;height:7px;border-radius:3.5px;background:var(--ey-yellow);border:1.5px solid var(--ey-yellow);opacity:0.55;' :
+                'width:7px;height:7px;border-radius:3.5px;background:transparent;border:1.5px solid rgba(255,255,255,0.35);');
     dots.appendChild(d);
   }
-  counter.textContent = 'Step ' + (beatIdx + 1) + ' of ' + totalBeats;
 }
 
 function startDemo() {
@@ -3299,23 +3494,25 @@ function backBeat() {
 function resetDemo() {
   if (window._typer) clearInterval(window._typer);
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
-  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;margin-bottom:8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
+  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;line-height:30px;margin:0 0 8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;line-height:22.4px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
   document.getElementById('demo-actions').style.display = 'none';
   var bar = document.getElementById('copilot-input-bar'); if (bar) bar.style.display = 'none';
-  var inp = document.getElementById('copilot-input'); if (inp) { inp.value = ''; inp.style.color = 'var(--text-secondary)'; inp.style.borderColor = 'rgba(46,46,56,0.08)'; }
+  var askEx = document.getElementById('ask-explainer'); if (askEx) askEx.innerHTML = '';
+  var inp = document.getElementById('copilot-input'); if (inp) { inp.value = ''; inp.style.color = 'var(--text-secondary)'; inp.style.borderColor = 'rgba(255,230,0,0.35)'; }
   var win = document.getElementById('copilot-window'); if (win) win.classList.remove('is-hallucinating');
   setCopilotStatus('EY.ai Copilot');
   currentBeat = -1;
+  chatEl.classList.remove('is-inside-beat');
   var bi = document.getElementById('beat-indicator'); if (bi) bi.style.display = 'none';
 }
 
-const INSIDE_TOKENS_HTML = `<div style="padding:18px;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.15);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.5"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg><span style="color:var(--accent-blue);font-size:13px;font-weight:700;">Tokenization</span></div><p style="color:var(--text-secondary);font-size:13px;line-height:1.7;margin-bottom:14px;">AI doesn't read words like you. It breaks your sentence into small chunks called <strong style="color:var(--ey-dark);">tokens</strong> — roughly ¾ of a word each.</p><div style="background:var(--off-white);border-radius:10px;padding:16px;margin-bottom:14px;"><div style="color:var(--text-dim);font-size:10px;font-weight:600;letter-spacing:1px;margin-bottom:10px;">YOUR PROMPT → TOKENIZED</div><div style="font-size:11px;color:var(--gray-01);margin-bottom:10px;font-style:italic;line-height:1.5;padding:7px 10px;background:var(--white);border-radius:5px;border-left:2px solid rgba(46,46,56,0.06);">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;"><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.1s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">Summar</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.2s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">ize</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.35s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-green);font-weight:600;font-family:monospace;">the</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.5s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">G</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.65s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-blue);font-weight:600;font-family:monospace;">ST</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.8s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-orange);font-weight:600;font-family:monospace;">impl</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.95s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-orange);font-weight:600;font-family:monospace;">ications</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.1s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-green);font-weight:600;font-family:monospace;">online</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.25s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-red);font-weight:600;font-family:monospace;">sell</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.4s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:6px 14px;border-radius:6px;font-size:14px;color:var(--accent-red);font-weight:600;font-family:monospace;">er</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.55s both;align-self:center;"><span style="color:rgba(46,46,56,0.25);font-size:18px;letter-spacing:3px;">···</span></span></div><div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--text-dim);font-size:10px;">16 words</span><span style="color:var(--text-dim);">→</span><span style="color:var(--accent-blue);font-size:10px;font-weight:600;">~21 tokens</span></div></div><div style="background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;padding:10px 14px;margin-top:10px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;">Everyday Analogy - Like cutting a pizza into slices before eating it.</div></div></div><div role="button" tabindex="0" onclick="goToInsideTab('llm')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goToInsideTab('llm');}" onmouseover="this.style.background='rgba(0,200,100,0.09)'" onmouseout="this.style.background='rgba(0,200,100,0.04)'" style="margin-top:12px;padding:10px 14px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.15);border-radius:8px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background 0.15s;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><div><span style="color:var(--accent-green);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;display:block;margin-bottom:2px;">What happens next? - LLM</span></div></div></div>`;
+const INSIDE_TOKENS_HTML = `<div style="padding:12px;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.15);border-radius:10px;"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg><span style="color:var(--accent-blue);font-size:12px;font-weight:700;">Tokenization</span></div><p style="color:var(--text-secondary);font-size:11px;line-height:1.45;margin:0;flex:1;min-width:180px;text-align:right;">AI doesn't read words like you. It breaks your sentence into small chunks called <strong style="color:var(--ey-dark);">tokens</strong> — roughly ¾ of a word each.</p></div><div style="background:var(--off-white);border-radius:8px;padding:10px;margin-bottom:8px;display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;"><div style="min-width:110px;display:flex;flex-direction:column;justify-content:center;gap:4px;"><div style="color:var(--text-dim);font-size:9px;font-weight:700;letter-spacing:0.8px;">YOUR PROMPT → TOKENIZED</div><div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--text-dim);font-size:9px;">16 words</span><span style="color:var(--accent-blue);font-size:13px;line-height:1;">→</span><span style="color:var(--accent-blue);font-size:9px;font-weight:700;">~21 tokens</span></div></div><div style="flex:1;min-width:200px;"><div style="font-size:10px;color:var(--gray-01);margin-bottom:6px;font-style:italic;line-height:1.4;padding:5px 8px;background:var(--white);border-radius:4px;border-left:2px solid rgba(46,46,56,0.06);text-align:center;">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-start;"><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.1s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">Summar</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.2s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">ize</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.35s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-green);font-weight:700;font-family:monospace;">the</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.5s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">G</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.65s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">ST</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.8s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-orange);font-weight:700;font-family:monospace;">impl</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.95s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-orange);font-weight:700;font-family:monospace;">ications</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.1s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-green);font-weight:700;font-family:monospace;">online</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.25s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-red);font-weight:700;font-family:monospace;">sell</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.4s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-red);font-weight:700;font-family:monospace;">er</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.55s both;align-self:center;"><span style="color:rgba(46,46,56,0.25);font-size:14px;letter-spacing:2px;">···</span></span></div></div></div><div style="background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like cutting a pizza into slices before eating it.</div></div></div>`;
 
-const INSIDE_LLM_HTML = `<div style="padding:18px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.15);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span style="color:var(--accent-green);font-size:13px;font-weight:700;">LLM — The Brain Predicts One Word at a Time</span></div><p style="color:var(--text-secondary);font-size:13px;line-height:1.7;margin-bottom:14px;">Tokens enter a <strong style="color:var(--ey-dark);">Large Language Model</strong> — The model has learned patterns from <strong style="color:var(--accent-green);">enormous amounts of text</strong>. It <em>predicts</em> the next word, one at a time.</p><div style="background:var(--off-white);border-radius:10px;padding:16px;margin-bottom:14px;"><div style="color:var(--text-dim);font-size:10px;font-weight:600;letter-spacing:1px;margin-bottom:8px;"></div><div style="font-size:10px;color:var(--gray-01);font-style:italic;margin-bottom:10px;padding:5px 8px;background:var(--white);border-radius:4px;border-left:2px solid rgba(46,46,56,0.05);">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="font-family:monospace;font-size:13px;line-height:2.2;"><span style="color:var(--accent-green);">GST</span> <span style="color:var(--text-dim);animation:blink 1s infinite;">▊</span><br><span style="color:var(--accent-green);">GST</span> <span style="color:var(--ey-dark);">implications</span> <span style="color:var(--text-dim);animation:blink 1s infinite;">▊</span><br><span style="color:var(--accent-green);">GST</span> <span style="color:var(--ey-dark);">implications for an online seller include registration across multiple states, ITC claims...</span></div></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:10px 14px;background:rgba(0,200,100,0.07);border:1px solid rgba(0,200,100,0.2);border-radius:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:12px;font-weight:700;">LLM = The brain behind the conversation</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;">Everyday Analogy - Like your phone predicting the next word while typing.</div></div></div></div>`;
+const INSIDE_LLM_HTML = `<div style="padding:10px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.15);border-radius:10px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span style="color:var(--accent-green);font-size:12px;font-weight:700;">LLM — The Brain Predicts One Word at a Time</span></div><p style="color:var(--text-secondary);font-size:11px;line-height:1.4;margin-bottom:6px;">Tokens enter a <strong style="color:var(--ey-dark);">Large Language Model</strong> — The model has learned patterns from <strong style="color:var(--accent-green);">enormous amounts of text</strong>. It <em>predicts</em> the next word, one at a time.</p><div style="background:var(--off-white);border-radius:8px;padding:8px;margin-bottom:6px;"><div style="font-size:9px;color:var(--gray-01);font-style:italic;margin-bottom:4px;padding:3px 6px;background:var(--white);border-radius:4px;border-left:2px solid rgba(46,46,56,0.05);">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="font-family:monospace;font-size:11px;line-height:1.55;"><span style="color:var(--accent-green);">GST</span> <span style="color:var(--text-dim);animation:blink 1s infinite;">▊</span><br><span style="color:var(--accent-green);">GST</span> <span style="color:var(--ey-dark);">implications for an online seller include registration across multiple states, ITC claims...</span></div></div><div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;padding:5px 8px;background:rgba(0,200,100,0.07);border:1px solid rgba(0,200,100,0.2);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:11px;font-weight:700;">LLM = The brain behind the conversation</span></div><div style="padding:5px 8px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:6px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like your phone predicting the next word while typing.</div></div></div>`;
 
-const INSIDE_KNOWLEDGE_HTML = `<div style="padding:18px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.15);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg><span style="color:var(--accent-purple);font-size:13px;font-weight:700;">Knowledge Layer — Where AI Finds Trusted Information</span></div><p style="color:var(--text-secondary);font-size:13px;line-height:1.7;margin-bottom:14px;">The model understands the question. <strong style="color:var(--ey-dark);">Now it needs trusted information.</strong></p><div style="background:var(--off-white);border-radius:10px;padding:16px;margin-bottom:14px;"><div style="color:var(--text-dim);font-size:10px;font-weight:600;letter-spacing:1px;margin-bottom:12px;">THE KNOWLEDGE LAYER CONTAINS</div><div style="display:flex;flex-direction:column;gap:7px;"><div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span style="color:var(--gray-01);font-size:12px;">Company documents</span></div><div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span style="color:var(--gray-01);font-size:12px;">Tax guidance</span></div><div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span style="color:var(--gray-01);font-size:12px;">Policies</span></div><div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span style="color:var(--gray-01);font-size:12px;">Knowledge repositories</span></div><div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span style="color:var(--gray-01);font-size:12px;">Research material</span></div></div></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:10px 14px;background:rgba(180,0,255,0.07);border:1px solid rgba(180,0,255,0.2);border-radius:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-purple);font-size:12px;font-weight:700;">Knowledge Layer = The library AI can consult</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;">Everyday Analogy - Like a tax professional reaching for a bookshelf before drafting advice.</div></div></div></div>`;
+const INSIDE_KNOWLEDGE_HTML = `<div style="padding:12px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.15);border-radius:10px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg><span style="color:var(--accent-purple);font-size:12px;font-weight:700;">Knowledge Layer — Where AI Finds Trusted Information</span></div><p style="color:var(--text-secondary);font-size:11px;line-height:1.45;margin-bottom:8px;">The model understands the question. <strong style="color:var(--ey-dark);">Now it needs trusted information.</strong></p><div style="background:var(--off-white);border-radius:8px;padding:10px;margin-bottom:8px;"><div style="color:var(--text-dim);font-size:9px;font-weight:600;letter-spacing:0.8px;margin-bottom:6px;">THE KNOWLEDGE LAYER CONTAINS</div><div style="display:flex;flex-direction:column;gap:4px;"><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span style="color:var(--gray-01);font-size:10px;">Company documents</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span style="color:var(--gray-01);font-size:10px;">Tax guidance</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span style="color:var(--gray-01);font-size:10px;">Policies</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span style="color:var(--gray-01);font-size:10px;">Knowledge repositories</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span style="color:var(--gray-01);font-size:10px;">Research material</span></div></div></div><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;padding:6px 10px;background:rgba(180,0,255,0.07);border:1px solid rgba(180,0,255,0.2);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-purple);font-size:11px;font-weight:700;">Knowledge Layer = The library AI can consult</span></div><div style="padding:6px 10px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:6px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like a tax professional reaching for a bookshelf before drafting advice.</div></div></div>`;
 
-const INSIDE_RAG_HTML = `<div style="padding:18px;background:rgba(255,125,30,0.04);border:1px solid rgba(255,125,30,0.15);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span style="color:var(--accent-orange);font-size:13px;font-weight:700;">RAG — Retrieval Augmented Generation</span><span style="color:var(--gray-01);font-size:11px;margin-left:8px;">AI actively searches a knowledge source before constructing its answer.</span></div><div style="padding:10px 14px;background:rgba(255,125,30,0.06);border-left:3px solid rgba(255,125,30,0.5);border-radius:6px;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><div><div style="color:var(--accent-orange);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px;">What Happens Next? - The AI searches that knowledge source before answering.</div></div></div><div style="background:var(--off-white);border-radius:10px;padding:16px;margin-bottom:14px;"><div style="color:var(--text-dim);font-size:10px;font-weight:600;letter-spacing:1px;margin-bottom:14px;text-align:center;">HOW RAG WORKS</div><div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="background:rgba(255,230,0,0.08);border:1px solid rgba(255,230,0,0.25);border-radius:8px;padding:9px 20px;text-align:center;min-width:200px;"><span style="color:var(--eyebrow-gold);font-size:12px;font-weight:700;">Question</span></div><div style="display:flex;flex-direction:column;align-items:center;padding:4px 0;"><div style="width:1px;height:10px;background:rgba(46,46,56,0.12);"></div><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M2 6l3 3 3-3" stroke="rgba(46,46,56,0.25)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div style="background:rgba(180,0,255,0.08);border:1px solid rgba(180,0,255,0.25);border-radius:8px;padding:9px 20px;text-align:center;min-width:200px;"><span style="color:var(--accent-purple);font-size:12px;font-weight:700;">Search Knowledge Layer</span></div><div style="display:flex;flex-direction:column;align-items:center;padding:4px 0;"><div style="width:1px;height:10px;background:rgba(46,46,56,0.12);"></div><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M2 6l3 3 3-3" stroke="rgba(46,46,56,0.25)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div style="background:rgba(255,125,30,0.08);border:1px solid rgba(255,125,30,0.25);border-radius:8px;padding:9px 20px;text-align:center;min-width:200px;"><span style="color:var(--accent-orange);font-size:12px;font-weight:700;">Retrieve Relevant Information</span></div><div style="display:flex;flex-direction:column;align-items:center;padding:4px 0;"><div style="width:1px;height:10px;background:rgba(46,46,56,0.12);"></div><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M2 6l3 3 3-3" stroke="rgba(46,46,56,0.25)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div style="background:rgba(0,200,100,0.08);border:1px solid rgba(0,200,100,0.25);border-radius:8px;padding:9px 20px;text-align:center;min-width:200px;"><span style="color:var(--accent-green);font-size:12px;font-weight:700;">Generate Response</span></div></div></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:10px 14px;background:rgba(0,200,100,0.07);border:1px solid rgba(0,200,100,0.2);border-radius:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:12px;font-weight:700;">RAG = AI looking up information before responding</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;">Everyday Analogy - Like an open-book exam. With the textbook available. Not relying on memory alone.</div></div></div></div>`;
+const INSIDE_RAG_HTML = `<div style="padding:12px;background:rgba(255,125,30,0.04);border:1px solid rgba(255,125,30,0.15);border-radius:10px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span style="color:var(--accent-orange);font-size:12px;font-weight:700;">RAG — Retrieval Augmented Generation</span><span style="color:var(--gray-01);font-size:10px;">AI searches a knowledge source before answering.</span></div><div style="padding:6px 10px;background:rgba(255,125,30,0.06);border-left:3px solid rgba(255,125,30,0.5);border-radius:5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><div style="color:var(--accent-orange);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">What Happens Next? — The AI searches that knowledge source before answering.</div></div><div style="background:var(--off-white);border-radius:8px;padding:10px;margin-bottom:8px;"><div style="color:var(--text-dim);font-size:9px;font-weight:600;letter-spacing:0.8px;margin-bottom:8px;text-align:center;">HOW RAG WORKS</div><div class="rag-flow-row"><span class="rag-node" style="background:rgba(255,230,0,0.08);border:1px solid rgba(255,230,0,0.25);color:var(--eyebrow-gold);">Question</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node" style="background:rgba(180,0,255,0.08);border:1px solid rgba(180,0,255,0.25);color:var(--accent-purple);">Search Knowledge Layer</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node" style="background:rgba(255,125,30,0.08);border:1px solid rgba(255,125,30,0.25);color:var(--accent-orange);">Retrieve Relevant Information</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node" style="background:rgba(0,200,100,0.08);border:1px solid rgba(0,200,100,0.25);color:var(--accent-green);">Generate Response</span></div></div><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;padding:6px 10px;background:rgba(0,200,100,0.07);border:1px solid rgba(0,200,100,0.2);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:11px;font-weight:700;">RAG = AI looking up information before responding</span></div><div style="padding:6px 10px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:6px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like an open-book exam. With the textbook available. Not relying on memory alone.</div></div></div>`;
 
 const INSIDE_TABS = [
   { id: 'tokens', label: 'Tokenization', color: 'var(--accent-blue)', html: INSIDE_TOKENS_HTML },
@@ -3328,8 +3525,7 @@ function buildInsideAccordion() {
   var tabButtons = INSIDE_TABS.map(function (tab, i) {
     return '<button id="inside-tab-btn-' + tab.id + '" class="inside-tab-btn' + (i === 0 ? ' is-active' : '') + '" style="--tab-color:' + tab.color + ';" onclick="selectInsideTab(\'' + tab.id + '\', this)">' + tab.label + '</button>';
   }).join('');
-  return `<div style="border:1px solid var(--card-border); border-radius:12px; overflow:hidden; margin-top:6px; background:var(--off-white);">
-    <div style="padding:12px 16px 0; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim);">How it works — optional detail</div>
+  return `<div class="inside-concepts-card" style="border:1px solid var(--card-border); border-radius:10px; overflow:hidden; margin-top:0; background:var(--off-white);">
     <div class="inside-tab-strip">${tabButtons}</div>
     <div id="inside-tab-panel" class="inside-tab-panel">${INSIDE_TABS[0].html}</div>
   </div>`;
@@ -3363,9 +3559,10 @@ function renderBeat(flipIn) {
   if (window._typer) clearInterval(window._typer);
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = '';
-  // Reset chat height instantly (no transition) when switching beats
-  chatEl.style.transition = 'none';
-  chatEl.style.height = '620px';
+  // Window is fixed at 480px; chat flexes and scrolls — no per-beat height rewriting
+  chatEl.style.transition = '';
+  chatEl.style.height = '';
+  chatEl.style.maxHeight = '';
   var askExplainerEl = document.getElementById('ask-explainer');
   if (askExplainerEl) askExplainerEl.innerHTML = '';
   var barEl = document.getElementById('copilot-input-bar');
@@ -3373,6 +3570,7 @@ function renderBeat(flipIn) {
   var winEl = document.getElementById('copilot-window');
   if (winEl) winEl.classList.remove('is-hallucinating');
   var beat = BEATS[currentBeat];
+  chatEl.classList.toggle('is-inside-beat', beat === 'inside');
   setCopilotStatus(BEAT_STATUS[beat] || 'EY.ai Copilot');
 
   if (beat === 'ask') {
@@ -3392,24 +3590,18 @@ function renderBeat(flipIn) {
       // from directly below the (now fully-typed) input bar — not inside the
       // scrollable chat log above it.
       var ann = document.createElement('div');
-      ann.style.cssText = 'padding:16px 0 4px;animation:slideUpIn 0.45s ease-out forwards;opacity:0;';
-      ann.innerHTML =`<div style="border:1px solid rgba(255,230,0,0.25);border-radius:12px;overflow:hidden;background:var(--white);"><div style="background:rgba(255,230,0,0.07);border-bottom:1px solid rgba(255,230,0,0.15);padding:10px 18px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">What is a Prompt?</span></div><div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;"><div><p style="color:var(--ey-dark);font-size:14px;font-weight:700;margin:0 0 6px;line-height:1.4;">This is the instruction given to AI.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.6;margin:0 0 14px;">The clearer the instruction, the better the answer.</p><div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,100,0.1);border:1px solid rgba(0,200,100,0.25);padding:7px 14px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:12px;font-weight:700;">Prompt = What you ask AI to do</span></div></div><div style="background:var(--off-white);border:1px solid rgba(255,230,0,0.15);border-left:3px solid var(--ey-yellow);border-radius:8px;padding:14px 16px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Everyday Analogy</span></div><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin:0 0 6px;line-height:1.4;">Like giving directions to a cab driver.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.5;margin:0;">A specific destination leads to a better journey.</p></div></div></div>`;
+      ann.style.cssText = 'padding:10px 0 0;animation:slideUpIn 0.45s ease-out forwards;opacity:0;';
+      ann.innerHTML =`<div style="border:1px solid rgba(255,230,0,0.25);border-radius:12px;overflow:hidden;background:var(--white);"><div style="background:rgba(255,230,0,0.07);border-bottom:1px solid rgba(255,230,0,0.15);padding:10px 18px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">What is a Prompt?</span></div><div style="padding:18px 20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px;align-items:start;"><div><p style="color:var(--ey-dark);font-size:14px;font-weight:700;margin:0 0 6px;line-height:1.4;">This is the instruction given to AI.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.6;margin:0 0 14px;">The clearer the instruction, the better the answer.</p><div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,100,0.1);border:1px solid rgba(0,200,100,0.25);padding:7px 14px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:12px;font-weight:700;">Prompt = What you ask AI to do</span></div></div><div style="background:var(--off-white);border:1px solid rgba(255,230,0,0.15);border-left:3px solid var(--ey-yellow);border-radius:8px;padding:14px 16px;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Everyday Analogy</span></div><p style="color:var(--ey-dark);font-size:13px;font-weight:700;margin:0 0 6px;line-height:1.4;">Like giving directions to a cab driver.</p><p style="color:var(--gray-01);font-size:12px;line-height:1.5;margin:0;">A specific destination leads to a better journey.</p></div></div></div>`;
       setTimeout(function () {
         if (currentBeat < 0 || BEATS[currentBeat] !== 'ask') return;
         if (askExplainerEl) askExplainerEl.appendChild(ann);
-        // Shrink chat area by the card height so parent window stays the same total height
-        requestAnimationFrame(function () {
-          var cardH = askExplainerEl.scrollHeight;
-          chatEl.style.transition = 'height 0.45s ease-out';
-          chatEl.style.height = Math.max(160, 620 - cardH) + 'px';
-        });
         appendBeatNext('Next');
       }, 800);
     }, 30);
 
   } else if (beat === 'sent') {
     barEl.style.display = 'none';
-    inputEl.value = ''; inputEl.style.color = 'var(--text-secondary)'; inputEl.style.borderColor = 'rgba(46,46,56,0.08)';
+    inputEl.value = ''; inputEl.style.color = 'var(--text-secondary)'; inputEl.style.borderColor = 'rgba(255,230,0,0.35)';
     addChatBubble('You', 'Summarize the GST implications for an online seller selling goods across multiple Indian states');
     chatEl.scrollTop = chatEl.scrollHeight;
 
@@ -3446,17 +3638,27 @@ function renderBeat(flipIn) {
         if (bubble) bubble.classList.add('thinking-highlight');
       }, 400 + i * 620));
     });
+    // Figma: yellow reflection bar is the Next control on this beat (no footer Next)
     window._sentThinkingTimers.push(setTimeout(function () {
       if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return;
-      appendBeatNext('Next');
-    }, 400 + _thinkingStages.length * 620));
+      if (document.getElementById('sent-prompt-cta')) return;
+      var cta = document.createElement('div');
+      cta.id = 'sent-prompt-cta';
+      cta.style.cssText = 'margin:8px 0 4px;animation:fadeInMsg 0.45s ease-out forwards;opacity:0;';
+      cta.innerHTML = '<button type="button" onclick="continueBeat()" aria-label="Continue — What do you think is happening right now?"><p>What do you think is happening right now?</p></button>';
+      chatEl.appendChild(cta);
+      chatEl.scrollTop = chatEl.scrollHeight;
+      // Keep footer Next hidden — the yellow bar is the advancement control
+      var contBtn = document.getElementById('demo-continue-btn');
+      if (contBtn) contBtn.style.display = 'none';
+    }, 400 + 4 * 620));
 
   } else if (beat === 'inside') {
     barEl.style.display = 'none';
     if (inputEl) { inputEl.value = ''; inputEl.style.color = 'var(--text-secondary)'; inputEl.style.borderColor = 'rgba(46,46,56,0.08)'; }
     var acc = document.createElement('div');
+    acc.className = 'inside-beat-wrap' + (flipIn ? ' beat-flip-in' : '');
     acc.style.cssText = 'animation:' + (flipIn ? 'flipInY 0.4s ease-out forwards' : 'fadeInMsg 0.5s ease-out forwards') + ';opacity:0;';
-    if (flipIn) acc.className = 'beat-flip-in';
     acc.innerHTML = buildInsideAccordion();
     chatEl.appendChild(acc);
     appendBeatNext('Next');
@@ -3686,6 +3888,15 @@ window.toggleAcc = toggleAcc;
 <style>
 /* Cheat sheet — EY tokens (Off White surface, white cards, Off Black type) */
 .cheat-section {
+  --cheat-row-gap: 12px;
+  --cheat-head-w: 148px;
+  --cheat-head-min-h: 56px;
+  --cheat-pad: 16px;
+  --cheat-card-gap: 12px;
+  --cheat-radius: 8px;
+  --cheat-accent: 3px;
+  /* Closed rows — slightly darker than Off White section surface */
+  --cheat-row-closed: color-mix(in srgb, var(--off-white) 92%, var(--ey-dark) 8%);
   padding: 72px 64px;
   text-align: center;
   background: var(--off-white);
@@ -3709,9 +3920,9 @@ window.toggleAcc = toggleAcc;
   color: var(--gray-01);
 }
 .cheat-columns {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cheat-row-gap);
   width: 100%;
   max-width: none;
   margin: 0;
@@ -3720,25 +3931,50 @@ window.toggleAcc = toggleAcc;
 .cheat-col {
   min-width: 0;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
 }
 .cheat-col-head {
   list-style: none;
-  border-top: 3px solid currentColor;
-  padding: 14px 16px 12px;
+  position: relative;
+  box-sizing: border-box;
+  flex: 0 0 var(--cheat-head-w);
+  min-height: var(--cheat-head-min-h);
+  padding: var(--cheat-pad);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--cheat-card-gap);
   cursor: pointer;
   color: var(--ey-on-dark);
   background: var(--ey-bg-card);
-  border-left: 1px solid var(--ey-border-on-dark);
-  border-right: 1px solid var(--ey-border-on-dark);
-  border-bottom: 1px solid var(--ey-border-on-dark);
-  border-radius: 0 0 8px 8px;
+  border: 1px solid var(--ey-border-on-dark);
+  border-radius: var(--cheat-radius);
   user-select: none;
+  overflow: hidden;
+}
+.cheat-col-head::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--cheat-accent);
+  background: currentColor;
+}
+.cheat-col:not([open]) .cheat-col-head {
+  background: var(--cheat-row-closed);
+  border-color: var(--gray-02);
+  color: var(--ey-dark);
+  border-radius: var(--cheat-radius);
+}
+.cheat-col:not([open]) .cheat-chevron {
+  color: var(--gray-01);
+}
+.cheat-col[open] .cheat-col-head {
+  border-radius: var(--cheat-radius) 0 0 var(--cheat-radius);
+  border-right: none;
 }
 .cheat-col-head::-webkit-details-marker { display: none; }
 .cheat-col-label {
@@ -3755,24 +3991,40 @@ window.toggleAcc = toggleAcc;
   flex-shrink: 0;
   color: var(--ey-on-dark-72);
   transition: transform 0.2s;
+  transform: rotate(-90deg);
 }
-.cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
+.cheat-col[open] .cheat-chevron { transform: rotate(0deg); }
 .cheat-col[data-tone="create"] { color: var(--ey-dark); }
-/* Dark header bar — accent colors stay on icon + top border only */
-.cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-on-dark); border-top-color: var(--ey-yellow); }
+/* Dark header bar — accent via ::before + icon tint only */
+.cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-on-dark); }
+.cheat-col:not([open])[data-tone="create"] .cheat-col-head { color: var(--ey-dark); }
+.cheat-col[data-tone="create"] .cheat-col-head::before { background: var(--ey-yellow); }
 .cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-on-dark); }
+.cheat-col:not([open])[data-tone="create"] .cheat-col-label { color: var(--ey-dark); }
 .cheat-col[data-tone="create"] .cheat-col-label svg { color: var(--ey-yellow); }
-.cheat-col[data-tone="understand"] .cheat-col-head { color: var(--accent-blue); border-top-color: var(--accent-blue); }
-.cheat-col[data-tone="organize"] .cheat-col-head { color: var(--accent-green); border-top-color: var(--accent-green); }
-.cheat-col[data-tone="think"] .cheat-col-head { color: var(--accent-purple); border-top-color: var(--accent-purple); }
+.cheat-col[data-tone="understand"] .cheat-col-head { color: var(--accent-blue); }
+.cheat-col[data-tone="understand"] .cheat-col-head::before { background: var(--accent-blue); }
+.cheat-col[data-tone="organize"] .cheat-col-head { color: var(--accent-green); }
+.cheat-col[data-tone="organize"] .cheat-col-head::before { background: var(--accent-green); }
+.cheat-col[data-tone="think"] .cheat-col-head { color: var(--accent-purple); }
+.cheat-col[data-tone="think"] .cheat-col-head::before { background: var(--accent-purple); }
 .cheat-col[data-tone="create"] .cheat-card-icon { color: var(--ey-dark); }
 .cheat-col[data-tone="understand"] .cheat-card-icon { color: var(--accent-blue); }
 .cheat-col[data-tone="organize"] .cheat-card-icon { color: var(--accent-green); }
 .cheat-col[data-tone="think"] .cheat-card-icon { color: var(--accent-purple); }
 .cheat-col-body {
   display: none;
-  flex-direction: column;
-  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--cheat-card-gap);
+  padding: var(--cheat-pad);
+  box-sizing: border-box;
+  background: var(--white);
+  border: 1px solid var(--gray-02);
+  border-left: none;
+  border-radius: 0 var(--cheat-radius) var(--cheat-radius) 0;
 }
 .cheat-col[open] > .cheat-col-body {
   display: flex;
@@ -3780,12 +4032,14 @@ window.toggleAcc = toggleAcc;
 .cheat-card {
   background: var(--white);
   border: 1px solid var(--gray-02);
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: var(--cheat-radius);
+  padding: var(--cheat-pad);
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--cheat-card-gap);
   align-items: stretch;
+  flex: 1;
   min-width: 0;
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
@@ -3796,9 +4050,10 @@ window.toggleAcc = toggleAcc;
 }
 .cheat-card-main {
   display: flex;
-  gap: 12px;
+  gap: var(--cheat-card-gap);
   align-items: flex-start;
   min-width: 0;
+  flex: 1;
 }
 .cheat-card-copy {
   min-width: 0;
@@ -3848,34 +4103,60 @@ window.toggleAcc = toggleAcc;
   overflow-wrap: anywhere;
 }
 
-/* Narrow: stacked accordion (one column under another) */
+/* Narrow: stacked accordion (header on top, cards below) */
 @media (max-width: 900px) {
   .cheat-section { padding: 56px 24px; }
   .cheat-title { font-size: 24px; }
   .cheat-subtitle { margin-bottom: 28px; }
-  .cheat-columns {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
   .cheat-col {
+    flex-direction: column;
     background: var(--white);
     border: 1px solid var(--gray-02);
-    border-radius: 8px;
+    border-radius: var(--cheat-radius);
     gap: 0;
     overflow: hidden;
   }
+  .cheat-col:not([open]) {
+    background: var(--cheat-row-closed);
+  }
+  .cheat-col:not([open]) .cheat-col-head {
+    background: transparent;
+    border-bottom: none;
+  }
   .cheat-col-head {
-    padding: 16px 18px;
-    border-top-width: 3px;
+    flex: none;
+    width: auto;
+    min-height: var(--cheat-head-min-h);
+    padding: var(--cheat-pad);
+    border: none;
+    border-bottom: 1px solid var(--gray-02);
     border-radius: 0;
-    border-left: none;
+  }
+  .cheat-col-head::before {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: var(--cheat-accent);
+  }
+  .cheat-col:not([open]) .cheat-col-head,
+  .cheat-col[open] .cheat-col-head {
+    border-radius: 0;
     border-right: none;
   }
+  .cheat-chevron { transform: rotate(0deg); }
+  .cheat-col[open] .cheat-chevron { transform: rotate(180deg); }
   .cheat-col-body {
-    padding: 0 18px 18px;
-    gap: 10px;
+    flex: none;
+    flex-direction: column;
+    padding: 0 var(--cheat-pad) var(--cheat-pad);
+    gap: var(--cheat-card-gap);
+    border: none;
+    border-radius: 0;
+    background: transparent;
   }
-  .cheat-card { box-shadow: none; }
+  .cheat-card { flex: none; box-shadow: none; }
   .cheat-card:hover { transform: none; box-shadow: none; }
 }
 </style>
@@ -3903,35 +4184,27 @@ window.toggleAcc = toggleAcc;
           if (other !== col) other.open = false;
         });
       }
-      // Re-align card heights when desktop columns open/close
+      // Re-align card heights when desktop rows open/close
       equalizeCardRows();
     });
   });
 
-  // Match every card's height to the tallest card in its row, so the four
-  // columns line up evenly even though the copy lengths differ.
+  // Match every card's height to the tallest card in its expanded row.
   function equalizeCardRows() {
-    var rows = cols.map(function (col) {
-      return Array.prototype.slice.call(col.querySelectorAll('.cheat-card'));
-    });
-    var rowCount = rows.reduce(function (max, r) { return Math.max(max, r.length); }, 0);
-
-    // Reset first so we measure natural (content) height, not a stale max.
-    rows.forEach(function (cards) {
+    cols.forEach(function (col) {
+      var cards = Array.prototype.slice.call(col.querySelectorAll('.cheat-card'));
       cards.forEach(function (card) { card.style.height = ''; });
     });
 
-    if (mq.matches) return; // single-column accordion on mobile — natural height is fine
+    if (mq.matches) return; // stacked accordion on mobile — natural height is fine
 
-    for (var i = 0; i < rowCount; i++) {
+    cols.forEach(function (col) {
+      if (!col.open) return;
+      var cards = Array.prototype.slice.call(col.querySelectorAll('.cheat-card'));
       var tallest = 0;
-      rows.forEach(function (cards) {
-        if (cards[i]) tallest = Math.max(tallest, cards[i].offsetHeight);
-      });
-      rows.forEach(function (cards) {
-        if (cards[i]) cards[i].style.height = tallest + 'px';
-      });
-    }
+      cards.forEach(function (card) { tallest = Math.max(tallest, card.offsetHeight); });
+      cards.forEach(function (card) { card.style.height = tallest + 'px'; });
+    });
   }
 
   var resizeTimer;
@@ -4261,14 +4534,11 @@ window.toggleAcc = toggleAcc;
   root.dataset.gvaAccReady = '1';
   var bands = Array.prototype.slice.call(root.querySelectorAll('details.gva-band'));
 
-  // One parent band open at a time; auto-open child cells when band opens
+  // Bands open independently; auto-open child cells when a band opens
   // (except the Capabilities band — its cells stay closed until individually clicked)
   bands.forEach(function (band) {
     band.addEventListener('toggle', function () {
       if (!band.open) return;
-      bands.forEach(function (other) {
-        if (other !== band) other.open = false;
-      });
       var isCapBand = band.querySelector('#gva-band-cap') !== null;
       if (!isCapBand) {
         band.querySelectorAll('details.gva-cell').forEach(function (cell) { cell.open = true; });
@@ -4932,7 +5202,7 @@ window.toggleEvoNestCollapse = toggleEvoNestCollapse;
 function renderEvoBreadcrumb(i) {
   const el = document.getElementById('evo-breadcrumb');
   if (!el) return;
-  // Full era names inside circle nodes (not AI/ML/DL short forms)
+  // Full era names inside rectangular pills (not AI/ML/DL short forms)
   el.innerHTML = EVO_ERAS.map((e, idx) => {
     const state = idx === i ? 'is-current' : idx < i ? 'is-visited' : '';
     const sep = idx > 0 ? '<span class="evo-breadcrumb-sep" aria-hidden="true">›</span>' : '';

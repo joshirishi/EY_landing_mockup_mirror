@@ -28,6 +28,8 @@ const ASSET = {
 
 const W = 1200;
 const H = 820;
+/** Side-by-side hero column: render at 70% of fit-to-width scale. */
+const DISPLAY_SCALE = 0.7;
 
 /** Copilot ring box: left 409, top 224, size 384 → geometric center. */
 const CX = 409 + 384 / 2; // 601
@@ -212,7 +214,7 @@ export default function CoreProcessingPipeline() {
   useEffect(() => {
     const el = shellRef.current;
     if (!el) return;
-    const update = () => setScale(el.clientWidth / W);
+    const update = () => setScale((el.clientWidth / W) * DISPLAY_SCALE);
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
@@ -228,8 +230,13 @@ export default function CoreProcessingPipeline() {
       data-node-id="3543:4136"
     >
       <div
-        className="absolute left-0 top-0 origin-top-left bg-[#1a1a24]"
-        style={{ width: W, height: H, transform: `scale(${scale})` }}
+        className="absolute left-1/2 top-0 bg-[#1a1a24]"
+        style={{
+          width: W,
+          height: H,
+          transform: `translateX(-50%) scale(${scale})`,
+          transformOrigin: "top center",
+        }}
       >
         <CopilotRing />
 

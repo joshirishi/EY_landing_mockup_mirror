@@ -125,6 +125,7 @@ const TOKEN_BRIDGE = `
 
 /* Cheat Sheet — pin EY kit surfaces so dark glass styles cannot leak back in */
 #module-content .cheat-section {
+  --cheat-row-closed: color-mix(in srgb, ${colors.offWhite} 92%, ${colors.offBlack} 8%);
   background: ${colors.offWhite} !important;
   color: ${colors.offBlack};
   border-bottom: 1px solid ${colors.gray02};
@@ -150,45 +151,96 @@ const TOKEN_BRIDGE = `
   word-break: break-word;
   overflow-wrap: anywhere;
 }
-#module-content .cheat-columns { width: 100%; max-width: none; }
+#module-content .cheat-columns { width: 100%; max-width: none; gap: 12px; }
 
-/* Cheat Sheet column headers — EY dark-module surface; accents on icon/border */
+/* Cheat Sheet row headers — EY dark-module surface; accent via ::before */
 #module-content .cheat-col-head {
+  position: relative;
   background: ${colors.eyBgCard};
   color: ${colors.onDark};
-  border-left: 1px solid ${colors.borderOnDark};
-  border-right: 1px solid ${colors.borderOnDark};
-  border-bottom: 1px solid ${colors.borderOnDark};
-  border-radius: 0 0 8px 8px;
-  padding: 14px 16px 12px;
+  border: 1px solid ${colors.borderOnDark};
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 56px;
+  box-sizing: border-box;
+}
+#module-content .cheat-col-head::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: ${colors.borderOnDark};
+}
+#module-content .cheat-col:not([open]) .cheat-col-head {
+  background: var(--cheat-row-closed);
+  border-color: ${colors.gray02};
+  color: ${colors.offBlack};
+  border-radius: 8px;
+}
+#module-content .cheat-col:not([open]) .cheat-chevron {
+  color: ${colors.gray01};
+}
+#module-content .cheat-col[open] .cheat-col-head {
+  border-radius: 8px 0 0 8px;
+  border-right: none;
 }
 #module-content .cheat-chevron { color: ${colors.onDarkMuted}; }
 #module-content .cheat-col[data-tone="create"] .cheat-col-head {
   color: ${colors.onDark};
-  border-top-color: ${colors.yellow};
 }
+#module-content .cheat-col:not([open])[data-tone="create"] .cheat-col-head {
+  color: ${colors.offBlack};
+}
+#module-content .cheat-col[data-tone="create"] .cheat-col-head::before { background: ${colors.yellow}; }
 #module-content .cheat-col[data-tone="create"] .cheat-col-label { color: ${colors.onDark}; }
+#module-content .cheat-col:not([open])[data-tone="create"] .cheat-col-label { color: ${colors.offBlack}; }
 #module-content .cheat-col[data-tone="create"] .cheat-col-label svg { color: ${colors.yellow}; }
-#module-content .cheat-col[data-tone="understand"] .cheat-col-head {
-  color: ${colors.frameBlue};
-  border-top-color: ${colors.frameBlue};
-}
-#module-content .cheat-col[data-tone="organize"] .cheat-col-head {
-  color: ${colors.frameGreen};
-  border-top-color: ${colors.frameGreen};
-}
-#module-content .cheat-col[data-tone="think"] .cheat-col-head {
-  color: ${colors.framePurple};
-  border-top-color: ${colors.framePurple};
+#module-content .cheat-col[data-tone="understand"] .cheat-col-head { color: ${colors.frameBlue}; }
+#module-content .cheat-col[data-tone="understand"] .cheat-col-head::before { background: ${colors.frameBlue}; }
+#module-content .cheat-col[data-tone="organize"] .cheat-col-head { color: ${colors.frameGreen}; }
+#module-content .cheat-col[data-tone="organize"] .cheat-col-head::before { background: ${colors.frameGreen}; }
+#module-content .cheat-col[data-tone="think"] .cheat-col-head { color: ${colors.framePurple}; }
+#module-content .cheat-col[data-tone="think"] .cheat-col-head::before { background: ${colors.framePurple}; }
+
+#module-content .cheat-col-body {
+  padding: 16px;
+  gap: 12px;
+  box-sizing: border-box;
 }
 
 @media (max-width: 900px) {
-  #module-content .cheat-columns { grid-template-columns: 1fr; }
+  #module-content .cheat-col:not([open]) {
+    background: var(--cheat-row-closed);
+  }
+  #module-content .cheat-col:not([open]) .cheat-col-head {
+    background: transparent;
+    border-bottom: none;
+  }
   #module-content .cheat-col-head {
+    border: none;
+    border-bottom: 1px solid ${colors.gray02};
     border-radius: 0;
-    border-left: none;
+    padding: 16px;
+    min-height: 56px;
+  }
+  #module-content .cheat-col-head::before {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 3px;
+  }
+  #module-content .cheat-col:not([open]) .cheat-col-head,
+  #module-content .cheat-col[open] .cheat-col-head {
+    border-radius: 0;
     border-right: none;
-    border-bottom: 1px solid ${colors.borderOnDark};
+  }
+  #module-content .cheat-col-body {
+    padding: 0 16px 16px;
+    gap: 12px;
   }
 }
 
@@ -222,6 +274,7 @@ const TOKEN_BRIDGE = `
   --gva-text: ${colors.onDark};
   --gva-text-muted: ${colors.onDarkMuted};
   --gva-text-subtle: ${colors.onDarkSubtle};
+  --gva-label: ${colors.gray01};
   --gva-yellow: ${colors.yellow};
   --gva-yellow-soft: ${colors.yellowAlpha10};
   --gva-blue: ${colors.frameBlue};

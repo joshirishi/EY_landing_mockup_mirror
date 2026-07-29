@@ -186,18 +186,18 @@ function Nav1() {
 
 function Frame() {
   return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] md:gap-[16px] items-start justify-center not-italic relative shrink-0 w-full max-w-[800px]" data-name="Frame">
-      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.15] relative shrink-0 text-[#ffe600] text-[32px] sm:text-[40px] md:text-[48px] md:leading-[56px]">EY.ai Tax Labs</p>
-      <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[26px] md:leading-[28px] relative shrink-0 text-[#C4C4CD] text-[16px] md:text-[18px] w-full">A structured phased engagement designed to empower your tax teams with AI capabilities, from foundational training to advanced workflow integration.</p>
+    <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] md:gap-[16px] items-start justify-center not-italic relative shrink-0 w-full" data-name="Frame">
+      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.15] relative shrink-0 text-[#ffe600] text-[32px] sm:text-[40px] md:text-[40px] lg:text-[48px] md:leading-[48px] lg:leading-[56px]">EY.ai Tax Labs</p>
+      <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[26px] md:leading-[28px] relative shrink-0 text-[#C4C4CD] text-[16px] md:text-[17px] lg:text-[18px] w-full">A structured phased engagement designed to empower your tax teams with AI capabilities, from foundational training to advanced workflow integration.</p>
     </div>
   );
 }
 
 function HeaderSection() {
   return (
-    <div className="relative shrink-0 w-full" data-name="header-section">
+    <div className="relative shrink-0 w-full md:w-[42%] lg:w-[38%] md:min-w-0" data-name="header-section">
       <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex items-center justify-between pb-[24px] pt-[32px] md:pt-[40px] px-4 sm:px-8 md:px-[64px] relative size-full">
+        <div className="content-stretch flex items-center justify-between pb-[24px] pt-[32px] md:py-[40px] px-4 sm:px-8 md:px-[48px] lg:px-[64px] relative size-full">
           <Frame />
         </div>
       </div>
@@ -812,9 +812,9 @@ function Frame38() {
 
 function DiagramViewport() {
   return (
-    <div className="bg-[#1A1A24] relative shrink-0 w-full min-w-0" data-name="diagram-viewport">
+    <div className="bg-[#1A1A24] relative shrink-0 w-full md:flex-1 md:min-w-0" data-name="diagram-viewport">
       <div className="flex flex-row items-center justify-center size-full min-w-0">
-        <div className="content-stretch flex items-center justify-center px-4 sm:px-8 md:px-[48px] py-6 md:py-[40px] relative size-full min-w-0 w-full">
+        <div className="content-stretch flex items-center justify-center px-4 sm:px-8 md:px-[24px] lg:px-[32px] py-6 md:py-[32px] relative size-full min-w-0 w-full">
           <CoreProcessingPipeline />
         </div>
       </div>
@@ -824,7 +824,7 @@ function DiagramViewport() {
 
 function AiMs365Schematic() {
   return (
-    <div className="bg-[#1A1A24] content-stretch flex flex-col items-start overflow-clip relative shrink-0 w-full" data-name="ai-ms365-schematic">
+    <div className="bg-[#1A1A24] content-stretch flex flex-col md:flex-row md:items-stretch overflow-clip relative shrink-0 w-full" data-name="ai-ms365-schematic">
       <HeaderSection />
       <DiagramViewport />
     </div>
@@ -2400,7 +2400,9 @@ function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
     <div className="bg-white content-stretch flex flex-col gap-[48px] items-start pb-[80px] relative shrink-0 w-full">
       <Frame39 />
       <CardGrid onProceed={onProceed} />
+      {/* Download Engagement Overview — temporarily hidden
       <Frame4 />
+      */}
     </div>
   );
 }
