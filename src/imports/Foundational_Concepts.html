@@ -314,7 +314,7 @@ body {
   color: var(--ey-on-dark);
 }
 .surface-dark .wrong-card {
-  color: var(--ey-on-dark);
+  color: inherit;
 }
 .surface-dark .paths-card,
 .surface-dark .velocity-card {
@@ -554,10 +554,10 @@ body {
   max-width: none;
   align-items: stretch;
 }
-/* Figma 3646:4189 — full-bleed image top, dark body, white title, gray description */
+/* Figma 3646:4189 — full-bleed image, white body, dark title, gray desc, date|author footer */
 .wrong-card {
-  background: #2E2E38;
-  border-radius: 4px;
+  background: #FFFFFF !important;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   text-align: left;
@@ -565,17 +565,17 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.22);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 .wrong-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.40);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
 }
 .wrong-card:focus-visible { outline: 2px solid var(--destructive); outline-offset: 2px; }
 .wrong-card-top {
   position: relative;
   width: 100%;
-  height: 240px;
+  height: 220px;
   flex-shrink: 0;
   overflow: hidden;
   line-height: 0;
@@ -587,50 +587,62 @@ body {
   object-position: center center;
   display: block;
 }
-.wrong-card-top::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: linear-gradient(0deg, #2E2E38 0%, transparent 100%);
-  pointer-events: none;
-}
+.wrong-card-top::after { display: none; }
 .wrong-card-body {
-  padding: 20px 20px 24px;
-  background: #2E2E38;
+  padding: 16px 16px 20px;
+  background: #FFFFFF !important;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
 }
-.wrong-card-meta {
-  display: none;
-}
-.wrong-card-body p {
+.wrong-card-title {
   font-family: 'EYInterstate:Bold', Arial, "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.4;
-  color: #FFFFFF;
+  color: #2E2E38 !important;
   font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0;
-  flex: 1;
-  min-height: 0;
 }
-.wrong-card-body .date {
+.wrong-card-desc {
+  font-family: 'EYInterstate:Regular', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #747480 !important;
+  font-weight: 400;
+  margin: 0;
+  flex: 1;
+}
+.wrong-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+.wrong-card-meta .date {
   font-family: 'EYInterstate:Regular', Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 11px;
+  color: #747480 !important;
   font-weight: 400;
-  color: rgba(255,255,255,0.45);
-  margin: 0;
-  margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  flex-shrink: 0;
 }
+.wrong-card-sep {
+  font-size: 11px;
+  color: #C4C4CD !important;
+}
+.wrong-card-meta .source {
+  font-family: 'EYInterstate:Bold', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 11px;
+  color: #2E2E38 !important;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* hide any legacy bare p/date that wasn't converted */
+.wrong-card-body > p:not(.wrong-card-title):not(.wrong-card-desc) { display: none; }
+.wrong-card-body > .date { display: none; }
 @media (max-width: 900px) {
   .wrong-section { padding: 56px 24px; }
   .wrong-grid { grid-template-columns: 1fr; }
@@ -3085,11 +3097,13 @@ document.addEventListener('keydown', function(e) {
         <img src="/reality-95.png" alt="">
       </div>
       <div class="wrong-card-body">
+        <p class="wrong-card-title">95% companies have seen zero return on their AI investments and the reason is …, says study</p>
+        <p class="wrong-card-desc">A sweeping study finds most enterprises have failed to translate AI spending into measurable business value, citing unclear use cases and poor change management.</p>
         <div class="wrong-card-meta">
+          <span class="date">30 Sep 2025</span>
+          <span class="wrong-card-sep">|</span>
           <span class="source">Times of India</span>
         </div>
-        <p>95% companies have seen zero return on their AI investments and the reason is …, says study</p>
-        <span class="date">30 September 2025</span>
       </div>
     </article>
 
@@ -3098,11 +3112,13 @@ document.addEventListener('keydown', function(e) {
         <img src="/reality-500m.png" alt="">
       </div>
       <div class="wrong-card-body">
+        <p class="wrong-card-title">How AI startup's $500 million monthly bill may be a wakeup call for tech companies using AI freely</p>
+        <p class="wrong-card-desc">Soaring inference costs are forcing companies to scrutinise ROI on AI workloads — and question whether uncapped usage models are sustainable at scale.</p>
         <div class="wrong-card-meta">
+          <span class="date">31 May 2026</span>
+          <span class="wrong-card-sep">|</span>
           <span class="source">Times of India</span>
         </div>
-        <p>How AI startup's $500 million monthly bill may be a wakeup call for tech companies using AI freely</p>
-        <span class="date">31 May 2026</span>
       </div>
     </article>
 
@@ -3111,11 +3127,13 @@ document.addEventListener('keydown', function(e) {
         <img src="/reality-sanctioned.png" alt="">
       </div>
       <div class="wrong-card-body">
+        <p class="wrong-card-title">Corporate America Is Starting to Ration AI as Cost Skyrockets</p>
+        <p class="wrong-card-desc">Firms that rushed into AI deployments are now pulling back, setting usage caps and requiring business-case justifications before greenlighting new projects.</p>
         <div class="wrong-card-meta">
-          <span class="source">The Wall Street Journal</span>
+          <span class="date">28 May 2026</span>
+          <span class="wrong-card-sep">|</span>
+          <span class="source">Wall Street Journal</span>
         </div>
-        <p>Corporate America Is Starting to Ration AI as Cost Skyrockets</p>
-        <span class="date">28 May 2026</span>
       </div>
     </article>
   </div>
