@@ -34,6 +34,27 @@ function resolve(theme: Theme | undefined) {
   return theme === 'dark' ? darkText : lightText;
 }
 
+/** Visible label matching a ModuleHeader tab — ties section content to in-page nav. */
+export function SectionAnchorTitle({
+  children,
+  theme,
+  align = "center",
+  style,
+  className,
+  ...rest
+}: TypoProps & { align?: "left" | "center" | "right" }) {
+  return (
+    <EYEyebrow
+      theme={theme}
+      className={className}
+      style={{ textAlign: align, marginBottom: 8, ...style }}
+      {...rest}
+    >
+      {children}
+    </EYEyebrow>
+  );
+}
+
 /** Small ALL-CAPS eyebrow / category label */
 export function EYEyebrow({ children, theme, style, className, ...rest }: TypoProps) {
   const color = theme === 'dark' ? colors.yellow : colors.eyebrowGold;

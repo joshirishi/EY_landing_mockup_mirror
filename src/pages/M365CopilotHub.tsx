@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-  AlertTriangle, BarChart3, Calculator, ClipboardList, Compass, FileText,
+  AlertTriangle, ArrowRight, BarChart3, Calculator, ClipboardList, Compass, FileText,
   FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
   PenLine, Pin, Rocket, Search, Sparkles, Target, Timer,
 } from "lucide-react";
-import { ModuleHeader, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
+import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import { contentInlinePad, contentRailStyle, fonts as F, spacing } from "../design-kit/tokens";
 
 // ── EY Design System tokens ───────────────────────────────────────────────────
@@ -227,27 +228,27 @@ const SECTION_DATA: Record<TabId, {
   },
 };
 
-// ── Pattern 1: "use-grid" — 2-column tax use-case cards ───────────────────────
-function UseCaseCard({ icon: Icon, title, body, accent, appLabel }: { icon: LucideIcon; title: string; body: string; accent: string; appLabel: string }) {
+// ── Pattern 2c: Use-case cards — left column (Figma 3640:4312). Bare stacked
+// cards on the section background; no titled panel wrapper.
+function CopilotUseCasePanel({ useCases }: {
+  useCases: { icon: LucideIcon; title: string; body: string }[];
+}) {
   return (
-    <div style={{ position: "relative", display: "flex", gap: 16, alignItems: "flex-start", background: C.white, borderRadius: 16, padding: "22px 22px 22px 26px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", border: "1px solid #C4C4CD", overflow: "hidden" }}>
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: accent }} />
-      <div style={{ width: 48, height: 48, minWidth: 48, borderRadius: 12, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
-        <Icon size={22} strokeWidth={1.75} aria-hidden />
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.dark2, marginBottom: 6, lineHeight: 1.3 }}>{title}</p>
-        <p style={{ fontFamily: F.regular, fontSize: 13.5, color: C.gray01, lineHeight: 1.55, marginBottom: 12 }}>{body}</p>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: F.regular, fontSize: 11, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: accent }}>✦ {appLabel} + Copilot</span>
-      </div>
-    </div>
-  );
-}
-
-function UseCaseGrid({ items, accent, appLabel }: { items: { icon: LucideIcon; title: string; body: string }[]; accent: string; appLabel: string }) {
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
-      {items.map(item => <UseCaseCard key={item.title} icon={item.icon} title={item.title} body={item.body} accent={accent} appLabel={appLabel} />)}
+    <div style={{ flex: "0 0 292px", minWidth: 0, maxHeight: 800, minHeight: 0, padding: 22, display: "flex", flexDirection: "column", gap: 10, overflowY: "auto" }}>
+      {useCases.map(uc => {
+        const Icon = uc.icon;
+        return (
+          <div key={uc.title} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12.75px", borderRadius: 14, background: C.white, border: `0.75px solid ${C.gray02}` }}>
+            <div style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
+              <Icon size={18} strokeWidth={1.75} aria-hidden />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 13, color: C.dark2, marginBottom: 4, lineHeight: 1.3 }}>{uc.title}</p>
+              <p style={{ fontFamily: F.regular, fontSize: 11.5, color: C.gray01, lineHeight: 1.45 }}>{uc.body}</p>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -279,25 +280,23 @@ function useTypingPrompt() {
   return { activeIndex, typedText, select };
 }
 
-// ── Pattern 2a: mock app window — window chrome + ribbon canvas + response card ──
+// ── Pattern 2a: App window mock — dark chrome, gradient canvas, tall white
+// document with Copilot panel anchored at top (Figma 3640:4190) ─────────────
 function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; accent: string; typedText: string }) {
   return (
-    <div style={{ flex: "1.05 1 0", minWidth: 0, background: `linear-gradient(180deg, ${C.dark2}, ${C.dark})`, borderRadius: 22, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.28)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column" }}>
+    <div style={{ flex: "1 1 392px", minWidth: 0, maxHeight: 800, minHeight: 598, background: `linear-gradient(180deg, ${C.dark2}, ${C.dark})`, borderRadius: 22, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.28)", border: "0.75px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column" }}>
       {/* Window chrome */}
-      <div style={{ height: 42, background: C.dark, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", borderBottom: "1px solid rgba(255,255,255,0.08)", gap: 12 }}>
+      <div style={{ height: 42, background: C.dark, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", borderBottom: "0.75px solid rgba(255,255,255,0.08)", gap: 12, flexShrink: 0 }}>
         <div style={{ display: "flex", gap: 7, flexShrink: 0 }}>
-          {[1, 0.6, 0.32].map((o, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: accent, opacity: o }} />)}
+          {[1, 0.6, 0.32].map((o, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: 5, background: accent, opacity: o }} />)}
         </div>
         <span style={{ fontFamily: F.regular, fontSize: 12, fontWeight: 700, color: C.white, flex: 1, textAlign: "center" }}>{appLabel} — blank workspace</span>
-        <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.gray02, border: "1px solid rgba(255,255,255,0.16)", borderRadius: 999, padding: "4px 10px", flexShrink: 0, whiteSpace: "nowrap" }}>Copilot-enabled</span>
+        <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.gray02, border: "0.75px solid rgba(255,255,255,0.16)", borderRadius: 999, padding: "4.75px 10.75px", flexShrink: 0, whiteSpace: "nowrap" }}>Copilot-enabled</span>
       </div>
-      {/* Ribbon-colored canvas with mock document + Copilot response */}
-      <div style={{ flex: 1, padding: 24, display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${accent}, ${C.dark})`, minHeight: 320 }}>
-        <div style={{ width: "100%", maxWidth: 400, background: C.white, borderRadius: 16, padding: 24, boxShadow: "0 18px 44px rgba(0,0,0,0.24)" }}>
-          {["94%", "80%", "92%", "62%"].map((w, i) => (
-            <div key={i} style={{ height: 8, borderRadius: 999, background: C.offWhite, width: w, marginBottom: 12 }} />
-          ))}
-          <div style={{ marginTop: 8, background: C.offWhite, border: `1px solid ${C.yellow}`, borderRadius: 12, padding: 14 }}>
+      {/* App-colored canvas — tall white document, Copilot overlay at top */}
+      <div style={{ flex: 1, padding: 24, display: "flex", alignItems: "stretch", justifyContent: "center", background: `linear-gradient(125deg, ${accent}, ${C.dark})`, minHeight: 0, overflow: "auto" }}>
+        <div style={{ width: "100%", maxWidth: 342, minHeight: 506, background: C.white, borderRadius: 16, padding: 24, boxShadow: "0 18px 22px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
+          <div style={{ marginTop: 12, background: C.offWhite, border: `0.75px solid ${C.yellow}`, borderRadius: 12, padding: "14.75px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <CopilotIcon size={16} />
               <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.6px", textTransform: "uppercase", color: C.dark2 }}>Copilot</span>
@@ -306,7 +305,7 @@ function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; acc
               readOnly
               value={typedText}
               placeholder="Choose a prompt on the right to see Copilot respond →"
-              style={{ width: "100%", minHeight: 100, border: "none", outline: "none", resize: "none", background: "transparent", fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55 }}
+              style={{ width: "100%", minHeight: 100, border: "none", outline: "none", resize: "none", background: "transparent", fontFamily: F.regular, fontSize: 13, color: typedText ? C.dark2 : "rgba(46,46,56,0.5)", lineHeight: 1.55 }}
             />
           </div>
         </div>
@@ -315,18 +314,18 @@ function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; acc
   );
 }
 
-// ── Pattern 2b: "Ask Copilot in {App}" prompt panel — 5 real, clickable prompts ──
+// ── Pattern 2b: "Ask Copilot in {App}" prompt panel — 5 clickable prompts ──
 function CopilotPromptPanel({ appLabel, subtitle, prompts, activeIndex, onSelect }: {
   appLabel: string; subtitle: string; prompts: { label: string; text: string }[];
   activeIndex: number | null; onSelect: (idx: number) => void;
 }) {
   return (
-    <div style={{ flex: "0.95 1 0", minWidth: 0, background: `linear-gradient(160deg, ${C.dark2}, ${C.dark})`, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 22, padding: 22, boxShadow: "0 20px 50px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
-      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-        <span aria-hidden>✨</span> Ask Copilot in {appLabel}
+    <div style={{ flex: "1 1 392px", minWidth: 0, maxHeight: 800, minHeight: 598, background: `linear-gradient(151deg, ${C.dark2} 8.5%, ${C.dark} 91.5%)`, border: "0.75px solid rgba(255,255,255,0.08)", borderRadius: 22, padding: "22.75px", boxShadow: "0 20px 25px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
+      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, marginBottom: 4, display: "flex", alignItems: "center", gap: 8, lineHeight: 1.5 }}>
+        <Sparkles size={16} strokeWidth={1.75} color={C.yellow} aria-hidden /> Ask Copilot in {appLabel}
       </p>
       <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray02, lineHeight: 1.5, marginBottom: 16 }}>{subtitle}</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, overflowY: "auto", minHeight: 0, flex: 1, paddingRight: 4 }}>
         {prompts.map((p, i) => {
           const active = i === activeIndex;
           return (
@@ -334,21 +333,21 @@ function CopilotPromptPanel({ appLabel, subtitle, prompts, activeIndex, onSelect
               key={p.label}
               onClick={() => onSelect(i)}
               style={{
-                display: "flex", alignItems: "center", gap: 12, padding: "11px 12px", borderRadius: 14,
+                display: "flex", alignItems: "center", gap: 12, padding: "11.75px 12.75px", borderRadius: 14,
                 background: active ? "rgba(255,230,0,0.14)" : "rgba(255,255,255,0.04)",
-                border: active ? `1px solid ${C.yellow}` : "1px solid rgba(255,255,255,0.08)",
+                border: active ? `0.75px solid ${C.yellow}` : "0.75px solid rgba(255,255,255,0.08)",
                 cursor: "pointer", textAlign: "left", width: "100%", fontFamily: F.regular,
                 transition: "background 0.2s, border-color 0.2s, transform 0.2s",
               }}
               onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.transform = "translateX(3px)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
             >
-              <span style={{ width: 24, height: 24, minWidth: 24, borderRadius: "50%", background: active ? C.yellow : "rgba(255,255,255,0.12)", color: active ? C.dark : C.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{i + 1}</span>
+              <span style={{ width: 24, height: 24, minWidth: 24, borderRadius: 12, background: active ? C.yellow : "rgba(255,255,255,0.12)", color: active ? C.dark : C.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{i + 1}</span>
               <span style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: C.white, marginBottom: 2 }}>{p.label}</span>
+                <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: C.white, marginBottom: 2, lineHeight: 1.5 }}>{p.label}</span>
                 <span style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.55)", lineHeight: 1.4 }}>{p.text}</span>
               </span>
-              <span style={{ color: active ? C.yellow : "rgba(255,255,255,0.35)", fontSize: 14, flexShrink: 0 }}>→</span>
+              <ArrowRight size={14} strokeWidth={1.75} color={active ? C.yellow : "rgba(255,255,255,0.35)"} aria-hidden style={{ flexShrink: 0 }} />
             </button>
           );
         })}
@@ -357,28 +356,37 @@ function CopilotPromptPanel({ appLabel, subtitle, prompts, activeIndex, onSelect
   );
 }
 
-// ── Pattern 2: combines the mock app window + prompt panel into one scene ────
+// ── Pattern 2: Use cases | app mock | prompt panel — Figma 3640:4189 layout.
+// Fixed left-to-right order; capped at 800px; inner lists scroll if needed.
 function CopilotScene({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
   const tabMeta = TABS.find(t => t.id === tabId)!;
   const appLabel = APP_NAME[tabId];
   const { activeIndex, typedText, select } = useTypingPrompt();
 
-  const mock = <CopilotAppMock appLabel={appLabel} accent={tabMeta.appColor} typedText={typedText} />;
-  const panel = (
-    <CopilotPromptPanel
-      appLabel={appLabel}
-      subtitle={d.panelSubtitle}
-      prompts={d.prompts}
-      activeIndex={activeIndex}
-      onSelect={idx => select(idx, d.prompts[idx].text)}
-    />
-  );
-
   return (
-    <div style={{ display: "flex", gap: 20, alignItems: "stretch", flexWrap: "wrap" }}>
-      {d.screenshotSide === "left" ? <>{mock}{panel}</> : <>{panel}{mock}</>}
-    </div>
+    <>
+      <div
+        className="copilot-scene"
+        style={{ display: "flex", alignItems: "stretch", gap: 20, maxHeight: 800 }}
+      >
+        <CopilotUseCasePanel useCases={d.useCases} />
+        <CopilotAppMock appLabel={appLabel} accent={tabMeta.appColor} typedText={typedText} />
+        <CopilotPromptPanel
+          appLabel={appLabel}
+          subtitle={d.panelSubtitle}
+          prompts={d.prompts}
+          activeIndex={activeIndex}
+          onSelect={idx => select(idx, d.prompts[idx].text)}
+        />
+      </div>
+      <style>{`
+        @media (max-width: 900px) {
+          .copilot-scene { flex-direction: column !important; max-height: none !important; }
+          .copilot-scene > * { flex: 1 1 auto !important; max-height: none !important; min-height: 0 !important; }
+        }
+      `}</style>
+    </>
   );
 }
 
@@ -482,7 +490,6 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
 function TabSection({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
   const tabMeta = TABS.find(t => t.id === tabId)!;
-  const appLabel = APP_NAME[tabId];
   // Always offWhite so this surface matches #prompt-repository above (no color break).
   return (
     <div style={{ background: C.offWhite, padding: `48px 0 64px` }}>
@@ -495,12 +502,7 @@ function TabSection({ tabId }: { tabId: TabId }) {
       <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 28, color: C.dark2, marginBottom: 12, lineHeight: 1.2 }}>{d.h2}</p>
       <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
 
-      {/* Pattern 1 — 2-column tax use-case grid */}
-      <div style={{ marginBottom: 48 }}>
-        <UseCaseGrid items={d.useCases} accent={tabMeta.appColor} appLabel={appLabel} />
-      </div>
-
-      {/* Pattern 2 — interactive mock app window + "Ask Copilot" prompt panel */}
+      {/* Pattern 2 — interactive 3-column scene: app mock + prompts + use cases */}
       <CopilotScene tabId={tabId} />
       </div>
     </div>
@@ -630,8 +632,9 @@ export default function M365CopilotHub({
       </section>
 
       {/* ── Repository Tabs — CENTERED header (Figma: RepositoryTabs) ────────── */}
-      <section id="prompt-repository" style={{ background: C.offWhite, padding: `64px 0 0`, textAlign: "center", scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="prompt-repository" style={{ background: C.offWhite, padding: `64px 0 0`, textAlign: "center", scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
+        <SectionAnchorTitle align="center">M365 Apps</SectionAnchorTitle>
         <p style={{ fontSize: 11, color: C.gray01, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 12, fontWeight: 700 }}>EXPLORE PROMPT CATEGORIES</p>
         <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12, color: C.dark2 }}>Sample Prompt Repository for using Copilot in Tax</h2>
         <p style={{ fontSize: 15, color: C.gray01, marginBottom: 32 }}>Select your preferred M365 application tool below to view optimized, compliant corporate-ready prompts.</p>
@@ -665,8 +668,9 @@ export default function M365CopilotHub({
       <TabSection key={activeTab} tabId={activeTab} />
 
       {/* ── Useful Links (Figma: useful-links-section-redesign) ─────────────── */}
-      <section id="useful-links" style={{ background: C.dark2, padding: `${spacing.sectionPaddingY} 0 64px`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="useful-links" style={{ background: C.dark2, padding: `${spacing.sectionPaddingY} 0 64px`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
+        <SectionAnchorTitle theme="dark" align="center">Useful Links</SectionAnchorTitle>
         <h2 style={{ fontSize: 28, fontWeight: 700, color: C.white, marginBottom: 12, textAlign: "center" }}>Useful Links</h2>
         <p style={{ fontSize: 15, color: C.gray02, marginBottom: 48, textAlign: "center" }}>Handy EY resources to check your system access, explore deeper templates, and use generative AI safely.</p>
         <div style={{ display: "flex", gap: 20 }}>
@@ -685,8 +689,9 @@ export default function M365CopilotHub({
       </section>
 
       {/* ── Security (Figma: security-case-studies — 4 horizontal cards) ─────── */}
-      <section id="security" style={{ background: C.dark, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="security" style={{ background: C.dark, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
+        <SectionAnchorTitle theme="dark" align="left">Security &amp; Governance</SectionAnchorTitle>
         {/* GOVERNANCE & TRUST kicker badge */}
         <div style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,230,0,0.12)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, padding: "5px 14px", marginBottom: 24 }}>
           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: C.yellow, fontFamily: F.regular }}>GOVERNANCE &amp; TRUST</span>

@@ -3,11 +3,16 @@
  * <SiteHeader variant="learning"/> on Phase 1 overview and every module page.
  *
  * Structure:
- *   Row A — Circular yellow back + "Tax Labs" › [Foundational Training Workshops ▾]
- *           › current page title, plus a progress pill (+ optional section status).
+ *   Row A — Circular yellow back + "Tax Labs" › [current module ▾]
+ *           The picker button shows the current module (with order badge) on
+ *           module pages, or the workshop name on the phase-overview page.
+ *           Opening it reveals the workshop context header + "Workshop
+ *           overview" + the module list. A progress pill sits on the right
+ *           (Module / Sub-module of total) plus an optional section status.
  *   Row B — "Learn" / "Apply" tab clusters (module pages only) that jump to
- *           in-page sections within the current module, with scroll-spy highlighting.
- *           Sub-module sections live here — not in the workshop dropdown (Row A).
+ *           in-page sections within the current module, with scroll-spy
+ *           highlighting. Sub-module sections live here — not in the dropdown
+ *           (Row A), which handles only workshop/module navigation.
  *
  * Usage (Phase 1 overview):
  *   <SiteHeader variant="learning" onNavigate={navigate} />
@@ -16,15 +21,14 @@
  * Usage (module page):
  *   <ModuleHeader currentModuleId="ai-tax-prompting" onNavigate={navigate} onBack={onBack} />
  *
- * Sections reachable from Row B must set `style={{ scrollMarginTop: SUBNAV_SCROLL_OFFSET }}`.
+ * Sections reachable from Row B must set `style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN }}`.
  */
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { colors, fonts } from "./tokens";
 import {
   PHASE_NUMBER,
   PHASE_PATH,
-  TOTAL_MODULES,
   TOTAL_PHASES,
   getAdjacentModules,
   getCurrentPhase,
@@ -35,8 +39,18 @@ import {
   type ModuleId,
 } from "./curriculum";
 
-/** Scroll offset (px) to reserve for the stacked sticky bars — set on each in-page section. */
-export const SUBNAV_SCROLL_OFFSET = 156;
+/**
+ * Fallback scroll offset (px) for ModuleHeader alone.
+ * SiteHeader scrolls away on module pages — do not include it here.
+ */
+export const SUBNAV_SCROLL_OFFSET = 100;
+
+/** CSS scroll-margin value — tracks live ModuleHeader height via `--ey-subnav-scroll-offset`. */
+export const SUBNAV_SCROLL_MARGIN = `var(--ey-subnav-scroll-offset, ${SUBNAV_SCROLL_OFFSET}px)` as const;
+
+function syncSubnavScrollOffset(height: number) {
+  document.documentElement.style.setProperty("--ey-subnav-scroll-offset", `${height}px`);
+}
 
 const FOCUS_RING = `2px solid ${colors.yellow}`;
 const WORKSHOP_LABEL = getCurrentPhase().label.replace(/^Phase \d+: /, "");
@@ -78,24 +92,48 @@ export function ModuleHeader(props: ModuleHeaderProps) {
 
   const current = currentModuleId ? getModule(currentModuleId) : null;
   const pageTitle = isPhaseOverview ? "Foundational AI Training" : current!.title;
+  // Picker button shows WHERE YOU ARE: the current module on module pages, the
+  // workshop name on the phase-overview page. The trailing page-title span was
+  // removed because it duplicated this label; the dropdown adds workshop context.
+  const pickerLabel = isPhaseOverview ? WORKSHOP_LABEL : current!.title;
   // User-facing: Phase → Module, Module → Sub-module.
   // Split into two chips so Module (context) ≠ Sub-module (you are here).
   const progressChips = isPhaseOverview
     ? { module: `Module ${PHASE_NUMBER} of ${TOTAL_PHASES}`, subModule: null as string | null }
     : {
         module: `Module ${PHASE_NUMBER}`,
-        subModule: `Sub-module ${current!.order} of ${TOTAL_MODULES}`,
+        // Plan numbering — {phaseNumber}.{moduleOrder} e.g. "1.3" = phase 1, 3rd module.
+        subModule: `${PHASE_NUMBER}.${current!.order}`,
       };
   const statusText = sectionStatus;
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const [subnavHeight, setSubnavHeight] = useState(SUBNAV_SCROLL_OFFSET);
   const groups = currentModuleId ? getSubModuleGroups(currentModuleId) : { learn: [], apply: [] };
   const { learn, apply } = groups;
   const showSectionTabs = !isPhaseOverview && !!current?.supportsInPageNav && (learn.length > 0 || apply.length > 0);
   const activeSectionId = useScrollSpy(
-    onSectionClick || !current ? [] : current.subModules.map((s) => s.id)
+    onSectionClick || !current ? [] : current.subModules.map((s) => s.id),
+    subnavHeight
   );
+
+  useLayoutEffect(() => {
+    const el = stickyRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const height = el.offsetHeight;
+      setSubnavHeight(height);
+      syncSubnavScrollOffset(height);
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [showSectionTabs, pageTitle]);
 
   useEffect(() => {
     if (!pickerOpen) return;
@@ -114,7 +152,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   }, [pickerOpen]);
 
   return (
-    <div style={{ position: "sticky", top: 0, zIndex: 200 }}>
+    <div ref={stickyRef} style={{ position: "sticky", top: 0, zIndex: 200 }}>
       {/* ── Level 2: breadcrumb + progress — fluid padding, collapses on narrow screens ── */}
       <div
         className="flex flex-wrap items-center justify-between gap-3 md:gap-4 px-4 sm:px-6 md:px-10 py-3"
@@ -156,7 +194,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
               onClick={() => setPickerOpen((v) => !v)}
               aria-haspopup="menu"
               aria-expanded={pickerOpen}
-              className="flex items-center gap-1.5 min-w-0 max-w-[min(100%,240px)] sm:max-w-none"
+              className="flex items-center gap-2 min-w-0 max-w-[min(100%,260px)] sm:max-w-none"
               style={{
                 background: "none",
                 border: "none",
@@ -165,12 +203,32 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                 borderRadius: 4,
                 fontFamily: fonts.bold,
                 fontSize: 14,
-                color: colors.white,
+                color: isPhaseOverview ? colors.white : colors.yellow,
               }}
               onFocus={applyFocusRing}
               onBlur={clearFocusRing}
             >
-              <span className="truncate">{WORKSHOP_LABEL}</span>
+              {!isPhaseOverview && current && (
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    fontSize: 11,
+                    fontFamily: fonts.bold,
+                    background: colors.yellow,
+                    color: colors.offBlack,
+                    flexShrink: 0,
+                  }}
+                  aria-hidden="true"
+                >
+                  {current.order}
+                </span>
+              )}
+              <span className="truncate">{pickerLabel}</span>
               <span
                 style={{
                   fontSize: 8,
@@ -195,22 +253,6 @@ export function ModuleHeader(props: ModuleHeaderProps) {
               />
             )}
           </div>
-
-          <span className="hidden lg:inline shrink-0" aria-hidden="true">
-            <ChevronSep />
-          </span>
-
-          <span
-            className="hidden lg:inline truncate"
-            style={{
-              color: colors.gray01,
-              fontFamily: fonts.regular,
-              fontSize: 14,
-            }}
-            aria-current="page"
-          >
-            {pageTitle}
-          </span>
         </div>
 
         <div className="flex items-center gap-3 md:gap-5 shrink-0">
@@ -238,7 +280,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
       {showSectionTabs && (
         <nav
           aria-label={`${pageTitle} sections`}
-          className="flex gap-6 md:gap-8 overflow-x-auto px-4 sm:px-6 md:px-10 pt-2.5"
+          className="flex items-end gap-6 md:gap-8 overflow-x-auto px-4 sm:px-6 md:px-10 pt-2.5"
           style={{
             background: colors.offWhite,
             borderBottom: "1px solid rgba(46,46,56,0.1)",
@@ -358,14 +400,14 @@ function ProgressChipGroup({
           >
             ›
           </span>
-          {/* You-are-here — EY Yellow owns the primary read */}
+          {/* You-are-here — plain EY Yellow text, no pill (plan number reads as a label, not a badge) */}
           <span
             style={{
-              ...chipBase,
-              background: colors.yellow,
-              color: colors.confidentBlack,
+              fontSize: 12,
+              whiteSpace: "nowrap",
+              lineHeight: 1.2,
+              color: colors.yellow,
               fontFamily: fonts.bold,
-              boxShadow: "0 0 0 1px rgba(255,230,0,0.35)",
             }}
           >
             {displaySub}
@@ -483,6 +525,21 @@ function ModulePickerMenu({
         maxHeight: "min(70vh, 480px)",
       }}
     >
+      {/* Workshop context — anchors the module list below it. */}
+      <div
+        style={{
+          padding: "8px 10px 6px",
+          fontFamily: fonts.bold,
+          fontSize: 11,
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+          color: colors.yellow,
+          lineHeight: 1.2,
+        }}
+      >
+        {WORKSHOP_LABEL}
+      </div>
+
       <PickerItem
         label="Workshop overview"
         isCurrent={isPhaseOverview}
@@ -621,12 +678,21 @@ function TabCluster({
   const isApply = label.toLowerCase() === "apply";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "flex-end",
+        gap: 16,
+        flexShrink: 0,
+      }}
+    >
       <span
+        aria-hidden="true"
         style={{
           display: "inline-flex",
           alignItems: "center",
-          alignSelf: "flex-start",
+          flexShrink: 0,
           fontFamily: fonts.bold,
           fontSize: 11,
           letterSpacing: "0.06em",
@@ -637,12 +703,13 @@ function TabCluster({
           borderRadius: 999,
           padding: "5px 12px",
           lineHeight: 1.2,
+          marginBottom: 10,
           boxShadow: "0 1px 2px rgba(26, 26, 36, 0.06)",
         }}
       >
         {label}
       </span>
-      <div style={{ display: "flex", gap: 20 }}>
+      <div style={{ display: "flex", gap: 20, alignItems: "flex-end" }}>
         {items.map((item) => {
           const isActive = item.id === activeSectionId;
           const tabStyle: React.CSSProperties = {
@@ -691,7 +758,7 @@ function TabCluster({
 }
 
 /** Highlights the section tab whose content is currently most visible under the sticky header. */
-function useScrollSpy(sectionIds: string[]): string | null {
+function useScrollSpy(sectionIds: string[], scrollOffset: number): string | null {
   const [activeId, setActiveId] = useState<string | null>(sectionIds[0] ?? null);
 
   useEffect(() => {
@@ -711,12 +778,12 @@ function useScrollSpy(sectionIds: string[]): string | null {
           setActiveId(topMost.target.id);
         }
       },
-      { rootMargin: `-${SUBNAV_SCROLL_OFFSET}px 0px -60% 0px`, threshold: 0 }
+      { rootMargin: `-${scrollOffset}px 0px -60% 0px`, threshold: 0 }
     );
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [sectionIds.join(",")]);
+  }, [sectionIds.join(","), scrollOffset]);
 
   return activeId;
 }

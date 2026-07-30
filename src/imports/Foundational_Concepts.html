@@ -58,6 +58,7 @@
   --ey-border-on-dark: rgba(255, 255, 255, 0.12);
   --ey-yellow-alpha-10: rgba(255, 230, 0, 0.10);
   --ey-bg-card: #2E2E38;
+  --ey-card-deep: #54545F;       /* Rise of AI news cards (Figma 3645:4189) */
 
   --radius: 0;
   --transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
@@ -308,9 +309,13 @@ body {
 /* Keep semantic danger label red even on dark */
 .surface-dark .wrong-label { color: #FF4136 !important; }
 
-/* Cards keep dark ink even when section surface is dark */
-.surface-dark .rise-card,
-.surface-dark .wrong-card,
+/* Cards on dark sections — rise cards use on-dark ink (Figma 3645:4189) */
+.surface-dark .rise-card {
+  color: var(--ey-on-dark);
+}
+.surface-dark .wrong-card {
+  color: var(--ey-on-dark);
+}
 .surface-dark .paths-card,
 .surface-dark .velocity-card {
   color: var(--ey-dark);
@@ -396,65 +401,111 @@ body {
   gap: 20px;
   width: 100%;
   max-width: none;
+  align-items: stretch;
 }
 .rise-card {
-  background: var(--off-white);
-  border: 1px solid var(--gray-02);
+  background: var(--ey-card-deep);
+  border: 1px solid var(--ey-card-deep);
+  border-top-width: 4px;
   overflow: hidden;
   cursor: pointer;
   text-align: left;
   transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .rise-card:hover {
   transform: translateY(-3px);
-  border-color: var(--gray-01);
-  box-shadow: 0 8px 24px rgba(46,46,56,0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
-.rise-card:focus-visible { outline: 2px solid var(--eyebrow-gold); outline-offset: 2px; }
+.rise-card:focus-visible { outline: 2px solid var(--ey-yellow); outline-offset: 2px; }
 .rise-card-top--img {
   position: relative;
-  height: 120px;
-  padding: 0;
-  background: var(--gray-02);
+  width: 100%;
+  height: 148px;
+  flex-shrink: 0;
+  padding: 6px;
+  background: var(--ey-card-deep);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
 .rise-card-top--img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top;
+  object-fit: contain;
+  object-position: center center;
   display: block;
 }
+.rise-card-top--img::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: linear-gradient(0deg, var(--ey-card-deep) 0%, transparent 100%);
+  pointer-events: none;
+}
 .rise-card-body {
-  padding: 18px;
+  padding: 16px 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 16px;
   flex: 1;
-  background: var(--off-white);
+  min-height: 0;
+  background: var(--ey-card-deep);
 }
 .rise-card-meta {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 11px; margin: 0;
+  display: flex;
+  align-items: center;
+  margin: 0;
 }
 .rise-card-meta .source {
-  font-weight: 700; color: var(--eyebrow-gold);
-  text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'EYInterstate:Bold', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: var(--ey-yellow);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 10px;
+  line-height: 1;
+}
+.rise-card-meta .source::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: var(--ey-yellow);
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 .rise-card-body p {
-  font-size: 15px; line-height: 1.35;
-  color: var(--ey-dark); font-weight: 700;
+  font-family: 'EYInterstate:Light', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ey-on-dark);
+  font-weight: 300;
   letter-spacing: -0.01em;
   margin: 0;
   flex: 1;
+  min-height: 0;
 }
 .rise-card-body .date {
-  font-size: 12px;
-  color: var(--gray-01);
-  margin-top: 4px;
-  padding-top: 8px;
-  border-top: 1px solid var(--gray-02);
+  font-family: 'EYInterstate:Regular', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--gray-02);
+  margin: 0;
+  margin-top: auto;
+  padding: 0;
+  border-top: none;
+  flex-shrink: 0;
 }
 @media (max-width: 1100px) {
   .rise-section { padding: 56px 24px; }
@@ -500,74 +551,114 @@ body {
   gap: 20px;
   width: 100%;
   max-width: none;
+  align-items: stretch;
 }
+/* Figma 3646:4189 row + 3519:3125 card device; dark surfaces match .rise-card (3645:4189) */
 .wrong-card {
-  background: var(--white);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  border-radius: 12px;
+  background: var(--ey-card-deep);
+  border: 1px solid var(--ey-card-deep);
+  border-top-width: 4px;
   overflow: hidden;
   cursor: pointer;
   text-align: left;
   transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 .wrong-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(239, 68, 68, 0.45);
-  box-shadow: 0 8px 24px rgba(46, 46, 56, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
-.wrong-card:focus-visible { outline: 2px solid #FF4136; outline-offset: 2px; }
+.wrong-card:focus-visible { outline: 2px solid var(--destructive); outline-offset: 2px; }
 .wrong-card-top {
   position: relative;
-  height: 120px;
-  padding: 0;
-  background: var(--off-white);
+  width: 100%;
+  height: 148px;
+  flex-shrink: 0;
+  padding: 6px;
+  background: var(--ey-card-deep);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
 .wrong-card-top img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top;
+  object-fit: contain;
+  object-position: center center;
   display: block;
 }
-/* Same EY Insight Card device as .rise-card, in the section's danger red */
 .wrong-card-top::after {
   content: '';
   position: absolute;
-  left: 14px; right: 14px; top: 14px;
-  height: 46px;
-  border: 2px solid #FF4136;
-  border-bottom: none;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: linear-gradient(0deg, var(--ey-card-deep) 0%, transparent 100%);
   pointer-events: none;
 }
 .wrong-card-body {
-  padding: 18px;
-  background: transparent;
+  padding: 16px 16px 20px;
+  background: var(--ey-card-deep);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 16px;
   flex: 1;
+  min-height: 0;
 }
 .wrong-card-meta {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 11px; margin: 0;
+  display: flex;
+  align-items: center;
+  margin: 0;
 }
-.wrong-card-meta .source { font-weight: 700; color: #FF4136; text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px; }
+.wrong-card-meta .source {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'EYInterstate:Bold', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: var(--destructive);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 10px;
+  line-height: 1;
+}
+.wrong-card-meta .source::before,
+.wrong-card-meta .source::after {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.wrong-card-meta .source::before { background: var(--ey-yellow); }
+.wrong-card-meta .source::after { background: var(--destructive); }
 .wrong-card-body p {
-  font-size: 15px; line-height: 1.35;
-  color: var(--ey-dark); font-weight: 700;
+  font-family: 'EYInterstate:Light', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ey-on-dark);
+  font-weight: 300;
   letter-spacing: -0.01em;
   margin: 0;
   flex: 1;
+  min-height: 0;
 }
 .wrong-card-body .date {
-  font-size: 12px;
-  color: var(--muted-foreground);
-  margin-top: 4px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(239, 68, 68, 0.12);
+  font-family: 'EYInterstate:Regular', Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--gray-02);
+  margin: 0;
+  margin-top: auto;
+  padding: 0;
+  border-top: none;
+  flex-shrink: 0;
 }
 @media (max-width: 900px) {
   .wrong-section { padding: 56px 24px; }
@@ -699,13 +790,6 @@ body {
   border: 1px solid var(--gva-border);
   background: var(--gva-surface);
   color: currentColor;
-}
-.gva-colhead-kicker {
-  margin: 0 0 4px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 .gva-colhead-title {
   margin: 0;
@@ -1310,14 +1394,23 @@ body {
   margin: 0 0 28px;
   width: 100%;
 }
+.evo-section > .section-anchor-title,
+.evo-section > .evo-title,
+.evo-section > .evo-sub {
+  text-align: center;
+}
 /* Parent → child concentric nest (wraps the featured card) */
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
-/* ===== BREADCRUMB → TIMELINE BAR (rectangular pills + connector) ===== */
+/* Breadcrumb strip hidden — Figma uses nested left panel only */
 .evo-breadcrumb {
+  display: none;
+}
+/* ===== BREADCRUMB → TIMELINE BAR (rectangular pills + connector) ===== */
+.evo-breadcrumb--legacy {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -1451,6 +1544,8 @@ body {
   width: 100%;
 }
 .evo-nest-layer {
+  width: 100%;
+  box-sizing: border-box;
   border: 1.5px solid #2E2E38;
   border-radius: 16px;
   padding: 10px;
@@ -1464,13 +1559,28 @@ body {
   display: flex; align-items: center; gap: 10px;
   min-height: 28px;
   padding: 0 4px 2px;
+  width: 100%;
+  flex-shrink: 0;
 }
 .evo-nest-layer .evo-nest-dot {
   width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
 }
 .evo-nest-layer .evo-nest-label {
-  font-size: 12px; font-weight: 700; color: #C4C4CD;
+  font-size: 12px; font-weight: 400; color: var(--gray-02);
   letter-spacing: 0.02em;
+}
+.evo-nest-layer .evo-nest-year {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ey-yellow);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.evo-nest-nav-icon {
+  margin-left: 6px;
+  flex-shrink: 0;
 }
 .evo-nest-layer.is-ancestor {
   border-color: #2E2E38;
@@ -1478,68 +1588,42 @@ body {
 .evo-nest-layer.is-current {
   border-color: var(--ey-yellow);
   background: rgba(255,230,0,0.04);
-  padding: 0;
+  padding: 11.5px;
   overflow: hidden;
 }
 .evo-nest-layer.is-current > .evo-nest-row {
-  padding: 10px 14px;
+  padding: 8px 12px;
   background: rgba(255,230,0,0.1);
-  border-bottom: 1px solid rgba(255,230,0,0.22);
+  border-bottom: none;
+  border-radius: 8px;
 }
+.evo-nest-layer.is-current .evo-nest-label { color: var(--off-white); }
 .evo-nest-layer.is-current > .evo-nest-row.evo-nest-row-nav:hover {
   background: rgba(255,230,0,0.16);
 }
 .evo-nest-layer.is-current .evo-nest-label { color: #FFFFFF; }
-.evo-nest-toggle { cursor: pointer; border-radius: 8px; }
-.evo-nest-toggle:hover { background: rgba(255,255,255,0.04); }
-.evo-nest-toggle:focus-visible { outline: 2px solid var(--ey-yellow); outline-offset: 2px; }
-/* Ancestor rows that navigate to a specific era */
+/* Layer rows that navigate to a specific era */
 .evo-nest-row-nav { cursor: pointer; border-radius: 8px; }
 .evo-nest-row-nav:hover { background: rgba(255,255,255,0.05); }
 .evo-nest-row-nav:focus-visible { outline: 2px solid var(--ey-yellow); outline-offset: 2px; }
 .evo-nest-nav-icon,
-.evo-nest-chevron,
 .evo-nest-row-icon {
-  margin-left: auto;
   flex-shrink: 0;
-  color: #C4C4CD;
+  color: var(--gray-02);
   opacity: 1;
   transition: opacity 0.15s, transform 0.15s;
 }
 .evo-nest-row-nav:hover .evo-nest-nav-icon { opacity: 1; transform: translateX(3px); }
-.evo-nest-chevron { transition: transform 0.25s ease; }
-#evo-nest.is-collapsed .evo-nest-chevron { transform: rotate(-90deg); }
-/* Collapsed: fold every ring down to a single summary line above the featured card */
-#evo-nest.is-collapsed .evo-nest-layer {
-  border-color: transparent;
-  background: transparent;
-  padding: 0;
-}
-#evo-nest.is-collapsed .evo-nest-layer > .evo-nest-layer { margin-top: 0; }
-#evo-nest.is-collapsed .evo-nest-row { display: none; }
-#evo-nest.is-collapsed > .evo-nest-layer {
-  border: 1.5px solid #2E2E38;
-  border-radius: 12px;
-  padding: 10px 14px;
-  background: rgba(255,255,255,0.015);
-  margin-bottom: 12px;
-}
-#evo-nest.is-collapsed > .evo-nest-layer > .evo-nest-row { display: flex; padding: 0; }
 .evo-featured {
   display: flex;
   flex-direction: column;
   gap: 0;
-  background: #1A1A24;
+  background: var(--surface-dark-card, #1A1A24);
   border: none;
   border-radius: 0 0 14px 14px;
   overflow: hidden;
-  min-height: 420px;
+  min-height: 400px;
   margin-bottom: 0;
-}
-/* When featured is alone (pre-init), keep a frame */
-.evo-concentric > .evo-featured {
-  border: 1px solid #2E2E38;
-  border-radius: 12px;
 }
 .evo-featured-img {
   width: 100%;
@@ -1614,9 +1698,64 @@ body {
 }
 .evo-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .evo-chip {
-  border: 1px solid #2E2E38; background: #1A1A24;
-  color: #C4C4CD; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--ey-dark); background: var(--ey-dark);
+  color: var(--ey-on-dark); font-size: 12px; font-weight: 600;
   padding: 8px 12px; border-radius: 999px;
+}
+/* Two-column layout: nested layers (left) + featured detail card (right) */
+.evo-layout {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+}
+#evo-nest,
+.evo-nest {
+  flex: 0 0 292px;
+  width: 292px;
+  min-width: 292px;
+  max-width: 292px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  align-self: stretch;
+}
+/* Nest: stretch outer + inner rings to match featured-shell height */
+#evo-nest > .evo-nest-layer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+#evo-nest .evo-nest-layer > .evo-nest-layer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.evo-featured-shell {
+  flex: 0 0 calc(100% - 316px);
+  width: calc(100% - 316px);
+  min-width: 0;
+  border: 1.5px solid var(--ey-yellow);
+  border-radius: 16px;
+  background: rgba(255,230,0,0.04);
+  overflow: hidden;
+}
+.evo-featured-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+  padding: 8px 12px;
+  background: rgba(255,230,0,0.1);
+  border-bottom: 1px solid rgba(255,230,0,0.22);
+}
+.evo-featured-header .evo-nest-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.evo-featured-header .evo-nest-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--off-white);
+  letter-spacing: 0.02em;
 }
 .evo-body {
   display: flex;
@@ -1705,12 +1844,15 @@ body {
     padding-top: 48px;
     padding-bottom: 48px;
   }
+  .evo-featured-shell {
+    min-height: 563px;
+  }
   .evo-featured {
     display: grid;
-    grid-template-columns: min(520px, 45%) 1fr;
+    grid-template-columns: min(490px, 48%) 1fr;
     grid-template-rows: minmax(400px, auto);
     gap: 0 24px;
-    min-height: 400px;
+    min-height: 525px;
     position: relative;
   }
   .evo-featured-img {
@@ -1781,6 +1923,9 @@ body {
 
 @media (max-width: 1100px) {
   .evo-section { padding: 64px 24px; }
+  .evo-layout { flex-direction: column; }
+  .evo-nest { flex: 1 1 auto; align-items: stretch; width: 100%; max-width: none; }
+  .evo-featured-shell { flex: 1 1 auto; width: 100%; max-width: none; }
   .evo-featured-img { min-height: 240px; }
   .evo-featured-foot { padding: 0 24px 24px; }
   .evo-body { flex-direction: column; }
@@ -2446,6 +2591,7 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 <!-- ======== ACT NOW — The AI Advantage Won't Wait ======== -->
 <section class="section velocity-section surface-neutral" id="act-now">
   <div class="velocity-header">
+    <p class="section-anchor-title">Act Now</p>
     <h2>The AI Advantage Won't Wait</h2>
     <p class="velocity-sub">The biggest risk today isn't using AI incorrectly — it's waiting too long to start.</p>
   </div>
@@ -2880,6 +3026,7 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 
 <!-- ======== SECTION 2 — The Meteoric Rise of AI (Figma 3519:3028) ======== -->
 <section id="rise-of-ai" class="rise-section surface-dark" aria-labelledby="rise-heading">
+  <p class="section-anchor-title section-anchor-title--center section-anchor-title--dark">Understanding AI</p>
   <h2 id="rise-heading" class="rise-title">The <span class="hl">Meteoric Rise</span> of AI</h2>
   <p class="rise-sub">Recent headlines capturing AI's explosive growth</p>
   <!-- <p class="rise-hint">click any card to view the full article</p> -->
@@ -3076,15 +3223,23 @@ document.addEventListener('keydown', function(e) {
 
 <!-- ======== AI EVOLUTION TIMELINE (Figma 3276:17185) ======== -->
 <section class="evo-section surface-dark" id="evolution" aria-labelledby="evo-heading">
+  <p class="section-anchor-title section-anchor-title--dark">Evolution</p>
   <h2 id="evo-heading" class="evo-title">The Evolution of AI</h2>
   <p class="evo-sub">Each layer is a subset of the one before it — building on the last</p>
 
   <div id="evo-timeline-view">
-    <nav class="evo-breadcrumb" id="evo-breadcrumb" aria-label="AI evolution eras timeline, current era highlighted"></nav>
+    <nav class="evo-breadcrumb" id="evo-breadcrumb" aria-label="AI evolution eras timeline, current era highlighted" hidden></nav>
 
-    <div class="evo-body">
-      <!-- Concentric nest: ancestor rings wrap the featured card -->
-      <div class="evo-concentric" id="evo-nest" role="img" aria-label="Technology nesting from parent to child">
+    <div class="evo-layout">
+      <!-- Left: nested technology layers (Figma left panel) -->
+      <div class="evo-nest" id="evo-nest" role="img" aria-label="Technology nesting from parent to child"></div>
+
+      <!-- Right: featured era detail card (Figma right panel) -->
+      <div class="evo-featured-shell" id="evo-featured-shell">
+        <div class="evo-featured-header" id="evo-featured-header">
+          <span class="evo-nest-dot" id="evo-feat-header-dot" style="background:#4696FF"></span>
+          <span class="evo-nest-label" id="evo-feat-header-title">Artificial Intelligence</span>
+        </div>
         <div class="evo-featured" id="evo-featured">
           <div class="evo-featured-img"><img id="evo-feat-img" src="/evo-ai.png" alt=""></div>
           <div class="evo-featured-body">
@@ -3109,10 +3264,8 @@ document.addEventListener('keydown', function(e) {
           </div>
         </div>
       </div>
-
-      <!-- evo-previews panel hidden per request -->
-      <!-- <div class="evo-previews" id="evo-previews"></div> -->
     </div>
+  </div>
 
     <!-- Cabinet Analogy entry — temporarily removed from page
     <div class="evo-cabinet">
@@ -3271,11 +3424,19 @@ document.addEventListener('keydown', function(e) {
 .inside-tab-btn { flex:1 1 0; white-space:nowrap; padding:6px 8px; font-size:10px; font-weight:400; font-family:inherit; border-radius:8px 8px 0 0; border:1px solid transparent; border-bottom:none; background:transparent; color:var(--gray-01); cursor:pointer; transition:background 0.15s ease, color 0.15s ease; }
 .inside-tab-btn:hover { background:rgba(46,46,56,0.03); }
 .inside-tab-btn.is-active { background:var(--white); color:var(--tab-color, var(--ey-dark)); border-color:rgba(46,46,56,0.08); font-weight:700; box-shadow:inset 0 -2px 0 var(--tab-color, var(--accent-blue)); }
-.inside-tab-panel { padding:8px 10px; background:var(--white); flex:1 1 auto; min-height:0; overflow-y:auto; }
+.inside-tab-panel {
+  padding:8px 10px; background:var(--white);
+  flex:1 1 auto; min-height:0; overflow-y:auto;
+  display:flex; flex-direction:column;
+}
+/* Tab body fills remaining card height; content stays top-aligned inside */
+.inside-tab-panel > div {
+  flex:1 1 auto; align-self:stretch; box-sizing:border-box;
+}
 /* Chat padding lives in CSS so inside-beat can override without fighting inline styles */
 #copilot-chat { padding:28px; box-sizing:border-box; }
 /* Inside beat: 16px chat padding; flip wrap + concepts card fill available chat height */
-#copilot-chat.is-inside-beat { padding:16px; display:flex; flex-direction:column; }
+#copilot-chat.is-inside-beat { padding:16px; display:flex; flex-direction:column; overflow:hidden; }
 #copilot-chat.is-inside-beat > .inside-beat-wrap {
   flex:1 1 auto; min-height:0; height:100%; align-self:stretch;
   display:flex; flex-direction:column;
@@ -3328,15 +3489,86 @@ document.addEventListener('keydown', function(e) {
   0%, 100% { opacity:1; transform:scale(1); }
   50% { opacity:0.55; transform:scale(1.15); }
 }
-/* Fabricated-quote card — pulses its border/ring, never its fill */
-.hallucination-quote-pulse { animation:pulseRedStroke 2s ease-in-out infinite; }
+/* Fabricated-response card — quote + reaction lines read as one unified block */
+.hallucination-fabricated-block {
+  background:rgba(255,65,54,0.05);
+  border:1px solid rgba(255,65,54,0.18);
+  border-radius:10px;
+  margin-bottom:14px;
+  overflow:hidden;
+}
+.hallucination-fabricated-block.hallucination-quote-pulse { animation:pulseRedStroke 2s ease-in-out infinite; }
+.hallucination-fabricated-quote {
+  background:rgba(255,65,54,0.07);
+  border-bottom:1px solid rgba(255,65,54,0.12);
+  padding:12px 16px;
+}
+.hallucination-fabricated-quote p {
+  color:var(--ey-dark);
+  font-size:14px;
+  font-style:italic;
+  line-height:1.7;
+  margin:0;
+  text-align:left;
+}
+.hallucination-fabricated-caption {
+  padding:10px 16px 12px;
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+}
+.hallucination-fabricated-caption p {
+  display:inline-flex;
+  align-items:center;
+  color:var(--text-secondary);
+  font-size:12px;
+  line-height:1.4;
+  margin:0;
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid rgba(46,46,56,0.12);
+  background:rgba(46,46,56,0.04);
+}
+.hallucination-fabricated-kicker {
+  color:var(--accent-red);
+  font-weight:700;
+  border-color:rgba(255,65,54,0.25);
+  background:rgba(255,65,54,0.08);
+}
+.copilot-everyday-analogy {
+  padding:10px 14px;
+  background:var(--ey-yellow-alpha-10);
+  border:1.5px solid var(--gray-02);
+  border-left:3px solid var(--ey-yellow);
+  border-radius:8px;
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  color:var(--ey-dark);
+}
+.copilot-everyday-analogy svg {
+  flex-shrink:0;
+  margin-top:1px;
+  stroke:currentColor;
+}
+.copilot-everyday-analogy__text {
+  color:var(--ey-dark);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.3px;
+  line-height:1.5;
+  text-transform:uppercase;
+  margin:0;
+}
 @keyframes pulseRedStroke {
   0%, 100% { border-color:rgba(255,65,54,0.2); box-shadow:0 0 0 0 rgba(255,65,54,0); }
   50% { border-color:rgba(255,65,54,0.7); box-shadow:0 0 0 3px rgba(255,65,54,0.12); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hallucination-warn-icon { animation:none; }
-  .hallucination-quote-pulse { animation:none; border-color:rgba(255,65,54,0.5); }
+  .hallucination-fabricated-block.hallucination-quote-pulse { animation:none; border-color:rgba(255,65,54,0.5); }
 }
 /* Staggered reveal for lists rendered one-after-another (human-in-loop checklist, recap stages) */
 .stagger-in { opacity:0; animation:fadeInMsg 0.4s ease-out forwards; }
@@ -3348,6 +3580,9 @@ document.addEventListener('keydown', function(e) {
   #demo-actions > div { gap:12px; }
   #copilot-window { height:auto; max-height:none; min-height:420px; }
   #ask-explainer [style*="grid-template-columns"] { grid-template-columns:1fr !important; }
+  .hitl-checklist-grid { grid-template-columns:1fr !important; }
+  .hallucination-fabricated-caption { gap:6px; padding:10px 12px 12px; }
+  .hallucination-fabricated-caption p { font-size:11px; padding:4px 10px; }
 }
 </style>
 <script>
@@ -3368,12 +3603,13 @@ function addMessage(role, html) {
 }
 
 // Same as addMessage but skips the role avatar — full-width card, no left column.
+// Tall explainer cards (e.g. hallucination beat) should open at the top of the scroll area.
 function addMessagePlain(html) {
   const msg = document.createElement('div');
   msg.style.cssText = 'margin-bottom:20px; animation:fadeInMsg 0.5s ease-out forwards; opacity:0;';
   msg.innerHTML = html;
   chatEl.appendChild(msg);
-  chatEl.scrollTop = chatEl.scrollHeight;
+  chatEl.scrollTop = 0;
 }
 
 // Compact bubble for genuine back-and-forth lines (as opposed to the wide
@@ -3559,6 +3795,7 @@ function renderBeat(flipIn) {
   if (window._typer) clearInterval(window._typer);
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = '';
+  chatEl.scrollTop = 0;
   // Window is fixed at 480px; chat flexes and scrolls — no per-beat height rewriting
   chatEl.style.transition = '';
   chatEl.style.height = '';
@@ -3672,21 +3909,20 @@ function renderBeat(flipIn) {
   } else if (beat === 'hallucination') {
     barEl.style.display = 'none';
     if (winEl) winEl.classList.add('is-hallucinating');
-    addMessagePlain(`<div style="padding:16px 18px;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg class="hallucination-warn-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="var(--ey-yellow)" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round"/></svg><span style="color:var(--accent-red);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">What Could Go Wrong? — Hallucination</span></div><div style="background:rgba(255,65,54,0.06);border:1px solid rgba(255,65,54,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">Suppose the AI generates this instead:</p></div><div class="hallucination-quote-pulse" style="background:rgba(255,65,54,0.05);border:1px solid rgba(255,65,54,0.2);border-radius:16px 16px 16px 4px;padding:12px 16px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-style:italic;line-height:1.7;margin:0;text-align:left;">&ldquo;Every online seller is required to register for GST in every Indian state where customers are located.&rdquo;</p></div><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">This sounds professional.</p><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">It sounds confident.</p><p style="color:var(--text-dim);font-size:13px;margin-bottom:14px;">But it may not be accurate.</p><div style="border-top:1px solid rgba(46,46,56,0.06);padding-top:12px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin-bottom:4px;">What Happened?</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI filled gaps with something that sounded plausible.</p></div><div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--accent-red);font-size:13px;font-weight:700;">Hallucination = A confident answer that may be wrong</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;">Everyday Analogy — Like a student who doesn’t know the answer but writes something that sounds convincing.</div></div></div></div>`);
+    addMessagePlain(`<div style="padding:16px 18px;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg class="hallucination-warn-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="var(--ey-yellow)" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round"/></svg><span style="color:var(--accent-red);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">What Could Go Wrong? — Hallucination</span></div><div style="background:rgba(255,65,54,0.06);border:1px solid rgba(255,65,54,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">Suppose the AI generates this instead:</p></div><div class="hallucination-fabricated-block hallucination-quote-pulse"><div class="hallucination-fabricated-quote"><p>&ldquo;Every online seller is required to register for GST in every Indian state where customers are located.&rdquo;</p></div><div class="hallucination-fabricated-caption"><p>This sounds professional.</p><p>It sounds confident.</p><p class="hallucination-fabricated-kicker">But it may not be accurate.</p></div></div><div style="border-top:1px solid rgba(46,46,56,0.06);padding-top:12px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin-bottom:4px;">What Happened?</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI filled gaps with something that sounded plausible.</p></div><div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--accent-red);font-size:13px;font-weight:700;">Hallucination = A confident answer that may be wrong</span></div><div class="copilot-everyday-analogy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p class="copilot-everyday-analogy__text">Everyday Analogy — Like a student who doesn’t know the answer but writes something that sounds convincing.</p></div></div>`);
     appendBeatNext('Next');
+    requestAnimationFrame(function () { chatEl.scrollTop = 0; });
 
   } else if (beat === 'you') {
     barEl.style.display = 'none';
-    addMessage('You', `<div style="padding:16px 18px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="color:var(--accent-green);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Human in the Loop</span></div><div style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">What Happens Next?</p><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">The tax professional reviews the answer.</p></div><p style="color:var(--text-secondary);font-size:13px;margin-bottom:8px;">The professional:</p><div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;"><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.05s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Validates the facts</span></div><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.2s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Checks current legislation</span></div><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.35s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Verifies interpretations</span></div><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.5s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Applies professional judgment</span></div></div><div style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.15);border-left:3px solid rgba(0,200,100,0.4);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--accent-green);font-size:12px;font-weight:700;margin-bottom:4px;">Revised Response</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI-generated draft is corrected and refined before being relied upon.</p></div><div style="background:var(--ey-yellow);border:1px solid var(--ey-yellow);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ey-dark)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--ey-dark);font-size:13px;font-weight:700;">Human in the Loop = AI assists. Humans decide.</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;">Everyday Analogy - Like GPS suggesting a route. You are still responsible for driving the car.</div></div></div></div>`);
+    addMessagePlain(`<div style="padding:16px 18px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="color:var(--accent-green);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Human in the Loop</span></div><div style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">What Happens Next?</p><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">The tax professional reviews the answer.</p></div><p style="color:var(--text-secondary);font-size:13px;margin-bottom:8px;">The professional:</p><div class="hitl-checklist-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;"><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.05s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Validates the facts</span></div><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.2s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Checks current legislation</span></div><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.35s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Verifies interpretations</span></div><div class="stagger-in" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:6px;animation-delay:0.5s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--text-secondary);font-size:13px;">Applies professional judgment</span></div></div><div style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.15);border-left:3px solid rgba(0,200,100,0.4);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--accent-green);font-size:12px;font-weight:700;margin-bottom:4px;">Revised Response</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI-generated draft is corrected and refined before being relied upon.</p></div><div style="background:var(--ey-yellow);border:1px solid var(--ey-yellow);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ey-dark)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--ey-dark);font-size:13px;font-weight:700;">Human in the Loop = AI assists. Humans decide.</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div><div style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px;">Everyday Analogy - Like GPS suggesting a route. You are still responsible for driving the car.</div></div></div></div>`);
     appendBeatNext('Next');
+    requestAnimationFrame(function () { chatEl.scrollTop = 0; });
 
   } else if (beat === 'better') {
     barEl.style.display = 'none';
-    // Recap opens back on the actual conversation — prompt then response,
-    // stacked like a real chat thread — before the full-journey summary below.
-    addChatBubble('You', 'Summarize the GST implications for an online seller selling goods across multiple Indian states');
-    addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.');
-    addMessage('AI', `<div style="padding:22px;background:linear-gradient(160deg,rgba(255,230,0,0.04) 0%,rgba(0,200,100,0.04) 100%);border:1px solid var(--gray-02);border-radius:16px;animation:fadeInMsg 0.5s ease;"><div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(46,46,56,0.06);"><div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,230,0,0.07);border:1px solid rgba(255,230,0,0.18);border-radius:20px;padding:4px 14px;margin-bottom:10px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">THE FULL JOURNEY</span></div><div style="color:var(--ey-dark);font-size:16px;font-weight:700;margin-bottom:4px;">Inside Every AI Conversation</div><div style="color:var(--text-muted);font-size:12px;">Every response you receive passes through all of these layers.</div></div><div style="display:flex;flex-direction:column;gap:3px;"><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.0s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--ey-yellow);background:rgba(255,230,0,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--ey-yellow);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,230,0,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,230,0,0.1);"><span style="color:var(--eyebrow-gold);font-size:11px;font-weight:700;">PROMPT</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">You asked</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.08s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-blue);background:rgba(70,150,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-blue);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(70,150,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(70,150,255,0.1);"><span style="color:var(--accent-blue);font-size:11px;font-weight:700;">TOKENS</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI read</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.16s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-green);background:rgba(0,200,100,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-green);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(0,200,100,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(0,200,100,0.1);"><span style="color:var(--accent-green);font-size:11px;font-weight:700;">LLM</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI understood</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.24s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-purple);background:rgba(180,0,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-purple);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(180,0,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(180,0,255,0.1);"><span style="color:var(--accent-purple);font-size:11px;font-weight:700;">KNOWLEDGE LAYER</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI knew where to look</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.32s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-orange);background:rgba(255,125,30,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-orange);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,125,30,0.04);border:1px solid rgba(255,125,30,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,125,30,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,125,30,0.1);"><span style="color:var(--accent-orange);font-size:11px;font-weight:700;">RAG</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI checked</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.4s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-blue);background:rgba(70,150,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-blue);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(70,150,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(70,150,255,0.1);"><span style="color:var(--accent-blue);font-size:11px;font-weight:700;">OUTPUT</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI drafted</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.48s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-red);background:rgba(255,65,54,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-red);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,65,54,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,65,54,0.1);"><span style="color:var(--accent-red);font-size:11px;font-weight:700;">HALLUCINATION</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI could still be wrong</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.56s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-green);background:rgba(0,200,100,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-green);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(0,200,100,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(0,200,100,0.1);"><span style="color:var(--accent-green);font-size:11px;font-weight:700;">HUMAN IN THE LOOP</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">Professional judgment ensured accuracy</span></div></div></div></div><div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(46,46,56,0.06);text-align:center;"><span style="color:var(--text-muted);font-size:12px;font-style:italic;">Now you know what happens inside every AI response.</span></div></div>`);
+    addMessagePlain(`<div style="padding:22px;background:linear-gradient(160deg,rgba(255,230,0,0.04) 0%,rgba(0,200,100,0.04) 100%);border:1px solid var(--gray-02);border-radius:16px;animation:fadeInMsg 0.5s ease;"><div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(46,46,56,0.06);"><div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,230,0,0.07);border:1px solid rgba(255,230,0,0.18);border-radius:20px;padding:4px 14px;margin-bottom:10px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">THE FULL JOURNEY</span></div><div style="color:var(--ey-dark);font-size:16px;font-weight:700;margin-bottom:4px;">Inside Every AI Conversation</div><div style="color:var(--text-muted);font-size:12px;">Every response you receive passes through all of these layers.</div></div><div style="display:flex;flex-direction:column;gap:3px;"><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.0s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--ey-yellow);background:rgba(255,230,0,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--ey-yellow);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,230,0,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,230,0,0.1);"><span style="color:var(--eyebrow-gold);font-size:11px;font-weight:700;">PROMPT</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">You asked</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.08s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-blue);background:rgba(70,150,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-blue);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(70,150,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(70,150,255,0.1);"><span style="color:var(--accent-blue);font-size:11px;font-weight:700;">TOKENS</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI read</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.16s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-green);background:rgba(0,200,100,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-green);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(0,200,100,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(0,200,100,0.1);"><span style="color:var(--accent-green);font-size:11px;font-weight:700;">LLM</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI understood</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.24s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-purple);background:rgba(180,0,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-purple);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(180,0,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(180,0,255,0.1);"><span style="color:var(--accent-purple);font-size:11px;font-weight:700;">KNOWLEDGE LAYER</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI knew where to look</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.32s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-orange);background:rgba(255,125,30,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-orange);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,125,30,0.04);border:1px solid rgba(255,125,30,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,125,30,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,125,30,0.1);"><span style="color:var(--accent-orange);font-size:11px;font-weight:700;">RAG</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI checked</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.4s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-blue);background:rgba(70,150,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-blue);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(70,150,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(70,150,255,0.1);"><span style="color:var(--accent-blue);font-size:11px;font-weight:700;">OUTPUT</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI drafted</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.48s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-red);background:rgba(255,65,54,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-red);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,65,54,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,65,54,0.1);"><span style="color:var(--accent-red);font-size:11px;font-weight:700;">HALLUCINATION</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI could still be wrong</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.56s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-green);background:rgba(0,200,100,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-green);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(0,200,100,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(0,200,100,0.1);"><span style="color:var(--accent-green);font-size:11px;font-weight:700;">HUMAN IN THE LOOP</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">Professional judgment ensured accuracy</span></div></div></div></div><div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(46,46,56,0.06);text-align:center;"><span style="color:var(--text-muted);font-size:12px;font-style:italic;">Now you know what happens inside every AI response.</span></div></div>`);
+    requestAnimationFrame(function () { chatEl.scrollTop = 0; });
     var dBtn = document.getElementById('demo-continue-btn'); if (dBtn) dBtn.style.display = 'none';
   }
 }
@@ -3707,6 +3943,7 @@ window.toggleAcc = toggleAcc;
 
 <!-- ======== CHEAT SHEET — Think Beyond Drafting (CREATE / UNDERSTAND / ORGANIZE / THINK) ======== -->
 <section class="section surface-neutral cheat-section" id="cheatsheet" aria-labelledby="cheat-heading">
+  <p class="section-anchor-title">Cheat Sheet</p>
   <h2 id="cheat-heading" class="cheat-title">Think Beyond Drafting and Summarisation</h2>
   <p class="cheat-subtitle">Generative AI can be your smart thought partner</p>
 
@@ -3889,14 +4126,14 @@ window.toggleAcc = toggleAcc;
 /* Cheat sheet — EY tokens (Off White surface, white cards, Off Black type) */
 .cheat-section {
   --cheat-row-gap: 12px;
-  --cheat-head-w: 148px;
   --cheat-head-min-h: 56px;
   --cheat-pad: 16px;
   --cheat-card-gap: 12px;
+  --cheat-eg-min-h: 80px;
   --cheat-radius: 8px;
   --cheat-accent: 3px;
-  /* Closed rows — slightly darker than Off White section surface */
-  --cheat-row-closed: color-mix(in srgb, var(--off-white) 92%, var(--ey-dark) 8%);
+  /* Closed rows — full dark fill (matches open header bar) */
+  --cheat-row-closed: var(--ey-bg-card);
   padding: 72px 64px;
   text-align: center;
   background: var(--off-white);
@@ -3939,7 +4176,7 @@ window.toggleAcc = toggleAcc;
   list-style: none;
   position: relative;
   box-sizing: border-box;
-  flex: 0 0 var(--cheat-head-w);
+  flex: 1 1 auto;
   min-height: var(--cheat-head-min-h);
   padding: var(--cheat-pad);
   display: flex;
@@ -3963,18 +4200,45 @@ window.toggleAcc = toggleAcc;
   width: var(--cheat-accent);
   background: currentColor;
 }
-.cheat-col:not([open]) .cheat-col-head {
+.cheat-col:not([open]) {
+  width: 100%;
   background: var(--cheat-row-closed);
-  border-color: var(--gray-02);
-  color: var(--ey-dark);
+  border: 1px solid var(--ey-border-on-dark);
   border-radius: var(--cheat-radius);
+  box-sizing: border-box;
+}
+.cheat-col:not([open]) .cheat-col-head {
+  flex: 1 1 auto;
+  width: auto;
+  background: transparent;
+  border: none;
+  color: var(--ey-on-dark);
+  border-radius: var(--cheat-radius);
+  overflow: visible;
 }
 .cheat-col:not([open]) .cheat-chevron {
-  color: var(--gray-01);
+  color: var(--ey-on-dark-72);
+}
+/* Open row — stacked: full-width header, cards below (Figma 3642:4241) */
+.cheat-col[open] {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  border: 1px solid var(--gray-02);
+  border-radius: var(--cheat-radius);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .cheat-col[open] .cheat-col-head {
-  border-radius: var(--cheat-radius) 0 0 var(--cheat-radius);
-  border-right: none;
+  flex: none;
+  width: 100%;
+  height: auto;
+  min-height: var(--cheat-head-min-h);
+  max-height: none;
+  align-self: stretch;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--ey-border-on-dark);
 }
 .cheat-col-head::-webkit-details-marker { display: none; }
 .cheat-col-label {
@@ -3997,10 +4261,10 @@ window.toggleAcc = toggleAcc;
 .cheat-col[data-tone="create"] { color: var(--ey-dark); }
 /* Dark header bar — accent via ::before + icon tint only */
 .cheat-col[data-tone="create"] .cheat-col-head { color: var(--ey-on-dark); }
-.cheat-col:not([open])[data-tone="create"] .cheat-col-head { color: var(--ey-dark); }
+.cheat-col:not([open])[data-tone="create"] .cheat-col-head { color: var(--ey-on-dark); }
 .cheat-col[data-tone="create"] .cheat-col-head::before { background: var(--ey-yellow); }
 .cheat-col[data-tone="create"] .cheat-col-label { color: var(--ey-on-dark); }
-.cheat-col:not([open])[data-tone="create"] .cheat-col-label { color: var(--ey-dark); }
+.cheat-col:not([open])[data-tone="create"] .cheat-col-label { color: var(--ey-on-dark); }
 .cheat-col[data-tone="create"] .cheat-col-label svg { color: var(--ey-yellow); }
 .cheat-col[data-tone="understand"] .cheat-col-head { color: var(--accent-blue); }
 .cheat-col[data-tone="understand"] .cheat-col-head::before { background: var(--accent-blue); }
@@ -4014,7 +4278,8 @@ window.toggleAcc = toggleAcc;
 .cheat-col[data-tone="think"] .cheat-card-icon { color: var(--accent-purple); }
 .cheat-col-body {
   display: none;
-  flex: 1;
+  flex: none;
+  width: 100%;
   min-width: 0;
   flex-direction: row;
   align-items: stretch;
@@ -4022,9 +4287,8 @@ window.toggleAcc = toggleAcc;
   padding: var(--cheat-pad);
   box-sizing: border-box;
   background: var(--white);
-  border: 1px solid var(--gray-02);
-  border-left: none;
-  border-radius: 0 var(--cheat-radius) var(--cheat-radius) 0;
+  border: none;
+  border-radius: 0;
 }
 .cheat-col[open] > .cheat-col-body {
   display: flex;
@@ -4041,6 +4305,7 @@ window.toggleAcc = toggleAcc;
   align-items: stretch;
   flex: 1;
   min-width: 0;
+  min-height: 165px;
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 .cheat-card:hover {
@@ -4084,23 +4349,27 @@ window.toggleAcc = toggleAcc;
   line-height: 1.45;
   color: var(--gray-01);
 }
-/* Prompt example — tag/quote box so text stays readable in narrow columns */
+/* Prompt example — yellow-accent quote box (Figma 3642:4266) */
 .cheat-card-eg {
   margin: 0;
+  margin-top: auto;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 12px;
+  min-height: var(--cheat-eg-min-h);
+  padding: 11px 13px 11px 15px;
   border-radius: 6px;
   background: var(--off-white);
-  border: 1px solid var(--gray-02);
-  border-left: 3px solid var(--ey-yellow);
+  border: 1px solid var(--ey-yellow);
+  border-left-width: 3px;
   font-size: 12px;
   font-weight: 400;
   line-height: 1.5;
-  font-style: italic;
   color: var(--ey-dark);
   word-break: break-word;
   overflow-wrap: anywhere;
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
 }
 
 /* Narrow: stacked accordion (header on top, cards below) */
@@ -4110,14 +4379,16 @@ window.toggleAcc = toggleAcc;
   .cheat-subtitle { margin-bottom: 28px; }
   .cheat-col {
     flex-direction: column;
-    background: var(--white);
-    border: 1px solid var(--gray-02);
-    border-radius: var(--cheat-radius);
     gap: 0;
     overflow: hidden;
   }
+  .cheat-col[open] {
+    background: var(--white);
+    border-color: var(--gray-02);
+  }
   .cheat-col:not([open]) {
     background: var(--cheat-row-closed);
+    border-color: var(--ey-border-on-dark);
   }
   .cheat-col:not([open]) .cheat-col-head {
     background: transparent;
@@ -4224,6 +4495,7 @@ window.toggleAcc = toggleAcc;
 
 
 <section class="section surface-dark gva-section" id="genai-vs-agents" aria-labelledby="gva-heading" data-node-id="3519:3747">
+  <p class="section-anchor-title section-anchor-title--dark">GenAI vs Agents</p>
   <h2 id="gva-heading" class="gva-title">LLM vs AI Agent vs Agentic AI</h2>
   <p class="gva-sub">Each level builds on the previous by adding new capabilities. Understanding the difference helps you choose the right tool for the job.</p>
 
@@ -4235,7 +4507,6 @@ window.toggleAcc = toggleAcc;
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>
         </div>
         <div>
-          <p class="gva-colhead-kicker">1 — LLM</p>
           <h3 class="gva-colhead-title">LLM (Generative AI)</h3>
         </div>
       </div>
@@ -4244,7 +4515,6 @@ window.toggleAcc = toggleAcc;
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M17 11l2 2 4-4"/></svg>
         </div>
         <div>
-          <p class="gva-colhead-kicker">2 — AI AGENT</p>
           <h3 class="gva-colhead-title">AI Agent</h3>
         </div>
       </div>
@@ -4253,7 +4523,6 @@ window.toggleAcc = toggleAcc;
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </div>
         <div>
-          <p class="gva-colhead-kicker">3 — AGENTIC AI</p>
           <h3 class="gva-colhead-title">Agentic AI</h3>
         </div>
       </div>
@@ -4550,6 +4819,7 @@ window.toggleAcc = toggleAcc;
 
 <!-- ======== INTERACTIVE EXERCISES ======== -->
 <section class="section surface-neutral quiz-section" id="quiz" style="padding:100px 60px;">
+  <p class="section-anchor-title section-anchor-title--center">Quiz</p>
   <h2>Test Your Understanding</h2>
   <!-- <p class="section-subtitle">Two exercises to check what you have learned.</p> -->
 
@@ -5187,17 +5457,6 @@ const EVO_ERAS = [
   }
 ];
 let evoActive = 0;
-let evoNestCollapsed = false;
-
-function toggleEvoNestCollapse() {
-  evoNestCollapsed = !evoNestCollapsed;
-  const nest = document.getElementById('evo-nest');
-  if (!nest) return;
-  nest.classList.toggle('is-collapsed', evoNestCollapsed);
-  const toggleRow = nest.querySelector('.evo-nest-toggle');
-  if (toggleRow) toggleRow.setAttribute('aria-expanded', String(!evoNestCollapsed));
-}
-window.toggleEvoNestCollapse = toggleEvoNestCollapse;
 
 function renderEvoBreadcrumb(i) {
   const el = document.getElementById('evo-breadcrumb');
@@ -5214,82 +5473,39 @@ function renderEvoBreadcrumb(i) {
 
 function renderEvoNest(i) {
   const nest = document.getElementById('evo-nest');
-  const featured = document.getElementById('evo-featured');
-  if (!nest || !featured) return;
+  if (!nest) return;
 
   renderEvoBreadcrumb(i);
 
-  // Keep the featured card alive — pull it out before rebuilding rings
-  featured.remove();
-
-  // Build concentric rings: outer ancestors → inner current wraps featured
+  // Build concentric rings on the left — all layers always visible
   let outer = null;
   let innermost = null;
-  for (let depth = 0; depth <= i; depth++) {
+  for (let depth = 0; depth < EVO_ERAS.length; depth++) {
     const e = EVO_ERAS[depth];
     const isCurrent = depth === i;
-    const role = depth === 0 && i === 0
-      ? 'Root layer'
-      : isCurrent
-        ? 'You are here'
-        : (depth === 0 ? 'Parent (root) layer' : 'Parent layer');
+    const role = isCurrent ? 'You are here' : (depth < i ? 'Parent layer' : 'Child layer');
 
     const layer = document.createElement('div');
     layer.className = 'evo-nest-layer ' + (isCurrent ? 'is-current' : 'is-ancestor');
     layer.setAttribute('data-depth', String(depth));
 
     const row = document.createElement('div');
-    row.className = 'evo-nest-row';
+    row.className = 'evo-nest-row evo-nest-row-nav';
+    const yearText = e.yearLabel || e.year;
     row.innerHTML =
       `<span class="evo-nest-dot" style="background:${e.dot}"></span>` +
-      `<span class="evo-nest-label">${e.title}<span class="sr-only"> — ${role}</span></span>`;
+      `<span class="evo-nest-label">${e.title}<span class="sr-only"> — ${role}</span></span>` +
+      `<span class="evo-nest-year" aria-label="Era ${yearText}">${yearText}</span>`;
 
-    // Lucide-style stroke icons — every visible nest row shows an affordance by default
-    const chevronDown = '<svg class="evo-nest-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4C4CD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
-    const chevronRight = '<svg class="evo-nest-nav-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
+    row.setAttribute('role', 'button');
+    row.setAttribute('tabindex', '0');
+    row.setAttribute('aria-label', 'Go to ' + e.title);
+    const d = depth;
+    row.addEventListener('click', function () { selectEra(d); });
+    row.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); selectEra(d); }
+    });
 
-    if (depth === 0 && i > 0) {
-      // Root ancestor — collapse/expand the nest rings (chevron rotates when collapsed)
-      row.classList.add('evo-nest-toggle');
-      row.setAttribute('role', 'button');
-      row.setAttribute('tabindex', '0');
-      row.setAttribute('aria-expanded', String(!evoNestCollapsed));
-      row.setAttribute('aria-label', 'Expand or collapse the nested technology layers');
-      row.insertAdjacentHTML('beforeend', chevronDown);
-      row.addEventListener('click', toggleEvoNestCollapse);
-      row.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleEvoNestCollapse(); }
-      });
-    } else if (!isCurrent) {
-      // Ancestor row — jump back up to that era
-      row.classList.add('evo-nest-row-nav');
-      row.setAttribute('role', 'button');
-      row.setAttribute('tabindex', '0');
-      row.setAttribute('aria-label', 'Go to ' + e.title);
-      row.insertAdjacentHTML('beforeend', chevronRight);
-      const d = depth;
-      row.addEventListener('click', function () { selectEra(d); });
-      row.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); selectEra(d); }
-      });
-    } else {
-      // Current layer — drill into the next nested child when one exists
-      const hasChild = i < EVO_ERAS.length - 1;
-      if (hasChild) {
-        const child = EVO_ERAS[i + 1];
-        const next = i + 1;
-        row.classList.add('evo-nest-row-nav');
-        row.setAttribute('role', 'button');
-        row.setAttribute('tabindex', '0');
-        row.setAttribute('aria-label', 'Go deeper into ' + child.title);
-        row.insertAdjacentHTML('beforeend', chevronRight);
-        row.addEventListener('click', function () { selectEra(next); });
-        row.addEventListener('keydown', function (ev) {
-          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); selectEra(next); }
-        });
-      }
-      // Leaf era (Agentic) — no chevron; nowhere deeper to go
-    }
     layer.appendChild(row);
 
     if (!outer) outer = layer;
@@ -5297,13 +5513,11 @@ function renderEvoNest(i) {
     innermost = layer;
   }
 
-  innermost.appendChild(featured);
   nest.innerHTML = '';
-  nest.appendChild(outer);
-  nest.classList.toggle('is-collapsed', i > 0 && evoNestCollapsed);
+  if (outer) nest.appendChild(outer);
   nest.setAttribute(
     'aria-label',
-    'Nesting: ' + EVO_ERAS.slice(0, i + 1).map((e) => e.short).join(' contains ')
+    'Nesting: ' + EVO_ERAS.map((e) => e.short).join(' contains ')
   );
 }
 
@@ -5316,7 +5530,8 @@ function selectEra(i) {
 
   img.src = era.image;
   img.alt = era.title;
-  document.getElementById('evo-feat-year').textContent = era.yearLabel || era.year;
+  const yearText = era.yearLabel || era.year;
+  document.getElementById('evo-feat-year').textContent = yearText;
   document.getElementById('evo-feat-title').textContent = era.title;
   document.getElementById('evo-feat-tag').textContent = era.tag;
   document.getElementById('evo-feat-desc').textContent = era.desc;
@@ -5324,6 +5539,11 @@ function selectEra(i) {
   document.getElementById('evo-feat-chips').innerHTML = era.examples.map(e =>
     `<span class="evo-chip">${e}</span>`
   ).join('');
+
+  const headerDot = document.getElementById('evo-feat-header-dot');
+  const headerTitle = document.getElementById('evo-feat-header-title');
+  if (headerDot) headerDot.style.background = era.dot;
+  if (headerTitle) headerTitle.textContent = era.title;
 
   renderEvoNest(i);
 
@@ -5354,9 +5574,8 @@ function selectEra(i) {
 }
 
 function initEvoExplorer() {
-  // Preview cards are the era picker — no separate year-tab strip
   if (!document.getElementById('evo-featured')) return;
-  selectEra(0);
+  selectEra(EVO_ERAS.length - 1);
 }
 
 // Expose for inline handlers + React late inject (DOMContentLoaded already fired)

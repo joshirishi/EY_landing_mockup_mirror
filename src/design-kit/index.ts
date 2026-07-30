@@ -31,7 +31,7 @@ export { EYCard } from './EYCard';
 export { EYFrame } from './EYFrame';
 export { SiteHeader, PlatformModeBadge } from './SiteHeader';
 export type { SiteSection } from './SiteHeader';
-export { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from './LearningNav';
+export { ModuleHeader, ModulePrevNext, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from './LearningNav';
 export { EYWhatsNext, EYWhatsNextHighlight } from './EYWhatsNext';
 export {
   MODULES,
@@ -53,6 +53,7 @@ export {
 } from './curriculum';
 export {
   EYEyebrow,
+  SectionAnchorTitle,
   EYDisplay,
   EYHeading,
   EYSubheading,

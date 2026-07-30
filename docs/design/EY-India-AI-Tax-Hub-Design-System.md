@@ -1,5 +1,12 @@
 # EY India AI Tax Hub — Design System
-**Motif DS 4.17 · Internal Build Reference**
+
+> **⚠️ Deprecated for this codebase.** This document describes **Motif DS 4.17** components (`ds-cards.tsx`, `motif-ds.tsx`, `src/app/components/`) that are **not used** in the current EY.ai Tax Labs app.
+>
+> **Use the canonical spec instead:** [`src/DESIGN.md`](../../src/DESIGN.md) — design kit (`src/design-kit/`), tokens (`tokens.ts`, `theme.css`), and live page patterns.
+>
+> Kept here for historical reference and any future Motif DS dashboard work. Do not treat file paths below as accurate for the learning platform.
+
+**Motif DS 4.17 · Internal Build Reference (legacy)**
 
 > All components must exclusively use CSS custom properties from `/src/styles/theme.css`.  
 > All typography must use the `EYInterstate` font face from `/src/styles/fonts.css`.  

@@ -66,7 +66,7 @@ export const MODULES: CurriculumModule[] = [
       { id: "act-now", label: "Act Now", group: "learn" },
       { id: "rise-of-ai", label: "Understanding AI", group: "learn" },
       { id: "evolution", label: "Evolution", group: "learn" },
-      { id: "terminology", label: "Key Terms", group: "learn" },
+      { id: "terminology", label: "Guided Demo", group: "learn" },
       { id: "cheatsheet", label: "Cheat Sheet", group: "apply" },
       { id: "genai-vs-agents", label: "GenAI vs Agents", group: "learn" },
       { id: "quiz", label: "Quiz", group: "apply" },

@@ -251,3 +251,13 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+/* Prompting Techniques Wizard + Advanced Framework Shell — stacks the fixed-height
+   two-column shells into a single column on small screens. pt-wizard: 760px;
+   af-shell: 650px — preserved on all viewports; inner nav + detail pane scroll independently. */
+@media (max-width: 900px) {
+  .pt-wizard,
+  .af-shell {
+    grid-template-columns: 1fr !important;
+  }
+}

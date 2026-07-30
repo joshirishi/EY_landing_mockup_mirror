@@ -10,7 +10,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
-import { ModuleHeader, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { colors, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
@@ -53,6 +53,7 @@ const TOKEN_BRIDGE = `
   --ey-border-on-dark: ${colors.borderOnDark};
   --ey-yellow-alpha-10: ${colors.yellowAlpha10};
   --ey-bg-card: ${colors.eyBgCard};
+  --ey-card-deep: #54545F;
 
   /* Spacing + global content rail (change layout.contentWidth once → all pages) */
   --ey-content-width: ${layout.contentWidth};
@@ -94,22 +95,65 @@ const TOKEN_BRIDGE = `
   color: ${colors.white};
 }
 
-/* Rise of AI — grey card surfaces (EY off-white); no yellow top bracket */
+/* Rise of AI — dark card surfaces (Figma 3645:4189) */
 #module-content .rise-card,
-#module-content .rise-card-body {
-  background: ${colors.offWhite};
+#module-content .rise-card-body,
+#module-content .rise-card-top--img {
+  background: var(--ey-card-deep);
 }
 #module-content .rise-card {
-  border-color: ${colors.gray02};
+  border-color: var(--ey-card-deep);
+  border-top-width: 4px;
 }
 #module-content .rise-card-top--img::after {
-  content: none;
-  display: none;
-  border: none;
+  background: linear-gradient(0deg, var(--ey-card-deep) 0%, transparent 100%);
+}
+#module-content .rise-card-meta .source {
+  color: ${colors.yellow};
+}
+#module-content .rise-card-meta .source::before {
+  background: ${colors.yellow};
+}
+#module-content .rise-card-body p {
+  color: ${colors.onDark};
+  font-family: ${fonts.light};
+  font-weight: 300;
 }
 #module-content .rise-card-body .date {
-  border-top-color: ${colors.gray02};
-  color: ${colors.gray01};
+  border-top: none;
+  color: ${colors.gray02};
+}
+
+/* Reality Check — dark news cards (Figma 3646:4189 / 3519:3125, rise-card device) */
+#module-content .wrong-card,
+#module-content .wrong-card-body,
+#module-content .wrong-card-top {
+  background: var(--ey-card-deep);
+}
+#module-content .wrong-card {
+  border-color: var(--ey-card-deep);
+  border-top-width: 4px;
+}
+#module-content .wrong-card-top::after {
+  background: linear-gradient(0deg, var(--ey-card-deep) 0%, transparent 100%);
+}
+#module-content .wrong-card-meta .source {
+  color: ${colors.error};
+}
+#module-content .wrong-card-meta .source::before {
+  background: ${colors.yellow};
+}
+#module-content .wrong-card-meta .source::after {
+  background: ${colors.error};
+}
+#module-content .wrong-card-body p {
+  color: ${colors.onDark};
+  font-family: ${fonts.light};
+  font-weight: 300;
+}
+#module-content .wrong-card-body .date {
+  border-top: none;
+  color: ${colors.gray02};
 }
 
 /* Restore intended section breathing room (lesson used 90px 60px / 80px / 64px;
@@ -266,7 +310,7 @@ const TOKEN_BRIDGE = `
 
 /* LLM vs AI Agent vs Agentic AI — EY dark-module tokens only (no ad-hoc rgba washes) */
 #module-content .gva-section {
-  --gva-sticky-top: ${SUBNAV_SCROLL_OFFSET}px;
+  --gva-sticky-top: var(--ey-subnav-scroll-offset, ${SUBNAV_SCROLL_OFFSET}px);
   --gva-page: ${colors.confidentBlack};
   --gva-card: ${colors.eyBgCard};
   --gva-border: ${colors.borderOnDark};
@@ -338,7 +382,27 @@ const TOKEN_BRIDGE = `
 }
 
 #module-content [id] {
-  scroll-margin-top: ${SUBNAV_SCROLL_OFFSET}px;
+  scroll-margin-top: var(--ey-subnav-scroll-offset, ${SUBNAV_SCROLL_OFFSET}px);
+}
+
+/* Section anchor titles — match ModuleHeader tab labels (curriculum.ts) */
+#module-content .section-anchor-title {
+  font-family: ${fonts.bold};
+  font-size: ${typeScale.label.size}px;
+  font-weight: ${typeScale.label.weight};
+  letter-spacing: ${typeScale.label.tracking};
+  text-transform: uppercase;
+  color: ${colors.eyebrowGold};
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+#module-content .surface-dark .section-anchor-title,
+#module-content .section-anchor-title--dark {
+  color: ${colors.yellow};
+}
+#module-content .section-anchor-title--center {
+  text-align: center;
+  width: 100%;
 }
 `;
 

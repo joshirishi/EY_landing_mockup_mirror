@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, X, XCircle, Zap } from "lucide-react";
-import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss } from "../design-kit/tokens";
-import { ModuleHeader, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
+import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
+import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext } from "../design-kit/EYWhatsNext";
+import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import heroImg from "../assets/images/AdobeStock-621943361.jpeg";
 
 /** Section surface rhythm: dark → neutral → light (repeats down the page). */
@@ -804,9 +805,9 @@ function PromptStackBuilder() {
                     fontSize: 10,
                     fontWeight: 800,
                     letterSpacing: "0.04em",
-                    color: item.color,
+                    color: C.offBlack,
                     background: item.color + "18",
-                    border: `1px solid ${item.color}44`,
+                    border: `1px solid ${item.border}40`,
                     borderRadius: 4,
                     padding: "3px 8px",
                     fontFamily: F.bold,
@@ -919,8 +920,9 @@ function PromptStackBuilder() {
 function TeamBriefingSection() {
   const missingItems = ["What issue?", "Which jurisdiction?", "What output?", "By when?"];
   return (
-    <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+    <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       <div style={{ ...contentRailStyle }}>
+        <SectionAnchorTitle align="center">Team Briefing</SectionAnchorTitle>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Brief AI Like You Brief Your Team
         </h2>
@@ -1006,8 +1008,9 @@ function TeamBriefingSection() {
 function AiLazyProSection() {
   const s = SURFACE.dark;
   return (
-    <section id="lazy-vs-pro" style={{ background: s.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+    <section id="lazy-vs-pro" style={{ background: s.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       <div style={{ ...contentRailStyle }}>
+        <SectionAnchorTitle theme="dark" align="center">Weak vs Strong</SectionAnchorTitle>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: s.heading, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Same AI. Two Very Different Results.
         </h2>
@@ -1108,7 +1111,7 @@ function RecapInNutshellSection() {
     <section id="recap" style={{
       background: s.bg,
       padding: `100px 0`,
-      scrollMarginTop: SUBNAV_SCROLL_OFFSET,
+      scrollMarginTop: SUBNAV_SCROLL_MARGIN,
     }}>
       <div style={{ ...contentRailStyle, textAlign: "center" }}>
         {/* Eyebrow pill hidden site-wide per request — see AI_TAX_PROMPTING pill removal
@@ -1198,7 +1201,7 @@ function MetaPromptSection() {
   ];
 
   return (
-    <section id="meta-prompt" style={{ background: SURFACE.neutral.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+    <section id="meta-prompt" style={{ background: SURFACE.neutral.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       <div style={{ ...contentRailStyle }}>
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <p style={{ color: C.eyebrowGold, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 12 }}>
@@ -1700,9 +1703,10 @@ function PromptingActivitySection() {
       background: SURFACE.neutral.bg,
       padding: `${spacing.sectionPaddingY} 0`,
       textAlign: "center",
-      scrollMarginTop: SUBNAV_SCROLL_OFFSET,
+      scrollMarginTop: SUBNAV_SCROLL_MARGIN,
     }}>
       <div style={{ ...contentRailStyle }}>
+        <SectionAnchorTitle align="center">Activity</SectionAnchorTitle>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, marginBottom: 56, fontFamily: F.bold }}>
           Test Your Prompting Skills
         </h2>
@@ -1751,8 +1755,9 @@ function EightElementsWizard() {
   const focusRing = `2px solid ${C.yellow}`;
 
   return (
-    <section id="elements" style={{ background: C.gray02, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+    <section id="elements" style={{ background: C.gray02, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       <div style={{ ...contentRailStyle, textAlign: "center" }}>
+        <SectionAnchorTitle align="center">7 Elements</SectionAnchorTitle>
         <h2 style={{ fontSize: 32, fontWeight: 700, color: s.heading, fontFamily: F.bold, letterSpacing: "-0.02em", margin: "0 0 12px", textAlign: "center" }}>
           Prompt like a Pro - Elements
         </h2>
@@ -1760,13 +1765,13 @@ function EightElementsWizard() {
           Each element is a lever — pick one from the list to explore what it is, why it matters, and how it changes a prompt.
         </p>
 
-        <div style={{
+        <div className="pt-wizard" style={{
           border: `1px solid rgba(46,46,56,0.10)`,
           borderRadius: 12,
           overflow: "hidden",
           display: "grid",
           gridTemplateColumns: "minmax(260px, 300px) 1fr",
-          minHeight: 520,
+          height: 760,
           textAlign: "left",
           background: C.white,
         }}>
@@ -1776,6 +1781,7 @@ function EightElementsWizard() {
             padding: "20px 0",
             display: "flex",
             flexDirection: "column",
+            minHeight: 0,
           }}>
             <div style={{ padding: "0 20px 16px", borderBottom: `1px solid rgba(46,46,56,0.08)` }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.gray01, fontFamily: F.bold, marginBottom: 4 }}>
@@ -1800,8 +1806,8 @@ function EightElementsWizard() {
                       display: "flex",
                       alignItems: "center",
                       gap: 10,
-                      padding: "10px 12px",
-                      marginBottom: 4,
+                      padding: "8px 12px",
+                      marginBottom: 2,
                       background: active ? C.confidentBlack : "transparent",
                       border: active ? "none" : "1px solid transparent",
                       borderRadius: 8,
@@ -1822,20 +1828,13 @@ function EightElementsWizard() {
                     }}>
                       {item.id}
                     </span>
-                    <span style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{
-                        display: "block", fontSize: 13, fontWeight: 700,
-                        color: active ? C.white : C.confidentBlack,
-                        fontFamily: F.bold,
-                      }}>
-                        {item.name}
-                      </span>
-                      <span style={{
-                        display: "block", fontSize: 11, marginTop: 2, fontFamily: F.regular,
-                        color: active ? "rgba(255,255,255,0.72)" : C.gray01,
-                      }}>
-                        {item.q}
-                      </span>
+                    <span style={{
+                      flex: 1, minWidth: 0,
+                      fontSize: 13, fontWeight: 700,
+                      color: active ? C.white : C.confidentBlack,
+                      fontFamily: F.bold,
+                    }}>
+                      {item.name}
                     </span>
                     <ChevronRight size={14} color={active ? C.yellow : C.gray01} style={{ flexShrink: 0 }} />
                   </button>
@@ -1990,14 +1989,14 @@ function TechniqueExampleQuote({ text, variant }: { text: string; variant: "with
     <div style={{
       background: accent + "0a",
       borderRadius: 8,
-      padding: "12px 14px",
+      padding: "10px 12px",
       borderLeft: `3px solid ${accent}`,
     }}>
       <p style={{
         margin: 0,
-        fontSize: 12,
-        lineHeight: 1.65,
-        fontFamily: F.light,
+        fontSize: typeScale.body.size,
+        lineHeight: 1.6,
+        fontFamily: F.regular,
         fontStyle: "italic",
         color: C.gray01,
       }}>
@@ -2023,24 +2022,25 @@ function PromptingTechniquesWizard() {
   const focusRing = `2px solid ${C.yellow}`;
 
   return (
-    <div style={{
+    <div className="pt-wizard" style={{
       border: `1px solid rgba(46,46,56,0.10)`,
       borderRadius: 12,
       overflow: "hidden",
       display: "grid",
       gridTemplateColumns: "minmax(260px, 300px) 1fr",
-      minHeight: 520,
+      height: 760,
       textAlign: "left",
       background: C.white,
     }}>
       <nav aria-label="Prompting techniques" style={{
         background: C.offWhite,
         borderRight: `1px solid rgba(46,46,56,0.08)`,
-        padding: "20px 0",
+        padding: "14px 0",
         display: "flex",
         flexDirection: "column",
+        minHeight: 0,
       }}>
-        <div style={{ padding: "0 20px 16px", borderBottom: `1px solid rgba(46,46,56,0.08)` }}>
+        <div style={{ padding: "0 16px 12px", borderBottom: `1px solid rgba(46,46,56,0.08)` }}>
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.gray01, fontFamily: F.bold, marginBottom: 4 }}>
             Prompt like a Pro — Techniques
           </div>
@@ -2049,7 +2049,7 @@ function PromptingTechniquesWizard() {
           </div>
         </div>
 
-        <div style={{ flex: 1, overflowY: "auto", padding: "12px 10px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "10px 8px" }}>
           {PROMPTING_TECHNIQUES.map(item => {
             const active = selectedId === item.id;
             return (
@@ -2063,8 +2063,8 @@ function PromptingTechniquesWizard() {
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
-                  padding: "10px 12px",
-                  marginBottom: 4,
+                  padding: "8px 12px",
+                  marginBottom: 2,
                   background: active ? C.confidentBlack : "transparent",
                   border: active ? "none" : "1px solid transparent",
                   borderRadius: 8,
@@ -2085,20 +2085,13 @@ function PromptingTechniquesWizard() {
                 }}>
                   {item.id}
                 </span>
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{
-                    display: "block", fontSize: 13, fontWeight: 700,
-                    color: active ? C.white : C.confidentBlack,
-                    fontFamily: F.bold,
-                  }}>
-                    {item.technique}
-                  </span>
-                  <span style={{
-                    display: "block", fontSize: 11, marginTop: 2, fontFamily: F.regular,
-                    color: active ? "rgba(255,255,255,0.72)" : C.gray01,
-                  }}>
-                    {item.does}
-                  </span>
+                <span style={{
+                  flex: 1, minWidth: 0,
+                  fontSize: 13, fontWeight: 700,
+                  color: active ? C.white : C.confidentBlack,
+                  fontFamily: F.bold,
+                }}>
+                  {item.technique}
                 </span>
                 <ChevronRight size={14} color={active ? C.yellow : C.gray01} style={{ flexShrink: 0 }} />
               </button>
@@ -2109,7 +2102,7 @@ function PromptingTechniquesWizard() {
 
       <div style={{ display: "flex", flexDirection: "column", background: C.white, minHeight: 0 }}>
         <div style={{
-          padding: "16px 24px",
+          padding: "12px 20px",
           borderBottom: `1px solid rgba(46,46,56,0.08)`,
           flexShrink: 0,
         }}>
@@ -2131,7 +2124,7 @@ function PromptingTechniquesWizard() {
             color: C.gray01,
             fontFamily: F.regular,
             lineHeight: 1.5,
-            margin: "6px 0 0",
+            margin: "4px 0 0",
             paddingLeft: 36,
           }}>
             {technique.does}
@@ -2141,10 +2134,10 @@ function PromptingTechniquesWizard() {
         <div style={{
           flex: 1,
           overflowY: "auto",
-          padding: "24px 28px 32px",
+          padding: "16px 20px 20px",
           display: "flex",
           flexDirection: "column",
-          gap: 20,
+          gap: 14,
         }}>
           {TECHNIQUE_FACETS.map(f => {
             const isExample = f.key === "without" || f.key === "with";
@@ -2156,8 +2149,8 @@ function PromptingTechniquesWizard() {
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
-                    marginBottom: 10,
-                    padding: "4px 10px",
+                    marginBottom: 8,
+                    padding: "3px 9px",
                     borderRadius: 100,
                     border: "1px solid rgba(46,46,56,0.12)",
                     background: C.offWhite,
@@ -2174,8 +2167,8 @@ function PromptingTechniquesWizard() {
                   <TechniqueExampleQuote text={text} variant={f.key} />
                 ) : (
                   <p style={{
-                    fontSize: 16,
-                    lineHeight: 1.7,
+                    fontSize: typeScale.body.size,
+                    lineHeight: 1.6,
                     color: C.gray01,
                     fontFamily: F.regular,
                     margin: 0,
@@ -2581,22 +2574,25 @@ function AdvancedFrameworkShell({ bucket, stageId, onSelectStage }: { bucket: Ad
     : <SelfCriticismPanel />;
 
   return (
-    <div style={{
+    <div className="af-shell" style={{
       border: `1px solid rgba(46,46,56,0.10)`,
       borderRadius: 12,
       overflow: "hidden",
       display: "grid",
       gridTemplateColumns: "minmax(260px, 300px) 1fr",
-      minHeight: 420,
+      height: 650,
+      textAlign: "left",
+      background: C.white,
     }}>
       <nav aria-label="Advanced technique stages" style={{
         background: C.offWhite,
         borderRight: `1px solid rgba(46,46,56,0.08)`,
-        padding: "20px 0",
+        padding: "14px 0",
         display: "flex",
         flexDirection: "column",
+        minHeight: 0,
       }}>
-        <div style={{ padding: "0 20px 16px", borderBottom: `1px solid rgba(46,46,56,0.08)` }}>
+        <div style={{ padding: "0 16px 12px", borderBottom: `1px solid rgba(46,46,56,0.08)` }}>
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.gray01, fontFamily: F.bold, marginBottom: 4 }}>
             {bucket.label}
           </div>
@@ -2605,7 +2601,7 @@ function AdvancedFrameworkShell({ bucket, stageId, onSelectStage }: { bucket: Ad
           </div>
         </div>
 
-        <div style={{ flex: 1, padding: "12px 10px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "10px 8px" }}>
           {bucket.stages.map((s, i) => {
             const active = stageId === s.id;
             return (
@@ -2619,8 +2615,8 @@ function AdvancedFrameworkShell({ bucket, stageId, onSelectStage }: { bucket: Ad
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
-                  padding: "10px 12px",
-                  marginBottom: 4,
+                  padding: "8px 12px",
+                  marginBottom: 2,
                   background: active ? C.confidentBlack : "transparent",
                   border: active ? "none" : "1px solid transparent",
                   borderRadius: 8,
@@ -2641,13 +2637,13 @@ function AdvancedFrameworkShell({ bucket, stageId, onSelectStage }: { bucket: Ad
                 }}>
                   {i + 1}
                 </span>
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: active ? C.white : C.confidentBlack, fontFamily: F.bold }}>
-                    {s.name}
-                  </span>
-                  <span style={{ display: "block", fontSize: 11, marginTop: 2, fontFamily: F.regular, color: active ? "rgba(255,255,255,0.72)" : C.gray01 }}>
-                    {s.subtitle}
-                  </span>
+                <span style={{
+                  flex: 1, minWidth: 0,
+                  fontSize: 13, fontWeight: 700,
+                  color: active ? C.white : C.confidentBlack,
+                  fontFamily: F.bold,
+                }}>
+                  {s.name}
                 </span>
                 <ChevronRight size={14} color={active ? C.yellow : C.gray01} style={{ flexShrink: 0 }} />
               </button>
@@ -2658,16 +2654,36 @@ function AdvancedFrameworkShell({ bucket, stageId, onSelectStage }: { bucket: Ad
 
       <div style={{ display: "flex", flexDirection: "column", background: C.white, minHeight: 0 }}>
         <div style={{
-          padding: "16px 24px",
+          padding: "12px 20px",
           borderBottom: `1px solid rgba(46,46,56,0.08)`,
-          display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
           flexShrink: 0,
         }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold }}>{stage.name}</span>
-          <span style={{ fontSize: 11, color: C.frameBlue, fontWeight: 600, fontFamily: F.bold }}>{stage.subtitle}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{
+              width: 28, height: 28, borderRadius: 6, flexShrink: 0,
+              background: C.yellow, color: C.confidentBlack,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 12, fontWeight: 800, fontFamily: F.bold,
+            }}>
+              {bucket.stages.findIndex(s => s.id === stage.id) + 1}
+            </span>
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold, margin: 0 }}>
+              {stage.name}
+            </h3>
+          </div>
+          <p style={{
+            fontSize: 11,
+            color: C.gray01,
+            fontFamily: F.regular,
+            lineHeight: 1.5,
+            margin: "4px 0 0",
+            paddingLeft: 36,
+          }}>
+            {stage.subtitle}
+          </p>
         </div>
 
-        <div style={{ flex: 1, padding: "24px 28px 32px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px 20px", minHeight: 0 }}>
           {panel}
         </div>
       </div>
@@ -2737,7 +2753,6 @@ function AdvancedTechniquesSection({ onDark = false }: { onDark?: boolean }) {
   const [activeTab, setActiveTab] = useState<AdvancedTab>("techniques");
   const [bucketId, setBucketId] = useState<AdvancedBucketId>(ADVANCED_BUCKETS[0].id);
   const [stageId, setStageId] = useState<AdvancedStageId>(ADVANCED_BUCKETS[0].stages[0].id);
-  const muted = onDark ? SURFACE.dark.body : C.gray01;
   const bucket = ADVANCED_BUCKETS.find(b => b.id === bucketId) ?? ADVANCED_BUCKETS[0];
 
   const selectBucket = (id: AdvancedBucketId) => {
@@ -2759,9 +2774,6 @@ function AdvancedTechniquesSection({ onDark = false }: { onDark?: boolean }) {
 
       {activeTab === "advanced" && (
         <div role="tabpanel" aria-label="Advanced Prompting Techniques">
-          <p style={{ fontSize: 15, color: muted, lineHeight: 1.7, marginBottom: 20, fontFamily: F.light, maxWidth: 720 }}>
-            A Practical Framework for Complex Problems
-          </p>
           <div style={{ marginBottom: 20 }}>
             <AdvancedBucketToggle bucketId={bucketId} onChange={selectBucket} onDark={onDark} />
           </div>
@@ -3032,25 +3044,18 @@ export default function AiTaxPrompting({
             The Difference Is the{" "}
             <span style={{ color: C.yellow }}>Prompt</span>
           </h1>
-          <p style={{ fontSize: 19, color: C.gray02, fontWeight: 300, lineHeight: 1.7, maxWidth: 660, fontFamily: F.light }}>
+          {/* <p style={{ fontSize: 19, color: C.gray02, fontWeight: 300, lineHeight: 1.7, maxWidth: 660, fontFamily: F.light }}>
             A prompt isn&apos;t just a question — it&apos;s a structured instruction that determines the quality of everything AI gives you back.
-          </p>
+          </p> */}
         </div>
       </section>
 
       {/* ── 2. THE PIPELINE — neutral ── */}
-      <section id="pipeline" style={{ background: SURFACE.neutral.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="pipeline" style={{ background: SURFACE.neutral.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column", gap: 48, alignItems: "center" }}>
           {/* Header */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, width: "100%" }}>
-            {/* Eyebrow pill hidden site-wide per request — see AI_TAX_PROMPTING pill removal
-            <div style={{
-              background: C.yellow, border: `1px solid ${C.gray02}`, borderRadius: 100,
-              padding: "6px 16px",
-            }}>
-              <span style={{ fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: "21px" }}>THE PIPELINE</span>
-            </div>
-            */}
+            <SectionAnchorTitle align="center">Prompt Basics</SectionAnchorTitle>
             <h2 style={{
               fontSize: 32, fontWeight: 700, color: C.offBlack, fontFamily: F.bold,
               lineHeight: 1.2, letterSpacing: "-0.32px", textAlign: "center", margin: 0,
@@ -3159,7 +3164,7 @@ export default function AiTaxPrompting({
         style={{
           background: C.confidentBlack,
           padding: `${spacing.sectionPaddingY} 0`,
-          scrollMarginTop: SUBNAV_SCROLL_OFFSET,
+          scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         }}
       >
         <div style={{ ...contentRailStyle }}>
@@ -3224,8 +3229,9 @@ export default function AiTaxPrompting({
       <AiLazyProSection />
 
       {/* ── 6. PROMPT STACK BUILDER — light ── */}
-      <section id="stack-builder" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="stack-builder" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
+          <SectionAnchorTitle align="center">Stack Builder</SectionAnchorTitle>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
             Build a Perfect Prompt — Piece by Piece
           </h2>
@@ -3237,12 +3243,13 @@ export default function AiTaxPrompting({
       </section>
 
       {/* ── 7. TECHNIQUES + LEVEL UP — dark ── */}
-      <section id="advanced" style={{ background: SURFACE.dark.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="advanced" style={{ background: SURFACE.dark.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
+          <SectionAnchorTitle theme="dark" align="center">Techniques</SectionAnchorTitle>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: SURFACE.dark.heading, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
             Prompt like a Pro — Techniques
           </h2>
-          <p style={{ fontSize: 16, color: SURFACE.dark.body, textAlign: "center", lineHeight: 1.7, marginBottom: 32, fontFamily: F.light, maxWidth: 680, marginLeft: "auto", marginRight: "auto" }}>
+          <p style={{ fontSize: 16, color: SURFACE.dark.body, textAlign: "center", lineHeight: 1.7, marginBottom: 32, fontFamily: F.light, maxWidth: 920, marginLeft: "auto", marginRight: "auto" }}>
             Eight core techniques for sharper everyday prompts, plus an advanced framework for complex tax problems.
           </p>
           <AdvancedTechniquesSection onDark />
@@ -3256,11 +3263,9 @@ export default function AiTaxPrompting({
       <PromptingActivitySection />
 
       {/* ── 10. GOLDEN RULES — Do's & Don'ts ── */}
-      <section id="dos-donts" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_OFFSET }}>
+      <section id="dos-donts" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
-          <p style={{ color: SURFACE.light.eyebrow, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: F.bold, marginBottom: 10 }}>
-            The Golden Rules
-          </p>
+          <SectionAnchorTitle align="center">Do&apos;s &amp; Don&apos;ts</SectionAnchorTitle>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: SURFACE.light.heading, marginBottom: 8, fontFamily: F.bold }}>
             Prompt Engineering — Do&apos;s &amp; Don&apos;ts
           </h2>
