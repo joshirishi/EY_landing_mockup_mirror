@@ -4,6 +4,8 @@ import { PhasedEngagementView, Phase1View } from "../imports/Frame353/index";
 import FoundationalConcepts from "../pages/FoundationalConcepts";
 import AiTaxPrompting from "../pages/AiTaxPrompting";
 import M365CopilotHub from "../pages/M365CopilotHub";
+import BrainstormingUseCases from "../pages/BrainstormingUseCases";
+import GuidanceImplementation from "../pages/GuidanceImplementation";
 
 // ── /  ──────────────────────────────────────────────────────────────────────
 function HomeRoute() {
@@ -20,7 +22,21 @@ function PhasedRoute() {
   const navigate = useNavigate();
   return (
     <div className="relative w-full max-w-full min-w-0 overflow-x-hidden">
-      <PhasedEngagementView onNavigateToPhase1={() => navigate("/phase1")} />
+      <PhasedEngagementView
+        onNavigateToPhase1={() => navigate("/phase1")}
+        onNavigateToBrainstorming={() => navigate("/brainstorming-use-cases")}
+        onNavigateToImplementation={() => navigate("/guidance-implementation")}
+      />
+    </div>
+  );
+}
+
+// ── /guidance-implementation  ────────────────────────────────────────────────
+function GuidanceImplementationRoute() {
+  const navigate = useNavigate();
+  return (
+    <div className="size-full">
+      <GuidanceImplementation onBack={() => navigate("/phased")} onNavigate={navigate} />
     </div>
   );
 }
@@ -60,6 +76,16 @@ function AiTaxPromptingRoute() {
   );
 }
 
+// ── /brainstorming-use-cases  ────────────────────────────────────────────────
+function BrainstormingRoute() {
+  const navigate = useNavigate();
+  return (
+    <div className="size-full">
+      <BrainstormingUseCases onBack={() => navigate("/phased")} onNavigate={navigate} />
+    </div>
+  );
+}
+
 // ── /foundational  ──────────────────────────────────────────────────────────
 function FoundationalRoute() {
   const navigate = useNavigate();
@@ -91,6 +117,8 @@ export const router = createBrowserRouter([
       { path: "ai-tax-prompting", Component: AiTaxPromptingRoute },
       { path: "foundational", Component: FoundationalRoute },
       { path: "copilot-hub", Component: CopilotHubRoute },
+      { path: "brainstorming-use-cases", Component: BrainstormingRoute },
+      { path: "guidance-implementation", Component: GuidanceImplementationRoute },
     ],
   },
 ]);

@@ -1214,7 +1214,7 @@ const PHASE_CARDS = [
     title: "Brainstorming Use Cases",
     // description: "Identify high-impact tax processes for AI, map current workflows, and classify opportunities between AI agents and prompts.",
     description: "1 workshop + 2 followups",
-    locked: true,
+    locked: false,
     completed: false,
     coverage: ["Identify 5–7 tax processes for AI", "Use cases across current tax workflow", "Agent vs Prompt classification"],
     deliverables: ["AI first process maps for 5-7 tax use cases", "Recommendation note for Prompt vs M365 Agent"],
@@ -1226,7 +1226,7 @@ const PHASE_CARDS = [
     title: "AI Agents & Prompts",
     // description: "Advanced, hands-on training in prompt engineering and M365 Copilot agent design for the use cases identified in Phase 2.",
     description: "2 workshops 1.5 hours each",
-    locked: true,
+    locked: false,
     completed: false,
     coverage: ["Advanced prompt engineering (hands-on)", "M365 Copilot Agent design (hands-on)", "Guided Prompt Library Development"],
     deliverables: ["Sample Prompt Templates", "Instructions for M365 Agents"],
@@ -1286,7 +1286,7 @@ function CardCheckIcon() {
   );
 }
 
-function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProceed?: () => void }) {
+function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS[0]; onProceed?: () => void; onNavigate?: () => void }) {
   return (
     <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]">
       <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[8px]" />
@@ -1353,7 +1353,7 @@ function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProce
         ) : (
           <div
             className="bg-[#ffe600] content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0 cursor-pointer"
-            onClick={onProceed}
+            onClick={onNavigate ?? onProceed}
           >
             <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[16px] whitespace-nowrap">Click here to Proceed</p>
           </div>
@@ -1363,14 +1363,14 @@ function PhaseCard({ phase, onProceed }: { phase: typeof PHASE_CARDS[0]; onProce
   );
 }
 
-function CardGrid({ onProceed }: { onProceed?: () => void }) {
+function CardGrid({ onProceed, onNavigateToBrainstorming, onNavigateToImplementation }: { onProceed?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void }) {
   return (
     <div className="relative shrink-0 w-full min-w-0">
       <div className="content-stretch flex flex-col gap-[24px] items-stretch px-4 sm:px-8 md:px-[64px] relative size-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-[24px] relative shrink-0 w-full">
           <PhaseCard phase={PHASE_CARDS[0]} onProceed={onProceed} />
-          <PhaseCard phase={PHASE_CARDS[1]} />
-          <PhaseCard phase={PHASE_CARDS[2]} />
+          <PhaseCard phase={PHASE_CARDS[1]} onNavigate={onNavigateToBrainstorming} />
+          <PhaseCard phase={PHASE_CARDS[2]} onNavigate={onNavigateToImplementation} />
           <PhaseCard phase={PHASE_CARDS[3]} />
         </div>
       </div>
@@ -2395,11 +2395,11 @@ const PHASES = [
   { week: "Week 8",   number: 4, title: "Governance & AI Reinforcement",   locked: true },
 ];
 
-function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
+function InteractiveContentArea({ onProceed, onNavigateToBrainstorming, onNavigateToImplementation }: { onProceed?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void }) {
   return (
     <div className="bg-white content-stretch flex flex-col gap-[48px] items-start pb-[80px] relative shrink-0 w-full">
       <Frame39 />
-      <CardGrid onProceed={onProceed} />
+      <CardGrid onProceed={onProceed} onNavigateToBrainstorming={onNavigateToBrainstorming} onNavigateToImplementation={onNavigateToImplementation} />
       {/* Download Engagement Overview — temporarily hidden
       <Frame4 />
       */}
@@ -2409,7 +2409,7 @@ function InteractiveContentArea({ onProceed }: { onProceed?: () => void }) {
 
 // ── Standalone page exports (no absolute canvas positioning) ─────────────────
 
-export function PhasedEngagementView({ onNavigateToPhase1 }: { onNavigateToPhase1?: () => void } = {}) {
+export function PhasedEngagementView({ onNavigateToPhase1, onNavigateToBrainstorming, onNavigateToImplementation }: { onNavigateToPhase1?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void } = {}) {
   const navigate = useNavigate();
 
   return (
@@ -2419,7 +2419,7 @@ export function PhasedEngagementView({ onNavigateToPhase1 }: { onNavigateToPhase
       </div>
       <div id="phased-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
         <AiMs365Schematic />
-        <InteractiveContentArea onProceed={onNavigateToPhase1} />
+        <InteractiveContentArea onProceed={onNavigateToPhase1} onNavigateToBrainstorming={onNavigateToBrainstorming} onNavigateToImplementation={onNavigateToImplementation} />
       </div>
       <div className="bg-white content-stretch flex flex-col items-stretch justify-center px-4 sm:px-8 md:px-[64px] py-10 md:py-14 relative shrink-0 w-full overflow-hidden" data-name="Footer Final">
         <Container3 />
