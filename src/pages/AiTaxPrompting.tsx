@@ -1836,7 +1836,7 @@ function EightElementsWizard() {
       <div style={{ ...contentRailStyle, textAlign: "center" }}>
         <SectionAnchorTitle align="center">7 Elements</SectionAnchorTitle>
         <h2 style={{ fontSize: 32, fontWeight: 700, color: s.heading, fontFamily: F.bold, letterSpacing: "-0.02em", margin: "0 0 12px", textAlign: "center" }}>
-          Prompt like a Pro - Elements
+          Prompt like a Pro
         </h2>
         <p style={{ fontSize: 16, color: s.body, fontFamily: F.light, lineHeight: "24px", margin: "0 auto 40px", maxWidth: 720, textAlign: "center" }}>
           Each element is a lever — pick one from the list to explore what it is, why it matters, and how it changes a prompt.
