@@ -6,6 +6,7 @@ import AiTaxPrompting from "../pages/AiTaxPrompting";
 import M365CopilotHub from "../pages/M365CopilotHub";
 import BrainstormingUseCases from "../pages/BrainstormingUseCases";
 import GuidanceImplementation from "../pages/GuidanceImplementation";
+import ClosureAiReinforcement from "../pages/ClosureAiReinforcement";
 
 // ── /  ──────────────────────────────────────────────────────────────────────
 function HomeRoute() {
@@ -26,6 +27,7 @@ function PhasedRoute() {
         onNavigateToPhase1={() => navigate("/phase1")}
         onNavigateToBrainstorming={() => navigate("/brainstorming-use-cases")}
         onNavigateToImplementation={() => navigate("/guidance-implementation")}
+        onNavigateToClosure={() => navigate("/closure-ai-reinforcement")}
       />
     </div>
   );
@@ -109,6 +111,16 @@ function FoundationalRoute() {
   );
 }
 
+// ── /closure-ai-reinforcement  ───────────────────────────────────────────────
+function ClosureAiReinforcementRoute() {
+  const navigate = useNavigate();
+  return (
+    <div className="size-full">
+      <ClosureAiReinforcement onBack={() => navigate("/phased")} onNavigate={navigate} />
+    </div>
+  );
+}
+
 // ── Root layout  ─────────────────────────────────────────────────────────────
 function Root() {
   return (
@@ -133,6 +145,7 @@ export const router = createBrowserRouter([
       { path: "copilot-hub", Component: CopilotHubRoute },
       { path: "brainstorming-use-cases", Component: BrainstormingRoute },
       { path: "guidance-implementation", Component: GuidanceImplementationRoute },
+      { path: "closure-ai-reinforcement", Component: ClosureAiReinforcementRoute },
     ],
   },
 ]);

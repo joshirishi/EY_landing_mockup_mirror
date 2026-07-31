@@ -1363,7 +1363,7 @@ function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS
   );
 }
 
-function CardGrid({ onProceed, onNavigateToBrainstorming, onNavigateToImplementation }: { onProceed?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void }) {
+function CardGrid({ onProceed, onNavigateToBrainstorming, onNavigateToImplementation, onNavigateToClosure }: { onProceed?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void; onNavigateToClosure?: () => void }) {
   return (
     <div className="relative shrink-0 w-full min-w-0">
       <div className="content-stretch flex flex-col gap-[24px] items-stretch px-4 sm:px-8 md:px-[64px] relative size-full">
@@ -1371,7 +1371,7 @@ function CardGrid({ onProceed, onNavigateToBrainstorming, onNavigateToImplementa
           <PhaseCard phase={PHASE_CARDS[0]} onProceed={onProceed} />
           <PhaseCard phase={PHASE_CARDS[1]} onNavigate={onNavigateToBrainstorming} />
           <PhaseCard phase={PHASE_CARDS[2]} onNavigate={onNavigateToImplementation} />
-          <PhaseCard phase={PHASE_CARDS[3]} />
+          <PhaseCard phase={PHASE_CARDS[3]} onNavigate={onNavigateToClosure} />
         </div>
       </div>
     </div>
@@ -2395,11 +2395,11 @@ const PHASES = [
   { week: "Week 8",   number: 4, title: "Governance & AI Reinforcement",   locked: true },
 ];
 
-function InteractiveContentArea({ onProceed, onNavigateToBrainstorming, onNavigateToImplementation }: { onProceed?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void }) {
+function InteractiveContentArea({ onProceed, onNavigateToBrainstorming, onNavigateToImplementation, onNavigateToClosure }: { onProceed?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void; onNavigateToClosure?: () => void }) {
   return (
     <div className="bg-white content-stretch flex flex-col gap-[48px] items-start pb-[80px] relative shrink-0 w-full">
       <Frame39 />
-      <CardGrid onProceed={onProceed} onNavigateToBrainstorming={onNavigateToBrainstorming} onNavigateToImplementation={onNavigateToImplementation} />
+      <CardGrid onProceed={onProceed} onNavigateToBrainstorming={onNavigateToBrainstorming} onNavigateToImplementation={onNavigateToImplementation} onNavigateToClosure={onNavigateToClosure} />
       {/* Download Engagement Overview — temporarily hidden
       <Frame4 />
       */}
@@ -2409,7 +2409,7 @@ function InteractiveContentArea({ onProceed, onNavigateToBrainstorming, onNaviga
 
 // ── Standalone page exports (no absolute canvas positioning) ─────────────────
 
-export function PhasedEngagementView({ onNavigateToPhase1, onNavigateToBrainstorming, onNavigateToImplementation }: { onNavigateToPhase1?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void } = {}) {
+export function PhasedEngagementView({ onNavigateToPhase1, onNavigateToBrainstorming, onNavigateToImplementation, onNavigateToClosure }: { onNavigateToPhase1?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void; onNavigateToClosure?: () => void } = {}) {
   const navigate = useNavigate();
 
   return (
@@ -2419,7 +2419,7 @@ export function PhasedEngagementView({ onNavigateToPhase1, onNavigateToBrainstor
       </div>
       <div id="phased-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
         <AiMs365Schematic />
-        <InteractiveContentArea onProceed={onNavigateToPhase1} onNavigateToBrainstorming={onNavigateToBrainstorming} onNavigateToImplementation={onNavigateToImplementation} />
+        <InteractiveContentArea onProceed={onNavigateToPhase1} onNavigateToBrainstorming={onNavigateToBrainstorming} onNavigateToImplementation={onNavigateToImplementation} onNavigateToClosure={onNavigateToClosure} />
       </div>
       <div className="bg-white content-stretch flex flex-col items-stretch justify-center px-4 sm:px-8 md:px-[64px] py-10 md:py-14 relative shrink-0 w-full overflow-hidden" data-name="Footer Final">
         <Container3 />
