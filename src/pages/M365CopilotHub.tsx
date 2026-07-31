@@ -9,28 +9,19 @@ import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { SectionAnchorTitle } from "../design-kit/EYTypography";
-import { contentInlinePad, contentRailStyle, fonts as F, spacing } from "../design-kit/tokens";
+import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, typeScale } from "../design-kit/tokens";
 
-// ── EY Design System tokens ───────────────────────────────────────────────────
+// Canonical token alias — keeps existing C.dark / C.dark2 references working
 const C = {
-  yellow:         "#FFE600",
-  dark:           "#1A1A24", // confident-black
-  dark2:          "#2E2E38", // off-black
-  gray01:         "#747480",
-  gray02:         "#C4C4CD",
-  offWhite:       "#F6F6FA",
-  white:          "#FFFFFF",
-  // EY spectrum (frame) accent colours — used as section accents
-  frameBlue:      "#4696FF",
-  frameGreen:     "#00C864",
-  frameOrange:    "#FF7D1E",
-  framePurple:    "#B400FF",
-  // Microsoft app colours (kept for realistic app-window chrome only)
-  wordBlue:       "#4696FF",
-  excelGreen:     "#00C864",
-  pptOrange:      "#FF3C00",
-  outlookBlue:    "#4696FF",
-  teamsViolet:    "#B400FF",
+  ...colors,
+  dark:       colors.confidentBlack,
+  dark2:      colors.offBlack,
+  // Microsoft app colours (used for realistic app-window chrome only)
+  wordBlue:   colors.frameBlue,
+  excelGreen: colors.frameGreen,
+  pptOrange:  "#FF3C00",
+  outlookBlue: colors.frameBlue,
+  teamsViolet: colors.framePurple,
 };
 
 // ── Copilot icon (simplified sparkle — replaces expired Figma asset) ──────────
@@ -497,9 +488,9 @@ function TabSection({ tabId }: { tabId: TabId }) {
       {/* Eyebrow with app icon */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <AppIcon logo={tabMeta.logo} label={APP_NAME[tabId]} />
-        <span style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 11, letterSpacing: "1.5px", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
+        <span style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
       </div>
-      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 28, color: C.dark2, marginBottom: 12, lineHeight: 1.2 }}>{d.h2}</p>
+      <p style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.dark2, marginBottom: 12, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking }}>{d.h2}</p>
       <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
 
       {/* Pattern 2 — interactive 3-column scene: app mock + prompts + use cases */}
@@ -620,7 +611,7 @@ export default function M365CopilotHub({
           }}
         />
         <div style={{ position: "relative", zIndex: 1, flex: 1, maxWidth: 676 }}>
-          <h1 style={{ fontSize: 36, color: C.white, fontWeight: 700, lineHeight: 1.3, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: F.bold, fontSize: typeScale.h1.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h1.tracking, marginBottom: 20 }}>
             Explore M365 Copilot prompts in a new-age workspace
           </h1>
           <p style={{ fontSize: 16, color: "rgba(255,255,255,0.82)", lineHeight: 1.6 }}>
@@ -636,7 +627,7 @@ export default function M365CopilotHub({
         <div style={{ ...contentRailStyle }}>
         <SectionAnchorTitle align="center">M365 Apps</SectionAnchorTitle>
         <p style={{ fontSize: 11, color: C.gray01, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 12, fontWeight: 700 }}>EXPLORE PROMPT CATEGORIES</p>
-        <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12, color: C.dark2 }}>Sample Prompt Repository for using Copilot in Tax</h2>
+        <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 12, color: C.dark2 }}>Sample Prompt Repository for using Copilot in Tax</h2>
         <p style={{ fontSize: 15, color: C.gray01, marginBottom: 32 }}>Select your preferred M365 application tool below to view optimized, compliant corporate-ready prompts.</p>
         {/* Tab row — centered. Dark container from tokens: offBlack (#2E2E38) */}
         <div style={{ display: "inline-flex", gap: 8, background: C.dark2, borderRadius: 12, padding: 8 }}>
@@ -671,15 +662,15 @@ export default function M365CopilotHub({
       <section id="useful-links" style={{ background: C.dark2, padding: `${spacing.sectionPaddingY} 0 64px`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
         <SectionAnchorTitle theme="dark" align="center">Useful Links</SectionAnchorTitle>
-        <h2 style={{ fontSize: 28, fontWeight: 700, color: C.white, marginBottom: 12, textAlign: "center" }}>Useful Links</h2>
+        <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 12, textAlign: "center" }}>Useful Links</h2>
         <p style={{ fontSize: 15, color: C.gray02, marginBottom: 48, textAlign: "center" }}>Handy EY resources to check your system access, explore deeper templates, and use generative AI safely.</p>
         <div style={{ display: "flex", gap: 20 }}>
           {USEFUL_LINKS.map(l => (
             <div key={l.title} style={{ flex: "1 1 0", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "24px 20px", display: "flex", flexDirection: "column", gap: 12, transition: "transform 0.15s", cursor: "default" }}>
               <div style={{ width: 48, height: 48, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center" }}>{l.icon}</div>
-              <p style={{ fontWeight: 700, fontSize: 15, color: C.white, lineHeight: 1.3 }}>{l.title}</p>
+              <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 15, color: C.white, lineHeight: 1.3 }}>{l.title}</p>
               <p style={{ fontSize: 13, color: "#C4C4CD", flex: 1, lineHeight: 1.55 }}>{l.body}</p>
-              <a href="#" style={{ fontSize: 14, color: C.yellow, textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+              <a href="#" style={{ fontFamily: F.bold, fontSize: 14, color: C.yellow, textDecoration: "none", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
                 {l.cta} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
             </div>
@@ -694,9 +685,9 @@ export default function M365CopilotHub({
         <SectionAnchorTitle theme="dark" align="left">Security &amp; Governance</SectionAnchorTitle>
         {/* GOVERNANCE & TRUST kicker badge */}
         <div style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,230,0,0.12)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, padding: "5px 14px", marginBottom: 24 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: C.yellow, fontFamily: F.regular }}>GOVERNANCE &amp; TRUST</span>
+          <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow }}>GOVERNANCE &amp; TRUST</span>
         </div>
-        <h2 style={{ fontSize: 32, fontWeight: 700, color: C.white, marginBottom: 14 }}>Enterprise-Grade Security</h2>
+        <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 14 }}>Enterprise-Grade Security</h2>
         <p style={{ fontSize: 16, color: C.gray02, marginBottom: 52, maxWidth: 800 }}>Before you let Copilot loose on tax data, know the ground rules. Tap any card to view it full-size.</p>
         {/* 4 horizontal cards (Figma: CaseStudiesGrid — each 302px wide) */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 26 }}>
@@ -714,12 +705,12 @@ export default function M365CopilotHub({
               </div>
               {/* Card body */}
               <div style={{ background: "#2e2e38", padding: "20px 24px", flex: 1, display: "flex", flexDirection: "column" }}>
-                <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 32, color: C.yellow, marginBottom: 10, lineHeight: 1 }}>{card.num}</p>
+                <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 32, color: C.yellow, marginBottom: 10, lineHeight: 1 }}>{card.num}</p>
                 {/* Title grows to fill — pushes separator + CTA to bottom */}
-                <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, lineHeight: 1.35, flex: 1, marginBottom: 14 }}>{card.title}</p>
+                <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 16, color: C.white, lineHeight: 1.35, flex: 1, marginBottom: 14 }}>{card.title}</p>
                 <div style={{ height: 1, background: "rgba(255,255,255,0.1)", marginBottom: 14 }} />
                 {/* CTA — always at the bottom */}
-                <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: C.yellow, fontWeight: 700, textDecoration: "none", fontFamily: F.regular }}>
+                <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: C.yellow, fontWeight: 700, textDecoration: "none", fontFamily: F.bold }}>
                   View Protocol
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>

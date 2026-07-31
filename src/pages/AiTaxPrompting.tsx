@@ -625,6 +625,85 @@ function buildStackedPrompt(stackedIds: number[]): string {
     .join(" ");
 }
 
+type PromptStrengthState = {
+  pct: number;
+  label: string;
+  color: string;
+  Icon?: LucideIcon;
+};
+
+function getPromptStrengthState(layers: number, total = 7): PromptStrengthState {
+  const pct = Math.round((layers / total) * 100);
+  if (layers === 0) {
+    return { pct, label: "Empty — add layers!", color: C.destructive };
+  }
+  if (layers <= 2) {
+    return { pct, label: "Weak — keep adding!", color: C.destructive };
+  }
+  if (layers <= 4) {
+    return { pct, label: "Getting better...", color: C.accentOrange };
+  }
+  if (layers <= 6) {
+    return { pct, label: "Strong prompt!", color: C.offBlack, Icon: Zap };
+  }
+  return { pct, label: "Client-ready!", color: C.success, Icon: Target };
+}
+
+function PromptStrengthIndicator({ layers, total = PROMPT_STACK.length }: { layers: number; total?: number }) {
+  const { pct, label, color, Icon } = getPromptStrengthState(layers, total);
+
+  return (
+    <div
+      className="pt-wizard-strength"
+      role="progressbar"
+      aria-valuenow={layers}
+      aria-valuemin={0}
+      aria-valuemax={total}
+      aria-label={`Prompt strength: ${label}. ${layers} of ${total} layers added.`}
+      style={{
+        marginTop: 10,
+        flexShrink: 0,
+        padding: "12px 16px",
+        background: C.white,
+        border: `1px solid ${C.yellowAlpha12}`,
+        borderRadius: 8,
+      }}
+    >
+      <div style={{
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        color: C.gray01,
+        fontFamily: F.bold,
+        marginBottom: 6,
+      }}>
+        Prompt strength
+      </div>
+      <div className="pt-wizard-strength__track">
+        <div
+          className="pt-wizard-strength__fill"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 4,
+        marginTop: 6,
+        fontSize: 11,
+        fontWeight: 700,
+        color,
+        fontFamily: F.bold,
+      }}>
+        {Icon && <Icon size={14} strokeWidth={1.75} aria-hidden />}
+        {label}
+      </div>
+    </div>
+  );
+}
+
 function PromptStackBuilder() {
   const [stackOrder, setStackOrder] = useState<number[]>([]);
   const [copied, setCopied] = useState(false);
@@ -757,9 +836,7 @@ function PromptStackBuilder() {
             );
           })}
         </div>
-        <p style={{ fontSize: 11, color: C.gray01, fontFamily: F.regular, marginTop: 10, flexShrink: 0 }}>
-          {stackOrder.length} of {PROMPT_STACK.length} added
-        </p>
+        <PromptStrengthIndicator layers={stackOrder.length} />
       </div>
 
       {/* Preview + pinned generated prompt */}
@@ -1759,7 +1836,7 @@ function EightElementsWizard() {
       <div style={{ ...contentRailStyle, textAlign: "center" }}>
         <SectionAnchorTitle align="center">7 Elements</SectionAnchorTitle>
         <h2 style={{ fontSize: 32, fontWeight: 700, color: s.heading, fontFamily: F.bold, letterSpacing: "-0.02em", margin: "0 0 12px", textAlign: "center" }}>
-          Prompt like a Pro - Elements
+          Prompt like a Pro
         </h2>
         <p style={{ fontSize: 16, color: s.body, fontFamily: F.light, lineHeight: "24px", margin: "0 auto 40px", maxWidth: 720, textAlign: "center" }}>
           Each element is a lever — pick one from the list to explore what it is, why it matters, and how it changes a prompt.

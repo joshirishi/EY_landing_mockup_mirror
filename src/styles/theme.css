@@ -261,3 +261,23 @@
     grid-template-columns: 1fr !important;
   }
 }
+
+/* PromptStackBuilder — anatomy-style prompt strength meter */
+.pt-wizard-strength__track {
+  background: var(--secondary);
+  border-radius: 4px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.pt-wizard-strength__fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--destructive),
+    var(--ey-brand-yellow),
+    var(--chart-3)
+  );
+  transition: width 0.5s ease;
+}
