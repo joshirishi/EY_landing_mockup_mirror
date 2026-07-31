@@ -101,6 +101,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   // Phase-overview overrides — fall back to Phase 1 defaults so existing callers are unaffected.
   const overridePhaseLabel = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseLabel : undefined;
   const overridePhaseNumber = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseNumber : undefined;
+  const subPhaseLabel = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).subPhaseLabel : undefined;
   const overrideSections = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections : undefined;
 
   const current = currentModuleId ? getModule(currentModuleId) : null;
@@ -117,7 +118,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   // Split into two chips so Module (context) ≠ Sub-module (you are here).
   const activePhaseNumber = overridePhaseNumber ?? PHASE_NUMBER;
   const progressChips = isPhaseOverview
-    ? { module: `Module ${activePhaseNumber} of ${TOTAL_PHASES}`, subModule: null as string | null }
+    ? { module: `Module ${activePhaseNumber}`, subModule: subPhaseLabel ?? null as string | null }
     : {
         module: `Module ${PHASE_NUMBER}`,
         // Plan numbering — {phaseNumber}.{moduleOrder} e.g. "1.3" = phase 1, 3rd module.
@@ -223,12 +224,12 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                 borderRadius: 4,
                 fontFamily: fonts.bold,
                 fontSize: 14,
-                color: isPhaseOverview ? colors.white : colors.yellow,
+                color: colors.yellow,
               }}
               onFocus={applyFocusRing}
               onBlur={clearFocusRing}
             >
-              {!isPhaseOverview && current && (
+              {(isPhaseOverview ? activePhaseNumber : current?.order) != null && (
                 <span
                   style={{
                     display: "inline-flex",
@@ -245,10 +246,10 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                   }}
                   aria-hidden="true"
                 >
-                  {current.order}
+                  {isPhaseOverview ? activePhaseNumber : current?.order}
                 </span>
               )}
-              <span className="truncate">{pickerLabel}</span>
+              <span className="truncate" style={{ color: colors.yellow }}>{pickerLabel}</span>
               <span
                 style={{
                   fontSize: 8,

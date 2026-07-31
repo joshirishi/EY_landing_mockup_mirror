@@ -124,7 +124,6 @@ function HeroSection() {
         padding: "80px 0 72px",
       }}
     >
-      {/* EY spectrum rule */}
       <div
         style={{
           position: "absolute",
@@ -132,10 +131,9 @@ function HeroSection() {
           left: 0,
           right: 0,
           height: 3,
-          background: spectrumCss,
+          background: spectrumCss(4),
         }}
       />
-
       <div style={{ ...contentRailStyle, textAlign: "center" }}>
         <p
           style={{
