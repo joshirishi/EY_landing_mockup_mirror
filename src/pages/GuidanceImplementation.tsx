@@ -93,6 +93,12 @@ const eyebrow = (color: string): CSSProperties => ({
   marginBottom: 8,
 });
 
+// Section-level header used at the top of each panel — centered
+const sectionHeader: CSSProperties = {
+  textAlign: "center",
+  marginBottom: 48,
+};
+
 const h2Style: CSSProperties = {
   fontFamily: F.bold,
   fontSize: typeScale.h2.size,
@@ -162,25 +168,25 @@ function Panel1() {
     >
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: spectrumCss(1) }} />
       <div style={{ ...contentRailStyle }}>
-        <p style={eyebrow(C.yellow)}>Phase 3 · Guidance for Implementation</p>
-
-        <h1
-          style={{
-            fontFamily: F.bold,
-            fontSize: typeScale.h1,
-            fontWeight: 700,
-            color: C.onDark,
-            lineHeight: 1.15,
-            letterSpacing: "-0.02em",
-            maxWidth: 860,
-            marginBottom: 8,
-          }}
-        >
-          Hands-On Build Workshop
-        </h1>
-        <p style={{ fontFamily: F.bold, fontSize: 18, fontWeight: 700, color: C.onDarkMuted, marginBottom: 16, maxWidth: 700 }}>
-          Building Tax Prompt Libraries and Microsoft 365 Copilot Agents
-        </p>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.yellow)}>Phase 3 · Guidance for Implementation</p>
+          <h1
+            style={{
+              fontFamily: F.bold,
+              fontSize: typeScale.h1,
+              fontWeight: 700,
+              color: C.onDark,
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+              marginBottom: 8,
+            }}
+          >
+            Hands-On Build Workshop
+          </h1>
+          <p style={{ fontFamily: F.bold, fontSize: 18, fontWeight: 700, color: C.onDarkMuted, marginBottom: 0 }}>
+            Building Tax Prompt Libraries and Microsoft 365 Copilot Agents
+          </p>
+        </div>
 
         {/* Quote card */}
         <div
@@ -282,11 +288,13 @@ function Panel2() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <p style={eyebrow(C.confidentBlack)}>Prompt Engineering Refresher</p>
-        <h2 style={{ ...h2Style, color: C.confidentBlack }}>Building Better Tax Prompts</h2>
-        <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 48, maxWidth: 560 }}>
-          A prompt is the control surface for quality, scope and reviewability.
-        </p>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.confidentBlack)}>Prompt Engineering Refresher</p>
+          <h2 style={{ ...h2Style, color: C.confidentBlack }}>Building Better Tax Prompts</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 0 }}>
+            A prompt is the control surface for quality, scope and reviewability.
+          </p>
+        </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 32, alignItems: "start" }}>
           {/* 8-element table */}
@@ -367,11 +375,13 @@ function Panel3() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <p style={eyebrow(C.confidentBlack)}>Anatomy of a Good M365 Agent</p>
-        <h2 style={{ ...h2Style, color: C.confidentBlack }}>Instruction Components</h2>
-        <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 48, maxWidth: 560 }}>
-          Design the assistant like a repeatable tax process — not a generic chatbot.
-        </p>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.confidentBlack)}>Anatomy of a Good M365 Agent</p>
+          <h2 style={{ ...h2Style, color: C.confidentBlack }}>Instruction Components</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 0 }}>
+            Design the assistant like a repeatable tax process — not a generic chatbot.
+          </p>
+        </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 32, alignItems: "start" }}>
           {/* 7-element table */}
@@ -506,8 +516,10 @@ function Panel4() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <p style={eyebrow(C.yellow)}>Human-In-The-Loop (HITL)</p>
-        <h2 style={{ ...h2Style, color: C.onDark }}>The Most Important Control</h2>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.yellow)}>Human-In-The-Loop (HITL)</p>
+          <h2 style={{ ...h2Style, color: C.onDark }}>The Most Important Control</h2>
+        </div>
 
         {/* Banner */}
         <div style={{ background: "rgba(255,230,0,0.1)", border: `1px solid rgba(255,230,0,0.3)`, borderRadius: 4, padding: "16px 24px", marginBottom: 40 }}>
@@ -631,11 +643,13 @@ function Panel5() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <p style={eyebrow(C.confidentBlack)}>Sample Prompt Templates</p>
-        <h2 style={{ ...h2Style, color: C.confidentBlack }}>Workshop Reference Library</h2>
-        <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 16, maxWidth: 580 }}>
-          Use the programme handouts for detailed templates; use this slide as the build menu.
-        </p>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.confidentBlack)}>Sample Prompt Templates</p>
+          <h2 style={{ ...h2Style, color: C.confidentBlack }}>Workshop Reference Library</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 0 }}>
+            Use the programme handouts for detailed templates; use this slide as the build menu.
+          </p>
+        </div>
         <div style={{ background: C.confidentBlack, borderRadius: 4, padding: "12px 20px", marginBottom: 40, display: "inline-block" }}>
           <p style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.yellow }}>Reference material in Appendix A handout</p>
         </div>
@@ -716,11 +730,13 @@ function Panel6() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <p style={eyebrow(C.yellow)}>Sample M365 Agent Templates</p>
-        <h2 style={{ ...h2Style, color: C.onDark }}>From Build Lab to Controlled Deployment</h2>
-        <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.onDarkMuted, marginBottom: 48, maxWidth: 580 }}>
-          Convert draft instructions into pilots, adoption rituals and continuous refinement.
-        </p>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.yellow)}>Sample M365 Agent Templates</p>
+          <h2 style={{ ...h2Style, color: C.onDark }}>From Build Lab to Controlled Deployment</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.onDarkMuted, marginBottom: 0 }}>
+            Convert draft instructions into pilots, adoption rituals and continuous refinement.
+          </p>
+        </div>
 
         {/* 7 agents */}
         <p style={{ ...eyebrow(C.framePurple), marginBottom: 16 }}>Agent Instruction Library</p>
@@ -748,7 +764,7 @@ function Panel6() {
         </div>
 
         {/* You now have */}
-        <p style={eyebrow(C.yellow)}>You Now Have</p>
+        <p style={{ ...eyebrow(C.yellow), textAlign: "center" }}>You Now Have</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 56 }}>
           {YOU_NOW_HAVE.map((item) => (
             <div key={item.label} style={{ background: "rgba(255,255,255,0.05)", borderRadius: 4, padding: "24px 22px", borderTop: `3px solid ${item.color}` }}>

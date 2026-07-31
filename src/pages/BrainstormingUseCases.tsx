@@ -145,28 +145,30 @@ function MemoryRefreshSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
-        }}>
-          Memory Refresh
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.white,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-        }}>
-          Good Outcomes Begin with Clear Instructions
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
-          color: colors.onDarkMuted, margin: "0 0 36px", lineHeight: 1.5,
-        }}>
-          Recall the building blocks — without repeating the full Phase 1 training.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
+          }}>
+            Memory Refresh
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.white,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            Good Outcomes Begin with Clear Instructions
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
+            color: colors.onDarkMuted, margin: 0, lineHeight: 1.5,
+          }}>
+            Recall the building blocks — without repeating the full Phase 1 training.
+          </p>
+        </div>
 
         {/* Tab toggle + show descriptions row */}
         <div style={{
@@ -378,22 +380,24 @@ function ProblemFirstSection() {
           )}
         </div>
 
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-        }}>
-          Do Not Begin with "We Need an Agent"
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
-          color: colors.gray01, margin: "0 0 48px", lineHeight: 1.5,
-        }}>
-          A technology choice should follow the problem definition — not precede it.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            Do Not Begin with "We Need an Agent"
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            A technology choice should follow the problem definition — not precede it.
+          </p>
+        </div>
 
         {/* Steps */}
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -660,29 +664,30 @@ function GuidedExamplesSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading + disclaimer */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-        }}>
-          Guided Examples
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-        }}>
-          EY-Guided Prompt Examples
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-          color: colors.gray01, margin: "0 0 32px", lineHeight: 1.5,
-          maxWidth: 640,
-        }}>
-          These examples stimulate discussion — they are not a preselected implementation list.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+          }}>
+            Guided Examples
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            EY-Guided Prompt Examples
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            These examples stimulate discussion — they are not a preselected implementation list.
+          </p>
+        </div>
 
         {/* Split panel */}
         <div style={{
@@ -1003,29 +1008,31 @@ function AgentExamplesSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading + intro */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-        }}>
-          Guided Examples
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-        }}>
-          EY-Guided M365 Agent Examples
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-          color: colors.gray01, margin: "0 0 28px", lineHeight: 1.5, maxWidth: 680,
-        }}>
-          Purpose, actions and outcome as summarised in Sheet1 of Sample use cases.xlsx.
-          Agents are reusable assistants for clearly defined business scenarios.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+          }}>
+            Guided Examples
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            EY-Guided M365 Agent Examples
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            Purpose, actions and outcome as summarised in Sheet1 of Sample use cases.xlsx.
+            Agents are reusable assistants for clearly defined business scenarios.
+          </p>
+        </div>
 
         {/* Tile rows — detail panel injects after the row containing the active tile */}
         {[0, 1, 2].map((rowIdx) => {
@@ -1258,28 +1265,30 @@ function ActivityLevelChoiceSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-        }}>
-          Activity-Level Choice
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-        }}>
-          One Process. Different Activities. Different Solutions.
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-          color: colors.gray01, margin: "0 0 28px", lineHeight: 1.5, maxWidth: 680,
-        }}>
-          Illustrative advance-tax mapping from the workbook: classify each activity separately.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+          }}>
+            Activity-Level Choice
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            One Process. Different Activities. Different Solutions.
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            Illustrative advance-tax mapping from the workbook: classify each activity separately.
+          </p>
+        </div>
 
         {/* Legend cards */}
         <div style={{
