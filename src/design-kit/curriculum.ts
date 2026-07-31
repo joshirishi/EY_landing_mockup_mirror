@@ -54,6 +54,10 @@ export const PHASE_NUMBER = 1;
 export const TOTAL_PHASES = 4;
 export const BRAND_LABEL = "EY.ai Tax Labs";
 
+export const PHASE2_LABEL = "Phase 2: Brainstorming Tax Use Cases";
+export const PHASE2_PATH = "/phase2";
+export const PHASE2_NUMBER = 2;
+
 export const MODULES: CurriculumModule[] = [
   {
     id: "foundational",

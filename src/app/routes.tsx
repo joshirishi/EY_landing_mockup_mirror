@@ -17,14 +17,14 @@ function HomeRoute() {
 }
 
 // ── /phased  ─────────────────────────────────────────────────────────────────
-// Fluid layout (same pattern as /phase1) — no ScaledCanvas zoom-shrink.
 function PhasedRoute() {
   const navigate = useNavigate();
   return (
     <div className="relative w-full max-w-full min-w-0 overflow-x-hidden">
       <PhasedEngagementView
         onNavigateToPhase1={() => navigate("/phase1")}
-        onNavigateToBrainstorming={() => navigate("/brainstorming-use-cases")}
+        onNavigateToPhase2={() => navigate("/phase2")}
+        onNavigateToBrainstorming={() => navigate("/phase2")}
         onNavigateToImplementation={() => navigate("/guidance-implementation")}
       />
     </div>
@@ -56,6 +56,19 @@ function Phase1Route() {
   );
 }
 
+// ── /phase2  ─────────────────────────────────────────────────────────────────
+function Phase2Route() {
+  const navigate = useNavigate();
+  return (
+    <div className="size-full">
+      <BrainstormingUseCases
+        onBack={() => navigate("/phased")}
+        onNavigate={navigate}
+      />
+    </div>
+  );
+}
+
 // ── /copilot-hub  ────────────────────────────────────────────────────────────
 function CopilotHubRoute() {
   const navigate = useNavigate();
@@ -72,16 +85,6 @@ function AiTaxPromptingRoute() {
   return (
     <div className="size-full">
       <AiTaxPrompting onBack={() => navigate("/phase1")} onNavigate={navigate} />
-    </div>
-  );
-}
-
-// ── /brainstorming-use-cases  ────────────────────────────────────────────────
-function BrainstormingRoute() {
-  const navigate = useNavigate();
-  return (
-    <div className="size-full">
-      <BrainstormingUseCases onBack={() => navigate("/phased")} onNavigate={navigate} />
     </div>
   );
 }
@@ -114,10 +117,10 @@ export const router = createBrowserRouter([
       { index: true, Component: HomeRoute },
       { path: "phased", Component: PhasedRoute },
       { path: "phase1", Component: Phase1Route },
+      { path: "phase2", Component: Phase2Route },
       { path: "ai-tax-prompting", Component: AiTaxPromptingRoute },
       { path: "foundational", Component: FoundationalRoute },
       { path: "copilot-hub", Component: CopilotHubRoute },
-      { path: "brainstorming-use-cases", Component: BrainstormingRoute },
       { path: "guidance-implementation", Component: GuidanceImplementationRoute },
     ],
   },
