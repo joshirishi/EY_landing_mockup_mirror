@@ -82,13 +82,13 @@ type ModuleHeaderProps =
       onBack: () => void;
       onSectionClick?: never;
       sectionStatus?: string;
-      /** Override the phase label shown in the breadcrumb (e.g. for Phase 2+). */
+      /** Override the breadcrumb picker label (defaults to current Phase 1 workshop name). */
       phaseLabel?: string;
-      /** Override the phase number shown in the progress chip (default: PHASE_NUMBER). */
+      /** Override the phase number shown in the progress chip. */
       phaseNumber?: number;
-      /** Sub-phase label shown after the module chip (e.g. "2.1"). When provided, renders the two-chip style. */
+      /** Sub-phase label, e.g. "4.1". */
       subPhaseLabel?: string;
-      /** In-page anchor sections — renders Row B tab strip (same as module pages). */
+      /** In-page anchor sections for the tab strip. */
       sections?: { id: string; label: string; group: "learn" | "apply" }[];
     };
 
@@ -98,36 +98,26 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   const currentModuleId = isPhaseOverview ? null : props.currentModuleId;
   const onSectionClick = isPhaseOverview ? undefined : props.onSectionClick;
 
-  const overridePhaseLabel = isPhaseOverview
-    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseLabel
-    : undefined;
-  const overridePhaseNumber = isPhaseOverview
-    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseNumber
-    : undefined;
-  const subPhaseLabel = isPhaseOverview
-    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).subPhaseLabel
-    : undefined;
-  const overrideSections = isPhaseOverview
-    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections
-    : undefined;
-
-  const workshopDisplayLabel = overridePhaseLabel
-    ? overridePhaseLabel.replace(/^Phase \d+: /, "")
-    : WORKSHOP_LABEL;
+  // Phase-overview overrides — fall back to Phase 1 defaults so existing callers are unaffected.
+  const overridePhaseLabel = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseLabel : undefined;
+  const overridePhaseNumber = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseNumber : undefined;
+  const overrideSections = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections : undefined;
 
   const current = currentModuleId ? getModule(currentModuleId) : null;
   const pageTitle = isPhaseOverview
-    ? (overridePhaseLabel ? overridePhaseLabel.replace(/^Phase \d+: /, "") : "Foundational AI Training")
+    ? (overridePhaseLabel ?? "Foundational AI Training")
     : current!.title;
   // Picker button shows WHERE YOU ARE: the current module on module pages, the
   // workshop name on the phase-overview page. The trailing page-title span was
   // removed because it duplicated this label; the dropdown adds workshop context.
-  const pickerLabel = isPhaseOverview ? workshopDisplayLabel : current!.title;
+  const pickerLabel = isPhaseOverview
+    ? (overridePhaseLabel ? overridePhaseLabel.replace(/^Phase \d+: /, "") : WORKSHOP_LABEL)
+    : current!.title;
   // User-facing: Phase → Module, Module → Sub-module.
   // Split into two chips so Module (context) ≠ Sub-module (you are here).
   const activePhaseNumber = overridePhaseNumber ?? PHASE_NUMBER;
   const progressChips = isPhaseOverview
-    ? { module: `Module ${activePhaseNumber}`, subModule: subPhaseLabel ?? null as string | null }
+    ? { module: `Module ${activePhaseNumber} of ${TOTAL_PHASES}`, subModule: null as string | null }
     : {
         module: `Module ${PHASE_NUMBER}`,
         // Plan numbering — {phaseNumber}.{moduleOrder} e.g. "1.3" = phase 1, 3rd module.
@@ -140,20 +130,14 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   const stickyRef = useRef<HTMLDivElement>(null);
   const [subnavHeight, setSubnavHeight] = useState(SUBNAV_SCROLL_OFFSET);
   const groups = currentModuleId ? getSubModuleGroups(currentModuleId) : { learn: [], apply: [] };
-  const phaseOverrideSections = overrideSections ?? [];
-  const learn = isPhaseOverview
-    ? phaseOverrideSections.filter((s) => s.group === "learn")
-    : groups.learn;
-  const apply = isPhaseOverview
-    ? phaseOverrideSections.filter((s) => s.group === "apply")
-    : groups.apply;
-  const showSectionTabs = isPhaseOverview
-    ? phaseOverrideSections.length > 0
-    : !isPhaseOverview && !!current?.supportsInPageNav && (learn.length > 0 || apply.length > 0);
-  const allSectionIds = isPhaseOverview
-    ? phaseOverrideSections.map((s) => s.id)
+  const effectiveSections = overrideSections ?? [];
+  const learn = effectiveSections.length > 0 ? effectiveSections.filter((s) => s.group === "learn") : groups.learn;
+  const apply = effectiveSections.length > 0 ? effectiveSections.filter((s) => s.group === "apply") : groups.apply;
+  const showSectionTabs = (isPhaseOverview && effectiveSections.length > 0) || (!isPhaseOverview && !!current?.supportsInPageNav && (groups.learn.length > 0 || groups.apply.length > 0));
+  const spySectionIds = effectiveSections.length > 0
+    ? effectiveSections.map((s) => s.id)
     : (onSectionClick || !current ? [] : current.subModules.map((s) => s.id));
-  const activeSectionId = useScrollSpy(allSectionIds, subnavHeight);
+  const activeSectionId = useScrollSpy(spySectionIds, subnavHeight);
 
   useLayoutEffect(() => {
     const el = stickyRef.current;
@@ -239,31 +223,11 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                 borderRadius: 4,
                 fontFamily: fonts.bold,
                 fontSize: 14,
-                color: colors.yellow,
+                color: isPhaseOverview ? colors.white : colors.yellow,
               }}
               onFocus={applyFocusRing}
               onBlur={clearFocusRing}
             >
-              {isPhaseOverview && (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 18,
-                    height: 18,
-                    borderRadius: "50%",
-                    fontSize: 11,
-                    fontFamily: fonts.bold,
-                    background: colors.yellow,
-                    color: colors.offBlack,
-                    flexShrink: 0,
-                  }}
-                  aria-hidden="true"
-                >
-                  {activePhaseNumber}
-                </span>
-              )}
               {!isPhaseOverview && current && (
                 <span
                   style={{

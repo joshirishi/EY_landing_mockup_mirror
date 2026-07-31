@@ -1238,7 +1238,7 @@ const PHASE_CARDS = [
     title: "Closure & AI Reinforcement",
     // description: "Assess AI readiness, review adoption through Viva Insights, and establish governance guidance to close out the engagement responsibly.",
     description: "1 call/meeting x 2 hours",
-    locked: true,
+    locked: false,
     completed: false,
     coverage: ["AI Readiness Assessment", "Viva Insights Dashboard", "AI governance guidance"],
     deliverables: ["Governance Playbook", "Copilot Monitoring Guidance"],
