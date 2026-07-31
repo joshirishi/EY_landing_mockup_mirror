@@ -1782,11 +1782,6 @@ function LiveBrainstormSection() {
 const D1_ACCENT = colors.frameBlue;
 const D2_ACCENT = colors.framePurple;
 
-const PHASE_BAR = [
-  { label: "PHASE 1", sub: "What AI can do",                          accent: "#0076A8" },
-  { label: "PHASE 2", sub: "Where AI should help",                    accent: colors.yellow, current: true },
-  { label: "PHASE 3", sub: "How the selected solution can be designed", accent: "#168736" },
-] as const;
 
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
@@ -2004,44 +1999,6 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
           </div>
         </div>
 
-        {/* Phase progression bar */}
-        <div style={{ background: colors.confidentBlack, padding: "0" }}>
-          <div style={{
-            ...contentRailStyle,
-            display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 0,
-          }}>
-            {PHASE_BAR.map((phase, i) => (
-              <div
-                key={phase.label}
-                style={{
-                  borderTop: `3px solid ${phase.accent}`,
-                  borderRight: i < 2 ? `1px solid rgba(255,255,255,0.08)` : "none",
-                  padding: "18px 24px",
-                  background: phase.current ? "rgba(255,230,0,0.06)" : "transparent",
-                }}
-              >
-                <span style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 11,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: phase.accent,
-                }}>
-                  {phase.label}
-                  <span style={{
-                    color: "rgba(255,255,255,0.45)",
-                    fontFamily: fonts.regular,
-                    letterSpacing: 0,
-                    textTransform: "none",
-                  }}>
-                    {" — "}{phase.sub}
-                  </span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* What's Next CTA */}
