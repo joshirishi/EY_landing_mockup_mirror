@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Lock, PlusCircle } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { ModuleHeader } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYFooter } from "../design-kit/EYFooter";
+import { StepBadge } from "../design-kit/EYCard";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, spacing, spectrumCss } from "../design-kit/tokens";
@@ -130,13 +131,13 @@ function MemoryRefreshSection() {
 
   const switchTab = (tab: "prompt" | "agent") => {
     setActiveTab(tab);
-    setSubsVisible(false);
   };
 
   return (
     <section
       id="memory-refresh"
       style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.confidentBlack,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -260,11 +261,8 @@ function MemoryRefreshSection() {
                   transition: "background 180ms, border-color 180ms",
                 }}
               >
-                <span style={{
-                  fontFamily: fonts.bold, fontSize: 11,
-                  color: accentColor, display: "block", marginBottom: 6,
-                }}>
-                  {el.n}
+                <span style={{ display: "block", marginBottom: 8 }}>
+                  <StepBadge n={el.n} color={accentColor} size={22} />
                 </span>
                 <span style={{
                   fontFamily: fonts.bold, fontSize: 13,
@@ -354,7 +352,7 @@ function ProblemFirstSection() {
   return (
     <section
       id="problem-first"
-      style={{ background: colors.white, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.white, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
     >
       <div style={{ ...contentRailStyle }}>
 
@@ -652,7 +650,8 @@ function GuidedExamplesSection() {
     <section
       id="guided-examples"
       style={{
-        background: colors.yellowAlpha10,
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -995,7 +994,8 @@ function AgentExamplesSection() {
     <section
       id="agent-examples"
       style={{
-        background: "rgba(134,48,255,0.05)",
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.white,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1070,15 +1070,16 @@ function AgentExamplesSection() {
                         if (!isActive) (e.currentTarget as HTMLElement).style.background = colors.white;
                       }}
                     >
+                      <StepBadge
+                        n={String(idx + 1).padStart(2, "0")}
+                        color={colors.framePurple}
+                        variant={isActive ? "filled" : "outline"}
+                        size={22}
+                        onLight
+                      />
                       <span style={{
-                        fontFamily: fonts.bold, fontSize: 11,
-                        color: isActive ? colors.framePurple : colors.gray01,
-                        lineHeight: 1.4, flexShrink: 0, marginTop: 1,
-                      }}>
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span style={{
-                        fontFamily: fonts.bold, fontSize: 12,
+                        fontFamily: fonts.bold,
+                        fontSize: 12,
                         color: isActive ? colors.framePurple : colors.offBlack,
                         lineHeight: 1.35, letterSpacing: "-0.01em",
                         transition: "color 180ms",
@@ -1226,7 +1227,7 @@ const BADGE_CONFIG = {
 };
 
 function ActivityLevelChoiceSection() {
-  const [activeFilter, setActiveFilter] = useState<"prompt" | "agent" | "both" | null>(null);
+  const [activeFilter, setActiveFilter] = useState<"prompt" | "agent" | "both" | null>("prompt");
 
   const toggleFilter = (key: "prompt" | "agent" | "both") => {
     setActiveFilter((prev) => (prev === key ? null : key));
@@ -1239,7 +1240,8 @@ function ActivityLevelChoiceSection() {
     <section
       id="use-case-map"
       style={{
-        background: "rgba(0,163,255,0.05)",
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1547,6 +1549,7 @@ function LiveBrainstormSection() {
     <section
       id="live-brainstorm"
       style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.confidentBlack,
         padding: "80px 0",
       }}
@@ -1759,7 +1762,7 @@ const PHASE_BAR = [
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
     <>
-      <section id="deliverables" style={{ background: "#F4F4F8", padding: "80px 0 0" }}>
+      <section id="deliverables" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.offWhite, padding: "80px 0 0" }}>
         <div style={{ ...contentRailStyle }}>
           {/* Eyebrow */}
           <p style={{
@@ -2071,6 +2074,7 @@ function QuickRecallSection() {
     <section
       id="quick-recall"
       style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -2610,6 +2614,17 @@ function HeroSection() {
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────
+const PHASE2_SECTIONS = [
+  { id: "quick-recall",     label: "Quick Recall",    group: "learn" as const },
+  { id: "memory-refresh",   label: "Memory Refresh",  group: "learn" as const },
+  { id: "problem-first",    label: "Problem First",   group: "learn" as const },
+  { id: "guided-examples",  label: "Guided Examples", group: "learn" as const },
+  { id: "agent-examples",   label: "Agent Examples",  group: "learn" as const },
+  { id: "use-case-map",     label: "Use Case Map",    group: "apply" as const },
+  { id: "live-brainstorm",  label: "Live Brainstorm", group: "apply" as const },
+  { id: "deliverables",     label: "Deliverables",    group: "apply" as const },
+];
+
 export default function BrainstormingUseCases({
   onBack,
   onNavigate,
@@ -2617,26 +2632,23 @@ export default function BrainstormingUseCases({
   onBack: () => void;
   onNavigate: (path: string) => void;
 }) {
+  useModuleSectionHashScroll();
   return (
     <div
-      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden"
+      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-clip"
       data-name="EY.ai Tax Labs - Phase 2"
     >
-      {/* ── Sticky chrome ── */}
-      <div
-        className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]"
-        data-name="Top Navigation"
-      >
-        <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
-        <ModuleHeader
-          mode="phase-overview"
-          phaseLabel={PHASE2_LABEL}
-          phaseNumber={PHASE2_NUMBER}
-          subPhaseLabel="2.1"
-          onNavigate={onNavigate}
-          onBack={onBack}
-        />
-      </div>
+      {/* ── Site header scrolls away; ModuleHeader sticks on its own ── */}
+      <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
+      <ModuleHeader
+        mode="phase-overview"
+        phaseLabel={PHASE2_LABEL}
+        phaseNumber={PHASE2_NUMBER}
+        subPhaseLabel="2.1"
+        sections={PHASE2_SECTIONS}
+        onNavigate={onNavigate}
+        onBack={onBack}
+      />
 
       {/* ── Main content ── */}
       <main id="phase2-content">
