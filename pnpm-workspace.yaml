@@ -1,5 +1,11 @@
 packages:
   - '.'
+allowBuilds:
+  '@tailwindcss/oxide': true
+  analyzthis_design: true
+  esbuild: true
+minimumReleaseAgeExclude:
+  - analyzthis_design@1.10.0
 supportedArchitectures:
   os:
     - linux

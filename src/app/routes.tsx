@@ -4,6 +4,7 @@ import { PhasedEngagementView, Phase1View } from "../imports/Frame353/index";
 import FoundationalConcepts from "../pages/FoundationalConcepts";
 import AiTaxPrompting from "../pages/AiTaxPrompting";
 import M365CopilotHub from "../pages/M365CopilotHub";
+import BrainstormingUseCases from "../pages/BrainstormingUseCases";
 
 // ── /  ──────────────────────────────────────────────────────────────────────
 function HomeRoute() {
@@ -20,7 +21,10 @@ function PhasedRoute() {
   const navigate = useNavigate();
   return (
     <div className="relative w-full max-w-full min-w-0 overflow-x-hidden">
-      <PhasedEngagementView onNavigateToPhase1={() => navigate("/phase1")} />
+      <PhasedEngagementView
+        onNavigateToPhase1={() => navigate("/phase1")}
+        onNavigateToPhase2={() => navigate("/phase2")}
+      />
     </div>
   );
 }
@@ -35,6 +39,19 @@ function Phase1Route() {
         onNavigateToFoundational={() => navigate("/foundational")}
         onNavigateToAiTaxPrompting={() => navigate("/ai-tax-prompting")}
         onNavigateToCopilotHub={() => navigate("/copilot-hub")}
+      />
+    </div>
+  );
+}
+
+// ── /phase2  ─────────────────────────────────────────────────────────────────
+function Phase2Route() {
+  const navigate = useNavigate();
+  return (
+    <div className="size-full">
+      <BrainstormingUseCases
+        onBack={() => navigate("/phased")}
+        onNavigate={navigate}
       />
     </div>
   );
@@ -88,6 +105,7 @@ export const router = createBrowserRouter([
       { index: true, Component: HomeRoute },
       { path: "phased", Component: PhasedRoute },
       { path: "phase1", Component: Phase1Route },
+      { path: "phase2", Component: Phase2Route },
       { path: "ai-tax-prompting", Component: AiTaxPromptingRoute },
       { path: "foundational", Component: FoundationalRoute },
       { path: "copilot-hub", Component: CopilotHubRoute },
