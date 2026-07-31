@@ -346,6 +346,18 @@ const AGENT_WORKFLOW = [
 ];
 
 function Panel3() {
+  const [activeStep, setActiveStep] = useState(0);
+  const atEnd = activeStep === AGENT_WORKFLOW.length - 1;
+
+  function scrollToTemplates() {
+    const el = document.getElementById("p5-templates");
+    const container = document.querySelector(".overflow-auto");
+    if (el && container) {
+      const top = el.getBoundingClientRect().top + container.scrollTop - 80;
+      container.scrollTo({ top, behavior: "smooth" });
+    }
+  }
+
   return (
     <section
       id="p3-agents"
@@ -372,24 +384,89 @@ function Panel3() {
             </div>
           </div>
 
-          {/* Workflow + example purpose */}
+          {/* Workflow (interactive step-through) + example purpose */}
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div style={{ background: C.offWhite, borderRadius: 4, padding: "24px 28px" }}>
               <p style={eyebrow(C.framePurple)}>Agent Workflow</p>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                {AGENT_WORKFLOW.map((step, i) => (
-                  <div key={step.n} style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                      <div style={{ width: 32, height: 32, background: C.confidentBlack, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.framePurple }}>{step.n}</span>
+                {AGENT_WORKFLOW.map((step, i) => {
+                  const isActive = i === activeStep;
+                  const isPast = i < activeStep;
+                  return (
+                    <div key={step.n} style={{ display: "flex", alignItems: "center", transition: "opacity 200ms ease-out", opacity: isPast ? 0.35 : 1 }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <div style={{
+                          width: 32, height: 32, borderRadius: 4, flexShrink: 0,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          background: isActive ? C.framePurple : C.confidentBlack,
+                          boxShadow: isActive ? `0 0 0 3px rgba(122,85,204,0.25)` : "none",
+                          transition: "background 200ms ease-out, box-shadow 200ms ease-out",
+                        }}>
+                          <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: isActive ? C.white : C.framePurple }}>{step.n}</span>
+                        </div>
+                        {i < AGENT_WORKFLOW.length - 1 && <div style={{ width: 1, height: 16, background: "rgba(26,26,36,0.15)" }} />}
                       </div>
-                      {i < AGENT_WORKFLOW.length - 1 && <div style={{ width: 1, height: 16, background: "rgba(26,26,36,0.15)" }} />}
+                      <span style={{
+                        fontFamily: F.regular, fontSize: 14, marginLeft: 14,
+                        color: isActive ? C.confidentBlack : C.gray01,
+                        fontWeight: isActive ? 700 : 400,
+                        transition: "color 200ms ease-out, font-weight 200ms ease-out",
+                      }}>{step.step}</span>
                     </div>
-                    <span style={{ fontFamily: F.regular, fontSize: 14, color: C.confidentBlack, marginLeft: 14 }}>{step.step}</span>
-                  </div>
-                ))}
+                  );
+                })}
+              </div>
+
+              {/* Step controls */}
+              <div style={{ marginTop: 20, display: "flex", gap: 8 }}>
+                {!atEnd ? (
+                  <button
+                    type="button"
+                    onClick={() => setActiveStep((s) => Math.min(s + 1, AGENT_WORKFLOW.length - 1))}
+                    style={{
+                      fontFamily: F.bold, fontSize: 12, fontWeight: 700,
+                      color: C.framePurple, background: "none",
+                      border: `1px solid ${C.framePurple}`, borderRadius: 3,
+                      padding: "6px 14px", cursor: "pointer",
+                      letterSpacing: "0.04em",
+                      transition: "background 150ms ease, color 150ms ease",
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = C.framePurple; (e.currentTarget as HTMLButtonElement).style.color = C.white; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "none"; (e.currentTarget as HTMLButtonElement).style.color = C.framePurple; }}
+                  >
+                    Next step →
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={scrollToTemplates}
+                    style={{
+                      fontFamily: F.bold, fontSize: 12, fontWeight: 700,
+                      color: C.white, background: C.framePurple,
+                      border: "none", borderRadius: 3,
+                      padding: "6px 14px", cursor: "pointer",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    See example output →
+                  </button>
+                )}
+                {activeStep > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveStep(0)}
+                    style={{
+                      fontFamily: F.regular, fontSize: 12,
+                      color: C.gray01, background: "none",
+                      border: "none", cursor: "pointer", padding: "6px 8px",
+                    }}
+                  >
+                    Reset
+                  </button>
+                )}
               </div>
             </div>
+
             <div style={{ background: C.confidentBlack, borderRadius: 4, padding: "20px 24px", borderLeft: `4px solid ${C.framePurple}` }}>
               <p style={eyebrow(C.framePurple)}>Example Purpose</p>
               <p style={{ fontFamily: F.regular, fontSize: 14, color: C.onDark, lineHeight: 1.5 }}>
@@ -547,7 +624,7 @@ const APPENDIX_REFS = [
 function Panel5() {
   return (
     <section
-      id="p3-library"
+      id="p5-templates"
       style={{
         background: C.offWhite,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,

@@ -659,6 +659,27 @@ function SlotGrid({ slots, color, dark }: { slots: { label: string; text: string
 function Panel5() {
   const [openPrompt, setOpenPrompt] = useState<string | null>(null);
   const [openAgent, setOpenAgent] = useState<string | null>(null);
+  const [exploredPrompts, setExploredPrompts] = useState<Set<string>>(new Set());
+  const [exploredAgents, setExploredAgents] = useState<Set<string>>(new Set());
+  const [promptComplete, setPromptComplete] = useState(false);
+
+  const totalPrompts = PROMPT_DATA.length;
+  const exploredCount = exploredPrompts.size;
+
+  function togglePrompt(id: string) {
+    setOpenPrompt(openPrompt === id ? null : id);
+    setExploredPrompts((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      if (next.size === totalPrompts) setTimeout(() => setPromptComplete(true), 120);
+      return next;
+    });
+  }
+
+  function toggleAgent(id: string) {
+    setOpenAgent(openAgent === id ? null : id);
+    setExploredAgents((prev) => { const n = new Set(prev); n.add(id); return n; });
+  }
 
   return (
     <section
@@ -672,7 +693,40 @@ function Panel5() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <p style={eyebrow(C.yellow)}>Guided Examples</p>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 4 }}>
+          <p style={eyebrow(C.yellow)}>Guided Examples</p>
+          {/* Progress pill */}
+          <div
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 7,
+              padding: "4px 12px",
+              borderRadius: 20,
+              border: promptComplete
+                ? `1px solid ${C.yellow}`
+                : "1px solid rgba(255,255,255,0.15)",
+              background: promptComplete
+                ? `rgba(255,230,0,0.12)`
+                : "rgba(255,255,255,0.05)",
+              transition: "all 150ms ease-out",
+            }}
+          >
+            {promptComplete ? (
+              <>
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                  <path d="M2 5.5L4.5 8L9 3" stroke={C.yellow} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: "0.05em" }}>
+                  All {totalPrompts} explored
+                </span>
+              </>
+            ) : (
+              <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", letterSpacing: "0.05em" }}>
+                {exploredCount} / {totalPrompts} explored
+              </span>
+            )}
+          </div>
+        </div>
+
         <h2 style={{ ...h2Style, color: C.onDark }}>EY-Guided Prompt Examples</h2>
         <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.onDarkMuted, marginBottom: 8, maxWidth: 640 }}>
           Purpose, approach and outcome as summarised in Sheet1 of Sample use cases.xlsx.
@@ -692,27 +746,37 @@ function Panel5() {
                   <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                  {items.map((item) => (
-                    <AccordionCard
-                      key={item.id}
-                      accentColor={cat.color}
-                      num={item.num}
-                      title={item.title}
-                      open={openPrompt === item.id}
-                      onToggle={() => setOpenPrompt(openPrompt === item.id ? null : item.id)}
-                      dark={true}
-                    >
-                      <SlotGrid
-                        color={cat.color}
-                        dark={true}
-                        slots={[
-                          { label: "Purpose", text: item.purpose },
-                          { label: "Approach", text: item.approach },
-                          { label: "Outcome", text: item.outcome },
-                        ]}
-                      />
-                    </AccordionCard>
-                  ))}
+                  {items.map((item) => {
+                    const visited = exploredPrompts.has(item.id) && openPrompt !== item.id;
+                    return (
+                      <div
+                        key={item.id}
+                        style={{
+                          opacity: visited ? 0.55 : 1,
+                          transition: "opacity 150ms ease-out",
+                        }}
+                      >
+                        <AccordionCard
+                          accentColor={cat.color}
+                          num={item.num}
+                          title={item.title}
+                          open={openPrompt === item.id}
+                          onToggle={() => togglePrompt(item.id)}
+                          dark={true}
+                        >
+                          <SlotGrid
+                            color={cat.color}
+                            dark={true}
+                            slots={[
+                              { label: "Purpose", text: item.purpose },
+                              { label: "Approach", text: item.approach },
+                              { label: "Outcome", text: item.outcome },
+                            ]}
+                          />
+                        </AccordionCard>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -726,13 +790,19 @@ function Panel5() {
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 5, marginBottom: 32 }}>
           {AGENT_DATA.map((agent) => (
-            <AccordionCard
+            <div
               key={agent.id}
+              style={{
+                opacity: exploredAgents.has(agent.id) && openAgent !== agent.id ? 0.55 : 1,
+                transition: "opacity 150ms ease-out",
+              }}
+            >
+            <AccordionCard
               accentColor={agent.color}
               num={agent.num}
               title={agent.title}
               open={openAgent === agent.id}
-              onToggle={() => setOpenAgent(openAgent === agent.id ? null : agent.id)}
+              onToggle={() => toggleAgent(agent.id)}
               dark={true}
             >
               <SlotGrid
@@ -745,6 +815,7 @@ function Panel5() {
                 ]}
               />
             </AccordionCard>
+            </div>
           ))}
         </div>
 
