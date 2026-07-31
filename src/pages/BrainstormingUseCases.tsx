@@ -99,20 +99,20 @@ function SectionNav({ activeId }: { activeId: string }) {
 
 const eyebrow = (color: string): CSSProperties => ({
   fontFamily: F.bold,
-  fontSize: 11,
-  fontWeight: 700,
-  letterSpacing: "0.1em",
+  fontSize: typeScale.label.size,
+  fontWeight: typeScale.label.weight,
+  letterSpacing: typeScale.label.tracking,
   textTransform: "uppercase",
   color,
-  marginBottom: 12,
+  marginBottom: 8,
 });
 
 const h2Style: CSSProperties = {
   fontFamily: F.bold,
-  fontSize: typeScale.h2,
-  fontWeight: 700,
+  fontSize: typeScale.h2.size,
+  fontWeight: typeScale.h2.weight,
   lineHeight: 1.2,
-  letterSpacing: "-0.02em",
+  letterSpacing: typeScale.h2.tracking,
   marginBottom: 12,
 };
 
