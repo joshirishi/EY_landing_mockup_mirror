@@ -88,6 +88,8 @@ type ModuleHeaderProps =
       phaseNumber?: number;
       /** Sub-phase label shown after the module chip (e.g. "2.1"). When provided, renders the two-chip style. */
       subPhaseLabel?: string;
+      /** In-page anchor sections — renders Row B tab strip (same as module pages). */
+      sections?: { id: string; label: string; group: "learn" | "apply" }[];
     };
 
 export function ModuleHeader(props: ModuleHeaderProps) {
@@ -104,6 +106,9 @@ export function ModuleHeader(props: ModuleHeaderProps) {
     : undefined;
   const subPhaseLabel = isPhaseOverview
     ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).subPhaseLabel
+    : undefined;
+  const overrideSections = isPhaseOverview
+    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections
     : undefined;
 
   const workshopDisplayLabel = overridePhaseLabel
@@ -135,12 +140,20 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   const stickyRef = useRef<HTMLDivElement>(null);
   const [subnavHeight, setSubnavHeight] = useState(SUBNAV_SCROLL_OFFSET);
   const groups = currentModuleId ? getSubModuleGroups(currentModuleId) : { learn: [], apply: [] };
-  const { learn, apply } = groups;
-  const showSectionTabs = !isPhaseOverview && !!current?.supportsInPageNav && (learn.length > 0 || apply.length > 0);
-  const activeSectionId = useScrollSpy(
-    onSectionClick || !current ? [] : current.subModules.map((s) => s.id),
-    subnavHeight
-  );
+  const phaseOverrideSections = overrideSections ?? [];
+  const learn = isPhaseOverview
+    ? phaseOverrideSections.filter((s) => s.group === "learn")
+    : groups.learn;
+  const apply = isPhaseOverview
+    ? phaseOverrideSections.filter((s) => s.group === "apply")
+    : groups.apply;
+  const showSectionTabs = isPhaseOverview
+    ? phaseOverrideSections.length > 0
+    : !isPhaseOverview && !!current?.supportsInPageNav && (learn.length > 0 || apply.length > 0);
+  const allSectionIds = isPhaseOverview
+    ? phaseOverrideSections.map((s) => s.id)
+    : (onSectionClick || !current ? [] : current.subModules.map((s) => s.id));
+  const activeSectionId = useScrollSpy(allSectionIds, subnavHeight);
 
   useLayoutEffect(() => {
     const el = stickyRef.current;
