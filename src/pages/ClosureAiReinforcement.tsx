@@ -514,7 +514,8 @@ function ResponsibleAIJourney() {
         <div
           role="tablist"
           aria-label="Responsible AI checkpoints"
-          style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24, justifyContent: "center" }}
+          className="journey-tabs-rail"
+          style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "8px 0", marginBottom: 24 }}
         >
           {JOURNEY_STEPS.map((s, i) => {
             const isActive = i === active;
@@ -529,9 +530,10 @@ function ResponsibleAIJourney() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 8,
-                    padding: "8px 16px",
+                    gap: 6,
+                    padding: "7px 12px",
                     borderRadius: 32,
+                    justifySelf: "center",
                     border: `1.5px solid ${isActive ? s.color : colors.borderOnDark}`,
                     background: isActive ? `${s.color}18` : "transparent",
                     cursor: "pointer",
@@ -550,7 +552,6 @@ function ResponsibleAIJourney() {
                     {s.label}
                   </span>
                 </button>
-                {i === 3 && <div aria-hidden="true" style={{ flexBasis: "100%", height: 0 }} />}
               </Fragment>
             );
           })}
