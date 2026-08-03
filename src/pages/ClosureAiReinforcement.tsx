@@ -1220,16 +1220,22 @@ export default function ClosureAiReinforcement({
                   try {
                     const { default: html2canvas } = await import("html2canvas");
                     const { jsPDF } = await import("jspdf");
+                    const CAPTURE_WIDTH = 1280;
                     const canvas = await html2canvas(section, {
-                      scale: 2,
+                      scale: 3,
                       useCORS: true,
+                      allowTaint: true,
                       backgroundColor: "#1A1A24",
                       logging: false,
+                      // Force desktop layout — CSS grid/media-queries evaluate at this width
+                      windowWidth: CAPTURE_WIDTH,
+                      width: CAPTURE_WIDTH,
+                      imageTimeout: 0,
                       ignoreElements: (el) => el.hasAttribute("data-no-print"),
                     });
-                    // Use display-pixel dimensions (canvas is 2× for sharpness)
-                    const W = canvas.width / 2;
-                    const H = canvas.height / 2;
+                    // canvas is 3× — convert back to CSS pixels for PDF sizing
+                    const W = canvas.width / 3;
+                    const H = canvas.height / 3;
                     const PX_TO_MM = 25.4 / 96;
                     const pdf = new jsPDF({
                       orientation: W > H ? "landscape" : "portrait",
