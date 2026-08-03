@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Lock, PlusCircle } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
+import { ModuleHeader } from "../design-kit/LearningNav";
 import { EYFooter } from "../design-kit/EYFooter";
-import { StepBadge } from "../design-kit/EYCard";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, spacing, spectrumCss } from "../design-kit/tokens";
@@ -131,13 +130,13 @@ function MemoryRefreshSection() {
 
   const switchTab = (tab: "prompt" | "agent") => {
     setActiveTab(tab);
+    setSubsVisible(false);
   };
 
   return (
     <section
       id="memory-refresh"
       style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.confidentBlack,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -146,31 +145,30 @@ function MemoryRefreshSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
-          textAlign: "center",
-        }}>
-          Memory Refresh
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.white,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-          textAlign: "center",
-        }}>
-          Good Outcomes Begin with Clear Instructions
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
-          color: colors.onDarkMuted, margin: "0 0 36px", lineHeight: 1.5,
-          textAlign: "center",
-        }}>
-          Recall the building blocks — without repeating the full Phase 1 training.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
+          }}>
+            Memory Refresh
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.white,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            Good Outcomes Begin with Clear Instructions
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
+            color: colors.onDarkMuted, margin: 0, lineHeight: 1.5,
+          }}>
+            Recall the building blocks — without repeating the full Phase 1 training.
+          </p>
+        </div>
 
         {/* Tab toggle + show descriptions row */}
         <div style={{
@@ -251,48 +249,43 @@ function MemoryRefreshSection() {
             return (
               <div
                 key={`${activeTab}-${el.n}`}
+                onMouseEnter={() => setHoveredTile(el.n)}
+                onMouseLeave={() => setHoveredTile(null)}
                 style={{
+                  background: isHovered ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)",
+                  border: `1px solid ${isHovered ? accentColor : "rgba(255,255,255,0.1)"}`,
+                  borderRadius: 8,
+                  padding: "clamp(14px, 1.5vw, 20px)",
                   animation: "ey-slide-up 260ms cubic-bezier(.22,.68,0,1.05) both",
                   animationDelay: `${el.n * 30}ms`,
-                  borderRadius: 8,
-                  height: "100%",
+                  cursor: "default",
+                  transition: "background 180ms, border-color 180ms",
                 }}
               >
-                <div
-                  onMouseEnter={() => setHoveredTile(el.n)}
-                  onMouseLeave={() => setHoveredTile(null)}
-                  style={{
-                    background: isHovered ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)",
-                    border: `1px solid ${isHovered ? accentColor : "rgba(255,255,255,0.1)"}`,
-                    borderRadius: 8,
-                    padding: "clamp(14px, 1.5vw, 20px)",
-                    cursor: "default",
-                    transition: "background 180ms, border-color 180ms",
-                    height: "100%",
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <span style={{ display: "block", marginBottom: 8 }}>
-                    <StepBadge n={el.n} color={accentColor} size={22} />
-                  </span>
-                  <span style={{
-                    fontFamily: fonts.bold, fontSize: 13,
-                    color: colors.white, lineHeight: 1.3, display: "block",
-                  }}>
-                    {el.kw}
-                  </span>
+                <span style={{
+                  fontFamily: fonts.bold, fontSize: 11,
+                  color: accentColor, display: "block", marginBottom: 6,
+                }}>
+                  {el.n}
+                </span>
+                <span style={{
+                  fontFamily: fonts.bold, fontSize: 13,
+                  color: colors.white, lineHeight: 1.3, display: "block",
+                }}>
+                  {el.kw}
+                </span>
+                {showSub && (
                   <span style={{
                     fontFamily: fonts.regular, fontSize: 12,
                     color: colors.onDarkMuted, lineHeight: 1.4,
                     display: "block", marginTop: 6,
                     borderTop: "1px solid rgba(255,255,255,0.08)",
                     paddingTop: 6,
-                    opacity: showSub ? 1 : 0,
-                    transition: "opacity 180ms",
+                    animation: "ey-hero-fade-up 200ms cubic-bezier(.22,.68,0,1.05) both",
                   }}>
                     {el.sub}
                   </span>
-                </div>
+                )}
               </div>
             );
           })}
@@ -363,41 +356,30 @@ function ProblemFirstSection() {
   return (
     <section
       id="problem-first"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.white, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
+      style={{ background: colors.white, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
     >
+      <style>{`
+        @keyframes ey-row-step-back {
+          from { opacity: 1; transform: translateX(0); }
+          to   { opacity: 0.45; transform: translateX(-4px); }
+        }
+        @keyframes ey-row-step-forward {
+          from { opacity: 0.45; transform: translateX(-4px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
+
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading + progress */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-          textAlign: "center",
-        }}>
-          Problem First
-        </p>
-
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-          textAlign: "center",
-        }}>
-          Do Not Begin with "We Need an Agent"
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
-          color: colors.gray01, margin: "0 0 48px", lineHeight: 1.5,
-          textAlign: "center",
-        }}>
-          A technology choice should follow the problem definition — not precede it.
-        </p>
-
-        {/* Progress badge */}
-        {!promptVisible && (
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.eyebrowGold, margin: 0,
+          }}>
+            Problem First
+          </p>
+          {!promptVisible && (
             <span style={{
               fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em",
               color: colors.gray01, background: colors.offWhite,
@@ -406,8 +388,27 @@ function ProblemFirstSection() {
             }}>
               {revealed} of {PROBLEM_STEPS.length}
             </span>
-          </div>
-        )}
+          )}
+        </div>
+
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            Do Not Begin with "We Need an Agent"
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            A technology choice should follow the problem definition — not precede it.
+          </p>
+        </div>
 
         {/* Steps */}
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -666,8 +667,7 @@ function GuidedExamplesSection() {
     <section
       id="guided-examples"
       style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.offWhite,
+        background: colors.yellowAlpha10,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -675,31 +675,30 @@ function GuidedExamplesSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading + disclaimer */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-          textAlign: "center",
-        }}>
-          Guided Examples
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-          textAlign: "center",
-        }}>
-          EY-Guided Prompt Examples
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-          color: colors.gray01, margin: "0 0 32px auto", lineHeight: 1.5,
-          maxWidth: 640, textAlign: "center", marginLeft: "auto", marginRight: "auto",
-        }}>
-          These examples stimulate discussion — they are not a preselected implementation list.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+          }}>
+            Guided Examples
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            EY-Guided Prompt Examples
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            These examples stimulate discussion — they are not a preselected implementation list.
+          </p>
+        </div>
 
         {/* Split panel */}
         <div style={{
@@ -939,6 +938,7 @@ function GuidedExamplesSection() {
             explanation, validation or a first draft?
           </p>
         </div>
+
       </div>
     </section>
   );
@@ -1012,8 +1012,7 @@ function AgentExamplesSection() {
     <section
       id="agent-examples"
       style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.white,
+        background: "rgba(134,48,255,0.05)",
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1021,32 +1020,31 @@ function AgentExamplesSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading + intro */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-          textAlign: "center",
-        }}>
-          Guided Examples
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-          textAlign: "center",
-        }}>
-          EY-Guided M365 Agent Examples
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-          color: colors.gray01, margin: "0 0 28px", lineHeight: 1.5, maxWidth: 680,
-          textAlign: "center", marginLeft: "auto", marginRight: "auto",
-        }}>
-          Purpose, actions and outcome as summarised in Sheet1 of Sample use cases.xlsx.<br />
-          Agents are reusable assistants for clearly defined business scenarios.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+          }}>
+            Guided Examples
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            EY-Guided M365 Agent Examples
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            Purpose, actions and outcome as summarised in Sheet1 of Sample use cases.xlsx.
+            Agents are reusable assistants for clearly defined business scenarios.
+          </p>
+        </div>
 
         {/* Tile rows — detail panel injects after the row containing the active tile */}
         {[0, 1, 2].map((rowIdx) => {
@@ -1091,16 +1089,15 @@ function AgentExamplesSection() {
                         if (!isActive) (e.currentTarget as HTMLElement).style.background = colors.white;
                       }}
                     >
-                      <StepBadge
-                        n={String(idx + 1).padStart(2, "0")}
-                        color={colors.framePurple}
-                        variant={isActive ? "filled" : "outline"}
-                        size={22}
-                        onLight
-                      />
                       <span style={{
-                        fontFamily: fonts.bold,
-                        fontSize: 12,
+                        fontFamily: fonts.bold, fontSize: 11,
+                        color: isActive ? colors.framePurple : colors.gray01,
+                        lineHeight: 1.4, flexShrink: 0, marginTop: 1,
+                      }}>
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span style={{
+                        fontFamily: fonts.bold, fontSize: 12,
                         color: isActive ? colors.framePurple : colors.offBlack,
                         lineHeight: 1.35, letterSpacing: "-0.01em",
                         transition: "color 180ms",
@@ -1248,7 +1245,7 @@ const BADGE_CONFIG = {
 };
 
 function ActivityLevelChoiceSection() {
-  const [activeFilter, setActiveFilter] = useState<"prompt" | "agent" | "both" | null>("prompt");
+  const [activeFilter, setActiveFilter] = useState<"prompt" | "agent" | "both" | null>(null);
 
   const toggleFilter = (key: "prompt" | "agent" | "both") => {
     setActiveFilter((prev) => (prev === key ? null : key));
@@ -1261,8 +1258,7 @@ function ActivityLevelChoiceSection() {
     <section
       id="use-case-map"
       style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.offWhite,
+        background: "rgba(0,163,255,0.05)",
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1281,31 +1277,30 @@ function ActivityLevelChoiceSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading */}
-        <p style={{
-          fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
-          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-          textAlign: "center",
-        }}>
-          Activity-Level Choice
-        </p>
-        <h2 style={{
-          fontFamily: fonts.bold,
-          fontSize: "clamp(22px, 3.5vw, 36px)",
-          color: colors.offBlack,
-          margin: "0 0 8px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-          textAlign: "center",
-        }}>
-          One Process. Different Activities. Different Solutions.
-        </h2>
-        <p style={{
-          fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-          color: colors.gray01, margin: "0 0 28px", lineHeight: 1.5, maxWidth: 680,
-          textAlign: "center", marginLeft: "auto", marginRight: "auto",
-        }}>
-          Illustrative advance-tax mapping from the workbook: classify each activity separately.
-        </p>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <p style={{
+            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+          }}>
+            Activity-Level Choice
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.offBlack,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            One Process. Different Activities. Different Solutions.
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01, margin: 0, lineHeight: 1.5,
+          }}>
+            Illustrative advance-tax mapping from the workbook: classify each activity separately.
+          </p>
+        </div>
 
         {/* Legend cards */}
         <div style={{
@@ -1466,9 +1461,6 @@ function ActivityLevelChoiceSection() {
                   {row.response}
                 </span>
               </div>
-            );
-          })}
-        </div>
 
         {/* Key message bar */}
         <div style={{
@@ -1573,7 +1565,6 @@ function LiveBrainstormSection() {
     <section
       id="live-brainstorm"
       style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.confidentBlack,
         padding: "80px 0",
       }}
@@ -1587,7 +1578,6 @@ function LiveBrainstormSection() {
           letterSpacing: "0.1em",
           textTransform: "uppercase",
           margin: "0 0 14px",
-          textAlign: "center",
         }}>
           Live Brainstorm
         </p>
@@ -1600,7 +1590,6 @@ function LiveBrainstormSection() {
           margin: "0 0 14px",
           letterSpacing: "-0.02em",
           lineHeight: 1.1,
-          textAlign: "center",
         }}>
           Your Tax Process. Your Pain Points. Your Opportunities.
         </h2>
@@ -1613,11 +1602,8 @@ function LiveBrainstormSection() {
           margin: "0 0 32px",
           lineHeight: 1.6,
           maxWidth: 640,
-          textAlign: "center",
-          marginLeft: "auto",
-          marginRight: "auto",
         }}>
-          EY's guided samples open the conversation.<br />The client's validated process and pain points determine the opportunity.
+          EY's guided samples open the conversation. The client's validated process and pain points determine the opportunity.
         </p>
 
         {/* Main panel */}
@@ -1779,20 +1765,24 @@ function LiveBrainstormSection() {
 
 // ── Deliverables Section ─────────────────────────────────────────────────────
 
-const D1_ACCENT = colors.frameBlue;
-const D2_ACCENT = colors.framePurple;
+const D1_ACCENT = "#0076A8";
+const D2_ACCENT = "#7B5EA7";
 
+const PHASE_BAR = [
+  { label: "PHASE 1", sub: "What AI can do",                          accent: "#0076A8" },
+  { label: "PHASE 2", sub: "Where AI should help",                    accent: colors.yellow, current: true },
+  { label: "PHASE 3", sub: "How the selected solution can be designed", accent: "#168736" },
+] as const;
 
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
     <>
-      <section id="deliverables" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.offWhite, padding: `${spacing.sectionPaddingY} 0 0` }}>
+      <section id="deliverables" style={{ background: "#F4F4F8", padding: "80px 0 0" }}>
         <div style={{ ...contentRailStyle }}>
           {/* Eyebrow */}
           <p style={{
             color: colors.eyebrowGold, fontFamily: fonts.bold,
             fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 14px",
-            textAlign: "center",
           }}>
             Phase 2 Outputs
           </p>
@@ -1802,7 +1792,6 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
             color: colors.offBlack, fontFamily: fonts.bold,
             fontSize: "clamp(26px, 3.2vw, 40px)", margin: "0 0 12px",
             letterSpacing: "-0.02em", lineHeight: 1.1,
-            textAlign: "center",
           }}>
             From Workshop Discussion to a Reimagined Tax Process
           </h2>
@@ -1812,7 +1801,6 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
             color: colors.gray01, fontFamily: fonts.regular,
             fontSize: "clamp(13px, 1.4vw, 15px)", margin: "0 0 40px",
             lineHeight: 1.6, maxWidth: 600,
-            textAlign: "center", marginLeft: "auto", marginRight: "auto",
           }}>
             The workshop converts validated client inputs into two practical Phase 2 deliverables.
           </p>
@@ -1839,9 +1827,9 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
             }}>
               <span style={{
                 fontFamily: fonts.bold,
-                fontSize: 40,
+                fontSize: 56,
                 lineHeight: 1,
-                color: colors.white,
+                color: "rgba(255,255,255,0.92)",
                 letterSpacing: "-0.04em",
               }}>
                 01
@@ -1933,9 +1921,9 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
             }}>
               <span style={{
                 fontFamily: fonts.bold,
-                fontSize: 40,
+                fontSize: 56,
                 lineHeight: 1,
-                color: colors.white,
+                color: "rgba(255,255,255,0.92)",
                 letterSpacing: "-0.04em",
               }}>
                 02
@@ -1978,13 +1966,13 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
                   "Initial priority",
                   "Dependencies or considerations",
                   "Suggested next step",
-                ].map((item, i) => (
+                ].map((item) => (
                   <div key={item} style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                     <span style={{
-                      fontFamily: fonts.bold, fontSize: 11,
-                      color: D2_ACCENT, flexShrink: 0, minWidth: 16,
+                      fontFamily: fonts.bold, fontSize: 14,
+                      color: D2_ACCENT, flexShrink: 0, lineHeight: 1,
                     }}>
-                      {i + 1}.
+                      ·
                     </span>
                     <span style={{
                       fontFamily: fonts.regular, fontSize: 14,
@@ -1999,6 +1987,44 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
           </div>
         </div>
 
+        {/* Phase progression bar */}
+        <div style={{ background: colors.confidentBlack, padding: "0" }}>
+          <div style={{
+            ...contentRailStyle,
+            display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 0,
+          }}>
+            {PHASE_BAR.map((phase, i) => (
+              <div
+                key={phase.label}
+                style={{
+                  borderTop: `3px solid ${phase.accent}`,
+                  borderRight: i < 2 ? `1px solid rgba(255,255,255,0.08)` : "none",
+                  padding: "18px 24px",
+                  background: phase.current ? "rgba(255,230,0,0.06)" : "transparent",
+                }}
+              >
+                <span style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: phase.accent,
+                }}>
+                  {phase.label}
+                  <span style={{
+                    color: "rgba(255,255,255,0.45)",
+                    fontFamily: fonts.regular,
+                    letterSpacing: 0,
+                    textTransform: "none",
+                  }}>
+                    {" — "}{phase.sub}
+                  </span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* What's Next CTA */}
@@ -2063,7 +2089,6 @@ function QuickRecallSection() {
     <section
       id="quick-recall"
       style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -2079,7 +2104,6 @@ function QuickRecallSection() {
           textTransform: "uppercase",
           color: colors.eyebrowGold,
           margin: "0 0 12px",
-          textAlign: "center",
         }}>
           Quick Recall
         </p>
@@ -2090,9 +2114,8 @@ function QuickRecallSection() {
           margin: "0 0 8px",
           letterSpacing: "-0.02em",
           lineHeight: 1.1,
-          textAlign: "center",
         }}>
-          Prompt or M365 Agent?<br />Start with the Nature of the Activity.
+          Prompt or M365 Agent? Start with the Nature of the Activity.
         </h2>
         <p style={{
           fontFamily: fonts.regular,
@@ -2100,7 +2123,6 @@ function QuickRecallSection() {
           color: colors.gray01,
           margin: "0 0 40px",
           lineHeight: 1.5,
-          textAlign: "center",
         }}>
           {agentsRevealed ? (
             <>
@@ -2606,17 +2628,6 @@ function HeroSection() {
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────
-const PHASE2_SECTIONS = [
-  { id: "quick-recall",     label: "Quick Recall",    group: "learn" as const },
-  { id: "memory-refresh",   label: "Memory Refresh",  group: "learn" as const },
-  { id: "problem-first",    label: "Problem First",   group: "learn" as const },
-  { id: "guided-examples",  label: "Guided Examples", group: "learn" as const },
-  { id: "agent-examples",   label: "Agent Examples",  group: "learn" as const },
-  { id: "use-case-map",     label: "Use Case Map",    group: "apply" as const },
-  { id: "live-brainstorm",  label: "Live Brainstorm", group: "apply" as const },
-  { id: "deliverables",     label: "Deliverables",    group: "apply" as const },
-];
-
 export default function BrainstormingUseCases({
   onBack,
   onNavigate,
@@ -2624,23 +2635,26 @@ export default function BrainstormingUseCases({
   onBack: () => void;
   onNavigate: (path: string) => void;
 }) {
-  useModuleSectionHashScroll();
   return (
     <div
-      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-clip"
+      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden"
       data-name="EY.ai Tax Labs - Phase 2"
     >
-      {/* ── Site header scrolls away; ModuleHeader sticks on its own ── */}
-      <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
-      <ModuleHeader
-        mode="phase-overview"
-        phaseLabel={PHASE2_LABEL}
-        phaseNumber={PHASE2_NUMBER}
-        subPhaseLabel="2.1"
-        sections={PHASE2_SECTIONS}
-        onNavigate={onNavigate}
-        onBack={onBack}
-      />
+      {/* ── Sticky chrome ── */}
+      <div
+        className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]"
+        data-name="Top Navigation"
+      >
+        <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
+        <ModuleHeader
+          mode="phase-overview"
+          phaseLabel={PHASE2_LABEL}
+          phaseNumber={PHASE2_NUMBER}
+          subPhaseLabel="2.1"
+          onNavigate={onNavigate}
+          onBack={onBack}
+        />
+      </div>
 
       {/* ── Main content ── */}
       <main id="phase2-content">
@@ -2665,6 +2679,8 @@ export default function BrainstormingUseCases({
 
       </main>
 
+      {/* ── Footer ── */}
+      <EYFooter />
     </div>
   );
 }

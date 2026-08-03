@@ -7,7 +7,7 @@ import cardSvg from "../ContentArea/svg-1dplfat9j5";
 import imgBackgroundMotif from "./f5e2e2f2ea31280810b6cbd46b1af92fee8b344c.png";
 import { imgGroup, imgBackground, imgBackground1, imgBackground2, imgBackground3 } from "./svg-cx48y";
 import TimelineCard from "../TimelineCard/index";
-import CoreProcessingPipeline from "./CoreProcessingPipeline";
+import AscentJourneyInfographic from "./AscentJourneyInfographic";
 
 function Div() {
   return <div className="bg-[#ffe600] h-[3px] relative shrink-0 w-full" data-name="div" />;
@@ -180,27 +180,6 @@ function Nav1() {
   return (
     <div className="bg-[#2E2E38] content-stretch flex flex-col items-center relative shrink-0 w-full" data-name="nav">
       <Div4 />
-    </div>
-  );
-}
-
-function Frame() {
-  return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] md:gap-[16px] items-start justify-center not-italic relative shrink-0 w-full" data-name="Frame">
-      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.15] relative shrink-0 text-[#ffe600] text-[32px] sm:text-[40px] md:text-[40px] lg:text-[48px] md:leading-[48px] lg:leading-[56px]">EY.ai Tax Labs</p>
-      <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[26px] md:leading-[28px] relative shrink-0 text-[#C4C4CD] text-[16px] md:text-[17px] lg:text-[18px] w-full">A structured phased engagement designed to empower your tax teams with AI capabilities, from foundational training to advanced workflow integration.</p>
-    </div>
-  );
-}
-
-function HeaderSection() {
-  return (
-    <div className="relative shrink-0 w-full md:w-[42%] lg:w-[38%] md:min-w-0" data-name="header-section">
-      <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex items-center justify-between pb-[24px] pt-[32px] md:py-[40px] px-4 sm:px-8 md:px-[48px] lg:px-[64px] relative size-full">
-          <Frame />
-        </div>
-      </div>
     </div>
   );
 }
@@ -810,23 +789,14 @@ function Frame38() {
   );
 }
 
-function DiagramViewport() {
-  return (
-    <div className="bg-[#1A1A24] relative shrink-0 w-full md:flex-1 md:min-w-0" data-name="diagram-viewport">
-      <div className="flex flex-row items-center justify-center size-full min-w-0">
-        <div className="content-stretch flex items-center justify-center px-4 sm:px-8 md:px-[24px] lg:px-[32px] py-6 md:py-[32px] relative size-full min-w-0 w-full">
-          <CoreProcessingPipeline />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function AiMs365Schematic() {
   return (
-    <div className="bg-[#1A1A24] content-stretch flex flex-col md:flex-row md:items-stretch overflow-clip relative shrink-0 w-full" data-name="ai-ms365-schematic">
-      <HeaderSection />
-      <DiagramViewport />
+    <div
+      className="relative shrink-0 w-full overflow-clip"
+      style={{ background: "var(--ey-bg-body)" }}
+      data-name="ai-ms365-schematic"
+    >
+      <AscentJourneyInfographic />
     </div>
   );
 }
@@ -1288,12 +1258,12 @@ function CardCheckIcon() {
 
 function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS[0]; onProceed?: () => void; onNavigate?: () => void }) {
   return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] flex-[1_0_0] min-w-px relative rounded-[8px]">
+    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] h-full flex flex-col min-w-px relative rounded-[8px]">
       <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[8px]" />
-      <div className="content-stretch flex flex-col gap-[24px] items-start p-[32px] relative size-full">
+      <div className="content-stretch flex flex-col flex-1 gap-[24px] h-full items-start p-[32px] relative w-full min-h-0">
         {/* Phase number + week */}
         <div className="content-stretch flex items-center justify-between relative shrink-0 w-full min-w-0">
-          <div className="bg-[#ffe600] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]">
+          <div className="bg-[var(--ey-brand-yellow)] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]">
             <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#1A1A24] text-[20px] whitespace-nowrap">{phase.number}</p>
           </div>
           <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">{phase.week}</p>
@@ -1304,7 +1274,7 @@ function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS
           <p className="font-['EYInterstate:Regular',sans-serif] leading-[22px] min-w-full relative shrink-0 text-[#747480] text-[14px] w-[min-content]">{phase.description}</p>
         </div>
         {/* Coverage + Deliverables */}
-        <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col flex-1 gap-[16px] items-start relative w-full min-h-0">
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Coverage</p>
             <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
@@ -1335,29 +1305,32 @@ function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS
           </div>
         </div>
         {/* CTA */}
-        {phase.completed ? (
-          <div className="bg-[#00C864] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
-            <CardCheckIcon />
-            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-white text-[16px] whitespace-nowrap">Completed</p>
-          </div>
-        ) : phase.locked ? (
-          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-            <div className="bg-[#C4C4CD] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
-              <CardLockIcon />
-              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#747480] text-[16px] whitespace-nowrap">This journey is locked</p>
+        <div className="mt-auto w-full flex flex-col gap-[8px] shrink-0">
+          {phase.completed ? (
+            <div className="w-full bg-[#00C864] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
+              <CardCheckIcon />
+              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-white text-[16px] whitespace-nowrap">Completed</p>
             </div>
-            <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#747480] text-[12px]">
-              Complete Phase {phase.number - 1} to unlock this journey
-            </p>
-          </div>
-        ) : (
-          <div
-            className="bg-[#ffe600] content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0 cursor-pointer"
-            onClick={onNavigate ?? onProceed}
+          ) : phase.locked ? (
+            <div className="w-full bg-[var(--border)] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
+              <CardLockIcon />
+              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[var(--muted-foreground)] text-[16px] whitespace-nowrap">This journey is locked</p>
+            </div>
+          ) : (
+            <div
+              className="w-full bg-[var(--ey-brand-yellow)] content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0 cursor-pointer"
+              onClick={onNavigate ?? onProceed}
+            >
+              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[16px] whitespace-nowrap">Click here to Proceed</p>
+            </div>
+          )}
+          <p
+            className={`[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[16px] not-italic relative shrink-0 text-[12px] min-h-[32px] ${phase.locked ? "text-[var(--muted-foreground)]" : "invisible"}`}
+            aria-hidden={!phase.locked}
           >
-            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[16px] whitespace-nowrap">Click here to Proceed</p>
-          </div>
-        )}
+            {phase.locked ? `Complete Phase ${phase.number - 1} to unlock this journey` : "\u00a0"}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -1367,7 +1340,7 @@ function CardGrid({ onProceed, onNavigateToBrainstorming, onNavigateToImplementa
   return (
     <div className="relative shrink-0 w-full min-w-0">
       <div className="content-stretch flex flex-col gap-[24px] items-stretch px-4 sm:px-8 md:px-[64px] relative size-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-[24px] relative shrink-0 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-[24px] items-stretch relative shrink-0 w-full">
           <PhaseCard phase={PHASE_CARDS[0]} onProceed={onProceed} />
           <PhaseCard phase={PHASE_CARDS[1]} onNavigate={onNavigateToBrainstorming} />
           <PhaseCard phase={PHASE_CARDS[2]} onNavigate={onNavigateToImplementation} />

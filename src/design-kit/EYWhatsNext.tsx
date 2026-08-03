@@ -46,7 +46,7 @@ export interface EYWhatsNextProps {
 export function EYWhatsNext({
   eyebrow = "What's Next",
   title,
-  description: _description,
+  description,
   ctaLabel,
   onContinue,
   meta: _meta,
@@ -137,19 +137,19 @@ export function EYWhatsNext({
           {title}
         </h2>
 
-        {/* Body paragraph temporarily hidden — keep heading + CTA only
-        <p
-          style={{
-            margin: "0 0 28px",
-            fontSize: 15,
-            lineHeight: "22px",
-            color: DARK.body,
-            fontFamily: fonts.regular,
-          }}
-        >
-          {_description}
-        </p>
-        */}
+        {description ? (
+          <p
+            style={{
+              margin: "0 0 28px",
+              fontSize: 15,
+              lineHeight: "22px",
+              color: DARK.body,
+              fontFamily: fonts.regular,
+            }}
+          >
+            {description}
+          </p>
+        ) : null}
 
         <button
           type="button"

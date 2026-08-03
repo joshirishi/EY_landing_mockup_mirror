@@ -28,6 +28,7 @@ Every in-page section must:
 1. Have an `id` matching its `SubModule.id` from `curriculum.ts`
 2. Set `scrollMarginTop: SUBNAV_SCROLL_MARGIN` so scroll-spy doesn't hide content
 3. Use full-bleed background with railed content inside
+4. **Center-align section titles and subtitles** — both the heading and its supporting subtitle use `textAlign: 'center'` (or equivalent). This is consistent across all module pages; do not left-align section headers.
 
 ```tsx
 import { SUBNAV_SCROLL_MARGIN, contentRailStyle, spacing } from '@/design-kit';

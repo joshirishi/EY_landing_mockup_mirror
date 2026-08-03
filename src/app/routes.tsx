@@ -18,14 +18,14 @@ function HomeRoute() {
 }
 
 // ── /phased  ─────────────────────────────────────────────────────────────────
-// Fluid layout (same pattern as /phase1) — no ScaledCanvas zoom-shrink.
 function PhasedRoute() {
   const navigate = useNavigate();
   return (
     <div className="relative w-full max-w-full min-w-0 overflow-x-hidden">
       <PhasedEngagementView
         onNavigateToPhase1={() => navigate("/phase1")}
-        onNavigateToBrainstorming={() => navigate("/brainstorming-use-cases")}
+        onNavigateToPhase2={() => navigate("/phase2")}
+        onNavigateToBrainstorming={() => navigate("/phase2")}
         onNavigateToImplementation={() => navigate("/guidance-implementation")}
         onNavigateToClosure={() => navigate("/closure-ai-reinforcement")}
       />
@@ -91,16 +91,6 @@ function AiTaxPromptingRoute() {
   );
 }
 
-// ── /brainstorming-use-cases  ────────────────────────────────────────────────
-function BrainstormingRoute() {
-  const navigate = useNavigate();
-  return (
-    <div className="size-full">
-      <BrainstormingUseCases onBack={() => navigate("/phased")} onNavigate={navigate} />
-    </div>
-  );
-}
-
 // ── /foundational  ──────────────────────────────────────────────────────────
 function FoundationalRoute() {
   const navigate = useNavigate();
@@ -143,7 +133,6 @@ export const router = createBrowserRouter([
       { path: "ai-tax-prompting", Component: AiTaxPromptingRoute },
       { path: "foundational", Component: FoundationalRoute },
       { path: "copilot-hub", Component: CopilotHubRoute },
-      { path: "brainstorming-use-cases", Component: BrainstormingRoute },
       { path: "guidance-implementation", Component: GuidanceImplementationRoute },
       { path: "closure-ai-reinforcement", Component: ClosureAiReinforcementRoute },
     ],

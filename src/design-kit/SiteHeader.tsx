@@ -199,7 +199,7 @@ function HubBrandBar({
         {rightSlot}
       </div>
 
-      <nav aria-label="Site sections" style={{ background: "#2E2E38", display: "flex", alignItems: "center", padding: "0 16px", overflowX: "auto" }}>
+      <nav aria-label="Site sections" style={{ background: colors.confidentBlack, display: "flex", alignItems: "center", padding: "0 16px", overflowX: "auto" }}>
         <SiteNavLink
           label="About EY India AI Tax Hub"
           isActive={activeSection === "home"}

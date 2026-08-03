@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-  AlertTriangle, ArrowRight, BarChart3, Calculator, ClipboardList, Compass, FileText,
+  AlertTriangle, ArrowRight, BarChart3, Calculator, Check, CheckCircle, ChevronDown, ChevronRight,
+  ClipboardList, Compass, Copy, ExternalLink, FileText,
   FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
-  PenLine, Pin, Rocket, Search, Sparkles, Target, Timer,
+  ChevronLeft, PenLine, Pin, Rocket, Search, Sparkles, Target, Timer, XCircle,
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
@@ -35,22 +36,6 @@ function CopilotIcon({ size = 20 }: { size?: number }) {
   );
 }
 
-// ── Agent glyph — muted line icon for "M365 Agent" coming-soon slot ──────────
-// No distinct public M365 Agent logo exists yet; Copilot's icon is already used
-// for "M365 Chat" above, so this stays a neutral gray line glyph (EY gray02).
-function AgentGlyph({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={C.gray02} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="4" y="9" width="16" height="11" rx="3" />
-      <path d="M12 9V5" />
-      <circle cx="12" cy="3.5" r="1.4" fill={C.gray02} stroke="none" />
-      <circle cx="9" cy="14.5" r="1.2" fill={C.gray02} stroke="none" />
-      <circle cx="15" cy="14.5" r="1.2" fill={C.gray02} stroke="none" />
-      <path d="M4 13H2M22 13h-2" />
-    </svg>
-  );
-}
-
 // ── Tab config (exact labels from Figma 3317:15589) ──────────────────────────
 // `logo` paths match the laptop-stage / CoreProcessingPipeline MS app SVGs in
 // public/pipeline/ — real product marks, not letter-on-square placeholders.
@@ -60,6 +45,7 @@ const TABS = [
   { id: "ppt",     label: "PowerPoint Decks", color: C.pptOrange,  appColor: C.pptOrange,  logo: "/pipeline/powerpoint.svg" },
   { id: "outlook", label: "Outlook Threads",  color: C.outlookBlue,appColor: C.outlookBlue,logo: "/pipeline/outlook.svg" },
   { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
+  { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/m365-agent-icon.png" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -71,12 +57,13 @@ const APP_NAME: Record<TabId, string> = {
   ppt: "PowerPoint",
   outlook: "Outlook",
   m365: "M365 Chat",
+  agent: "M365 Agent",
 };
 
 // ── Laptop stage — "What you can do" popping app widget (ported from Module1) ─
 // The 5 apps with live prompt content below "pop" with a floating animation and
-// jump straight to their tab section. The 6 apps without prompt content yet are
-// shown as a muted, inert "coming soon" dock underneath.
+// jump straight to their tab section. M365 Agent sits on the stage itself;
+// remaining apps without prompt content show as a muted "coming soon" dock.
 const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSSProperties }[] = [
   { id: "word",    label: "Word",        logo: "/pipeline/word.svg",         pos: { top: 47, left: 42 } },
   { id: "excel",   label: "Excel",       logo: "/pipeline/excel.svg",        pos: { top: 34, right: 68, animationDelay: "0.4s" } },
@@ -85,10 +72,15 @@ const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSS
   { id: "m365",    label: "M365 Chat",   logo: "/pipeline/copilot-icon.svg", pos: { top: 0, left: "44%", animationDelay: "1.6s" } },
 ];
 
-// `logo` is a real MS app SVG path; when absent (M365 Agent — no public logo
-// exists yet), the dock falls back to the muted AgentGlyph line icon.
-const LAPTOP_COMING_SOON_APPS: { label: string; logo?: string }[] = [
-  { label: "M365 Agent" },
+// M365 Agent — stage tile opens the agent prompt tab (same white tile as other apps).
+const LAPTOP_STAGE_AGENT = {
+  id: "agent" as TabId,
+  label: "M365 Agent",
+  logo: "/pipeline/m365-agent-icon.png",
+  pos: { bottom: 34, left: 0, right: 0, marginLeft: "auto", marginRight: "auto", animationDelay: "2s" } as React.CSSProperties,
+};
+
+const LAPTOP_COMING_SOON_APPS: { label: string; logo: string }[] = [
   { label: "MS Teams",   logo: "/pipeline/teams.svg" },
   { label: "SharePoint", logo: "/pipeline/sharepoint.svg" },
   { label: "OneDrive",   logo: "/pipeline/onedrive.svg" },
@@ -217,6 +209,648 @@ const SECTION_DATA: Record<TabId, {
     screenshotSide: "right",
     altBg: true,
   },
+  agent: {
+    eyebrow: "AUTONOMOUS TAX WORKFLOWS",
+    eyebrowColor: C.teamsViolet,
+    h2: "M365 Agent in Tax",
+    subtitle: "Build reliable M365 agents with Microsoft's instruction principles, reusable templates, and tax-specific sample workflows.",
+    useCases: [
+      { icon: Search,        title: "Retrieve Tax Knowledge",    body: "Locate historical positions, precedents and supporting materials across approved repositories." },
+      { icon: FolderOpen,    title: "Organise Evidence",         body: "Gather and package issue-wise evidence from SharePoint, Teams and Outlook for audits and disputes." },
+      { icon: ClipboardList, title: "Track Compliance",          body: "Monitor filing deadlines, action items and overdue obligations across engagements." },
+      { icon: Rocket,        title: "Automate Correspondence",   body: "Standardise recurring tax communications with approved templates and tone guidelines." },
+    ],
+    panelSubtitle: "Sample agent instructions for common tax workflow scenarios.",
+    prompts: [
+      { label: "Tax Knowledge Retrieval Agent",      text: "You are a tax knowledge assistant. Search approved repositories for opinions, notices, submissions and policies. Summarise findings with source references and flag gaps." },
+      { label: "Transfer Pricing Documentation Agent", text: "Review related-party schedules, TP reports and GL records. Identify transactions, summarise supporting information and highlight exceptions for audit readiness." },
+      { label: "Advance Tax Reviewer Agent",           text: "Compare current and prior quarter advance tax computations. Validate assumption changes, analyse variances and draft a management summary note." },
+      { label: "Assessment Evidence Agent",            text: "Search SharePoint, Teams and Outlook for documentation related to this assessment issue. Create an evidence pack and list missing support." },
+      { label: "Compliance Tracker Agent",             text: "Maintain the compliance calendar and filing records. Flag upcoming, due and overdue obligations with risk notes for each entity." },
+    ],
+    screenshotSide: "left",
+    altBg: false,
+  },
+};
+
+// ── M365 Agent — instruction principles, templates, and MS Learn reference ──
+const MS_LEARN_AGENT_INSTRUCTIONS =
+  "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/declarative-agent-instructions";
+const MS_LEARN_MODEL_MIGRATION =
+  "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/declarative-model-migration-overview";
+const MS_LEARN_OPENAPI_GUIDANCE =
+  "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/openapi-document-guidance";
+const MS_LEARN_COPILOT_STUDIO_INSTRUCTIONS =
+  "https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-mode-guidance";
+const MS_LEARN_SPECIAL_INSTRUCTIONS =
+  "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/declarative-agent-manifest-1.6#special-instructions-object";
+const EXAMPLE_INSTRUCTIONS_INTRO =
+  "The following example instructions are for an agent that can help resolve common IT problems.";
+
+const PATTERNS_SECTION_INTRO =
+  "This section provides patterns and templates that you can add to your declarative agent instructions. The examples shown aren't prescriptive. Use them as a starting point and adapt them to the requirements of your use case.";
+
+const IT_AGENT_FULL_EXAMPLE = `# OBJECTIVE
+Guide users through issue resolution by gathering information, checking outages, narrowing down solutions, and creating tickets if needed. Ensure the interaction is focused, friendly, and efficient.
+
+# RESPONSE RULES
+- Ask one clarifying question at a time, only when needed.
+- Present information as concise bullet points or tables.
+- Avoid overwhelming users with details or options.
+- Always confirm before moving to the next step or ending.
+- Use tools only if data is sufficient; otherwise, ask for missing info.
+
+# WORKFLOW
+
+## Step 1: Gather Basic Details
+- **Goal:** Identify the user's issue.
+- **Action:**
+  - Proceed if the description is clear.
+  - If unclear, ask a single, focused clarifying question.
+    - Example:
+      User: "Issue accessing a portal."
+      Assistant: "Which portal?"
+- **Transition:** Once clear, proceed to Step 2.
+
+## Step 2: Check for Ongoing Outages
+- **Goal:** Rule out known outages.
+- **Action:**
+  - Query \`ServiceNow\` for current outages.
+  - If an outage is found:
+    - Share details and ETA.
+    - Ask: "Is your issue unrelated? If yes, I can help further."
+    - If yes, go to Step 3. If no/no response, end politely.
+  - If none, inform the user and go to Step 3.
+
+## Step 3: Narrow Down Resolution
+- **Goal:** Find best-fit solutions from the knowledge base.
+- **Action:**
+  - Search \`ServiceNow KB\` for related articles.
+  - **Iterative narrowing:** Don't list all results. Instead:
+    - Ask clarifying questions based on article differences.
+    - Eliminate irrelevant options with user responses.
+    - Repeat until the best solution is found.
+  - Provide step-by-step fix instructions.
+  - Confirm: "Did this help? If not, I can go deeper or create a ticket."
+    - If more info is provided, repeat this step.
+    - If ticket needed, go to Step 4.
+    - If resolved/no response, end politely.
+
+## Step 4: Create Support Ticket
+- **Goal:** Log unresolved issues.
+- **Action:**
+  1. Map **category** and **subcategory** from the \`sys_choice\` SharePoint file.
+     - Use only valid pairs. Leave blank if not clear.
+  2. Fetch user's UPN (email) with the people capability.
+  3. Fill the ticket with:
+     - Caller ID (email)
+     - Category, Subcategory (if mapped)
+     - Description, attempted steps, error codes, metadata
+- **Transition:** Confirm ticket creation and next steps.
+
+# OUTPUT FORMATTING RULES
+- Use bullets for actions, lists, next steps.
+- Use tables for structured data where UI allows.
+- Avoid long paragraphs; keep responses skimmable.
+- Always confirm before ending or submitting tickets.
+
+# EXAMPLES
+
+## Valid Example
+**User:** "I can't connect to VPN."
+**Assistant:**
+- "Are you seeing a specific error?"
+  (User: "DNS server not responding.")
+- "Let me check for outages."
+  (No outage.)
+- "No outages. Searching knowledge base…"
+  (Finds articles. Asks: "Are you on office Wi-Fi or home?")
+  (User: "Home.")
+- "Try resetting your DNS settings. Here's how…"
+- "Did this help? If not, I can create a support ticket."
+
+## Invalid Example
+- "Here are 15 articles I found…" *(Overwhelms the user)*
+- "I'm raising a ticket" *(without confirming details)*`;
+
+type AgentPromptFailure = {
+  n: string;
+  title: string;
+  problem: string;
+  solution: string;
+};
+
+/** MS Learn § Avoid common prompt failures — declarative-agent-instructions */
+const AGENT_FAILURES_INTRO =
+  "Be aware of the following pitfalls and their solutions to avoid common failures.";
+
+const AGENT_PROMPT_FAILURES: readonly AgentPromptFailure[] = [
+  {
+    n: "01",
+    title: "Overeager tool use",
+    problem: "The model calls tools without needed inputs.",
+    solution: "Add instruction \"Only call the tool if necessary inputs are available; otherwise, ask the user.\"",
+  },
+  {
+    n: "02",
+    title: "Repetitive phrasing",
+    problem: "The model reuses example phrasing verbatim.",
+    solution: "Encourage varied responses and natural language. Consider adding more than one example instead of just one (few-shot prompting). Experiment with removing the example to save on tokens.",
+  },
+  {
+    n: "03",
+    title: "Verbose explanations",
+    problem: "The model overexplains or provides excessive formatting.",
+    solution: "To limit verbosity or formatting, add constraints and concise examples.",
+  },
+] as const;
+
+const AGENT_INTRO_BODY =
+  "Declarative agents are customized versions of Microsoft 365 Copilot that help you create personalized experiences by declaring specific instructions, actions, and knowledge. To write effective instructions for your declarative agent, consider the following questions:";
+
+const AGENT_INTRO_QUESTIONS = [
+  "What goal must your agent accomplish?",
+  "What workflows do you envision your end users going through?",
+  "Is there business logic you want to incorporate?",
+  "Is there a desired end user experience you want to incorporate?",
+  "For each workflow, can you provide step-by-step instructions for the agent?",
+] as const;
+
+const AGENT_GPT_MIGRATION_CALLOUT =
+  "Microsoft 365 Copilot periodically transitions to newer GPT versions. Because these updates are automatic, expect some behavioral change over time and be prepared to adapt prompts and instructions where precision matters. The recent move from GPT 5.0 to GPT 5.1 was a larger shift from a mostly literal interpretation of instructions to a more intent‑first, adaptive reasoning approach. This shift might affect how your declarative agent understands and responds to your instructions, particularly in structured or step-by-step scenarios.";
+
+const AGENT_SHAREPOINT_XPIA_CALLOUT =
+  "Don't store or offload declarative agent instructions in SharePoint documents (or any other knowledge source) to work around the 8,000-character instruction limit. Knowledge source content is not trusted maker-authored instruction content and is subject to cross-prompt injection attacks (XPIA) classifiers — directive-like language can be blocked, truncated, or sanitized at runtime, causing unpredictable agent behavior. This pattern also expands the attack surface: anyone with edit access to the referenced document can alter agent behavior at runtime, bypassing the manifest's authoring, versioning, and governance controls.";
+
+const AGENT_COMPONENTS_MAIN = ["Purpose", "General guidelines, including general directions, tone, and restrictions", "Skills"] as const;
+
+const AGENT_COMPONENTS_OPTIONAL = [
+  "Step-by-step instructions",
+  "Error handling and limitations",
+  "Feedback and iteration",
+  "Interaction examples",
+  "Nonstandard terms",
+  "Follow-up and closing",
+] as const;
+
+type AgentBestPractice = {
+  n: string;
+  title: string;
+  bullets?: readonly string[];
+  paragraphs?: readonly string[];
+  codeBlocks?: readonly { label: string; code: string }[];
+};
+
+/** MS Learn § Best practices for agent instructions — verbatim structure */
+const AGENT_MS_BEST_PRACTICES: readonly AgentBestPractice[] = [
+  {
+    n: "01",
+    title: "Use clear actionable language",
+    bullets: [
+      "**Focus on what Copilot should do**, not what to avoid.",
+      "**Use precise, specific verbs**, such as \"ask\", \"search\", \"send\", \"check\", or \"use\".",
+      "**Supplement with examples** to minimize ambiguity.",
+      "**Define any terms** that are nonstandard or unique to the organization in the instructions.",
+    ],
+  },
+  {
+    n: "02",
+    title: "Build step-by-step workflows with transitions",
+    paragraphs: ["Break workflows into modular, unambiguous, and nonconflicting steps. Each step should include:"],
+    bullets: [
+      "**Goal**: The purpose of the step.",
+      "**Action**: What the agent should do and which tools to use.",
+      "**Transition**: Clear criteria for moving to the next step or ending the workflow.",
+    ],
+  },
+  {
+    n: "03",
+    title: "Use strict structure",
+    paragraphs: ["Structure is one of the strongest signals used to interpret intent:"],
+    bullets: [
+      "Use *sections* to group related tasks into logical categories, without implying sequence.",
+      "Use *bullets* for parallel tasks that can be completed independently. Avoid numbering that might introduce unintended order.",
+      "Use *steps* for actions that must occur in a required sequence, and reserve them only for true workflows.",
+    ],
+  },
+  {
+    n: "04",
+    title: "Make tasks atomic",
+    paragraphs: [
+      "Break multiaction instructions into clearly separated units. This approach reduces ambiguity and prevents the model from merging or reinterpreting tasks.",
+      "Instead of: Extract metrics and summarize findings.",
+      "Use separate steps: 1. Extract metrics. 2. Summarize findings.",
+    ],
+  },
+  {
+    n: "05",
+    title: "Always specify tone, verbosity, and output format",
+    paragraphs: [
+      "If you don't specify tone and level of detail, the language model might infer these attributes, which can lead to inconsistent behavior across models. For example, specify:",
+    ],
+    bullets: [
+      "Tone: professional and concise.",
+      "Output: Three bullet points per section.",
+      "Return only the requested format; no explanations.",
+    ],
+  },
+  {
+    n: "06",
+    title: "Structure instructions in Markdown",
+    paragraphs: ["To provide emphasis and clarity on the order of steps, use Markdown."],
+    bullets: [
+      "Use `#`, `##`, and `###` for section headers.",
+      "Use `-` for unordered lists and `1.` for numbered lists. Use unordered lists unless the order of steps is important, in which case, use numbered lists.",
+      "Highlight tool or system names (for example, `Jira`, `ServiceNow`, `Teams`) by using backticks.",
+      "Make critical instructions bold by using `**`.",
+      "Clear headings and consistent list structures help the model understand your intended hierarchy. Avoid mixing list types in ways that can introduce unintended interpretation.",
+    ],
+  },
+  {
+    n: "07",
+    title: "Provide domain vocabulary",
+    paragraphs: ["Define specialized terms, formulas, acronyms, and dataset‑specific language. This definition prevents incorrect inference and ensures consistent interpretation."],
+  },
+  {
+    n: "08",
+    title: "Explicitly reference capabilities, knowledge, and actions",
+    paragraphs: ["Clearly call out the names of actions, capabilities, or knowledge sources involved at each step."],
+    bullets: [
+      "**Actions**: For example, \"Use `Jira` to fetch tickets.\"",
+      "**Copilot connector knowledge**: For example, \"Use `ServiceNow KB` for help articles.\"",
+      "**SharePoint knowledge**: For example, \"Reference SharePoint or OneDrive internal documents.\"",
+      "**Email messages**: For example, \"Check user emails for relevant information.\"",
+      "**Teams messages**: For example, \"Search Teams chat history.\"",
+      "**Code interpreter**: For example, \"Use code interpreter to generate bar or pie charts.\"",
+      "**People knowledge**: For example, \"Use people knowledge to fetch user email.\"",
+    ],
+  },
+  {
+    n: "09",
+    title: "Ground responses to configured knowledge sources",
+    paragraphs: [
+      "Language models have built-in knowledge from their training data. In many agent scenarios, you want the agent to rely only on the knowledge sources you configure—not the model's internal knowledge. This approach ensures that responses are accurate, consistent, and traceable to your organizational data.",
+      "The recommended way to prevent the model from drawing on its built-in knowledge is to set the `discourage_model_knowledge` property to `true` in the `special_instructions` object of your agent manifest. When enabled, the agent does its best to avoid generating responses from model knowledge and relies on your configured knowledge sources instead.",
+    ],
+  },
+  {
+    n: "10",
+    title: "Provide examples",
+    bullets: [
+      "For simple scenarios, you don't need to give examples.",
+      "For complex scenarios, declarative agents work best with few-shot prompting. That is, give more than one example to illustrate different aspects or edge cases.",
+    ],
+  },
+  {
+    n: "11",
+    title: "Control reasoning through phrasing",
+    paragraphs: ["Your wording signals how much reasoning you want the model to apply."],
+    codeBlocks: [
+      {
+        label: "Deep reasoning",
+        code: `Use deep reasoning. Break the problem into steps, analyze each step, evaluate alternatives, and justify the final decision. Reflect before answering.
+Task: Determine the optimal 3-year migration strategy given constraints A, B, and C.`,
+      },
+      {
+        label: "To detect when deep reasoning was selected",
+        code: `Before answering, report in one sentence whether you needed deep reasoning or minimal reasoning to solve this. Then provide the final answer only.`,
+      },
+      {
+        label: "Moderate reasoning (balanced)",
+        code: `Provide a concise but structured explanation. Include a short summary, 3 key drivers, and a final recommendation. No step-by-step reasoning required.
+Task: Explain the tradeoffs between solution X and Y.`,
+      },
+      {
+        label: "Fast and minimal reasoning",
+        code: `Short answer only. No reasoning or explanation. Provide the final result only.
+Task: Extract the product name and renewal date from this paragraph.`,
+      },
+    ],
+  },
+] as const;
+
+const AGENT_ADVANCED_TOPICS: readonly { n: string; title: string; body: string; link?: { href: string; label: string } }[] = [
+  {
+    n: "13",
+    title: "Add a final self-evaluation step",
+    body: "A self-check step reinforces completeness and ensures that the agent verifies alignment with your instructions before responding. For example: Before finalizing, confirm that all items from Section A appear in the summary.",
+  },
+  {
+    n: "14",
+    title: "Apply a stabilizing header when needed",
+    body: "When an agent shows signs of inference drift or step reordering, especially following a model update, add a short header that instructs the model to interpret the instructions literally and avoid inference.",
+    link: { href: MS_LEARN_MODEL_MIGRATION, label: "Model changes in GPT 5.1+ for declarative agents" },
+  },
+  {
+    n: "15",
+    title: "Iterate on your instructions",
+    body: "Developing instructions for declarative agents is often an iterative process. It typically consists of the following steps:",
+  },
+] as const;
+
+const AGENT_ITERATE_STEPS = [
+  "**Create** instructions and conversation starters for your agent following the structure and format described in this article.",
+  "**Publish** your agent. Responsible AI (RAI) practices are integrated into the validation process to ensure that agents uphold ethical standards.",
+  "**Test** your agent — confirm added value vs. Microsoft 365 Copilot, verify conversation starters, confirm instruction adherence, and handle out-of-scope prompts appropriately.",
+  "**Iterate** on instructions — modify instructions to change behavior; try adding knowledge like web search, OneDrive/SharePoint, or Microsoft 365 Copilot connectors if needed.",
+] as const;
+
+type AgentPattern = {
+  n: string;
+  name: string;
+  intro?: string;
+  template: string;
+  goodPrecision?: string;
+  deepReasoning?: string;
+  fastReasoning?: string;
+  whenToUseIntro?: string;
+  whenToUse?: readonly string[];
+};
+
+const AGENT_INSTRUCTION_PATTERNS: readonly AgentPattern[] = [
+  {
+    n: "01",
+    name: "Convert ambiguous multitask requests into deterministic workflows",
+    intro: "By using this pattern, you remove ambiguity by defining atomic steps, explicit formulas, and required validation. This approach ensures stable, repeatable behavior across model versions.",
+    template: `## Task: Metrics and ROI (Deterministic)
+
+### Definitions (Do not invent)
+- Metrics to compute: [Metric1], [Metric2], [Metric3]
+- ROI definition: ROI = (Benefit - Cost) / Cost
+- ROI scope: [e.g., 12 months, Product X only, Region Y]
+- Source of truth: Use ONLY the provided document(s) for inputs
+
+### Steps (Sequential — do not reorder)
+Step 1: Locate inputs for [Metric1-3] in the document. Quote the section/table name where each input came from.
+Step 2: Compute [Metric1-3] exactly as defined above. If any input is missing, stop and ask ONE question listing what's missing.
+Step 3: Compute ROI using the ROI definition above. Do not substitute other ROI formulas.
+Step 4: Output ONLY the table in the format below.
+
+### Output format
+Return a single Markdown table with columns: Metric | Value | Source (section/table) | Notes
+
+### Final check (Self-evaluation)
+Before finalizing: confirm every metric has (a) a value, (b) a source, and (c) no assumptions. If assumptions exist, stop and ask the user.`,
+  },
+  {
+    n: "02",
+    name: "Correct parallel versus sequential structure",
+    intro: "By using this pattern, you make sure the model separates parallel and sequential logic. The model runs workflows correctly without adding or reordering steps.",
+    template: `Section A — Extract Data
+- Extract pricing changes.
+- Extract margin changes.
+- Extract sentiment themes.
+
+Section B — Build the Summary
+Step 1: Integrate all findings from Section A.
+Step 2: Produce the 2 page call prep summary.`,
+  },
+  {
+    n: "03",
+    name: "Explicit decision rules",
+    intro: "By using this pattern, you add explicit if/then rules that prevent unintended model interpretation and enforce deterministic outcomes. This approach stops the language model from trying to resolve ambiguous conditional logic on its own, which can result in blended branches (\"do both\") or selection of the wrong conditional path.",
+    template: `Read the product report.
+Check category performance.
+If performance is stable or improving, write the summary section.
+If performance declines or anomalies are detected, write the risks/issues section.`,
+  },
+  {
+    n: "04",
+    name: "Output contract",
+    intro: "Output contracts provide shape, structure, tone, and allowed content, ensuring consistency. Without explicit output constraints, your agent might produce overly long explanations, overly terse responses, or switch unpredictably across versions.",
+    goodPrecision: `Produce a 2-page call-prep briefing:
+Page 1 → key metrics: revenue, margin, YoY deltas (calculate as needed).
+Page 2 → top themes, risks, opportunities, customer signals.
+Tone: Professional. Reasoning: none unless calculation required.`,
+    template: `## Output Contract (Mandatory)
+Goal: [one sentence]
+Format: [bullet list | table | 2 pages | JSON]
+Detail level: [short | medium | detailed] — do not exceed [X] bullets per section
+Tone: [Professional | Friendly | Efficient]
+Include: [A, B, C]
+Exclude: No extra recommendations, no extra context, no "helpful tips"
+Example shape:
+- Section 1: ...
+- Section 2: ...`,
+    whenToUseIntro: "Use this pattern when your output must follow:",
+    whenToUse: [
+      "A precise format (bullets, table, JSON, multi-page summary).",
+      "A specified level of detail (short, medium, detailed).",
+      "A compliance, audit, or customer-facing template.",
+      "A business process requiring consistent formatting across teams.",
+    ],
+  },
+  {
+    n: "05",
+    name: "Clean Markdown structure",
+    intro: "Clean, intentional Markdown ensures the model can reliably parse your instructions. Poorly nested lists, unclear headers, or inconsistent formatting cause merged steps, unintended hierarchy, or collapsed sections.",
+    template: `## Section A — Extract Data
+- Extract pricing changes.
+- Extract margin changes.
+- Extract sentiment themes.
+
+## Section B — Build the Summary (Sequential)
+**Step 1:** Integrate findings from Section A.
+**Step 2:** Produce the 2 page call prep summary.`,
+  },
+  {
+    n: "06",
+    name: "Self-evaluation gate",
+    intro: "By adding an explicit self-check step, you encourage the model to validate completeness, verify alignment with instructions, and correct omissions before responding. This step increases consistency and reliability.",
+    template: `## Section A: Extract Data (Non-Sequential)
+Perform these tasks when the user requests data extraction from the document:
+- Extract pricing changes.
+- Extract margin changes.
+- Extract sentiment themes.
+Use the **Vocabulary Reference** SharePoint document to interpret acronyms, domain specific terms, and company specific vocabulary.
+
+## Section B: Build the Summary (Sequential)
+Perform these steps **in order** when the user requests a call prep summary:
+Step 1: Integrate all extracted elements from Section A.
+Step 2: Produce a clear, well structured 2 page call prep summary.
+
+## Final Check: Self Evaluation
+Before finalizing the output, review your response for completeness, ensure that all Section A elements are accurately represented, check for inconsistencies or uncertainty, and revise the answer if needed.`,
+  },
+  {
+    n: "07",
+    name: "Steering automode reasoning",
+    intro: "Explicit reasoning cues give you control over how much thinking the model applies. Without this guidance, your agent might over-explain simple answers or under-explain complex decisions.",
+    template: "",
+    deepReasoning: `Use deep reasoning. Break the problem into steps, analyze each step, evaluate alternatives, and justify the final decision. Reflect before answering.
+Task: Determine the optimal 3-year migration strategy given constraints A, B, and C.`,
+    fastReasoning: `Short answer only. No reasoning or explanation. Provide the final result only.
+Task: Extract the product name and renewal date from this paragraph.`,
+    whenToUseIntro: "Use this pattern when your workflow requires:",
+    whenToUse: [
+      "Deeper reasoning (planning, evaluating alternatives, multistep logic).",
+      "Fast retrieval or extraction with minimal explanation.",
+      "Switching between high-level summaries and deeper analysis.",
+      "Consistent depth across multiple agents or use cases.",
+    ],
+  },
+  {
+    n: "08",
+    name: "Apply a literal-execution header for immediate stability",
+    intro: "A literal-execution header helps temporarily stabilize an existing agent, especially after a model change. This pattern is especially useful as an interim fix while you update the full instruction set.",
+    template: `Always interpret instructions literally.
+Never infer intent or fill in missing steps.
+Never add context, recommendations, or assumptions.
+Follow step order exactly with no optimization.
+Respond concisely and only in the requested format.
+Do not call tools unless a step explicitly instructs you to do so.`,
+    whenToUseIntro: "Use this pattern when:",
+    whenToUse: [
+      "You observe reordering, added steps, or excessive reasoning after upgrading to GPT 5.1+.",
+      "You need a fast short-term mitigation before applying deeper structural improvements.",
+      "You want to diagnose whether inference or instruction ambiguity is causing the problem.",
+    ],
+  },
+  {
+    n: "09",
+    name: "Evaluate and migrate existing declarative agent instructions",
+    intro: "Use a structured evaluation prompt to quickly audit an existing agent, identify specific weaknesses, and generate precise fixes.",
+    template: `You are reviewing Data Access (DA) agent instructions for 5.1 stability.
+
+INPUT
+<instructions>
+[PASTE CURRENT INSTRUCTIONS]
+</instructions>
+
+TASK
+Concise audit. Identify ONLY issues and exact fixes.
+
+CHECKS
+- Step order: identify ambiguity, missing steps, or merged steps → propose atomic, numbered steps.
+- Tool use: identify auto-calls, retries, or tool switching → add "use only in step X; no auto-retry".
+- Grounding: detect inference, blending, or citation gaps → add "cite only retrieved; no inference; no cross-document stitching".
+- Missing-data handling: if retrieval is empty or conflicting → add "stop and ask the user".
+- Verbosity: identify chatty or explanatory output → replace with "return only the requested data/format".
+- Contradictions or duplicates: resolve discrepancies; prefer explicit over implied.
+- Vague verbs ("verify", "process", "handle", "clean"): replace with precise, observable actions.
+- Safety: prohibit step reordering, optimization, or reinterpretation.
+
+OUTPUT (concise)
+- Header patch (3–6 lines)
+- Top 5 changes (bullet list: "Issue → Fix")
+- Example rewrite (≤10 lines) for the riskiest step`,
+    whenToUseIntro: "Use this pattern when:",
+    whenToUse: [
+      "You're migrating an existing agent from GPT 5.0 to GPT 5.1 or later.",
+      "You're unsure which parts of the instruction set are fragile or ambiguous.",
+      "You want a repeatable evaluation process for multiple declarative agents across an organization.",
+      "You need a quick way to identify which issues are structural, stylistic, or safety related.",
+    ],
+  },
+] as const;
+
+const AGENT_HUB_TABS = [
+  { id: "guide", label: "Write Effective Instructions" },
+  { id: "templates", label: "Instruction Templates and Design Patterns" },
+  { id: "best-practices", label: "Agent Best Practices" },
+] as const;
+type AgentHubTabId = (typeof AGENT_HUB_TABS)[number]["id"];
+
+type AgentBestPracticeSlide = {
+  n: string;
+  heading: string;
+  sub: string;
+  content: string;
+  bad: string;
+  good: string;
+};
+
+/** EY tax mailer — 10 instruction best-practice slides with Avoid/Use examples */
+const AGENT_BEST_PRACTICES_SLIDES: readonly AgentBestPracticeSlide[] = [
+  {
+    n: "01",
+    heading: "Use Clear, Actionable Language",
+    sub: "Stop Telling Copilot Agent What NOT To Do. Just tell It What TO Do.",
+    content: "Use clear verbs like Ask, Search, Check, Use, Send. The more precise your instructions, the more reliable your agent's output. Avoid vague instructions.",
+    bad: "Review Section 194R applicability",
+    good: "Analyze whether Section 194R applies to the attached sales promotion scheme and identify compliance requirements",
+  },
+  {
+    n: "02",
+    heading: "Build Step-by-Step Workflows with transitions",
+    sub: "Confused Agents Follow Confused Instructions.",
+    content: "Every workflow should have: Goal, Action, Transition",
+    bad: "Review tax notices and prepare responses.",
+    good: "Step 1: Identify pending notices. Step 2: Extract due dates. Step 3: Draft response summary.",
+  },
+  {
+    n: "03",
+    heading: "Use strict structure",
+    sub: "Great Results Start with Great Structure",
+    content: "Use: Sections for categories, Bullets for parallel tasks, Steps for sequential workflows",
+    bad: "Mixed instructions in one paragraph",
+    good: "Separate sections: Research, Analysis, Output",
+  },
+  {
+    n: "04",
+    heading: "Make tasks atomic",
+    sub: "One Instruction. One Outcome.",
+    content: "Complex work isn't solved in a single leap. Guide your agent through the same logical path you would follow: Review the facts, Identify the issues, Analyze the impact, Recommend the next steps",
+    bad: "Extract case laws and draft litigation arguments",
+    good: "Extract relevant case laws. Summarize legal principles. Draft litigation arguments.",
+  },
+  {
+    n: "05",
+    heading: "Always specify tone, verbosity, and output format",
+    sub: "If You Don't Specify It, Copilot Will Guess.",
+    content: "Always define: Tone, Detail level, Output format",
+    bad: "Draft an email to the client summarising the provisions covered u/s 90",
+    good: "Draft an email to the client summarising the provisions covered u/s 90. Tone: Professional and reassuring. Length: Under 150 words. Output Format: Email ready to send with subject line",
+  },
+  {
+    n: "06",
+    heading: "Structure instructions in Markdown",
+    sub: "Help Your Agent See the Bigger Picture",
+    content: "Use #, ##, and ### for section headers. Use bullets or numbered lists. Highlight tool or system names. Make critical instructions bold by using **",
+    bad: "Prepare a transfer pricing risk assessment.",
+    good: "Scope: Review FY 2025-26 transactions. Analysis: Identify related party transactions, Evaluate transfer pricing exposure. Risk Assessment: High-risk areas, Supporting documentation gaps. Deliverable: Risk matrix and recommendations",
+  },
+  {
+    n: "07",
+    heading: "Provide domain vocabulary",
+    sub: "Teach Your Agent Your Language",
+    content: "Never Assume Copilot Knows Your Acronyms. Define: Acronyms, Tax terms, Internal terms, Specialized formulas",
+    bad: "TP = Transfer Pricing (undefined)",
+    good: "TP = Transfer Pricing, FAI = Foreign Asset Information, PE = Permanent Establishment, AO = Assessing Officer",
+  },
+  {
+    n: "08",
+    heading: "Explicitly reference capabilities, knowledge, and actions",
+    sub: "Tell Copilot Where To Look",
+    content: "Tell the agent: Search Teams, Check emails, Use SharePoint knowledge, Use OneDrive documents",
+    bad: "Summarize action items",
+    good: "Search Teams conversations and summarize action items",
+  },
+  {
+    n: "09",
+    heading: "Provide examples",
+    sub: "Examples Are Superpowers",
+    content: "Don't Just Describe It. Show It. Provide examples for more than one example for edge cases. Remove ambiguity and help your agent replicate the outcome you expect.",
+    bad: "Draft a client communication.",
+    good: "Use the tone and structure below: Dear Client, We would like to inform you about the recent amendment impacting withholding tax obligations. Recommended next step: Review current vendor arrangements. Now draft a communication regarding Section 194T using the same style.",
+  },
+  {
+    n: "10",
+    heading: "Control reasoning through phrasing",
+    sub: "Control How Much Reasoning You Need",
+    content: "Not Every Task Needs Deep Thinking. Choose the right instruction style: Deep reasoning to analyze, derive, evaluate, justify, think step by step, reflect, verify logic and structure tasks into multiple dependent steps. Moderate reasoning (balanced) for concise but structured explanation. Fast and minimal reasoning for short answers, no reasoning on explanation and final result only.",
+    bad: "Analyze litigation strategy considering recent High Court and Supreme Court rulings. (Deep, no signal)",
+    good: "Deep Task: Analyze litigation strategy considering recent High Court and Supreme Court rulings. Moderate Task: Summarize implications of Section 148A. Quick Task: Extract due dates from this notice.",
+  },
+] as const;
+
+type AgentInstructionNavItem = {
+  id: string;
+  group: string;
+  label: string;
+  badge?: string;
+  title: string;
+  subtitle?: string;
 };
 
 // ── Pattern 2c: Use-case cards — left column (Figma 3640:4312). Bare stacked
@@ -276,7 +910,6 @@ function useTypingPrompt() {
 function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; accent: string; typedText: string }) {
   return (
     <div style={{ flex: "1 1 392px", minWidth: 0, maxHeight: 800, minHeight: 598, background: `linear-gradient(180deg, ${C.dark2}, ${C.dark})`, borderRadius: 22, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.28)", border: "0.75px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column" }}>
-      {/* Window chrome */}
       <div style={{ height: 42, background: C.dark, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", borderBottom: "0.75px solid rgba(255,255,255,0.08)", gap: 12, flexShrink: 0 }}>
         <div style={{ display: "flex", gap: 7, flexShrink: 0 }}>
           {[1, 0.6, 0.32].map((o, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: 5, background: accent, opacity: o }} />)}
@@ -284,7 +917,6 @@ function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; acc
         <span style={{ fontFamily: F.regular, fontSize: 12, fontWeight: 700, color: C.white, flex: 1, textAlign: "center" }}>{appLabel} — blank workspace</span>
         <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.gray02, border: "0.75px solid rgba(255,255,255,0.16)", borderRadius: 999, padding: "4.75px 10.75px", flexShrink: 0, whiteSpace: "nowrap" }}>Copilot-enabled</span>
       </div>
-      {/* App-colored canvas — tall white document, Copilot overlay at top */}
       <div style={{ flex: 1, padding: 24, display: "flex", alignItems: "stretch", justifyContent: "center", background: `linear-gradient(125deg, ${accent}, ${C.dark})`, minHeight: 0, overflow: "auto" }}>
         <div style={{ width: "100%", maxWidth: 342, minHeight: 506, background: C.white, borderRadius: 16, padding: 24, boxShadow: "0 18px 22px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
           <div style={{ marginTop: 12, background: C.offWhite, border: `0.75px solid ${C.yellow}`, borderRadius: 12, padding: "14.75px" }}>
@@ -347,8 +979,7 @@ function CopilotPromptPanel({ appLabel, subtitle, prompts, activeIndex, onSelect
   );
 }
 
-// ── Pattern 2: Use cases | app mock | prompt panel — Figma 3640:4189 layout.
-// Fixed left-to-right order; capped at 800px; inner lists scroll if needed.
+// ── Pattern 2: Use cases | app mock | prompt panel — Word/Excel/PPT/Outlook tabs
 function CopilotScene({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
   const tabMeta = TABS.find(t => t.id === tabId)!;
@@ -378,6 +1009,1294 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
         }
       `}</style>
     </>
+  );
+}
+
+// ── M365 Agent hub — unified MS Learn instructions in AgentBuilderShell ─────
+const AGENT_BUILDER_NAV = ["Home", "Agents", "Create agent", "Knowledge", "Actions"] as const;
+
+type AgentBuilderSidebarItem = {
+  id: string;
+  label: string;
+  badge?: string;
+  group?: string;
+};
+
+function AgentBuilderShell({
+  children,
+  fullPanel = false,
+  sidebarTitle = "Agent Builder",
+  sidebarItems,
+  activeSidebarId,
+  onSidebarSelect,
+}: {
+  children: ReactNode;
+  fullPanel?: boolean;
+  sidebarTitle?: string;
+  sidebarItems?: readonly AgentBuilderSidebarItem[];
+  activeSidebarId?: string;
+  onSidebarSelect?: (id: string) => void;
+}) {
+  const focusRing = `2px solid ${C.yellow}`;
+
+  const sidebarGroups = useMemo(() => {
+    if (!sidebarItems?.length) return [];
+    const order: string[] = [];
+    const map = new Map<string, AgentBuilderSidebarItem[]>();
+    for (const item of sidebarItems) {
+      const groupLabel = item.group ?? "Other";
+      if (!map.has(groupLabel)) {
+        map.set(groupLabel, []);
+        order.push(groupLabel);
+      }
+      map.get(groupLabel)!.push(item);
+    }
+    return order.map(label => ({ label, items: map.get(label)! }));
+  }, [sidebarItems]);
+
+  const [expandedGroup, setExpandedGroup] = useState<string | null>(
+    () => sidebarItems?.[0]?.group ?? null,
+  );
+
+  useEffect(() => {
+    if (!activeSidebarId || !sidebarItems) return;
+    const activeItem = sidebarItems.find(item => item.id === activeSidebarId);
+    if (activeItem?.group) setExpandedGroup(activeItem.group);
+  }, [activeSidebarId, sidebarItems]);
+
+  const toggleGroup = (groupLabel: string) => {
+    setExpandedGroup(prev => (prev === groupLabel ? null : groupLabel));
+  };
+
+  const renderSidebar = () => (
+    <div
+      style={{
+        width: sidebarItems ? 260 : 200,
+        flexShrink: 0,
+        borderRight: `1px solid ${C.gray02}`,
+        background: C.white,
+        padding: "16px 12px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 4,
+        minHeight: 0,
+        overflow: "hidden",
+      }}
+    >
+      <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: C.gray01, margin: "0 0 12px", padding: "0 8px", flexShrink: 0 }}>
+        {sidebarTitle}
+      </p>
+      <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 2, paddingRight: 2, minHeight: 0 }}>
+        {sidebarItems ? (
+          sidebarGroups.map(({ label, items }, groupIndex) => {
+            const isExpanded = expandedGroup === label;
+            const groupHasActive = items.some(item => item.id === activeSidebarId);
+            return (
+              <div key={label} style={{ marginTop: groupIndex === 0 ? 0 : 4 }}>
+                <button
+                  type="button"
+                  aria-expanded={isExpanded}
+                  onClick={() => toggleGroup(label)}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "8px 8px",
+                    borderRadius: 8,
+                    border: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    fontFamily: F.bold,
+                    background: groupHasActive && !isExpanded ? C.yellow + "1A" : "transparent",
+                  }}
+                  onFocus={e => { e.currentTarget.style.outline = focusRing; }}
+                  onBlur={e => { e.currentTarget.style.outline = "none"; }}
+                >
+                  <ChevronDown
+                    size={14}
+                    strokeWidth={1.75}
+                    aria-hidden
+                    style={{
+                      flexShrink: 0,
+                      color: C.gray01,
+                      transform: isExpanded ? "rotate(0deg)" : "rotate(-90deg)",
+                      transition: "transform 0.2s",
+                    }}
+                  />
+                  <span
+                    style={{
+                      flex: 1,
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      color: C.gray01,
+                    }}
+                  >
+                    {label}
+                  </span>
+                  <span style={{ fontFamily: F.regular, fontSize: 10, color: C.gray01, flexShrink: 0 }}>
+                    {items.length}
+                  </span>
+                </button>
+                {isExpanded && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 2, paddingLeft: 4 }}>
+                    {items.map(item => {
+                      const active = item.id === activeSidebarId;
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          aria-current={active ? "true" : undefined}
+                          onClick={() => onSidebarSelect?.(item.id)}
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: 8,
+                            padding: "7px 10px",
+                            borderRadius: 8,
+                            border: "none",
+                            cursor: "pointer",
+                            textAlign: "left",
+                            fontFamily: F.regular,
+                            background: active ? C.yellow + "33" : "transparent",
+                          }}
+                          onFocus={e => { e.currentTarget.style.outline = focusRing; }}
+                          onBlur={e => { e.currentTarget.style.outline = "none"; }}
+                        >
+                          {item.badge && (
+                            <span
+                              style={{
+                                width: 22,
+                                height: 22,
+                                borderRadius: 6,
+                                flexShrink: 0,
+                                background: active ? C.yellow : "transparent",
+                                border: `1.5px solid ${active ? C.yellow : C.gray02}`,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: 10,
+                                fontWeight: 700,
+                                color: C.dark2,
+                                fontFamily: F.bold,
+                              }}
+                            >
+                              {item.badge}
+                            </span>
+                          )}
+                          <span
+                            style={{
+                              flex: 1,
+                              minWidth: 0,
+                              fontSize: 12,
+                              fontWeight: active ? 700 : 400,
+                              color: active ? C.dark2 : C.gray01,
+                              lineHeight: 1.35,
+                            }}
+                          >
+                            {item.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          AGENT_BUILDER_NAV.map(item => {
+            const active = item === "Create agent";
+            return (
+              <div
+                key={item}
+                style={{
+                  padding: "8px 10px",
+                  borderRadius: 8,
+                  fontFamily: F.regular,
+                  fontSize: 12,
+                  fontWeight: active ? 700 : 400,
+                  color: active ? C.dark2 : C.gray01,
+                  background: active ? C.yellow + "33" : "transparent",
+                }}
+              >
+                {item}
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div
+      style={{
+        border: `1px solid ${C.gray02}`,
+        borderRadius: 14,
+        overflow: "hidden",
+        display: "flex",
+        height: 680,
+        maxHeight: 680,
+        minHeight: 520,
+        background: C.offWhite,
+        textAlign: "left",
+      }}
+    >
+      {renderSidebar()}
+
+      {fullPanel ? (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, overflow: "hidden", background: C.white }}>
+          {children}
+        </div>
+      ) : (
+        <>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 32,
+              minWidth: 0,
+            }}
+          >
+            <div style={{ textAlign: "center", maxWidth: 360, width: "100%" }}>
+              <p style={{ fontFamily: F.bold, fontSize: 22, fontWeight: 700, color: C.dark2, margin: "0 0 20px", lineHeight: 1.25 }}>
+                Build your own specialist agent
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px 16px",
+                  borderRadius: 999,
+                  border: `1px solid ${C.gray02}`,
+                  background: C.white,
+                  boxShadow: "0 2px 8px rgba(46,46,56,0.06)",
+                }}
+              >
+                <Sparkles size={16} strokeWidth={1.75} color={C.teamsViolet} aria-hidden />
+                <span style={{ fontFamily: F.regular, fontSize: 13, color: C.gray01 }}>Message Agent Builder</span>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              width: 380,
+              flexShrink: 0,
+              borderLeft: `1px solid ${C.gray02}`,
+              background: C.white,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+            }}
+          >
+            <div
+              style={{
+                padding: "14px 18px",
+                borderBottom: `1px solid ${C.gray02}`,
+                background: C.confidentBlack,
+              }}
+            >
+              <p style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.yellow, margin: 0, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                Instructions
+              </p>
+            </div>
+            <div style={{ flex: 1, overflowY: "auto", padding: "18px 20px" }}>{children}</div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ── Shared copy + MS Learn inline formatting helpers ─────────────────────────
+function useCopyText() {
+  const [copied, setCopied] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }, []);
+
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
+
+  return { copied, copy };
+}
+
+function VerbatimInline({ text }: { text: string }) {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (part.startsWith("**") && part.endsWith("**")) {
+          return <strong key={i}>{part.slice(2, -2)}</strong>;
+        }
+        if (part.startsWith("*") && part.endsWith("*")) {
+          return <em key={i}>{part.slice(1, -1)}</em>;
+        }
+        if (part.startsWith("`") && part.endsWith("`")) {
+          return (
+            <code
+              key={i}
+              style={{
+                fontFamily: F.regular,
+                fontSize: "0.92em",
+                background: C.offWhite,
+                border: `1px solid ${C.gray02}`,
+                borderRadius: 4,
+                padding: "1px 5px",
+              }}
+            >
+              {part.slice(1, -1)}
+            </code>
+          );
+        }
+        return part;
+      })}
+    </>
+  );
+}
+
+function AgentCodeBlock({ code }: { code: string }) {
+  return (
+    <pre
+      style={{
+        fontFamily: F.regular,
+        fontSize: 12,
+        color: C.white,
+        lineHeight: 1.7,
+        whiteSpace: "pre-wrap",
+        margin: 0,
+        background: C.dark2,
+        borderRadius: 8,
+        padding: "14px 16px",
+        border: "0.75px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      {code}
+    </pre>
+  );
+}
+
+function CopyButton({ text, label = "Copy template" }: { text: string; label?: string }) {
+  const { copied, copy } = useCopyText();
+  return (
+    <button
+      type="button"
+      onClick={() => copy(text)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "10px 16px",
+        minHeight: 44,
+        borderRadius: 8,
+        border: `0.75px solid ${C.gray02}`,
+        background: C.offWhite,
+        cursor: "pointer",
+        fontFamily: F.regular,
+        fontSize: 13,
+        fontWeight: 700,
+        color: C.dark2,
+      }}
+    >
+      {copied ? (
+        <>
+          <Check size={16} strokeWidth={1.75} color={colors.success} aria-hidden />
+          Copied
+        </>
+      ) : (
+        <>
+          <Copy size={16} strokeWidth={1.75} aria-hidden />
+          {label}
+        </>
+      )}
+    </button>
+  );
+}
+
+function getPatternCopyText(pattern: AgentPattern): string {
+  return [
+    pattern.goodPrecision,
+    pattern.deepReasoning,
+    pattern.fastReasoning,
+    pattern.template,
+  ].filter(Boolean).join("\n\n");
+}
+
+function AgentPatternBody({ pattern }: { pattern: AgentPattern }) {
+  const bodyStyle = { fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.6, margin: 0 };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {pattern.intro && (
+        <p style={bodyStyle}>
+          <VerbatimInline text={pattern.intro} />
+          {pattern.name === "Apply a literal-execution header for immediate stability" && (
+            <>
+              {" For more information, see "}
+              <a href={MS_LEARN_MODEL_MIGRATION} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700 }}>
+                Model changes in GPT 5.1+ for declarative agents
+              </a>
+              .
+            </>
+          )}
+        </p>
+      )}
+
+      {pattern.goodPrecision && (
+        <div>
+          <p style={{ ...bodyStyle, fontWeight: 700, marginBottom: 8 }}><VerbatimInline text="**Good precision**:" /></p>
+          <AgentCodeBlock code={pattern.goodPrecision} />
+        </div>
+      )}
+
+      {pattern.deepReasoning && (
+        <div>
+          <p style={{ ...bodyStyle, fontWeight: 700, marginBottom: 8 }}><VerbatimInline text="**Trigger deep reasoning**:" /></p>
+          <AgentCodeBlock code={pattern.deepReasoning} />
+        </div>
+      )}
+
+      {pattern.fastReasoning && (
+        <div>
+          <p style={{ ...bodyStyle, fontWeight: 700, marginBottom: 8 }}><VerbatimInline text="**Force fast and minimal reasoning**:" /></p>
+          <AgentCodeBlock code={pattern.fastReasoning} />
+        </div>
+      )}
+
+      {pattern.template && (
+        <div>
+          {pattern.goodPrecision && (
+            <p style={{ ...bodyStyle, fontWeight: 700, marginBottom: 8 }}><VerbatimInline text="**Output contract**:" /></p>
+          )}
+          <AgentCodeBlock code={pattern.template} />
+        </div>
+      )}
+
+      {pattern.whenToUseIntro && pattern.whenToUse && (
+        <div>
+          <p style={{ ...bodyStyle, marginBottom: 8 }}>{pattern.whenToUseIntro}</p>
+          <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 6 }}>
+            {pattern.whenToUse.map(item => (
+              <li key={item} style={bodyStyle}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <CopyButton text={getPatternCopyText(pattern)} label="Copy template" />
+    </div>
+  );
+}
+
+function AgentImportantCallout({ children }: { children: ReactNode }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: 10,
+        alignItems: "flex-start",
+        padding: "14px 16px",
+        borderRadius: 10,
+        background: "rgba(255,230,0,0.12)",
+        border: `1px solid ${C.yellow}`,
+        marginTop: 16,
+      }}
+    >
+      <AlertTriangle size={18} strokeWidth={1.75} color={C.dark2} aria-hidden style={{ flexShrink: 0, marginTop: 2 }} />
+      <div style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.6 }}>
+        <p style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 6px" }}>Important</p>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function AgentProse({ children, style }: { children: ReactNode; style?: React.CSSProperties }) {
+  return (
+    <p style={{ fontFamily: F.regular, fontSize: 14, color: C.dark2, lineHeight: 1.65, margin: "0 0 12px", ...style }}>
+      {children}
+    </p>
+  );
+}
+
+function AgentBulletList({ items }: { items: readonly string[] }) {
+  return (
+    <ul style={{ margin: "0 0 12px", paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
+      {items.map(item => (
+        <li key={item} style={{ fontFamily: F.regular, fontSize: 14, color: C.dark2, lineHeight: 1.6 }}>
+          <VerbatimInline text={item} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function buildAgentInstructionNav(): AgentInstructionNavItem[] {
+  return [
+    { id: "intro", group: "Intro", label: "Overview & framing questions", title: "Write effective instructions for declarative agents" },
+    { id: "components", group: "Components", label: "Instruction components", title: "Instruction components", subtitle: "Purpose, guidelines, skills, and optional components" },
+    ...AGENT_MS_BEST_PRACTICES.map(bp => ({
+      id: `bp-${bp.n}`,
+      group: "Best Practices",
+      badge: bp.n,
+      label: bp.title,
+      title: bp.title,
+    })),
+    ...AGENT_PROMPT_FAILURES.map(f => ({
+      id: `fail-${f.n}`,
+      group: "Failures",
+      badge: f.n,
+      label: f.title,
+      title: f.title,
+    })),
+    ...AGENT_ADVANCED_TOPICS.map(topic => ({
+      id: `adv-${topic.n}`,
+      group: "Advanced",
+      badge: topic.n,
+      label: topic.title,
+      title: topic.title,
+    })),
+    { id: "example", group: "Example", label: "IT agent full example", title: "Example instructions", subtitle: EXAMPLE_INSTRUCTIONS_INTRO },
+    ...AGENT_INSTRUCTION_PATTERNS.map(p => ({
+      id: `pat-${p.n}`,
+      group: "Patterns",
+      badge: p.n,
+      label: p.name,
+      title: p.name,
+    })),
+  ];
+}
+
+function AgentInstructionsHub() {
+  const navItems = buildAgentInstructionNav();
+  const [activeId, setActiveId] = useState(navItems[0]?.id ?? "intro");
+  const activeIndex = navItems.findIndex(item => item.id === activeId);
+  const active = navItems[activeIndex] ?? navItems[0];
+  const activePattern = AGENT_INSTRUCTION_PATTERNS.find(p => active.id === `pat-${p.n}`);
+  const activeFailure = AGENT_PROMPT_FAILURES.find(f => active.id === `fail-${f.n}`);
+  const activeBestPractice = AGENT_MS_BEST_PRACTICES.find(bp => active.id === `bp-${bp.n}`);
+  const activeAdvanced = AGENT_ADVANCED_TOPICS.find(t => active.id === `adv-${t.n}`);
+
+  const sidebarItems: AgentBuilderSidebarItem[] = navItems.map(item => ({
+    id: item.id,
+    group: item.group,
+    badge: item.badge,
+    label: item.label,
+  }));
+
+  const renderMainContent = () => {
+    if (active.id === "intro") {
+      return (
+        <>
+          <AgentProse>{AGENT_INTRO_BODY}</AgentProse>
+          <AgentBulletList items={AGENT_INTRO_QUESTIONS} />
+          <AgentProse>
+            If your declarative agent also has API plugins as actions, the OpenAPI document for your plugin helps the agent understand any instructions referring to the API. For more information, see{" "}
+            <a href={MS_LEARN_OPENAPI_GUIDANCE} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700 }}>How to make an OpenAPI document effective in extending Copilot</a>.
+          </AgentProse>
+          <AgentProse>
+            This guidance applies to developers and makers who use Agent Builder in Microsoft 365 Copilot or Microsoft 365 Agents Toolkit to create declarative agents. For Copilot Studio agents, see{" "}
+            <a href={MS_LEARN_COPILOT_STUDIO_INSTRUCTIONS} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700 }}>Configure high-quality instructions for generative orchestration</a>.
+          </AgentProse>
+          <AgentImportantCallout>
+            <AgentProse style={{ margin: 0 }}>{AGENT_GPT_MIGRATION_CALLOUT} For more information, see{" "}
+              <a href={MS_LEARN_MODEL_MIGRATION} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700 }}>Model changes in GPT 5.1+ for declarative agents</a>.
+            </AgentProse>
+          </AgentImportantCallout>
+          <AgentImportantCallout>
+            <AgentProse style={{ margin: 0 }}>{AGENT_SHAREPOINT_XPIA_CALLOUT}</AgentProse>
+          </AgentImportantCallout>
+        </>
+      );
+    }
+
+    if (active.id === "components") {
+      return (
+        <>
+          <AgentProse>
+            A well-structured set of instructions ensures that the agent understands its role, the tasks it should perform, and how to interact with users. The main components of declarative agent instructions are:
+          </AgentProse>
+          <AgentBulletList items={AGENT_COMPONENTS_MAIN} />
+          <AgentProse>When relevant, also include the following components in the instructions:</AgentProse>
+          <AgentBulletList items={AGENT_COMPONENTS_OPTIONAL} />
+          <AgentImportantCallout>
+            <AgentProse style={{ margin: 0 }}>{AGENT_SHAREPOINT_XPIA_CALLOUT}</AgentProse>
+          </AgentImportantCallout>
+        </>
+      );
+    }
+
+    if (activeBestPractice) {
+      return (
+        <>
+          {activeBestPractice.paragraphs?.map(p => (
+            <AgentProse key={p}><VerbatimInline text={p} /></AgentProse>
+          ))}
+          {activeBestPractice.bullets && <AgentBulletList items={activeBestPractice.bullets} />}
+          {activeBestPractice.codeBlocks?.map(block => (
+            <div key={block.label} style={{ marginBottom: 16 }}>
+              <p style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.dark2, margin: "0 0 8px" }}>{block.label}</p>
+              <AgentCodeBlock code={block.code} />
+            </div>
+          ))}
+          {activeBestPractice.n === "09" && (
+            <AgentProse>
+              For more information, see{" "}
+              <a href={MS_LEARN_SPECIAL_INSTRUCTIONS} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700 }}>Special instructions object</a>.
+            </AgentProse>
+          )}
+          {activeBestPractice.n === "11" && (
+            <AgentProse style={{ marginTop: 8 }}>This approach works because GPT‑5&apos;s routing system includes reasoning-token awareness.</AgentProse>
+          )}
+        </>
+      );
+    }
+
+    if (activeFailure) {
+      return (
+        <>
+          <AgentProse>{AGENT_FAILURES_INTRO}</AgentProse>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginTop: 8 }}>
+            <div style={{ background: "rgba(255,65,54,0.06)", borderRadius: 10, padding: "14px 16px", borderLeft: `3px solid ${colors.error}` }}>
+              <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: colors.error, letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
+                <XCircle size={14} strokeWidth={1.75} aria-hidden />
+                Problem
+              </p>
+              <p style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55, margin: 0 }}>{activeFailure.problem}</p>
+            </div>
+            <div style={{ background: "rgba(0,200,100,0.06)", borderRadius: 10, padding: "14px 16px", borderLeft: `3px solid ${colors.success}` }}>
+              <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: colors.success, letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
+                <CheckCircle size={14} strokeWidth={1.75} aria-hidden />
+                Solution
+              </p>
+              <p style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55, margin: 0 }}>{activeFailure.solution}</p>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    if (activeAdvanced) {
+      return (
+        <>
+          <AgentProse>{activeAdvanced.body}</AgentProse>
+          {activeAdvanced.link && (
+            <AgentProse>
+              For more information, see{" "}
+              <a href={activeAdvanced.link.href} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700 }}>{activeAdvanced.link.label}</a>.
+            </AgentProse>
+          )}
+          {activeAdvanced.n === "15" && (
+            <ol style={{ margin: "12px 0 0", paddingLeft: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+              {AGENT_ITERATE_STEPS.map(step => (
+                <li key={step} style={{ fontFamily: F.regular, fontSize: 14, color: C.dark2, lineHeight: 1.6 }}>
+                  <VerbatimInline text={step} />
+                </li>
+              ))}
+            </ol>
+          )}
+        </>
+      );
+    }
+
+    if (active.id === "example") {
+      return (
+        <>
+          <AgentProse>{EXAMPLE_INSTRUCTIONS_INTRO}</AgentProse>
+          <div style={{ background: C.dark2, borderRadius: 10, padding: "16px 18px", border: "0.75px solid rgba(255,255,255,0.08)", overflowX: "auto", marginTop: 8, maxHeight: 420, overflowY: "auto" }}>
+            <pre style={{ fontFamily: F.regular, fontSize: 12, color: C.white, lineHeight: 1.7, whiteSpace: "pre-wrap", margin: 0 }}>
+              {IT_AGENT_FULL_EXAMPLE}
+            </pre>
+          </div>
+          <div style={{ marginTop: 14 }}>
+            <CopyButton text={IT_AGENT_FULL_EXAMPLE} label="Copy all" />
+          </div>
+        </>
+      );
+    }
+
+    if (activePattern) {
+      return (
+        <>
+          <AgentProse>{PATTERNS_SECTION_INTRO}</AgentProse>
+          <div style={{ marginTop: 16 }}>
+            <AgentPatternBody pattern={activePattern} />
+          </div>
+        </>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <>
+      <AgentBuilderShell
+        fullPanel
+        sidebarTitle="Instructions Guide"
+        sidebarItems={sidebarItems}
+        activeSidebarId={activeId}
+        onSidebarSelect={setActiveId}
+      >
+        <div
+          style={{
+            padding: "16px 24px",
+            background: C.confidentBlack,
+            borderBottom: `1px solid rgba(255,255,255,0.12)`,
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexWrap: "wrap",
+            flexShrink: 0,
+          }}
+        >
+          {active.badge && (
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                flexShrink: 0,
+                background: C.yellow,
+                color: C.dark2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 12,
+                fontWeight: 700,
+                fontFamily: F.bold,
+              }}
+            >
+              {active.badge}
+            </span>
+          )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontFamily: F.bold, fontSize: 15, fontWeight: 700, color: C.onDark, margin: 0, lineHeight: 1.3 }}>
+              {active.title}
+            </p>
+            {active.subtitle && (
+              <p style={{ fontFamily: F.regular, fontSize: 12, color: C.onDarkSubtle, margin: "4px 0 0", lineHeight: 1.45 }}>{active.subtitle}</p>
+            )}
+          </div>
+          <span style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.yellow, letterSpacing: "0.04em" }}>
+            {activeIndex + 1}/{navItems.length}
+          </span>
+        </div>
+
+        <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", minHeight: 0 }}>
+          {renderMainContent()}
+        </div>
+
+        <div
+          style={{
+            padding: "14px 24px",
+            borderTop: `1px solid ${C.gray02}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            flexShrink: 0,
+            background: C.offWhite,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setActiveId(navItems[Math.max(0, activeIndex - 1)].id)}
+            disabled={activeIndex === 0}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 16px",
+              minHeight: 44,
+              borderRadius: 8,
+              border: `1px solid ${C.gray02}`,
+              background: C.white,
+              cursor: activeIndex === 0 ? "not-allowed" : "pointer",
+              opacity: activeIndex === 0 ? 0.45 : 1,
+              fontFamily: F.regular,
+              fontSize: 13,
+              fontWeight: 700,
+              color: C.dark2,
+            }}
+          >
+            <ChevronLeft size={16} strokeWidth={1.75} aria-hidden />
+            Previous
+          </button>
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+            {navItems.map((item, i) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-label={`Go to ${item.label}`}
+                onClick={() => setActiveId(item.id)}
+                style={{
+                  width: i === activeIndex ? 22 : 8,
+                  height: 8,
+                  borderRadius: 999,
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  background: i === activeIndex ? C.yellow : C.gray02,
+                  transition: "width 0.2s, background 0.2s",
+                }}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setActiveId(navItems[Math.min(navItems.length - 1, activeIndex + 1)].id)}
+            disabled={activeIndex === navItems.length - 1}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 16px",
+              minHeight: 44,
+              borderRadius: 8,
+              border: "none",
+              background: activeIndex === navItems.length - 1 ? C.gray02 : C.yellow,
+              cursor: activeIndex === navItems.length - 1 ? "not-allowed" : "pointer",
+              opacity: activeIndex === navItems.length - 1 ? 0.45 : 1,
+              fontFamily: F.regular,
+              fontSize: 13,
+              fontWeight: 700,
+              color: C.dark2,
+            }}
+          >
+            Next
+            <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        </div>
+      </AgentBuilderShell>
+      <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, textAlign: "center", marginTop: 12, lineHeight: 1.5 }}>
+        Source:{" "}
+        <a href={MS_LEARN_AGENT_INSTRUCTIONS} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
+          Microsoft Learn — Write effective instructions for declarative agents
+          <ExternalLink size={12} strokeWidth={1.75} aria-hidden />
+        </a>
+      </p>
+    </>
+  );
+}
+
+function FullWorkedExampleCard() {
+  return (
+    <>
+      <AgentProse>{EXAMPLE_INSTRUCTIONS_INTRO}</AgentProse>
+      <div style={{ background: C.dark2, borderRadius: 10, padding: "16px 18px", border: "0.75px solid rgba(255,255,255,0.08)", overflowX: "auto", marginTop: 8, maxHeight: 420, overflowY: "auto" }}>
+        <pre style={{ fontFamily: F.regular, fontSize: 12, color: C.white, lineHeight: 1.7, whiteSpace: "pre-wrap", margin: 0 }}>
+          {IT_AGENT_FULL_EXAMPLE}
+        </pre>
+      </div>
+      <div style={{ marginTop: 14 }}>
+        <CopyButton text={IT_AGENT_FULL_EXAMPLE} label="Copy all" />
+      </div>
+    </>
+  );
+}
+
+function AgentTemplatesTab() {
+  const templateNavItems: AgentBuilderSidebarItem[] = [
+    ...AGENT_INSTRUCTION_PATTERNS.map(p => ({
+      id: `pat-${p.n}`,
+      label: p.name,
+      badge: p.n,
+      group: "Patterns",
+    })),
+    { id: "example", label: "IT agent full example", badge: "Ex", group: "Example" },
+  ];
+
+  const [activeId, setActiveId] = useState(templateNavItems[0]?.id ?? "pat-01");
+  const activeIndex = templateNavItems.findIndex(item => item.id === activeId);
+  const active = templateNavItems[activeIndex] ?? templateNavItems[0];
+  const activePattern = AGENT_INSTRUCTION_PATTERNS.find(p => active.id === `pat-${p.n}`);
+
+  return (
+    <>
+      <AgentBuilderShell
+        fullPanel
+        sidebarTitle="Templates & Patterns"
+        sidebarItems={templateNavItems}
+        activeSidebarId={activeId}
+        onSidebarSelect={setActiveId}
+      >
+        <div
+          style={{
+            padding: "16px 24px",
+            background: C.confidentBlack,
+            borderBottom: `1px solid rgba(255,255,255,0.12)`,
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexWrap: "wrap",
+            flexShrink: 0,
+          }}
+        >
+          {active.badge && (
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 6,
+                flexShrink: 0,
+                background: C.yellow,
+                color: C.dark2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 12,
+                fontWeight: 700,
+                fontFamily: F.bold,
+              }}
+            >
+              {active.badge}
+            </span>
+          )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontFamily: F.bold, fontSize: 15, fontWeight: 700, color: C.onDark, margin: 0, lineHeight: 1.3 }}>
+              {active.label}
+            </p>
+            {active.id !== "example" && (
+              <p style={{ fontFamily: F.regular, fontSize: 12, color: C.onDarkSubtle, margin: "4px 0 0", lineHeight: 1.45 }}>
+                Instruction template and design pattern
+              </p>
+            )}
+          </div>
+          <span style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.yellow, letterSpacing: "0.04em" }}>
+            {activeIndex + 1}/{templateNavItems.length}
+          </span>
+        </div>
+
+        <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", minHeight: 0 }}>
+          {active.id === "example" ? (
+            <FullWorkedExampleCard />
+          ) : activePattern ? (
+            <>
+              <AgentProse>{PATTERNS_SECTION_INTRO}</AgentProse>
+              <div style={{ marginTop: 16 }}>
+                <AgentPatternBody pattern={activePattern} />
+              </div>
+            </>
+          ) : null}
+        </div>
+
+        <div
+          style={{
+            padding: "14px 24px",
+            borderTop: `1px solid ${C.gray02}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            flexShrink: 0,
+            background: C.offWhite,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setActiveId(templateNavItems[Math.max(0, activeIndex - 1)].id)}
+            disabled={activeIndex === 0}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 16px",
+              minHeight: 44,
+              borderRadius: 8,
+              border: `1px solid ${C.gray02}`,
+              background: C.white,
+              cursor: activeIndex === 0 ? "not-allowed" : "pointer",
+              opacity: activeIndex === 0 ? 0.45 : 1,
+              fontFamily: F.regular,
+              fontSize: 13,
+              fontWeight: 700,
+              color: C.dark2,
+            }}
+          >
+            <ChevronLeft size={16} strokeWidth={1.75} aria-hidden />
+            Previous
+          </button>
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+            {templateNavItems.map((item, i) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-label={`Go to ${item.label}`}
+                onClick={() => setActiveId(item.id)}
+                style={{
+                  width: i === activeIndex ? 22 : 8,
+                  height: 8,
+                  borderRadius: 999,
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  background: i === activeIndex ? C.yellow : C.gray02,
+                  transition: "width 0.2s, background 0.2s",
+                }}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setActiveId(templateNavItems[Math.min(templateNavItems.length - 1, activeIndex + 1)].id)}
+            disabled={activeIndex === templateNavItems.length - 1}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 16px",
+              minHeight: 44,
+              borderRadius: 8,
+              border: "none",
+              background: activeIndex === templateNavItems.length - 1 ? C.gray02 : C.yellow,
+              cursor: activeIndex === templateNavItems.length - 1 ? "not-allowed" : "pointer",
+              opacity: activeIndex === templateNavItems.length - 1 ? 0.45 : 1,
+              fontFamily: F.regular,
+              fontSize: 13,
+              fontWeight: 700,
+              color: C.dark2,
+            }}
+          >
+            Next
+            <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        </div>
+      </AgentBuilderShell>
+      <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, textAlign: "center", marginTop: 12, lineHeight: 1.5 }}>
+        Source:{" "}
+        <a href={MS_LEARN_AGENT_INSTRUCTIONS} target="_blank" rel="noopener noreferrer" style={{ color: C.teamsViolet, fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
+          Microsoft Learn — Instruction templates and design patterns
+          <ExternalLink size={12} strokeWidth={1.75} aria-hidden />
+        </a>
+      </p>
+    </>
+  );
+}
+
+function AgentBestPracticesTab() {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const slide = AGENT_BEST_PRACTICES_SLIDES[slideIndex];
+  const total = AGENT_BEST_PRACTICES_SLIDES.length;
+
+  const sidebarItems: AgentBuilderSidebarItem[] = AGENT_BEST_PRACTICES_SLIDES.map(s => ({
+    id: `bp-${s.n}`,
+    label: s.heading,
+    badge: s.n,
+    group: "EY Tax Slides",
+  }));
+
+  return (
+    <AgentBuilderShell
+      fullPanel
+      sidebarTitle="Best Practices"
+      sidebarItems={sidebarItems}
+      activeSidebarId={`bp-${slide.n}`}
+      onSidebarSelect={id => {
+        const n = id.replace("bp-", "");
+        const idx = AGENT_BEST_PRACTICES_SLIDES.findIndex(s => s.n === n);
+        if (idx >= 0) setSlideIndex(idx);
+      }}
+    >
+      <div
+        style={{
+          padding: "16px 24px",
+          background: C.confidentBlack,
+          borderBottom: `1px solid rgba(255,255,255,0.12)`,
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          flexWrap: "wrap",
+          flexShrink: 0,
+        }}
+      >
+        <span
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 6,
+            flexShrink: 0,
+            background: C.yellow,
+            color: C.dark2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 12,
+            fontWeight: 700,
+            fontFamily: F.bold,
+          }}
+        >
+          {slide.n}
+        </span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontFamily: F.bold, fontSize: 15, fontWeight: 700, color: C.onDark, margin: 0, lineHeight: 1.3 }}>{slide.heading}</p>
+          <p style={{ fontFamily: F.regular, fontSize: 12, color: C.onDarkSubtle, margin: "4px 0 0", lineHeight: 1.45 }}>{slide.sub}</p>
+        </div>
+        <span style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.yellow, letterSpacing: "0.04em" }}>
+          {slideIndex + 1}/{total}
+        </span>
+      </div>
+
+      <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", display: "flex", flexDirection: "column", gap: 20, minHeight: 0 }}>
+        <p style={{ fontFamily: F.regular, fontSize: 15, color: C.dark2, lineHeight: 1.65, margin: 0, maxWidth: 640 }}>{slide.content}</p>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
+          <div style={{ background: "rgba(255,65,54,0.06)", borderRadius: 10, padding: "14px 16px", borderLeft: `3px solid ${colors.error}` }}>
+            <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: colors.error, letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
+              <XCircle size={14} strokeWidth={1.75} aria-hidden />
+              Avoid
+            </p>
+            <p style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55, fontStyle: "italic", margin: 0 }}>{slide.bad}</p>
+          </div>
+          <div style={{ background: "rgba(0,200,100,0.06)", borderRadius: 10, padding: "14px 16px", borderLeft: `3px solid ${colors.success}` }}>
+            <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: colors.success, letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
+              <CheckCircle size={14} strokeWidth={1.75} aria-hidden />
+              Use
+            </p>
+            <p style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55, fontStyle: "italic", margin: 0 }}>{slide.good}</p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: "14px 24px",
+          borderTop: `1px solid ${C.gray02}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          flexShrink: 0,
+          background: C.offWhite,
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setSlideIndex(i => Math.max(0, i - 1))}
+          disabled={slideIndex === 0}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "10px 16px",
+            minHeight: 44,
+            borderRadius: 8,
+            border: `1px solid ${C.gray02}`,
+            background: C.white,
+            cursor: slideIndex === 0 ? "not-allowed" : "pointer",
+            opacity: slideIndex === 0 ? 0.45 : 1,
+            fontFamily: F.regular,
+            fontSize: 13,
+            fontWeight: 700,
+            color: C.dark2,
+          }}
+        >
+          <ChevronLeft size={16} strokeWidth={1.75} aria-hidden />
+          Previous
+        </button>
+        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+          {AGENT_BEST_PRACTICES_SLIDES.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Go to slide ${i + 1}`}
+              onClick={() => setSlideIndex(i)}
+              style={{
+                width: i === slideIndex ? 22 : 8,
+                height: 8,
+                borderRadius: 999,
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                background: i === slideIndex ? C.yellow : C.gray02,
+                transition: "width 0.2s, background 0.2s",
+              }}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => setSlideIndex(i => Math.min(total - 1, i + 1))}
+          disabled={slideIndex === total - 1}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "10px 16px",
+            minHeight: 44,
+            borderRadius: 8,
+            border: "none",
+            background: slideIndex === total - 1 ? C.gray02 : C.yellow,
+            cursor: slideIndex === total - 1 ? "not-allowed" : "pointer",
+            opacity: slideIndex === total - 1 ? 0.45 : 1,
+            fontFamily: F.regular,
+            fontSize: 13,
+            fontWeight: 700,
+            color: C.dark2,
+          }}
+        >
+          Next
+          <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+        </button>
+      </div>
+    </AgentBuilderShell>
+  );
+}
+
+function AgentHubTabs() {
+  const [activeSubTab, setActiveSubTab] = useState<AgentHubTabId>("guide");
+
+  return (
+    <div>
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <div style={{ display: "inline-flex", gap: 8, background: C.dark2, borderRadius: 12, padding: 8, flexWrap: "wrap", justifyContent: "center" }}>
+          {AGENT_HUB_TABS.map(t => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setActiveSubTab(t.id)}
+              style={{
+                padding: "9px 18px",
+                borderRadius: 8,
+                border: "none",
+                cursor: "pointer",
+                fontSize: 13,
+                fontFamily: F.regular,
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                background: activeSubTab === t.id ? C.yellow : "transparent",
+                color: activeSubTab === t.id ? C.dark2 : C.gray02,
+                boxShadow: activeSubTab === t.id ? "0 1px 6px rgba(0,0,0,0.25)" : "none",
+                transition: "background 0.15s, color 0.15s, box-shadow 0.15s",
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {activeSubTab === "guide" && <AgentInstructionsHub />}
+      {activeSubTab === "templates" && <AgentTemplatesTab />}
+      {activeSubTab === "best-practices" && <AgentBestPracticesTab />}
+    </div>
   );
 }
 
@@ -443,6 +2362,31 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
             <span style={{ position: "absolute", bottom: -22, fontSize: 11, color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap", fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
           </button>
         ))}
+
+        {/* M365 Agent — stage tile; same white backdrop as other popping apps */}
+        <button
+          onClick={() => onOpenApp(LAPTOP_STAGE_AGENT.id)}
+          title={`Open ${LAPTOP_STAGE_AGENT.label} tax use cases`}
+          style={{
+            position: "absolute",
+            width: 64, height: 64,
+            borderRadius: 18,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            border: "1px solid rgba(255,255,255,0.5)",
+            cursor: "pointer",
+            background: C.white,
+            boxShadow: "0 14px 30px rgba(0,0,0,0.4)",
+            zIndex: 20,
+            animation: "laptopStageFloat 5s ease-in-out infinite",
+            transition: "transform 0.2s, box-shadow 0.2s",
+            ...LAPTOP_STAGE_AGENT.pos,
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.12) translateY(-3px)"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
+        >
+          <img src={LAPTOP_STAGE_AGENT.logo} alt={LAPTOP_STAGE_AGENT.label} style={{ width: 40, height: 40, objectFit: "contain" }} />
+          <span style={{ position: "absolute", bottom: -22, fontSize: 11, color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap", fontFamily: F.regular, fontWeight: 700 }}>{LAPTOP_STAGE_AGENT.label}</span>
+        </button>
       </div>
 
       {/* Coming-soon dock — apps without prompt content yet. Real logos are
@@ -456,11 +2400,7 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
             style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 66, cursor: "default" }}
           >
             <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {app.logo ? (
-                <img src={app.logo} alt={app.label} style={{ width: 24, height: 24, objectFit: "contain", opacity: 0.6 }} />
-              ) : (
-                <AgentGlyph size={20} />
-              )}
+              <img src={app.logo} alt={app.label} style={{ width: 24, height: 24, objectFit: "contain", opacity: 0.6 }} />
             </div>
             <span style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", textAlign: "center", lineHeight: 1.2, fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
           </div>
@@ -493,8 +2433,11 @@ function TabSection({ tabId }: { tabId: TabId }) {
       <p style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.dark2, marginBottom: 12, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking }}>{d.h2}</p>
       <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
 
-      {/* Pattern 2 — interactive 3-column scene: app mock + prompts + use cases */}
-      <CopilotScene tabId={tabId} />
+      {tabId === "agent" ? (
+        <AgentHubTabs />
+      ) : (
+        <CopilotScene tabId={tabId} />
+      )}
       </div>
     </div>
   );

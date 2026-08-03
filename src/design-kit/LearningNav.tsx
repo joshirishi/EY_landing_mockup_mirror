@@ -88,8 +88,6 @@ type ModuleHeaderProps =
       phaseNumber?: number;
       /** Sub-phase label shown after the module chip (e.g. "2.1"). When provided, renders the two-chip style. */
       subPhaseLabel?: string;
-      /** In-page anchor sections for the tab strip (phase-overview pages like Phase 4). */
-      sections?: { id: string; label: string; group: "learn" | "apply" }[];
     };
 
 export function ModuleHeader(props: ModuleHeaderProps) {
@@ -106,9 +104,6 @@ export function ModuleHeader(props: ModuleHeaderProps) {
     : undefined;
   const subPhaseLabel = isPhaseOverview
     ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).subPhaseLabel
-    : undefined;
-  const overrideSections = isPhaseOverview
-    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections
     : undefined;
 
   const workshopDisplayLabel = overridePhaseLabel
