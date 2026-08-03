@@ -1329,6 +1329,474 @@ const YOU_NOW_HAVE = [
   { color: C.frameGreen,  label: "Built Copilot Agent instructions" },
 ];
 
+// ── Agent Instruction Tabs — Best Practices / Failures / Templates ──────────
+
+const AGENT_BEST_PRACTICES = [
+  {
+    n: "01",
+    heading: "Use Clear, Actionable Language",
+    sub: "Stop Telling Copilot Agent What NOT To Do. Just tell It What TO Do.",
+    content: "Use clear verbs like Ask, Search, Check, Use, Send. The more precise your instructions, the more reliable your agent's output. Avoid vague instructions.",
+    bad: "Review Section 194R applicability",
+    good: "Analyze whether Section 194R applies to the attached sales promotion scheme and identify compliance requirements",
+  },
+  {
+    n: "02",
+    heading: "Build Step-by-Step Workflows with transitions",
+    sub: "Confused Agents Follow Confused Instructions.",
+    content: "Every workflow should have: Goal, Action, Transition",
+    bad: "Review tax notices and prepare responses.",
+    good: "Step 1: Identify pending notices. Step 2: Extract due dates. Step 3: Draft response summary.",
+  },
+  {
+    n: "03",
+    heading: "Use strict structure",
+    sub: "Great Results Start with Great Structure",
+    content: "Use: Sections for categories, Bullets for parallel tasks, Steps for sequential workflows",
+    bad: "Mixed instructions in one paragraph",
+    good: "Separate sections: Research, Analysis, Output",
+  },
+  {
+    n: "04",
+    heading: "Make tasks atomic",
+    sub: "One Instruction. One Outcome.",
+    content: "Complex work isn't solved in a single leap. Guide your agent through the same logical path you would follow: Review the facts, Identify the issues, Analyze the impact, Recommend the next steps",
+    bad: "Extract case laws and draft litigation arguments",
+    good: "Extract relevant case laws. Summarize legal principles. Draft litigation arguments.",
+  },
+  {
+    n: "05",
+    heading: "Always specify tone, verbosity, and output format",
+    sub: "If You Don't Specify It, Copilot Will Guess.",
+    content: "Always define: Tone, Detail level, Output format",
+    bad: "Draft an email to the client summarising the provisions covered u/s 90",
+    good: "Draft an email to the client summarising the provisions covered u/s 90. Tone: Professional and reassuring. Length: Under 150 words. Output Format: Email ready to send with subject line",
+  },
+  {
+    n: "06",
+    heading: "Structure instructions in Markdown",
+    sub: "Help Your Agent See the Bigger Picture",
+    content: "Use #, ##, and ### for section headers. Use bullets or numbered lists. Highlight tool or system names. Make critical instructions bold by using **",
+    bad: "Prepare a transfer pricing risk assessment.",
+    good: "Scope: Review FY 2025-26 transactions. Analysis: Identify related party transactions, Evaluate transfer pricing exposure. Risk Assessment: High-risk areas, Supporting documentation gaps. Deliverable: Risk matrix and recommendations",
+  },
+  {
+    n: "07",
+    heading: "Provide domain vocabulary",
+    sub: "Teach Your Agent Your Language",
+    content: "Never Assume Copilot Knows Your Acronyms. Define: Acronyms, Tax terms, Internal terms, Specialized formulas",
+    bad: "TP = Transfer Pricing (undefined)",
+    good: "TP = Transfer Pricing, FAI = Foreign Asset Information, PE = Permanent Establishment, AO = Assessing Officer",
+  },
+  {
+    n: "08",
+    heading: "Explicitly reference capabilities, knowledge, and actions",
+    sub: "Tell Copilot Where To Look",
+    content: "Tell the agent: Search Teams, Check emails, Use SharePoint knowledge, Use OneDrive documents",
+    bad: "Summarize action items",
+    good: "Search Teams conversations and summarize action items",
+  },
+  {
+    n: "09",
+    heading: "Provide examples",
+    sub: "Examples Are Superpowers",
+    content: "Don't Just Describe It. Show It. Provide examples for more than one example for edge cases. Remove ambiguity and help your agent replicate the outcome you expect.",
+    bad: "Draft a client communication.",
+    good: "Use the tone and structure below: Dear Client, We would like to inform you about the recent amendment impacting withholding tax obligations. Recommended next step: Review current vendor arrangements. Now draft a communication regarding Section 194T using the same style.",
+  },
+  {
+    n: "10",
+    heading: "Control reasoning through phrasing",
+    sub: "Control How Much Reasoning You Need",
+    content: "Not Every Task Needs Deep Thinking. Choose the right instruction style: Deep reasoning to analyze, derive, evaluate, justify, think step by step, reflect, verify logic and structure tasks into multiple dependent steps. Moderate reasoning (balanced) for concise but structured explanation. Fast and minimal reasoning for short answers, no reasoning on explanation and final result only.",
+    bad: "Analyze litigation strategy considering recent High Court and Supreme Court rulings. (Deep, no signal)",
+    good: "Deep Task: Analyze litigation strategy considering recent High Court and Supreme Court rulings. Moderate Task: Summarize implications of Section 148A. Quick Task: Extract due dates from this notice.",
+  },
+];
+
+const COMMON_FAILURES = [
+  {
+    title: "Overeager tool use",
+    problem: "The model calls tools without needed inputs.",
+    solution: "Add instruction: Only call the tool if necessary inputs are available; otherwise, ask the user.",
+  },
+  {
+    title: "Repetitive phrasing",
+    problem: "The model reuses example phrasing verbatim.",
+    solution: "Encourage varied responses and natural language. Consider adding more than one example instead of just one (few-shot prompting). Experiment with removing the example to save on tokens.",
+  },
+  {
+    title: "Verbose explanations",
+    problem: "The model overexplains or provides excessive formatting.",
+    solution: "To limit verbosity or formatting, add constraints and concise examples.",
+  },
+  {
+    title: "Inference drift after model updates",
+    problem: "Agent reorders steps, adds context, or over-reasons following a GPT version change.",
+    solution: "Add a stabilizing header: Always interpret instructions literally. Never infer intent or fill in missing steps. Follow step order exactly with no optimization.",
+  },
+  {
+    title: "Missing self-evaluation",
+    problem: "Agent responds without verifying alignment with all instructions.",
+    solution: "Add a final self-evaluation step: Before finalizing, confirm that all items from Section A appear in the summary.",
+  },
+];
+
+const INSTRUCTION_PATTERNS = [
+  {
+    n: "01",
+    name: "Convert ambiguous multitask requests into deterministic workflows",
+    use: "Remove ambiguity by defining atomic steps, explicit formulas, and required validation. Ensures stable, repeatable behavior across model versions.",
+    template: "## Task: Metrics and ROI (Deterministic)\n\n### Definitions (Do not invent)\n- Metrics to compute: [Metric1], [Metric2], [Metric3]\n- ROI definition: ROI = (Benefit - Cost) / Cost\n- Source of truth: Use ONLY the provided document(s)\n\n### Steps (Sequential — do not reorder)\nStep 1: Locate inputs. Quote the section/table where each came from.\nStep 2: Compute metrics exactly as defined. If any input is missing, stop and ask ONE question.\nStep 3: Compute ROI using the definition above.\nStep 4: Output ONLY the table.\n\n### Final check\nBefore finalizing: confirm every metric has a value, a source, and no assumptions.",
+  },
+  {
+    n: "02",
+    name: "Correct parallel versus sequential structure",
+    use: "Separate parallel and sequential logic so the model runs workflows without adding or reordering steps.",
+    template: "Section A — Extract Data (parallel)\n- Extract pricing changes.\n- Extract margin changes.\n- Extract sentiment themes.\n\nSection B — Build the Summary (sequential)\nStep 1: Integrate all findings from Section A.\nStep 2: Produce the 2 page call prep summary.",
+  },
+  {
+    n: "03",
+    name: "Explicit decision rules",
+    use: "Add explicit if/then rules that prevent unintended model interpretation and enforce deterministic outcomes.",
+    template: "Read the product report.\nCheck category performance.\nIf performance is stable or improving, write the summary section.\nIf performance declines or anomalies are detected, write the risks/issues section.",
+  },
+  {
+    n: "04",
+    name: "Output contract",
+    use: "Provide shape, structure, tone, and allowed content ensuring consistency across versions.",
+    template: "## Output Contract (Mandatory)\nGoal: [one sentence]\nFormat: [bullet list | table | 2 pages | JSON]\nDetail level: [short | medium | detailed]\nTone: [Professional | Friendly | Efficient]\nInclude: [A, B, C]\nExclude: No extra recommendations, no extra context, no helpful tips",
+  },
+  {
+    n: "05",
+    name: "Self-evaluation gate",
+    use: "Add an explicit self-check step so the model validates completeness and corrects omissions before responding.",
+    template: "## Final Check: Self Evaluation\nBefore finalizing the output, review your response for completeness, ensure that all Section A elements are accurately represented, check for inconsistencies or uncertainty, and revise the answer if needed.",
+  },
+  {
+    n: "06",
+    name: "Steering automode reasoning",
+    use: "Explicit reasoning cues give you control over how much thinking the model applies.",
+    template: "Deep: Use deep reasoning. Break the problem into steps, analyze each step, evaluate alternatives, and justify the final decision. Reflect before answering.\n\nFast: Short answer only. No reasoning or explanation. Provide the final result only.",
+  },
+  {
+    n: "07",
+    name: "Literal-execution header for immediate stability",
+    use: "Temporarily stabilize an existing agent, especially after a model change. Interim fix while you update the full instruction set.",
+    template: "Always interpret instructions literally.\nNever infer intent or fill in missing steps.\nNever add context, recommendations, or assumptions.\nFollow step order exactly with no optimization.\nRespond concisely and only in the requested format.\nDo not call tools unless a step explicitly instructs to do so.",
+  },
+];
+
+function AgentInstructionTabs() {
+  const [activeKey, setActiveKey] = useState("bp-1");
+  const focusRing = `2px solid ${C.yellow}`;
+
+  // Flatten all items into a single list with group labels
+  const allItems = [
+    ...AGENT_BEST_PRACTICES.map((bp, i) => ({
+      key: `bp-${i + 1}`,
+      group: "Best Practices",
+      n: bp.n,
+      name: bp.heading,
+      type: "bp" as const,
+      data: bp,
+    })),
+    ...COMMON_FAILURES.map((f, i) => ({
+      key: `cf-${i + 1}`,
+      group: "Common Failures",
+      n: String(i + 1).padStart(2, "0"),
+      name: f.title,
+      type: "cf" as const,
+      data: f,
+    })),
+    ...INSTRUCTION_PATTERNS.map((p, i) => ({
+      key: `ip-${i + 1}`,
+      group: "Templates & Patterns",
+      n: p.n,
+      name: p.name,
+      type: "ip" as const,
+      data: p,
+    })),
+  ];
+
+  const active = allItems.find(it => it.key === activeKey) ?? allItems[0];
+  const groups = ["Best Practices", "Common Failures", "Templates & Patterns"];
+
+  return (
+    <div style={{ marginTop: 56, marginBottom: 24 }}>
+      <p style={{ ...eyebrow(C.yellow), textAlign: "center", marginBottom: 16 }}>Reference Guidance</p>
+
+      {/* Wizard — split panel (same pattern as #elements / EightElementsWizard) */}
+      <div style={{
+        border: `1px solid ${C.borderOnDark}`,
+        borderRadius: 12,
+        overflow: "hidden",
+        display: "grid",
+        gridTemplateColumns: "minmax(260px, 300px) 1fr",
+        height: 620,
+        textAlign: "left",
+        background: C.eyBgCard,
+      }}>
+        {/* LEFT — sidebar with grouped items */}
+        <nav aria-label="Agent instruction guidance" style={{
+          background: C.confidentBlack,
+          borderRight: `1px solid ${C.borderOnDark}`,
+          padding: "20px 0",
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+        }}>
+          <div style={{ padding: "0 20px 16px", borderBottom: `1px solid ${C.borderOnDark}` }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.yellow, fontFamily: F.bold, marginBottom: 4 }}>
+              Agent Instruction Guidance
+            </div>
+            <div style={{ fontSize: 13, color: C.onDarkMuted, fontFamily: F.regular, lineHeight: 1.5 }}>
+              Pick a topic to explore.
+            </div>
+          </div>
+
+          <div style={{ flex: 1, overflowY: "auto", padding: "12px 10px" }}>
+            {groups.map(group => {
+              const groupItems = allItems.filter(it => it.group === group);
+              return (
+                <div key={group} style={{ marginBottom: 12 }}>
+                  <div style={{
+                    fontSize: 9, fontWeight: 700, letterSpacing: "0.1em",
+                    textTransform: "uppercase", color: C.onDarkSubtle,
+                    fontFamily: F.bold, padding: "4px 12px 8px",
+                  }}>
+                    {group}
+                  </div>
+                  {groupItems.map(item => {
+                    const isActive = activeKey === item.key;
+                    return (
+                      <button
+                        key={item.key}
+                        type="button"
+                        aria-current={isActive ? "true" : undefined}
+                        onClick={() => setActiveKey(item.key)}
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          padding: "8px 12px",
+                          marginBottom: 2,
+                          background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                          border: isActive ? "none" : "1px solid transparent",
+                          borderRadius: 8,
+                          cursor: "pointer",
+                          textAlign: "left",
+                        }}
+                        onFocus={e => { e.currentTarget.style.outline = focusRing; }}
+                        onBlur={e => { e.currentTarget.style.outline = "none"; }}
+                      >
+                        <span style={{
+                          width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+                          background: isActive ? C.yellow : "transparent",
+                          border: `1.5px solid ${isActive ? C.yellow : C.gray02}`,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontSize: 10, fontWeight: 700,
+                          color: isActive ? C.confidentBlack : C.onDarkMuted,
+                          fontFamily: F.bold,
+                        }}>
+                          {item.n}
+                        </span>
+                        <span style={{
+                          flex: 1, minWidth: 0,
+                          fontSize: 12, fontWeight: 700,
+                          color: isActive ? C.onDark : C.onDarkMuted,
+                          fontFamily: F.bold,
+                          lineHeight: 1.3,
+                        }}>
+                          {item.name}
+                        </span>
+                        <ChevronRight size={14} color={isActive ? C.yellow : C.onDarkSubtle} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* RIGHT — detail panel */}
+        <div style={{ display: "flex", flexDirection: "column", background: C.eyBgCard, minHeight: 0 }}>
+          {/* Header strip */}
+          <div style={{
+            padding: "16px 24px",
+            background: C.confidentBlack,
+            borderBottom: `1px solid ${C.borderOnDark}`,
+            display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+            flexShrink: 0,
+          }}>
+            <span style={{
+              width: 28, height: 28, borderRadius: 6, flexShrink: 0,
+              background: C.yellow, color: C.confidentBlack,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 12, fontWeight: 700, fontFamily: F.bold,
+            }}>
+              {active.n}
+            </span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: C.onDark, fontFamily: F.bold }}>{active.name}</span>
+            <span style={{ fontSize: 11, color: C.yellow, fontWeight: 700, fontFamily: F.bold, letterSpacing: "0.04em" }}>{active.group.toUpperCase()}</span>
+          </div>
+
+          {/* Body — content varies by type */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px 32px", display: "flex", flexDirection: "column", gap: 20 }}>
+
+            {/* Best Practice item */}
+            {active.type === "bp" && (() => {
+              const bp = active.data as typeof AGENT_BEST_PRACTICES[0];
+              return (
+                <>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.yellow}55`, background: C.yellow + "14",
+                      fontSize: 12, fontWeight: 700, color: C.yellow, fontFamily: F.bold,
+                    }}>What it is</span>
+                    <p style={{ fontSize: 16, lineHeight: 1.7, color: C.onDark, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
+                      {bp.content}
+                    </p>
+                  </div>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.frameOrange}55`, background: C.frameOrange + "14",
+                      fontSize: 12, fontWeight: 700, color: C.frameOrange, fontFamily: F.bold,
+                    }}>Why it matters</span>
+                    <p style={{ fontSize: 16, lineHeight: 1.7, color: C.onDark, fontFamily: F.regular, margin: 0, maxWidth: 560, fontStyle: "italic" }}>
+                      {bp.sub}
+                    </p>
+                  </div>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.destructive}55`, background: C.destructive + "14",
+                      fontSize: 12, fontWeight: 700, color: C.destructive, fontFamily: F.bold,
+                    }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                      Avoid
+                    </span>
+                    <p style={{
+                      fontSize: 14, lineHeight: 1.7, color: C.destructive,
+                      fontFamily: F.light, fontStyle: "italic", margin: 0, maxWidth: 560,
+                      padding: "14px 18px", background: C.destructive + "0a",
+                      borderRadius: 8, borderLeft: `3px solid ${C.destructive}`,
+                    }}>
+                      {bp.bad}
+                    </p>
+                  </div>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.success}55`, background: C.success + "14",
+                      fontSize: 12, fontWeight: 700, color: C.success, fontFamily: F.bold,
+                    }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                      Use
+                    </span>
+                    <p style={{
+                      fontSize: 14, lineHeight: 1.7, color: C.success,
+                      fontFamily: F.light, fontStyle: "italic", margin: 0, maxWidth: 560,
+                      padding: "14px 18px", background: C.success + "0a",
+                      borderRadius: 8, borderLeft: `3px solid ${C.success}`,
+                    }}>
+                      {bp.good}
+                    </p>
+                  </div>
+                </>
+              );
+            })()}
+
+            {/* Common Failure item */}
+            {active.type === "cf" && (() => {
+              const f = active.data as typeof COMMON_FAILURES[0];
+              return (
+                <>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.frameOrange}55`, background: C.frameOrange + "14",
+                      fontSize: 12, fontWeight: 700, color: C.frameOrange, fontFamily: F.bold,
+                    }}>Problem</span>
+                    <p style={{ fontSize: 16, lineHeight: 1.7, color: C.onDark, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
+                      {f.problem}
+                    </p>
+                  </div>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.success}55`, background: C.success + "14",
+                      fontSize: 12, fontWeight: 700, color: C.success, fontFamily: F.bold,
+                    }}>Solution</span>
+                    <p style={{ fontSize: 16, lineHeight: 1.7, color: C.onDark, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
+                      {f.solution}
+                    </p>
+                  </div>
+                </>
+              );
+            })()}
+
+            {/* Instruction Pattern item */}
+            {active.type === "ip" && (() => {
+              const p = active.data as typeof INSTRUCTION_PATTERNS[0];
+              return (
+                <>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.yellow}55`, background: C.yellow + "14",
+                      fontSize: 12, fontWeight: 700, color: C.yellow, fontFamily: F.bold,
+                    }}>When to use</span>
+                    <p style={{ fontSize: 16, lineHeight: 1.7, color: C.onDark, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
+                      {p.use}
+                    </p>
+                  </div>
+                  <div>
+                    <span style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                      border: `1px solid ${C.frameBlue}55`, background: C.frameBlue + "14",
+                      fontSize: 12, fontWeight: 700, color: C.frameBlue, fontFamily: F.bold,
+                    }}>Template</span>
+                    <div style={{
+                      background: C.confidentBlack, borderRadius: 8,
+                      padding: "16px 18px", border: `1px solid ${C.borderOnDark}`,
+                      overflowX: "auto",
+                    }}>
+                      <p style={{ fontFamily: F.regular, fontSize: 13, color: C.onDark, lineHeight: 1.7, whiteSpace: "pre-wrap", margin: 0 }}>
+                        {p.template}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
+
+      {/* Source attribution */}
+      <div style={{ marginTop: 16, background: "rgba(255,230,0,0.06)", borderRadius: 8, padding: "14px 18px", border: `1px solid rgba(255,230,0,0.2)` }}>
+        <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.yellow, marginBottom: 4 }}>Source</p>
+        <p style={{ fontFamily: F.regular, fontSize: 12, color: C.onDarkMuted, lineHeight: 1.5 }}>
+          Write effective instructions for declarative agents | Microsoft Learn — https://learn.microsoft.com/hi-in/microsoft-365/copilot/extensibility/declarative-agent-instructions
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function Panel6() {
   const [activeIdx, setActiveIdx] = useState<number>(0);
   const agent = AGENT_LIBRARY[activeIdx];
@@ -1480,6 +1948,9 @@ function Panel6() {
             </div>
           </div>
         </div>
+
+        {/* 3-tab reference section — Agent Best Practices / Common Failures / Templates & Patterns */}
+        <AgentInstructionTabs />
 
         {/* You now have */}
         <p style={{ ...eyebrow(C.yellow), textAlign: "center", marginTop: 40 }}>You Now Have</p>

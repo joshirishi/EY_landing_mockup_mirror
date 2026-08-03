@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-  AlertTriangle, ArrowRight, BarChart3, Calculator, ClipboardList, Compass, FileText,
+  AlertTriangle, ArrowRight, BarChart3, Calculator, Check, CheckCircle, ChevronDown, ChevronRight, ChevronUp,
+  ClipboardList, Compass, Copy, ExternalLink, FileText,
   FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
-  PenLine, Pin, Rocket, Search, Sparkles, Target, Timer,
+  PenLine, Pin, Rocket, Search, Sparkles, Target, Timer, XCircle,
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
@@ -35,22 +36,6 @@ function CopilotIcon({ size = 20 }: { size?: number }) {
   );
 }
 
-// ── Agent glyph — muted line icon for "M365 Agent" coming-soon slot ──────────
-// No distinct public M365 Agent logo exists yet; Copilot's icon is already used
-// for "M365 Chat" above, so this stays a neutral gray line glyph (EY gray02).
-function AgentGlyph({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={C.gray02} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="4" y="9" width="16" height="11" rx="3" />
-      <path d="M12 9V5" />
-      <circle cx="12" cy="3.5" r="1.4" fill={C.gray02} stroke="none" />
-      <circle cx="9" cy="14.5" r="1.2" fill={C.gray02} stroke="none" />
-      <circle cx="15" cy="14.5" r="1.2" fill={C.gray02} stroke="none" />
-      <path d="M4 13H2M22 13h-2" />
-    </svg>
-  );
-}
-
 // ── Tab config (exact labels from Figma 3317:15589) ──────────────────────────
 // `logo` paths match the laptop-stage / CoreProcessingPipeline MS app SVGs in
 // public/pipeline/ — real product marks, not letter-on-square placeholders.
@@ -60,6 +45,7 @@ const TABS = [
   { id: "ppt",     label: "PowerPoint Decks", color: C.pptOrange,  appColor: C.pptOrange,  logo: "/pipeline/powerpoint.svg" },
   { id: "outlook", label: "Outlook Threads",  color: C.outlookBlue,appColor: C.outlookBlue,logo: "/pipeline/outlook.svg" },
   { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
+  { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/m365-agent-icon.png" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -71,12 +57,13 @@ const APP_NAME: Record<TabId, string> = {
   ppt: "PowerPoint",
   outlook: "Outlook",
   m365: "M365 Chat",
+  agent: "M365 Agent",
 };
 
 // ── Laptop stage — "What you can do" popping app widget (ported from Module1) ─
 // The 5 apps with live prompt content below "pop" with a floating animation and
-// jump straight to their tab section. The 6 apps without prompt content yet are
-// shown as a muted, inert "coming soon" dock underneath.
+// jump straight to their tab section. M365 Agent sits on the stage itself;
+// remaining apps without prompt content show as a muted "coming soon" dock.
 const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSSProperties }[] = [
   { id: "word",    label: "Word",        logo: "/pipeline/word.svg",         pos: { top: 47, left: 42 } },
   { id: "excel",   label: "Excel",       logo: "/pipeline/excel.svg",        pos: { top: 34, right: 68, animationDelay: "0.4s" } },
@@ -85,10 +72,15 @@ const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSS
   { id: "m365",    label: "M365 Chat",   logo: "/pipeline/copilot-icon.svg", pos: { top: 0, left: "44%", animationDelay: "1.6s" } },
 ];
 
-// `logo` is a real MS app SVG path; when absent (M365 Agent — no public logo
-// exists yet), the dock falls back to the muted AgentGlyph line icon.
-const LAPTOP_COMING_SOON_APPS: { label: string; logo?: string }[] = [
-  { label: "M365 Agent" },
+// M365 Agent — stage tile opens the agent prompt tab (same white tile as other apps).
+const LAPTOP_STAGE_AGENT = {
+  id: "agent" as TabId,
+  label: "M365 Agent",
+  logo: "/pipeline/m365-agent-icon.png",
+  pos: { bottom: 34, left: 0, right: 0, marginLeft: "auto", marginRight: "auto", animationDelay: "2s" } as React.CSSProperties,
+};
+
+const LAPTOP_COMING_SOON_APPS: { label: string; logo: string }[] = [
   { label: "MS Teams",   logo: "/pipeline/teams.svg" },
   { label: "SharePoint", logo: "/pipeline/sharepoint.svg" },
   { label: "OneDrive",   logo: "/pipeline/onedrive.svg" },
@@ -217,7 +209,168 @@ const SECTION_DATA: Record<TabId, {
     screenshotSide: "right",
     altBg: true,
   },
+  agent: {
+    eyebrow: "AUTONOMOUS TAX WORKFLOWS",
+    eyebrowColor: C.teamsViolet,
+    h2: "M365 Agent in Tax",
+    subtitle: "Build reliable M365 agents with Microsoft's instruction principles, reusable templates, and tax-specific sample workflows.",
+    useCases: [
+      { icon: Search,        title: "Retrieve Tax Knowledge",    body: "Locate historical positions, precedents and supporting materials across approved repositories." },
+      { icon: FolderOpen,    title: "Organise Evidence",         body: "Gather and package issue-wise evidence from SharePoint, Teams and Outlook for audits and disputes." },
+      { icon: ClipboardList, title: "Track Compliance",          body: "Monitor filing deadlines, action items and overdue obligations across engagements." },
+      { icon: Rocket,        title: "Automate Correspondence",   body: "Standardise recurring tax communications with approved templates and tone guidelines." },
+    ],
+    panelSubtitle: "Sample agent instructions for common tax workflow scenarios.",
+    prompts: [
+      { label: "Tax Knowledge Retrieval Agent",      text: "You are a tax knowledge assistant. Search approved repositories for opinions, notices, submissions and policies. Summarise findings with source references and flag gaps." },
+      { label: "Transfer Pricing Documentation Agent", text: "Review related-party schedules, TP reports and GL records. Identify transactions, summarise supporting information and highlight exceptions for audit readiness." },
+      { label: "Advance Tax Reviewer Agent",           text: "Compare current and prior quarter advance tax computations. Validate assumption changes, analyse variances and draft a management summary note." },
+      { label: "Assessment Evidence Agent",            text: "Search SharePoint, Teams and Outlook for documentation related to this assessment issue. Create an evidence pack and list missing support." },
+      { label: "Compliance Tracker Agent",             text: "Maintain the compliance calendar and filing records. Flag upcoming, due and overdue obligations with risk notes for each entity." },
+    ],
+    screenshotSide: "left",
+    altBg: false,
+  },
 };
+
+// ── M365 Agent — instruction principles, templates, and MS Learn reference ──
+const MS_LEARN_AGENT_INSTRUCTIONS =
+  "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/declarative-agent-instructions";
+
+const AGENT_INSTRUCTION_PRINCIPLES = [
+  {
+    n: "01",
+    heading: "Use Clear, Actionable Language",
+    sub: "Stop Telling Copilot Agent What NOT To Do. Just tell It What TO Do.",
+    content: "Use clear verbs like Ask, Search, Check, Use, Send. The more precise your instructions, the more reliable your agent's output. Avoid vague instructions.",
+    bad: "Review Section 194R applicability",
+    good: "Analyze whether Section 194R applies to the attached sales promotion scheme and identify compliance requirements",
+  },
+  {
+    n: "02",
+    heading: "Build Step-by-Step Workflows with transitions",
+    sub: "Confused Agents Follow Confused Instructions.",
+    content: "Every workflow should have: Goal, Action, Transition",
+    bad: "Review tax notices and prepare responses.",
+    good: "Step 1: Identify pending notices. Step 2: Extract due dates. Step 3: Draft response summary.",
+  },
+  {
+    n: "03",
+    heading: "Use strict structure",
+    sub: "Great Results Start with Great Structure",
+    content: "Use: Sections for categories, Bullets for parallel tasks, Steps for sequential workflows",
+    bad: "Mixed instructions in one paragraph",
+    good: "Separate sections: Research, Analysis, Output",
+  },
+  {
+    n: "04",
+    heading: "Make tasks atomic",
+    sub: "One Instruction. One Outcome.",
+    content: "Complex work isn't solved in a single leap. Guide your agent through the same logical path you would follow: Review the facts, Identify the issues, Analyze the impact, Recommend the next steps",
+    bad: "Extract case laws and draft litigation arguments",
+    good: "Extract relevant case laws. Summarize legal principles. Draft litigation arguments.",
+  },
+  {
+    n: "05",
+    heading: "Always specify tone, verbosity, and output format",
+    sub: "If You Don't Specify It, Copilot Will Guess.",
+    content: "Always define: Tone, Detail level, Output format",
+    bad: "Draft an email to the client summarising the provisions covered u/s 90",
+    good: "Draft an email to the client summarising the provisions covered u/s 90. Tone: Professional and reassuring. Length: Under 150 words. Output Format: Email ready to send with subject line",
+  },
+  {
+    n: "06",
+    heading: "Structure instructions in Markdown",
+    sub: "Help Your Agent See the Bigger Picture",
+    content: "Use #, ##, and ### for section headers. Use bullets or numbered lists. Highlight tool or system names. Make critical instructions bold by using **",
+    bad: "Prepare a transfer pricing risk assessment.",
+    good: "Scope: Review FY 2025-26 transactions. Analysis: Identify related party transactions, Evaluate transfer pricing exposure. Risk Assessment: High-risk areas, Supporting documentation gaps. Deliverable: Risk matrix and recommendations",
+  },
+  {
+    n: "07",
+    heading: "Provide domain vocabulary",
+    sub: "Teach Your Agent Your Language",
+    content: "Never Assume Copilot Knows Your Acronyms. Define: Acronyms, Tax terms, Internal terms, Specialized formulas",
+    bad: "TP = Transfer Pricing (undefined)",
+    good: "TP = Transfer Pricing, FAI = Foreign Asset Information, PE = Permanent Establishment, AO = Assessing Officer",
+  },
+  {
+    n: "08",
+    heading: "Explicitly reference capabilities, knowledge, and actions",
+    sub: "Tell Copilot Where To Look",
+    content: "Tell the agent: Search Teams, Check emails, Use SharePoint knowledge, Use OneDrive documents",
+    bad: "Summarize action items",
+    good: "Search Teams conversations and summarize action items",
+  },
+  {
+    n: "09",
+    heading: "Provide examples",
+    sub: "Examples Are Superpowers",
+    content: "Don't Just Describe It. Show It. Provide examples for more than one example for edge cases. Remove ambiguity and help your agent replicate the outcome you expect.",
+    bad: "Draft a client communication.",
+    good: "Use the tone and structure below: Dear Client, We would like to inform you about the recent amendment impacting withholding tax obligations. Recommended next step: Review current vendor arrangements. Now draft a communication regarding Section 194T using the same style.",
+  },
+  {
+    n: "10",
+    heading: "Control reasoning through phrasing",
+    sub: "Control How Much Reasoning You Need",
+    content: "Not Every Task Needs Deep Thinking. Choose the right instruction style: Deep reasoning to analyze, derive, evaluate, justify, think step by step, reflect, verify logic and structure tasks into multiple dependent steps. Moderate reasoning (balanced) for concise but structured explanation. Fast and minimal reasoning for short answers, no reasoning on explanation and final result only.",
+    bad: "Analyze litigation strategy considering recent High Court and Supreme Court rulings. (Deep, no signal)",
+    good: "Deep Task: Analyze litigation strategy considering recent High Court and Supreme Court rulings. Moderate Task: Summarize implications of Section 148A. Quick Task: Extract due dates from this notice.",
+  },
+] as const;
+
+const AGENT_INSTRUCTION_PATTERNS = [
+  {
+    n: "01",
+    name: "Convert ambiguous multitask requests into deterministic workflows",
+    use: "Remove ambiguity by defining atomic steps, explicit formulas, and required validation. Ensures stable, repeatable behavior across model versions.",
+    template: "## Task: Metrics and ROI (Deterministic)\n\n### Definitions (Do not invent)\n- Metrics to compute: [Metric1], [Metric2], [Metric3]\n- ROI definition: ROI = (Benefit - Cost) / Cost\n- Source of truth: Use ONLY the provided document(s)\n\n### Steps (Sequential — do not reorder)\nStep 1: Locate inputs. Quote the section/table where each came from.\nStep 2: Compute metrics exactly as defined. If any input is missing, stop and ask ONE question.\nStep 3: Compute ROI using the definition above.\nStep 4: Output ONLY the table.\n\n### Final check\nBefore finalizing: confirm every metric has a value, a source, and no assumptions.",
+  },
+  {
+    n: "02",
+    name: "Correct parallel versus sequential structure",
+    use: "Separate parallel and sequential logic so the model runs workflows without adding or reordering steps.",
+    template: "Section A — Extract Data (parallel)\n- Extract pricing changes.\n- Extract margin changes.\n- Extract sentiment themes.\n\nSection B — Build the Summary (sequential)\nStep 1: Integrate all findings from Section A.\nStep 2: Produce the 2 page call prep summary.",
+  },
+  {
+    n: "03",
+    name: "Explicit decision rules",
+    use: "Add explicit if/then rules that prevent unintended model interpretation and enforce deterministic outcomes.",
+    template: "Read the product report.\nCheck category performance.\nIf performance is stable or improving, write the summary section.\nIf performance declines or anomalies are detected, write the risks/issues section.",
+  },
+  {
+    n: "04",
+    name: "Output contract",
+    use: "Provide shape, structure, tone, and allowed content ensuring consistency across versions.",
+    template: "## Output Contract (Mandatory)\nGoal: [one sentence]\nFormat: [bullet list | table | 2 pages | JSON]\nDetail level: [short | medium | detailed]\nTone: [Professional | Friendly | Efficient]\nInclude: [A, B, C]\nExclude: No extra recommendations, no extra context, no helpful tips",
+  },
+  {
+    n: "05",
+    name: "Self-evaluation gate",
+    use: "Add an explicit self-check step so the model validates completeness and corrects omissions before responding.",
+    template: "## Final Check: Self Evaluation\nBefore finalizing the output, review your response for completeness, ensure that all Section A elements are accurately represented, check for inconsistencies or uncertainty, and revise the answer if needed.",
+  },
+  {
+    n: "06",
+    name: "Steering automode reasoning",
+    use: "Explicit reasoning cues give you control over how much thinking the model applies.",
+    template: "Deep: Use deep reasoning. Break the problem into steps, analyze each step, evaluate alternatives, and justify the final decision. Reflect before answering.\n\nFast: Short answer only. No reasoning or explanation. Provide the final result only.",
+  },
+  {
+    n: "07",
+    name: "Literal-execution header for immediate stability",
+    use: "Temporarily stabilize an existing agent, especially after a model change. Interim fix while you update the full instruction set.",
+    template: "Always interpret instructions literally.\nNever infer intent or fill in missing steps.\nNever add context, recommendations, or assumptions.\nFollow step order exactly with no optimization.\nRespond concisely and only in the requested format.\nDo not call tools unless a step explicitly instructs to do so.",
+  },
+] as const;
+
+const AGENT_HUB_TABS = [
+  { id: "principles", label: "Instruction Principles" },
+  { id: "templates",  label: "Templates & Patterns" },
+  { id: "use-cases",  label: "Tax Agent Use Cases" },
+] as const;
+type AgentHubTabId = (typeof AGENT_HUB_TABS)[number]["id"];
 
 // ── Pattern 2c: Use-case cards — left column (Figma 3640:4312). Bare stacked
 // cards on the section background; no titled panel wrapper.
@@ -381,6 +534,778 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
   );
 }
 
+// ── M365 Agent hub — progressive disclosure (Arjun spec) ─────────────────────
+function AgentPrincipleAccordionItem({
+  principle,
+  expanded,
+  onToggle,
+  panelId,
+  triggerId,
+}: {
+  principle: (typeof AGENT_INSTRUCTION_PRINCIPLES)[number];
+  expanded: boolean;
+  onToggle: () => void;
+  panelId: string;
+  triggerId: string;
+}) {
+  const focusRing = `2px solid ${C.yellow}`;
+
+  return (
+    <div
+      style={{
+        background: C.white,
+        borderRadius: 12,
+        overflow: "hidden",
+        border: `1px solid ${C.gray02}`,
+      }}
+    >
+      <button
+        type="button"
+        id={triggerId}
+        aria-expanded={expanded}
+        aria-controls={panelId}
+        onClick={onToggle}
+        onFocus={e => { e.currentTarget.style.outline = focusRing; }}
+        onBlur={e => { e.currentTarget.style.outline = "none"; }}
+        style={{
+          width: "100%",
+          padding: "16px 24px",
+          background: C.confidentBlack,
+          borderBottom: expanded ? `1px solid ${C.borderOnDark}` : "none",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          flexWrap: "wrap",
+          border: "none",
+          cursor: "pointer",
+          textAlign: "left",
+          fontFamily: F.regular,
+        }}
+      >
+        <span
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 6,
+            flexShrink: 0,
+            background: C.yellow,
+            color: C.confidentBlack,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 12,
+            fontWeight: 800,
+            fontFamily: F.bold,
+          }}
+        >
+          {principle.n}
+        </span>
+        <span
+          style={{
+            fontSize: typeScale.label.size,
+            fontWeight: 700,
+            color: C.onDark,
+            fontFamily: F.bold,
+            lineHeight: 1.3,
+          }}
+        >
+          {principle.heading}
+        </span>
+        <span
+          style={{
+            flex: 1,
+            minWidth: 160,
+            fontSize: 11,
+            color: C.yellow,
+            fontWeight: 700,
+            fontFamily: F.bold,
+            fontStyle: "italic",
+            lineHeight: 1.4,
+          }}
+        >
+          {principle.sub}
+        </span>
+        <ChevronDown
+          size={18}
+          strokeWidth={1.75}
+          color={C.onDarkSubtle}
+          aria-hidden
+          style={{
+            flexShrink: 0,
+            marginLeft: "auto",
+            transform: expanded ? "rotate(180deg)" : "none",
+            transition: "transform 0.2s",
+          }}
+        />
+      </button>
+
+      {expanded && (
+        <div
+          id={panelId}
+          role="region"
+          aria-labelledby={triggerId}
+          style={{ padding: "24px 28px 28px", background: C.white }}
+        >
+          <p
+            style={{
+              fontFamily: F.regular,
+              fontSize: typeScale.label.size,
+              color: C.dark2,
+              lineHeight: 1.6,
+              margin: "0 0 14px",
+            }}
+          >
+            {principle.content}
+          </p>
+          <div className="agent-principle-compare">
+            <div
+              style={{
+                background: "rgba(255,65,54,0.06)",
+                borderRadius: 10,
+                padding: "12px 14px",
+                borderLeft: `2px solid ${colors.error}`,
+              }}
+            >
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontFamily: F.bold,
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: colors.error,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  marginBottom: 6,
+                }}
+              >
+                <XCircle size={14} strokeWidth={1.75} aria-hidden />
+                Avoid
+              </p>
+              <p
+                style={{
+                  fontFamily: F.regular,
+                  fontSize: 13,
+                  color: C.gray01,
+                  lineHeight: 1.5,
+                  fontStyle: "italic",
+                  margin: 0,
+                }}
+              >
+                {principle.bad}
+              </p>
+            </div>
+            <div
+              style={{
+                background: "rgba(0,200,100,0.06)",
+                borderRadius: 10,
+                padding: "12px 14px",
+                borderLeft: `2px solid ${colors.success}`,
+              }}
+            >
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontFamily: F.bold,
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: colors.success,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  marginBottom: 6,
+                }}
+              >
+                <CheckCircle size={14} strokeWidth={1.75} aria-hidden />
+                Use
+              </p>
+              <p
+                style={{
+                  fontFamily: F.regular,
+                  fontSize: 13,
+                  color: C.dark2,
+                  lineHeight: 1.5,
+                  margin: 0,
+                }}
+              >
+                {principle.good}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AgentPrinciplesAccordion() {
+  const baseId = useRef(`principles-${Math.random().toString(36).slice(2, 9)}`).current;
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set(["01"]));
+
+  const toggle = (n: string) => {
+    setExpandedIds(prev => {
+      if (prev.has(n) && prev.size === 1) return new Set();
+      return new Set([n]);
+    });
+  };
+
+  const expandAll = () => setExpandedIds(new Set(AGENT_INSTRUCTION_PRINCIPLES.map(p => p.n)));
+  const collapseAll = () => setExpandedIds(new Set());
+
+  return (
+    <>
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: 16, marginBottom: 12 }}>
+        <button
+          type="button"
+          onClick={expandAll}
+          style={{
+            background: "none",
+            border: "none",
+            padding: "8px 0",
+            minHeight: 44,
+            cursor: "pointer",
+            fontFamily: F.regular,
+            fontSize: 13,
+            fontWeight: 700,
+            color: C.teamsViolet,
+          }}
+        >
+          Expand all
+        </button>
+        <button
+          type="button"
+          onClick={collapseAll}
+          style={{
+            background: "none",
+            border: "none",
+            padding: "8px 0",
+            minHeight: 44,
+            cursor: "pointer",
+            fontFamily: F.regular,
+            fontSize: 13,
+            fontWeight: 700,
+            color: C.gray01,
+          }}
+        >
+          Collapse all
+        </button>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {AGENT_INSTRUCTION_PRINCIPLES.map(p => (
+          <AgentPrincipleAccordionItem
+            key={p.n}
+            principle={p}
+            expanded={expandedIds.has(p.n)}
+            onToggle={() => toggle(p.n)}
+            triggerId={`${baseId}-trigger-${p.n}`}
+            panelId={`${baseId}-panel-${p.n}`}
+          />
+        ))}
+      </div>
+
+      <style>{`
+        .agent-principle-compare {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+        @media (max-width: 640px) {
+          .agent-principle-compare { grid-template-columns: 1fr; }
+        }
+      `}</style>
+    </>
+  );
+}
+
+function AgentTemplateCard({ pattern }: { pattern: (typeof AGENT_INSTRUCTION_PATTERNS)[number] }) {
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+  }, []);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(pattern.template);
+      setCopied(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable — silent fail */
+    }
+  };
+
+  const panelId = `template-panel-${pattern.n}`;
+  const triggerId = `template-trigger-${pattern.n}`;
+
+  return (
+    <div style={{ background: C.white, borderRadius: 14, overflow: "hidden", border: `0.75px solid ${C.gray02}` }}>
+      <div style={{ height: 3, background: C.teamsViolet }} />
+      <button
+        type="button"
+        id={triggerId}
+        aria-expanded={expanded}
+        aria-controls={panelId}
+        onClick={() => setExpanded(v => !v)}
+        style={{
+          width: "100%",
+          minHeight: 72,
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          padding: "16px 20px",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          textAlign: "left",
+          fontFamily: F.regular,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: F.bold,
+            fontSize: 11,
+            fontWeight: 700,
+            color: C.teamsViolet,
+            letterSpacing: "0.04em",
+            flexShrink: 0,
+          }}
+        >
+          {pattern.n}
+        </span>
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span
+            style={{
+              display: "block",
+              fontFamily: F.bold,
+              fontSize: 14,
+              fontWeight: 700,
+              color: C.dark2,
+              lineHeight: 1.3,
+              marginBottom: 4,
+            }}
+          >
+            {pattern.name}
+          </span>
+          <span
+            style={{
+              display: "block",
+              fontFamily: F.regular,
+              fontSize: 13,
+              color: C.gray01,
+              lineHeight: 1.45,
+            }}
+          >
+            {pattern.use}
+          </span>
+        </span>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            fontFamily: F.regular,
+            fontSize: 12,
+            fontWeight: 700,
+            color: C.teamsViolet,
+            flexShrink: 0,
+          }}
+        >
+          {expanded ? "Collapse" : "Expand template"}
+          {expanded ? (
+            <ChevronUp size={16} strokeWidth={1.75} aria-hidden />
+          ) : (
+            <ChevronDown size={16} strokeWidth={1.75} aria-hidden />
+          )}
+        </span>
+      </button>
+
+      {expanded && (
+        <div
+          id={panelId}
+          role="region"
+          aria-labelledby={triggerId}
+          style={{ padding: "0 20px 20px", borderTop: `0.75px solid ${C.gray02}` }}
+        >
+          <div
+            style={{
+              background: C.dark2,
+              borderRadius: 10,
+              padding: "16px 18px",
+              border: "0.75px solid rgba(255,255,255,0.08)",
+              overflowX: "auto",
+              marginTop: 16,
+              marginBottom: 12,
+            }}
+          >
+            <pre
+              style={{
+                fontFamily: F.regular,
+                fontSize: 12,
+                color: C.white,
+                lineHeight: 1.7,
+                whiteSpace: "pre-wrap",
+                margin: 0,
+              }}
+            >
+              {pattern.template}
+            </pre>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <button
+              type="button"
+              onClick={handleCopy}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "10px 16px",
+                minHeight: 44,
+                borderRadius: 8,
+                border: `0.75px solid ${C.gray02}`,
+                background: C.offWhite,
+                cursor: "pointer",
+                fontFamily: F.regular,
+                fontSize: 13,
+                fontWeight: 700,
+                color: C.dark2,
+              }}
+            >
+              {copied ? (
+                <>
+                  <Check size={16} strokeWidth={1.75} color={colors.success} aria-hidden />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy size={16} strokeWidth={1.75} aria-hidden />
+                  Copy template
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setExpanded(false)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "10px 0",
+                minHeight: 44,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: F.regular,
+                fontSize: 13,
+                fontWeight: 700,
+                color: C.gray01,
+              }}
+            >
+              Collapse
+              <ChevronUp size={16} strokeWidth={1.75} aria-hidden />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AgentHubTabs() {
+  const [activeSubTab, setActiveSubTab] = useState<AgentHubTabId>("principles");
+  const [activeKey, setActiveKey] = useState("p-1");
+  const focusRing = `2px solid ${C.yellow}`;
+
+  // Build the item list based on the active sub-tab
+  const items = activeSubTab === "principles"
+    ? AGENT_INSTRUCTION_PRINCIPLES.map((p, i) => ({
+        key: `p-${i + 1}`,
+        n: p.n,
+        name: p.heading,
+        type: "bp" as const,
+        data: p,
+      }))
+    : AGENT_INSTRUCTION_PATTERNS.map((p, i) => ({
+        key: `t-${i + 1}`,
+        n: p.n,
+        name: p.name,
+        type: "ip" as const,
+        data: p,
+      }));
+
+  const active = items.find(it => it.key === activeKey) ?? items[0];
+
+  return (
+    <div>
+      {/* Center-aligned sub-tab header — ModulePage pattern */}
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <div style={{ display: "inline-flex", gap: 8, background: C.dark2, borderRadius: 12, padding: 8 }}>
+          {AGENT_HUB_TABS.map(t => (
+            <button
+              key={t.id}
+              onClick={() => {
+                setActiveSubTab(t.id);
+                setActiveKey(t.id === "principles" ? "p-1" : t.id === "templates" ? "t-1" : "p-1");
+              }}
+              style={{
+                padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: 13,
+                fontFamily: F.regular, fontWeight: 700, whiteSpace: "nowrap",
+                background: activeSubTab === t.id ? C.yellow : "transparent",
+                color: activeSubTab === t.id ? C.dark2 : C.gray02,
+                boxShadow: activeSubTab === t.id ? "0 1px 6px rgba(0,0,0,0.25)" : "none",
+                transition: "background 0.15s, color 0.15s, box-shadow 0.15s",
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab 1 & 2 — wizard split panel (same pattern as #elements / EightElementsWizard) */}
+      {(activeSubTab === "principles" || activeSubTab === "templates") && (
+        <>
+          <div style={{
+            border: `1px solid ${C.gray02}`,
+            borderRadius: 12,
+            overflow: "hidden",
+            display: "grid",
+            gridTemplateColumns: "minmax(260px, 300px) 1fr",
+            height: 620,
+            textAlign: "left",
+            background: C.white,
+          }}>
+            {/* LEFT — sidebar */}
+            <nav aria-label="Agent instruction guidance" style={{
+              background: C.offWhite,
+              borderRight: `1px solid ${C.gray02}`,
+              padding: "20px 0",
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+            }}>
+              <div style={{ padding: "0 20px 16px", borderBottom: `1px solid ${C.gray02}` }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.gray01, fontFamily: F.bold, marginBottom: 4 }}>
+                  {activeSubTab === "principles" ? "Instruction Principles" : "Templates & Patterns"}
+                </div>
+                <div style={{ fontSize: 13, color: C.dark2, fontFamily: F.regular, lineHeight: 1.5 }}>
+                  Pick one to explore.
+                </div>
+              </div>
+
+              <div style={{ flex: 1, overflowY: "auto", padding: "12px 10px" }}>
+                {items.map(item => {
+                  const isActive = activeKey === item.key;
+                  return (
+                    <button
+                      key={item.key}
+                      type="button"
+                      aria-current={isActive ? "true" : undefined}
+                      onClick={() => setActiveKey(item.key)}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        padding: "8px 12px",
+                        marginBottom: 2,
+                        background: isActive ? C.dark : "transparent",
+                        border: isActive ? "none" : "1px solid transparent",
+                        borderRadius: 8,
+                        cursor: "pointer",
+                        textAlign: "left",
+                      }}
+                      onFocus={e => { e.currentTarget.style.outline = focusRing; }}
+                      onBlur={e => { e.currentTarget.style.outline = "none"; }}
+                    >
+                      <span style={{
+                        width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+                        background: isActive ? C.yellow : "transparent",
+                        border: `1.5px solid ${isActive ? C.yellow : C.gray02}`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 10, fontWeight: 700,
+                        color: C.dark2,
+                        fontFamily: F.bold,
+                      }}>
+                        {item.n}
+                      </span>
+                      <span style={{
+                        flex: 1, minWidth: 0,
+                        fontSize: 13, fontWeight: 700,
+                        color: isActive ? C.white : C.dark2,
+                        fontFamily: F.bold,
+                      }}>
+                        {item.name}
+                      </span>
+                      <ChevronRight size={14} color={isActive ? C.yellow : C.gray01} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+                    </button>
+                  );
+                })}
+              </div>
+            </nav>
+
+            {/* RIGHT — detail panel */}
+            <div style={{ display: "flex", flexDirection: "column", background: C.white, minHeight: 0 }}>
+              {/* Header strip */}
+              <div style={{
+                padding: "16px 24px",
+                background: C.dark,
+                borderBottom: `1px solid rgba(255,255,255,0.12)`,
+                display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+                flexShrink: 0,
+              }}>
+                <span style={{
+                  width: 28, height: 28, borderRadius: 6, flexShrink: 0,
+                  background: C.yellow, color: C.dark2,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 12, fontWeight: 700, fontFamily: F.bold,
+                }}>
+                  {active.n}
+                </span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: C.white, fontFamily: F.bold }}>{active.name}</span>
+              </div>
+
+              {/* Body */}
+              <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px 32px", display: "flex", flexDirection: "column", gap: 20 }}>
+
+                {/* Best Practice item */}
+                {active.type === "bp" && (() => {
+                  const bp = active.data as typeof AGENT_INSTRUCTION_PRINCIPLES[number];
+                  return (
+                    <>
+                      <div>
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 8,
+                          marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                          border: `1px solid ${C.yellow}55`, background: C.yellow + "14",
+                          fontSize: 12, fontWeight: 700, color: C.dark2, fontFamily: F.bold,
+                        }}>What it is</span>
+                        <p style={{ fontSize: 16, lineHeight: 1.7, color: C.dark2, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
+                          {bp.content}
+                        </p>
+                      </div>
+                      <div>
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 8,
+                          marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                          border: `1px solid ${C.frameOrange}55`, background: C.frameOrange + "14",
+                          fontSize: 12, fontWeight: 700, color: C.frameOrange, fontFamily: F.bold,
+                        }}>Why it matters</span>
+                        <p style={{ fontSize: 16, lineHeight: 1.7, color: C.dark2, fontFamily: F.regular, margin: 0, maxWidth: 560, fontStyle: "italic" }}>
+                          {bp.sub}
+                        </p>
+                      </div>
+                      <div>
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 8,
+                          marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                          border: `1px solid ${C.destructive}55`, background: C.destructive + "14",
+                          fontSize: 12, fontWeight: 700, color: C.destructive, fontFamily: F.bold,
+                        }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                          Avoid
+                        </span>
+                        <p style={{
+                          fontSize: 14, lineHeight: 1.7, color: C.destructive,
+                          fontFamily: F.regular, fontStyle: "italic", margin: 0, maxWidth: 560,
+                          padding: "14px 18px", background: C.destructive + "0a",
+                          borderRadius: 8, borderLeft: `3px solid ${C.destructive}`,
+                        }}>
+                          {bp.bad}
+                        </p>
+                      </div>
+                      <div>
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 8,
+                          marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                          border: `1px solid ${C.success}55`, background: C.success + "14",
+                          fontSize: 12, fontWeight: 700, color: C.success, fontFamily: F.bold,
+                        }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                          Use
+                        </span>
+                        <p style={{
+                          fontSize: 14, lineHeight: 1.7, color: C.success,
+                          fontFamily: F.regular, fontStyle: "italic", margin: 0, maxWidth: 560,
+                          padding: "14px 18px", background: C.success + "0a",
+                          borderRadius: 8, borderLeft: `3px solid ${C.success}`,
+                        }}>
+                          {bp.good}
+                        </p>
+                      </div>
+                    </>
+                  );
+                })()}
+
+                {/* Instruction Pattern item */}
+                {active.type === "ip" && (() => {
+                  const p = active.data as typeof AGENT_INSTRUCTION_PATTERNS[number];
+                  return (
+                    <>
+                      <div>
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 8,
+                          marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                          border: `1px solid ${C.yellow}55`, background: C.yellow + "14",
+                          fontSize: 12, fontWeight: 700, color: C.dark2, fontFamily: F.bold,
+                        }}>When to use</span>
+                        <p style={{ fontSize: 16, lineHeight: 1.7, color: C.dark2, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
+                          {p.use}
+                        </p>
+                      </div>
+                      <div>
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 8,
+                          marginBottom: 10, padding: "4px 10px", borderRadius: 100,
+                          border: `1px solid ${C.frameBlue}55`, background: C.frameBlue + "14",
+                          fontSize: 12, fontWeight: 700, color: C.frameBlue, fontFamily: F.bold,
+                        }}>Template</span>
+                        <div style={{
+                          background: C.dark, borderRadius: 8,
+                          padding: "16px 18px", border: `1px solid rgba(255,255,255,0.12)`,
+                          overflowX: "auto",
+                        }}>
+                          <p style={{ fontFamily: F.regular, fontSize: 13, color: C.white, lineHeight: 1.7, whiteSpace: "pre-wrap", margin: 0 }}>
+                            {p.template}
+                          </p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+          </div>
+
+          {/* Source attribution */}
+          <div style={{ background: C.white, borderRadius: 14, padding: "16px 20px", border: `0.75px solid ${C.gray02}`, marginTop: 16, textAlign: "center" }}>
+            <p style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.dark2, marginBottom: 8 }}>
+              {activeSubTab === "principles" ? "Microsoft Learn reference" : "Instruction templates and design patterns"}
+            </p>
+            <a
+              href={MS_LEARN_AGENT_INSTRUCTIONS}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontFamily: F.regular, fontSize: 13, color: C.teamsViolet, textDecoration: "none", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 6 }}
+            >
+              {activeSubTab === "principles" ? "Write effective instructions for declarative agents" : "View full guidance on Microsoft Learn"}
+              <ExternalLink size={14} strokeWidth={1.75} aria-hidden />
+            </a>
+          </div>
+        </>
+      )}
+
+      {/* Tab 3 — existing tax use-case scene (use cases + mock + prompts) */}
+      {activeSubTab === "use-cases" && <CopilotScene tabId="agent" />}
+    </div>
+  );
+}
+
 // ── App icon — real MS 365 / Office product logos from public/pipeline/ ───────
 function AppIcon({ logo, label, size = 20 }: { logo: string; label: string; size?: number }) {
   return (
@@ -443,6 +1368,31 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
             <span style={{ position: "absolute", bottom: -22, fontSize: 11, color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap", fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
           </button>
         ))}
+
+        {/* M365 Agent — stage tile; same white backdrop as other popping apps */}
+        <button
+          onClick={() => onOpenApp(LAPTOP_STAGE_AGENT.id)}
+          title={`Open ${LAPTOP_STAGE_AGENT.label} tax use cases`}
+          style={{
+            position: "absolute",
+            width: 64, height: 64,
+            borderRadius: 18,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            border: "1px solid rgba(255,255,255,0.5)",
+            cursor: "pointer",
+            background: C.white,
+            boxShadow: "0 14px 30px rgba(0,0,0,0.4)",
+            zIndex: 20,
+            animation: "laptopStageFloat 5s ease-in-out infinite",
+            transition: "transform 0.2s, box-shadow 0.2s",
+            ...LAPTOP_STAGE_AGENT.pos,
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.12) translateY(-3px)"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
+        >
+          <img src={LAPTOP_STAGE_AGENT.logo} alt={LAPTOP_STAGE_AGENT.label} style={{ width: 40, height: 40, objectFit: "contain" }} />
+          <span style={{ position: "absolute", bottom: -22, fontSize: 11, color: "rgba(255,255,255,0.85)", whiteSpace: "nowrap", fontFamily: F.regular, fontWeight: 700 }}>{LAPTOP_STAGE_AGENT.label}</span>
+        </button>
       </div>
 
       {/* Coming-soon dock — apps without prompt content yet. Real logos are
@@ -456,11 +1406,7 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
             style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 66, cursor: "default" }}
           >
             <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {app.logo ? (
-                <img src={app.logo} alt={app.label} style={{ width: 24, height: 24, objectFit: "contain", opacity: 0.6 }} />
-              ) : (
-                <AgentGlyph size={20} />
-              )}
+              <img src={app.logo} alt={app.label} style={{ width: 24, height: 24, objectFit: "contain", opacity: 0.6 }} />
             </div>
             <span style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", textAlign: "center", lineHeight: 1.2, fontFamily: F.regular, fontWeight: 700 }}>{app.label}</span>
           </div>
@@ -493,8 +1439,11 @@ function TabSection({ tabId }: { tabId: TabId }) {
       <p style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.dark2, marginBottom: 12, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking }}>{d.h2}</p>
       <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
 
-      {/* Pattern 2 — interactive 3-column scene: app mock + prompts + use cases */}
-      <CopilotScene tabId={tabId} />
+      {tabId === "agent" ? (
+        <AgentHubTabs />
+      ) : (
+        <CopilotScene tabId={tabId} />
+      )}
       </div>
     </div>
   );
