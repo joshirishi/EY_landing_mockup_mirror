@@ -1157,6 +1157,7 @@ export default function ClosureAiReinforcement({
   onNavigate: (path: string) => void;
 }) {
   useModuleSectionHashScroll();
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
     <div
