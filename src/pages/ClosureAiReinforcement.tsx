@@ -1219,7 +1219,6 @@ export default function ClosureAiReinforcement({
                   btn.style.pointerEvents = "none";
                   try {
                     const { default: html2canvas } = await import("html2canvas");
-                    const { jsPDF } = await import("jspdf");
                     const CAPTURE_WIDTH = 1280;
                     const canvas = await html2canvas(section, {
                       scale: 3,
@@ -1227,27 +1226,15 @@ export default function ClosureAiReinforcement({
                       allowTaint: true,
                       backgroundColor: "#1A1A24",
                       logging: false,
-                      // Force desktop layout — CSS grid/media-queries evaluate at this width
                       windowWidth: CAPTURE_WIDTH,
                       width: CAPTURE_WIDTH,
                       imageTimeout: 0,
                       ignoreElements: (el) => el.hasAttribute("data-no-print"),
                     });
-                    // canvas is 3× — convert back to CSS pixels for PDF sizing
-                    const W = canvas.width / 3;
-                    const H = canvas.height / 3;
-                    const PX_TO_MM = 25.4 / 96;
-                    const pdf = new jsPDF({
-                      orientation: W > H ? "landscape" : "portrait",
-                      unit: "mm",
-                      format: [W * PX_TO_MM, H * PX_TO_MM],
-                    });
-                    pdf.addImage(
-                      canvas.toDataURL("image/png"),
-                      "PNG", 0, 0,
-                      W * PX_TO_MM, H * PX_TO_MM,
-                    );
-                    pdf.save("Responsible AI Checklist.pdf");
+                    const link = document.createElement("a");
+                    link.download = "Responsible AI Checklist.png";
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
                   } catch (err) {
                     console.error("PDF generation failed:", err);
                   } finally {
