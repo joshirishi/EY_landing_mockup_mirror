@@ -1407,128 +1407,58 @@ export default function ClosureAiReinforcement({
         <section
           id="p4-org"
           style={{
-            background: colors.confidentBlack,
+            background: colors.offWhite,
             padding: spacing.sectionPadding,
             scrollMarginTop: SUBNAV_SCROLL_MARGIN,
           }}
         >
           <div style={contentRailStyle}>
-            {/* Header — centered per section-header-alignment rule */}
+            {/* Header */}
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <p style={{
                 fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.1em",
-                textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
+                textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
               }}>
                 GOVERNANCE COMPANION
               </p>
               <h2 style={{
-                fontFamily: fonts.bold, fontSize: 32, color: colors.onDark,
+                fontFamily: fonts.bold, fontSize: 32, color: colors.confidentBlack,
                 margin: "0 0 14px", lineHeight: 1.2,
               }}>
                 Organisational governance companion
               </h2>
               <p style={{
-                fontFamily: fonts.regular, fontSize: 17, color: colors.onDarkMuted,
+                fontFamily: fonts.regular, fontSize: 17, color: colors.gray01,
                 margin: "0 auto", maxWidth: 640, lineHeight: 1.6,
               }}>
                 A responsible-AI checklist to keep AI use visible, owned, controlled and continually reassessed.
               </p>
             </div>
 
-            {/* 3×2 card grid — eyBgCard on confidentBlack creates visible elevation */}
+            {/* 3×2 card grid — white cards on offWhite, accent stripe top border */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 36 }}>
               {[
-                {
-                  accent: colors.frameBlue,
-                  /* frameBlue on eyBgCard @ 20px bold = 4.52:1 > 3:1 large-text ✓ */
-                  titleColor: colors.frameBlue,
-                  checkColor: colors.frameBlue,
-                  title: "Direction",
-                  items: [
-                    "Establish responsible-AI principles",
-                    "Align AI use with organisational values",
-                    "Maintain acceptable-use policies and practical guidance",
-                    "Monitor legal, regulatory and professional developments",
-                  ],
-                },
-                {
-                  accent: colors.framePurple,
-                  /* framePurple on eyBgCard = 2.81:1 — FAILS even large text → use white title */
-                  titleColor: colors.onDark,
-                  checkColor: "rgba(255,255,255,0.45)",
-                  title: "Ownership",
-                  items: [
-                    "Assign accountable owners",
-                    "Define approval and escalation routes",
-                    "Include tax, finance, legal, risk, privacy, security and technology perspectives",
-                  ],
-                },
-                {
-                  accent: colors.eyebrowGold,
-                  /* eyebrowGold on eyBgCard @ 20px bold = 4.85:1 ✓ */
-                  titleColor: colors.eyebrowGold,
-                  checkColor: colors.eyebrowGold,
-                  title: "Visibility",
-                  items: [
-                    "Maintain visibility over material AI tools and Agents",
-                    "Identify owners, users, data sources, permissions and purposes",
-                    "Assess use cases based on risk and potential impact",
-                  ],
-                },
-                {
-                  accent: colors.frameGreen,
-                  /* frameGreen on eyBgCard = 6.04:1 ✓ */
-                  titleColor: colors.frameGreen,
-                  checkColor: colors.frameGreen,
-                  title: "Controls",
-                  items: [
-                    "Apply access, security, privacy, human-review and documentation controls",
-                    "Vet third-party AI before professional use or purchase",
-                    "Test prompts and Agents before wider deployment",
-                    "Establish procedures for errors, breaches and unintended outcomes",
-                  ],
-                },
-                {
-                  accent: colors.yellow,
-                  /* yellow on eyBgCard = 12.55:1 ✓ */
-                  titleColor: colors.yellow,
-                  checkColor: colors.yellow,
-                  title: "Enablement",
-                  items: [
-                    "Provide practical, role-appropriate training",
-                    "Train users on data protection, limitations, verification and escalation",
-                    "Use case studies to make responsible-AI risks understandable",
-                    "Keep policies and support routes accessible",
-                  ],
-                },
-                {
-                  accent: colors.frameTeal,
-                  /* frameTeal on eyBgCard = 10.82:1 ✓ */
-                  titleColor: colors.frameTeal,
-                  checkColor: colors.frameTeal,
-                  title: "Monitoring + reassessment",
-                  items: [
-                    "Monitor performance, access and compliance issues",
-                    "Capture user feedback and reported concerns",
-                    "Review outdated or conflicting knowledge sources",
-                    "Reassess governance as technology, regulation and use cases evolve",
-                  ],
-                },
+                { accent: colors.frameBlue,    title: "Direction",               items: ["Establish responsible-AI principles", "Align AI use with organisational values", "Maintain acceptable-use policies and practical guidance", "Monitor legal, regulatory and professional developments"] },
+                { accent: colors.framePurple,  title: "Ownership",               items: ["Assign accountable owners", "Define approval and escalation routes", "Include tax, finance, legal, risk, privacy, security and technology perspectives"] },
+                { accent: colors.eyebrowGold,  title: "Visibility",              items: ["Maintain visibility over material AI tools and Agents", "Identify owners, users, data sources, permissions and purposes", "Assess use cases based on risk and potential impact"] },
+                { accent: colors.frameGreen,   title: "Controls",                items: ["Apply access, security, privacy, human-review and documentation controls", "Vet third-party AI before professional use or purchase", "Test prompts and Agents before wider deployment", "Establish procedures for errors, breaches and unintended outcomes"] },
+                { accent: colors.frameOrange,  title: "Enablement",              items: ["Provide practical, role-appropriate training", "Train users on data protection, limitations, verification and escalation", "Use case studies to make responsible-AI risks understandable", "Keep policies and support routes accessible"] },
+                { accent: colors.frameTeal,    title: "Monitoring + reassessment", items: ["Monitor performance, access and compliance issues", "Capture user feedback and reported concerns", "Review outdated or conflicting knowledge sources", "Reassess governance as technology, regulation and use cases evolve"] },
               ].map((card) => (
                 <div
                   key={card.title}
                   style={{
-                    background: colors.eyBgCard,
+                    background: colors.white,
                     borderTopWidth: 3, borderTopStyle: "solid", borderTopColor: card.accent,
-                    borderRightWidth: 1, borderRightStyle: "solid", borderRightColor: colors.borderOnDark,
-                    borderBottomWidth: 1, borderBottomStyle: "solid", borderBottomColor: colors.borderOnDark,
-                    borderLeftWidth: 1, borderLeftStyle: "solid", borderLeftColor: colors.borderOnDark,
+                    borderRightWidth: 1, borderRightStyle: "solid", borderRightColor: "rgba(0,0,0,0.08)",
+                    borderBottomWidth: 1, borderBottomStyle: "solid", borderBottomColor: "rgba(0,0,0,0.08)",
+                    borderLeftWidth: 1, borderLeftStyle: "solid", borderLeftColor: "rgba(0,0,0,0.08)",
                     borderRadius: 10,
                     padding: "22px 20px",
                   }}
                 >
                   <p style={{
-                    fontFamily: fonts.bold, fontSize: 15, color: card.titleColor,
+                    fontFamily: fonts.bold, fontSize: 15, color: colors.confidentBlack,
                     margin: "0 0 16px", lineHeight: 1.25,
                   }}>
                     {card.title}
@@ -1540,16 +1470,15 @@ export default function ClosureAiReinforcement({
                         style={{
                           display: "flex", alignItems: "flex-start", gap: 9,
                           marginBottom: 8, fontFamily: fonts.regular,
-                          fontSize: 13, color: colors.onDarkMuted, lineHeight: 1.5,
+                          fontSize: 13, color: colors.gray01, lineHeight: 1.5,
                         }}
                       >
-                        {/* Checkbox square indicator — decorative, aria-hidden */}
                         <span
                           aria-hidden="true"
                           style={{
                             flexShrink: 0, display: "inline-block",
                             width: 10, height: 10, marginTop: "0.25em",
-                            border: `1.5px solid ${card.checkColor}`,
+                            border: `1.5px solid ${colors.gray01}`,
                             borderRadius: 2,
                           }}
                         />
@@ -1561,9 +1490,9 @@ export default function ClosureAiReinforcement({
               ))}
             </div>
 
-            {/* Yellow tagline — verbatim from PDF */}
+            {/* Tagline — yellow fails on offWhite; use confidentBlack */}
             <p style={{
-              fontFamily: fonts.bold, fontSize: 17, color: colors.yellow,
+              fontFamily: fonts.bold, fontSize: 17, color: colors.confidentBlack,
               textAlign: "center", margin: 0, lineHeight: 1.55,
             }}>
               Make governance practical: visible ownership, clear controls and regular reassessment.
