@@ -3474,6 +3474,44 @@ document.addEventListener('keydown', function(e) {
 #hallucination-prompt-cta button:focus-visible {
   transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,230,0,0.3); outline:none;
 }
+
+/* Newspaper clippings wall — hallucination beat */
+.hall-news-wall {
+  position:relative; width:100%; min-height:100%;
+  background:#f0ede8;
+  overflow:hidden;
+  padding:20px 16px 80px;
+  box-sizing:border-box;
+}
+.hall-clip {
+  position:absolute;
+  background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.05);
+  padding:12px 14px;
+  font-family:Georgia, 'Times New Roman', serif;
+  line-height:1.4;
+}
+.hall-clip-headline { font-size:15px; font-weight:700; color:#111; margin:0; }
+.hall-clip-sub { font-size:12px; color:#444; margin:4px 0 0; font-family:inherit; }
+.hall-clip-body { font-size:11px; color:#333; margin:6px 0 0; font-family:inherit; line-height:1.5; }
+.hall-clip-kicker { font-size:10px; font-weight:700; color:#c0392b; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 4px; font-family:Arial,sans-serif; }
+.hall-clip-img { width:100%; height:80px; object-fit:cover; margin-bottom:8px; display:block; }
+/* Slide-up transition for copilot-chat */
+#copilot-chat.slide-exit {
+  transition: transform 800ms cubic-bezier(0.4,0,0.2,1), opacity 600ms ease;
+  transform: translateY(-110%);
+  opacity: 0;
+}
+#copilot-chat.slide-enter-from {
+  transition: none;
+  transform: translateY(110%);
+  opacity: 0;
+}
+#copilot-chat.slide-enter {
+  transition: transform 900ms cubic-bezier(0.0,0,0.2,1), opacity 600ms ease;
+  transform: translateY(0);
+  opacity: 1;
+}
 @media (prefers-reduced-motion: reduce) {
   .beat-flip-out { animation:fadeOutMsg 0.15s ease forwards; }
   .beat-flip-in { animation:fadeInMsg 0.25s ease forwards; }
@@ -3586,7 +3624,7 @@ document.addEventListener('keydown', function(e) {
 }
 </style>
 <script>
-let currentBeat = -1;
+var currentBeat = -1;
 // Walkthrough order: prompt → processing/CTA → tabs → 7-steps overview → AI reply → hallucination → human loop → recap
 const BEATS = ['ask','sent','inside','output','hallucination','you','better'];
 const chatEl = document.getElementById('copilot-chat');
@@ -3715,10 +3753,117 @@ function startDemo() {
   renderBeat();
 }
 
+function buildNewsWall() {
+  return `<div class="hall-news-wall" style="width:100%;background:#f0ede8;padding:14px 12px;box-sizing:border-box;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:start;">
+    <!-- clip 1: top-left big headline — spans both rows left column -->
+    <div style="background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.13);padding:14px 16px;transform:rotate(-1.2deg);border-left:3px solid #c0392b;">
+      <p style="font-family:Arial,sans-serif;font-size:8px;font-weight:700;color:#c0392b;letter-spacing:0.5px;text-transform:uppercase;margin:0 0 6px;">TAX TODAY</p>
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:14px;font-weight:700;color:#111;margin:0;line-height:1.35;">Did AI hallucination play mischief with a tax tribunal order?</p>
+      <p style="font-family:Georgia,serif;font-size:10px;color:#555;margin:6px 0 0;line-height:1.5;">A recent tax tribunal order cited fictitious court judgments before it was hastily withdrawn — raising suspicions about the use of Generative AI.</p>
+    </div>
+    <!-- clip 2: top-right scanned newspaper -->
+    <div style="background:#f5f0e8;box-shadow:0 2px 10px rgba(0,0,0,0.18);padding:10px 12px;transform:rotate(0.9deg);border:1px solid #ddd;">
+      <p style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:#111;margin:0 0 4px;line-height:1.3;">'I failed miserably'</p>
+      <p style="font-family:Georgia,serif;font-size:9.5px;color:#444;margin:0 0 6px;line-height:1.4;">Lawyer who used ChatGPT for writing a phony brief explains fake cases to judge</p>
+      <p style="font-family:Georgia,serif;font-size:9px;color:#666;margin:0;line-height:1.5;">Steven Schwartz told a judge he never meant to fool anybody when he filed a court brief full of phony legal precedents invented by ChatGPT…</p>
+    </div>
+    <!-- clip 3: middle-left bench order -->
+    <div style="background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.11);padding:10px 12px;transform:rotate(0.6deg);">
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:11.5px;font-weight:700;color:#111;margin:0;line-height:1.4;">AI proposes, Tribunal Disposes! Bengaluru ITAT Bench in Soup after AI-generated Order cites non-existent Cases <span style="color:#c0392b;">[Read Order]</span></p>
+    </div>
+    <!-- clip 4: middle-right with photo -->
+    <div style="background:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.15);transform:rotate(-0.8deg);overflow:hidden;">
+      <div style="width:100%;height:60px;background:linear-gradient(135deg,#8a9bb0 0%,#6b7d8e 100%);display:flex;align-items:center;justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div style="padding:8px 10px;">
+        <p style="font-family:Arial,sans-serif;font-size:8px;font-weight:700;color:#c0392b;margin:0 0 3px;text-transform:uppercase;">Artificial Intelligence</p>
+        <p style="font-family:Georgia,serif;font-size:11px;font-weight:700;color:#111;margin:0;line-height:1.35;">High court tells UK lawyers to stop misuse of AI after fake case-law citations</p>
+      </div>
+    </div>
+    <!-- clip 5: bottom spanning full width -->
+    <div style="grid-column:1/-1;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.13);padding:10px 14px;transform:rotate(-0.4deg);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <p style="font-family:Arial,sans-serif;font-size:9px;color:#888;margin:0;white-space:nowrap;">Fri 6 Jun 2025 · The Guardian</p>
+        <div style="display:inline-flex;align-items:center;gap:4px;border:1px solid #ddd;border-radius:4px;padding:2px 7px;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span style="font-size:9px;font-family:Arial,sans-serif;color:#333;font-weight:600;">Share</span></div>
+      </div>
+      <p style="font-family:Georgia,serif;font-size:11px;color:#222;margin:6px 0 0;line-height:1.55;">Senior lawyers told to take urgent action to prevent misuse of <span style="color:#c0392b;font-weight:600;">artificial intelligence</span> after dozens of fake case-law citations were put before courts — either completely fictitious or containing made-up passages.</p>
+    </div>
+  </div>`;
+}
+
+function buildHallucinationReasoning() {
+  return `<div style="padding:16px 18px;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span style="color:var(--accent-red);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Why does this happen?</span></div><div style="background:rgba(255,65,54,0.06);border:1px solid rgba(255,65,54,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">The AI generated this instead:</p></div><div style="background:rgba(255,65,54,0.08);border-left:3px solid var(--accent-red);padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:12px;"><p style="color:var(--accent-red);font-size:13px;font-style:italic;margin:0;">&ldquo;Every online seller is required to register for GST in every Indian state where customers are located.&rdquo;</p></div><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">This sounds professional.</p><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">It sounds confident.</p><p style="color:var(--text-dim);font-size:13px;margin-bottom:14px;">But it is not accurate.</p><div style="border-top:1px solid rgba(46,46,56,0.06);padding-top:12px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin-bottom:4px;">What happened?</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI filled gaps with something that sounded plausible — a confident answer that is wrong.</p></div><div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--accent-red);font-size:13px;font-weight:700;">Hallucination = A confident answer that may be wrong</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;line-height:1.5;">Like a student who doesn&rsquo;t know the answer but writes something that sounds convincing.</span></div></div>`;
+}
+
 function continueBeat() {
   if (currentBeat >= BEATS.length - 1) return;
   var leavingBeat = BEATS[currentBeat];
+
+  // Hallucination beat has two sub-phases: news wall (phase 1) then reasoning boxes (phase 2)
+  if (leavingBeat === 'hallucination' && window._hallPhase === 1) {
+    window._hallPhase = 2;
+    var chatEl2 = document.getElementById('copilot-chat');
+    var contBtn2 = document.getElementById('demo-continue-btn');
+    if (contBtn2) contBtn2.style.display = 'none';
+    // Slide news wall up, slide reasoning boxes in
+    if (chatEl2) chatEl2.classList.add('slide-exit');
+    setTimeout(function() {
+      if (chatEl2) {
+        chatEl2.classList.remove('slide-exit');
+        chatEl2.style.overflow = '';
+        chatEl2.style.overflowY = 'auto';
+        chatEl2.style.padding = '';
+        chatEl2.classList.add('slide-enter-from');
+        chatEl2.innerHTML = '<div class="ai-msg" style="animation:fadeInMsg 0.4s ease;">' + buildHallucinationReasoning() + '</div>';
+        chatEl2.offsetHeight;
+        chatEl2.classList.remove('slide-enter-from');
+        chatEl2.classList.add('slide-enter');
+      }
+      setTimeout(function() {
+        if (chatEl2) chatEl2.classList.remove('slide-enter');
+        appendBeatNext('Next');
+      }, 950);
+    }, 850);
+    return;
+  }
+
   currentBeat++;
+  if (leavingBeat === 'output') {
+    // Slide-up cinematic transition into hallucination newspaper wall
+    window._hallPhase = 0;
+    var chatEl2 = document.getElementById('copilot-chat');
+    var contBtn2 = document.getElementById('demo-continue-btn');
+    if (contBtn2) contBtn2.style.display = 'none';
+    if (chatEl2) chatEl2.classList.add('slide-exit');
+    setTimeout(function() {
+      if (chatEl2) {
+        chatEl2.classList.remove('slide-exit');
+        chatEl2.innerHTML = '';
+        chatEl2.style.overflow = 'hidden';
+        chatEl2.style.padding = '0';
+        chatEl2.classList.add('slide-enter-from');
+        chatEl2.innerHTML = buildNewsWall();
+        chatEl2.offsetHeight;
+        chatEl2.classList.remove('slide-enter-from');
+        chatEl2.classList.add('slide-enter');
+      }
+      setTimeout(function() {
+        if (chatEl2) chatEl2.classList.remove('slide-enter');
+        window._hallPhase = 1;
+        var winEl2 = document.getElementById('copilot-window');
+        if (winEl2) winEl2.classList.add('is-hallucinating');
+        var bar = document.getElementById('demo-actions');
+        if (bar) bar.style.display = 'flex';
+        var backBtn = document.getElementById('demo-back-btn');
+        if (backBtn) { backBtn.disabled = false; backBtn.style.opacity = '1'; }
+        var restartBtn = document.getElementById('demo-restart-btn');
+        if (restartBtn) restartBtn.style.display = 'inline-flex';
+        appendBeatNext('Next');
+      }, 950);
+    }, 850);
+    return;
+  }
   renderBeat(leavingBeat === 'sent'); // flip transition into 'inside'
 }
 
@@ -3738,6 +3883,7 @@ function resetDemo() {
   var win = document.getElementById('copilot-window'); if (win) win.classList.remove('is-hallucinating');
   setCopilotStatus('EY.ai Copilot');
   currentBeat = -1;
+  window._hallPhase = 0;
   chatEl.classList.remove('is-inside-beat');
   var bi = document.getElementById('beat-indicator'); if (bi) bi.style.display = 'none';
 }
@@ -3904,19 +4050,16 @@ function renderBeat(flipIn) {
   } else if (beat === 'output') {
     barEl.style.display = 'none';
     addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.');
-    appendBeatNext('Next');
+    appendBeatNext('What could go wrong?');
 
   } else if (beat === 'hallucination') {
+    // Rendered via continueBeat slide intercept; this path only runs on backBeat
     barEl.style.display = 'none';
     if (winEl) winEl.classList.add('is-hallucinating');
-    addMessagePlain(`<div style="padding:16px 18px;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg class="hallucination-warn-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="var(--ey-yellow)" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round"/></svg><span style="color:var(--accent-red);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">What Could Go Wrong? — Hallucination</span></div><div style="background:rgba(255,65,54,0.06);border:1px solid rgba(255,65,54,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">Suppose the AI generates this instead:</p></div><div class="hallucination-fabricated-block hallucination-quote-pulse"><div class="hallucination-fabricated-quote"><p>&ldquo;Every online seller is required to register for GST in every Indian state where customers are located.&rdquo;</p></div><div class="hallucination-fabricated-caption"><p>This sounds professional.</p><p>It sounds confident.</p><p class="hallucination-fabricated-kicker">But it may not be accurate.</p></div></div><div style="border-top:1px solid rgba(46,46,56,0.06);padding-top:12px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin-bottom:4px;">What Happened?</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI filled gaps with something that sounded plausible.</p></div><div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--accent-red);font-size:13px;font-weight:700;">Hallucination = A confident answer that may be wrong</span></div><div class="copilot-everyday-analogy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><p class="copilot-everyday-analogy__text">Everyday Analogy — Like a student who doesn’t know the answer but writes something that sounds convincing.</p></div></div>`);
-    var hallCta = document.createElement('div');
-    hallCta.id = 'hallucination-prompt-cta';
-    hallCta.innerHTML = '<button type="button" onclick="continueBeat()" aria-label="How can we overcome Hallucination?"><span>How can we overcome Hallucination?</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>';
-    chatEl.appendChild(hallCta);
-    var contBtnHall = document.getElementById('demo-continue-btn');
-    if (contBtnHall) contBtnHall.style.display = 'none';
-    requestAnimationFrame(function () { chatEl.scrollTop = 0; });
+    chatEl.innerHTML = buildNewsWall();
+    chatEl.style.overflowY = 'hidden';
+    chatEl.style.padding = '0';
+    appendBeatNext('Next');
 
   } else if (beat === 'you') {
     barEl.style.display = 'none';
@@ -3937,6 +4080,7 @@ window.startDemo = startDemo;
 window.continueBeat = continueBeat;
 window.backBeat = backBeat;
 window.resetDemo = resetDemo;
+window.renderBeat = renderBeat;
 window.selectInsideTab = selectInsideTab;
 window.goToInsideTab = goToInsideTab;
 window.toggleAcc = toggleAcc;
