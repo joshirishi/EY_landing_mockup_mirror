@@ -358,6 +358,17 @@ function ProblemFirstSection() {
       id="problem-first"
       style={{ background: colors.white, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
     >
+      <style>{`
+        @keyframes ey-row-step-back {
+          from { opacity: 1; transform: translateX(0); }
+          to   { opacity: 0.45; transform: translateX(-4px); }
+        }
+        @keyframes ey-row-step-forward {
+          from { opacity: 0.45; transform: translateX(-4px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
+
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading + progress */}
@@ -927,6 +938,7 @@ function GuidedExamplesSection() {
             explanation, validation or a first draft?
           </p>
         </div>
+
       </div>
     </section>
   );
@@ -1449,9 +1461,6 @@ function ActivityLevelChoiceSection() {
                   {row.response}
                 </span>
               </div>
-            );
-          })}
-        </div>
 
         {/* Key message bar */}
         <div style={{

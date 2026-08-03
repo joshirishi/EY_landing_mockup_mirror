@@ -135,12 +135,16 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   const stickyRef = useRef<HTMLDivElement>(null);
   const [subnavHeight, setSubnavHeight] = useState(SUBNAV_SCROLL_OFFSET);
   const groups = currentModuleId ? getSubModuleGroups(currentModuleId) : { learn: [], apply: [] };
-  const { learn, apply } = groups;
-  const showSectionTabs = !isPhaseOverview && !!current?.supportsInPageNav && (learn.length > 0 || apply.length > 0);
-  const activeSectionId = useScrollSpy(
-    onSectionClick || !current ? [] : current.subModules.map((s) => s.id),
-    subnavHeight
-  );
+  const effectiveSections = overrideSections ?? [];
+  const learn = effectiveSections.length > 0 ? effectiveSections.filter((s) => s.group === "learn") : groups.learn;
+  const apply = effectiveSections.length > 0 ? effectiveSections.filter((s) => s.group === "apply") : groups.apply;
+  const showSectionTabs =
+    (isPhaseOverview && effectiveSections.length > 0) ||
+    (!isPhaseOverview && !!current?.supportsInPageNav && (groups.learn.length > 0 || groups.apply.length > 0));
+  const spySectionIds = effectiveSections.length > 0
+    ? effectiveSections.map((s) => s.id)
+    : (onSectionClick || !current ? [] : current.subModules.map((s) => s.id));
+  const activeSectionId = useScrollSpy(spySectionIds, subnavHeight);
 
   useLayoutEffect(() => {
     const el = stickyRef.current;

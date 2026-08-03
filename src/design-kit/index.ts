@@ -27,7 +27,7 @@ export { EYLogo } from './EYLogo';
 export { EYButton } from './EYButton';
 export { EYNavbar } from './EYNavbar';
 export { EYFooter } from './EYFooter';
-export { EYCard } from './EYCard';
+export { EYCard, StepBadge } from './EYCard';
 export { EYFrame } from './EYFrame';
 export { SiteHeader, PlatformModeBadge } from './SiteHeader';
 export type { SiteSection } from './SiteHeader';

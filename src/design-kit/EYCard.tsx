@@ -20,6 +20,63 @@
 import { colors, fonts, spectrumGradients } from './tokens';
 import type { CSSProperties, ReactNode } from 'react';
 
+/**
+ * StepBadge — circular number badge matching the LearningNav module order chip.
+ *
+ * Usage:
+ *   <StepBadge n={1} />                          // yellow on dark bg (default)
+ *   <StepBadge n={3} color="#8630FF" />           // custom accent
+ *   <StepBadge n={2} size={24} onLight />         // larger, light-bg variant
+ */
+export function StepBadge({
+  n,
+  color,
+  textColor: textColorProp,
+  size = 22,
+  onLight = false,
+  variant = 'filled',
+}: {
+  n: number | string;
+  color?: string;
+  /** Override the text colour inside the badge. */
+  textColor?: string;
+  size?: number;
+  onLight?: boolean;
+  /** 'filled' = solid background (default); 'outline' = border only, transparent fill. */
+  variant?: 'filled' | 'outline';
+}) {
+  const accentColor = color ?? colors.yellow;
+  const isYellow = !color || color === colors.yellow || color === '#FFE600';
+  const defaultTextColor = variant === 'outline'
+    ? accentColor
+    : isYellow ? colors.offBlack : colors.white;
+  const textColor = textColorProp ?? defaultTextColor;
+  const fontSize = size <= 20 ? 11 : size <= 26 ? 12 : 13;
+
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        background: variant === 'outline' ? 'transparent' : accentColor,
+        border: variant === 'outline' ? `1.5px solid ${accentColor}` : 'none',
+        color: textColor,
+        fontFamily: fonts.bold,
+        fontSize,
+        lineHeight: 1,
+        flexShrink: 0,
+      }}
+    >
+      {n}
+    </span>
+  );
+}
+
 interface EYCardProps {
   eyebrow?: string;
   title: string;
