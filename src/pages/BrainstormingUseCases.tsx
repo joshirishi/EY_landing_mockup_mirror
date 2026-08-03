@@ -5,7 +5,7 @@ import { ModuleHeader } from "../design-kit/LearningNav";
 import { EYFooter } from "../design-kit/EYFooter";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
-import { colors, contentRailStyle, fonts, spacing, spectrumCss } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, spacing } from "../design-kit/tokens";
 
 // ── Quick Recall data — verbatim from PDF slide 2 ────────────────────────────
 const PROMPT_TASKS = [
@@ -2461,7 +2461,7 @@ function HeroSection() {
           style={{
             height: 4,
             borderRadius: 2,
-            background: spectrumCss(4),
+            background: colors.yellow,
             marginBottom: 28,
             ...ruleAnim,
           }}

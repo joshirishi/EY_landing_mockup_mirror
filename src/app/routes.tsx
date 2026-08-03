@@ -1,4 +1,5 @@
-import { createBrowserRouter, Outlet, useNavigate } from "react-router";
+import { createBrowserRouter, Outlet, useLocation, useNavigate } from "react-router";
+import { useEffect } from "react";
 import Home from "../imports/Home2/index";
 import { PhasedEngagementView, Phase1View } from "../imports/Frame353/index";
 import FoundationalConcepts from "../pages/FoundationalConcepts";
@@ -112,9 +113,21 @@ function ClosureAiReinforcementRoute() {
 }
 
 // ── Root layout  ─────────────────────────────────────────────────────────────
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    // Scroll the Root div — it is the real scroll container (html/body/root are all height:100%)
+    document.getElementById("app-scroll-root")?.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    // Also reset window scroll for any page that escapes the root via position:fixed
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
+}
+
 function Root() {
   return (
-    <div className="size-full overflow-auto bg-white">
+    <div id="app-scroll-root" className="size-full overflow-auto bg-white">
+      <ScrollToTop />
       <Outlet />
     </div>
   );

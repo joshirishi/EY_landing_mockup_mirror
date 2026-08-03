@@ -4,7 +4,7 @@ import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYFooter } from "../design-kit/EYFooter";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { colors, contentRailStyle, fonts, spacing, spectrumCss } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, spacing } from "../design-kit/tokens";
 import { StepBadge } from "../design-kit/EYCard";
 import { EYQuote } from "../design-kit/EYTypography";
 
@@ -332,9 +332,6 @@ function HeroSection() {
         padding: "80px 0 80px",
       }}
     >
-      {/* Top spectrum bar — decorative */}
-      <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: spectrumCss(4) }} />
-
       <div style={{ ...contentRailStyle }}>
         {/* ── Split hero: left = headline, right = challenge card ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", marginBottom: 56 }}
@@ -356,7 +353,7 @@ function HeroSection() {
               style={{
                 height: 4,
                 borderRadius: 2,
-                background: spectrumCss(4),
+                background: colors.yellow,
                 width: "100%",
                 maxWidth: 360,
                 margin: "20px 0 24px",
@@ -1158,7 +1155,6 @@ export default function ClosureAiReinforcement({
   onNavigate: (path: string) => void;
 }) {
   useModuleSectionHashScroll();
-  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); }, []);
 
   return (
     <div
