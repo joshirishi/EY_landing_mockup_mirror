@@ -799,7 +799,7 @@ function useScrollSpy(sectionIds: string[], scrollOffset: number): string | null
           setActiveId(topMost.target.id);
         }
       },
-      { rootMargin: `-${scrollOffset}px 0px -60% 0px`, threshold: 0 }
+      { rootMargin: `-${scrollOffset + 2}px 0px -60% 0px`, threshold: 0 }
     );
 
     elements.forEach((el) => observer.observe(el));
