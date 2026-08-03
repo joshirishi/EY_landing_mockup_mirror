@@ -1218,22 +1218,9 @@ export default function ClosureAiReinforcement({
                   btn.innerHTML = "Generating…";
                   btn.style.pointerEvents = "none";
                   try {
-                    const { default: html2canvas } = await import("html2canvas");
-                    const CAPTURE_WIDTH = 1280;
-                    const canvas = await html2canvas(section, {
-                      scale: 3,
-                      useCORS: true,
-                      allowTaint: true,
-                      backgroundColor: "#1A1A24",
-                      logging: false,
-                      windowWidth: CAPTURE_WIDTH,
-                      width: CAPTURE_WIDTH,
-                      imageTimeout: 0,
-                      ignoreElements: (el) => el.hasAttribute("data-no-print"),
-                    });
                     const link = document.createElement("a");
                     link.download = "Responsible AI Checklist.png";
-                    link.href = canvas.toDataURL("image/png");
+                    link.href = "/Responsible Checklist.png";
                     link.click();
                   } catch (err) {
                     console.error("PDF generation failed:", err);
