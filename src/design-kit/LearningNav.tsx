@@ -82,14 +82,6 @@ type ModuleHeaderProps =
       onBack: () => void;
       onSectionClick?: never;
       sectionStatus?: string;
-      /** Override the breadcrumb picker label (defaults to current Phase 1 workshop name). */
-      phaseLabel?: string;
-      /** Override the phase number shown in the progress chip. */
-      phaseNumber?: number;
-      /** Sub-phase label, e.g. "4.1". */
-      subPhaseLabel?: string;
-      /** In-page anchor sections for the tab strip. */
-      sections?: { id: string; label: string; group: "learn" | "apply" }[];
     };
 
 export function ModuleHeader(props: ModuleHeaderProps) {
@@ -98,27 +90,16 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   const currentModuleId = isPhaseOverview ? null : props.currentModuleId;
   const onSectionClick = isPhaseOverview ? undefined : props.onSectionClick;
 
-  // Phase-overview overrides — fall back to Phase 1 defaults so existing callers are unaffected.
-  const overridePhaseLabel = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseLabel : undefined;
-  const overridePhaseNumber = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).phaseNumber : undefined;
-  const subPhaseLabel = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).subPhaseLabel : undefined;
-  const overrideSections = isPhaseOverview ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections : undefined;
-
   const current = currentModuleId ? getModule(currentModuleId) : null;
-  const pageTitle = isPhaseOverview
-    ? (overridePhaseLabel ?? "Foundational AI Training")
-    : current!.title;
+  const pageTitle = isPhaseOverview ? "Foundational AI Training" : current!.title;
   // Picker button shows WHERE YOU ARE: the current module on module pages, the
   // workshop name on the phase-overview page. The trailing page-title span was
   // removed because it duplicated this label; the dropdown adds workshop context.
-  const pickerLabel = isPhaseOverview
-    ? (overridePhaseLabel ? overridePhaseLabel.replace(/^Phase \d+: /, "") : WORKSHOP_LABEL)
-    : current!.title;
+  const pickerLabel = isPhaseOverview ? WORKSHOP_LABEL : current!.title;
   // User-facing: Phase → Module, Module → Sub-module.
   // Split into two chips so Module (context) ≠ Sub-module (you are here).
-  const activePhaseNumber = overridePhaseNumber ?? PHASE_NUMBER;
   const progressChips = isPhaseOverview
-    ? { module: `Module ${activePhaseNumber}`, subModule: subPhaseLabel ?? null as string | null }
+    ? { module: `Module ${PHASE_NUMBER} of ${TOTAL_PHASES}`, subModule: null as string | null }
     : {
         module: `Module ${PHASE_NUMBER}`,
         // Plan numbering — {phaseNumber}.{moduleOrder} e.g. "1.3" = phase 1, 3rd module.
@@ -131,14 +112,12 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   const stickyRef = useRef<HTMLDivElement>(null);
   const [subnavHeight, setSubnavHeight] = useState(SUBNAV_SCROLL_OFFSET);
   const groups = currentModuleId ? getSubModuleGroups(currentModuleId) : { learn: [], apply: [] };
-  const effectiveSections = overrideSections ?? [];
-  const learn = effectiveSections.length > 0 ? effectiveSections.filter((s) => s.group === "learn") : groups.learn;
-  const apply = effectiveSections.length > 0 ? effectiveSections.filter((s) => s.group === "apply") : groups.apply;
-  const showSectionTabs = (isPhaseOverview && effectiveSections.length > 0) || (!isPhaseOverview && !!current?.supportsInPageNav && (groups.learn.length > 0 || groups.apply.length > 0));
-  const spySectionIds = effectiveSections.length > 0
-    ? effectiveSections.map((s) => s.id)
-    : (onSectionClick || !current ? [] : current.subModules.map((s) => s.id));
-  const activeSectionId = useScrollSpy(spySectionIds, subnavHeight);
+  const { learn, apply } = groups;
+  const showSectionTabs = !isPhaseOverview && !!current?.supportsInPageNav && (learn.length > 0 || apply.length > 0);
+  const activeSectionId = useScrollSpy(
+    onSectionClick || !current ? [] : current.subModules.map((s) => s.id),
+    subnavHeight
+  );
 
   useLayoutEffect(() => {
     const el = stickyRef.current;
@@ -224,12 +203,12 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                 borderRadius: 4,
                 fontFamily: fonts.bold,
                 fontSize: 14,
-                color: colors.yellow,
+                color: isPhaseOverview ? colors.white : colors.yellow,
               }}
               onFocus={applyFocusRing}
               onBlur={clearFocusRing}
             >
-              {(isPhaseOverview ? activePhaseNumber : current?.order) != null && (
+              {!isPhaseOverview && current && (
                 <span
                   style={{
                     display: "inline-flex",
@@ -246,10 +225,10 @@ export function ModuleHeader(props: ModuleHeaderProps) {
                   }}
                   aria-hidden="true"
                 >
-                  {isPhaseOverview ? activePhaseNumber : current?.order}
+                  {current.order}
                 </span>
               )}
-              <span className="truncate" style={{ color: colors.yellow }}>{pickerLabel}</span>
+              <span className="truncate">{pickerLabel}</span>
               <span
                 style={{
                   fontSize: 8,
@@ -799,7 +778,7 @@ function useScrollSpy(sectionIds: string[], scrollOffset: number): string | null
           setActiveId(topMost.target.id);
         }
       },
-      { rootMargin: `-${scrollOffset + 2}px 0px -60% 0px`, threshold: 0 }
+      { rootMargin: `-${scrollOffset}px 0px -60% 0px`, threshold: 0 }
     );
 
     elements.forEach((el) => observer.observe(el));

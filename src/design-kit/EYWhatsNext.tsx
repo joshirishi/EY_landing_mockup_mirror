@@ -137,19 +137,19 @@ export function EYWhatsNext({
           {title}
         </h2>
 
-        {_description ? (
-          <p
-            style={{
-              margin: "-8px 0 28px",
-              fontSize: 15,
-              lineHeight: 1.65,
-              color: DARK.body,
-              fontFamily: fonts.regular,
-            }}
-          >
-            {_description}
-          </p>
-        ) : null}
+        {/* Body paragraph temporarily hidden — keep heading + CTA only
+        <p
+          style={{
+            margin: "0 0 28px",
+            fontSize: 15,
+            lineHeight: "22px",
+            color: DARK.body,
+            fontFamily: fonts.regular,
+          }}
+        >
+          {_description}
+        </p>
+        */}
 
         <button
           type="button"
@@ -175,6 +175,7 @@ export function EYWhatsNext({
           <ArrowRight size={16} aria-hidden />
         </button>
 
+        {/* Meta fine-print temporarily hidden — keep heading + CTA only
         {_meta ? (
           <p
             style={{
@@ -188,6 +189,7 @@ export function EYWhatsNext({
             {_meta}
           </p>
         ) : null}
+        */}
       </div>
       </div>
     </section>
