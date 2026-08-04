@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { colors, contentRailStyle, fonts, spacing, spectrumCss } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import { StepBadge } from "../design-kit/EYCard";
 import { EYQuote } from "../design-kit/EYTypography";
 
@@ -67,7 +67,7 @@ function RecogniseTheRisk() {
     >
       <div style={{ ...contentRailStyle }}>
         {/* eyebrow/heading/subheading: center-aligned on all non-hero sections */}
-        <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px", textAlign: "center" }}>
+        <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px", textAlign: "center" }}>
           Recognise the Risk
         </p>
         <h2
@@ -333,70 +333,75 @@ function HeroSection() {
         padding: "80px 0 80px",
       }}
     >
-      {/* Top spectrum bar — decorative */}
-      <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: spectrumCss(4) }} />
+      <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column" }}>
 
+        {/* H1 */}
+        <h1 id="hero-heading" style={{ fontFamily: fonts.bold, fontSize: "clamp(28px, 3.4vw, 48px)", letterSpacing: "-0.025em", lineHeight: 1.1, margin: 0 }}>
+          <span style={{ color: colors.white }}>From Using AI</span><br />
+          <span style={{ color: colors.yellow, whiteSpace: "nowrap" }}>to Using AI Responsibly</span>
+        </h1>
+
+        {/* Subheading */}
+        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 17px)", color: colors.onDarkMuted, margin: "0 0 36px", lineHeight: 1.65, maxWidth: 560 }}>
+          A practical governance playbook for senior tax and finance professionals.
+        </p>
+
+      </div>
+    </section>
+  );
+}
+
+// ── Hero context — Today's Question + capability cards + flow (separated from dark hero) ─
+function HeroContextSection() {
+  const cardStyle: React.CSSProperties = {
+    background: colors.white,
+    border: `1px solid ${colors.gray02}`,
+    borderRadius: 10,
+    padding: "28px 28px 32px",
+  };
+
+  const eyebrowStyle = (c: string = colors.eyebrowGold): React.CSSProperties => ({
+    fontFamily: fonts.bold,
+    fontSize: typeScale.label.size,
+    letterSpacing: typeScale.label.tracking,
+    textTransform: "uppercase",
+    color: c,
+    margin: "0 0 10px",
+  });
+
+  const bulletStyle: React.CSSProperties = {
+    fontFamily: fonts.regular,
+    fontSize: 14,
+    color: colors.gray01,
+    lineHeight: 1.6,
+    margin: "0 0 6px 0",
+    paddingLeft: 16,
+    position: "relative",
+  };
+
+  return (
+    <section
+      style={{
+        background: colors.offWhite,
+        padding: `${spacing.sectionPaddingY} 0`,
+        width: "100%",
+      }}
+    >
       <div style={{ ...contentRailStyle }}>
-        {/* ── Split hero: left = headline, right = challenge card ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", marginBottom: 56 }}
-          className="hero-split">
-          {/* Left: eyebrow + H1 + rule + subtitle + CTA */}
-          <div>
-            <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: "0 0 20px" }}>
-              Phase 4 · Responsible AI
-            </p>
-            <h1 id="hero-heading" style={{ fontFamily: fonts.bold, fontSize: "clamp(28px, 3.4vw, 48px)", letterSpacing: "-0.025em", lineHeight: 1.1, margin: 0 }}>
-              <span style={{ color: colors.white }}>From Using AI</span><br />
-              <span style={{ color: colors.yellow, whiteSpace: "nowrap" }}>to Using AI Responsibly</span>
-            </h1>
 
-            {/* Animated spectrum rule */}
-            <div
-              ref={ruleRef}
-              aria-hidden="true"
-              style={{
-                height: 4,
-                borderRadius: 2,
-                background: spectrumCss(4),
-                width: "100%",
-                maxWidth: 360,
-                margin: "20px 0 24px",
-                transformOrigin: "left center",
-                transform: ruleVisible ? "scaleX(1)" : "scaleX(0)",
-                transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1)",
-              }}
-            />
-
-            <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 17px)", color: colors.onDarkMuted, margin: "0 0 36px", lineHeight: 1.65, maxWidth: 420 }}>
-              A practical governance playbook for senior tax and finance professionals.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => { document.getElementById("p4-risk")?.scrollIntoView({ behavior: "smooth" }); }}
-              style={{ background: colors.yellow, color: colors.offBlack, fontFamily: fonts.bold, fontSize: 15, border: "none", borderRadius: 6, padding: "14px 32px", cursor: "pointer", letterSpacing: "0.01em" }}
-            >
-              Begin the Playbook →
-            </button>
-          </div>
-
-          {/* Right: challenge card */}
-          <div style={{ ...cardStyle, borderTop: `3px solid ${colors.yellow}` }}>
-            <p style={eyebrowStyle()}>Today's Question</p>
-            <p style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.6vw, 20px)", color: colors.white, margin: 0, lineHeight: 1.5 }}>
-              How do you use these capabilities without compromising accuracy, confidentiality, professional judgment or trust?
-            </p>
-          </div>
+        {/* Today's Question card */}
+        <div style={{ ...cardStyle, borderTop: `3px solid ${colors.yellow}`, marginBottom: 24 }}>
+          <p style={eyebrowStyle()}>Today's Question</p>
+          <p style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.6vw, 20px)", color: colors.offBlack, margin: 0, lineHeight: 1.5 }}>
+            How do you use these capabilities without compromising accuracy, confidentiality, professional judgment or trust?
+          </p>
         </div>
 
-        {/* Responsive collapse for mobile */}
-        <style>{`.hero-split { @media (max-width: 680px) { grid-template-columns: 1fr !important; gap: 32px !important; } }`}</style>
-
-        {/* Two-column grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 48 }}>
+        {/* Two-column capability cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 32 }}>
           {/* Left card */}
           <div style={{ ...cardStyle, borderTop: `3px solid ${colors.yellow}` }}>
-            <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.8vw, 18px)", color: colors.white, margin: "0 0 20px", lineHeight: 1.3 }}>
+            <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.8vw, 18px)", color: colors.offBlack, margin: "0 0 20px", lineHeight: 1.3 }}>
               AI Can Assist the Work.<br />You Remain Accountable.
             </h2>
             <p style={eyebrowStyle()}>You have learned how to:</p>
@@ -408,7 +413,7 @@ function HeroSection() {
                 </li>
               ))}
             </ul>
-            <p style={{ fontFamily: fonts.regular, fontSize: 14, color: colors.yellow, fontStyle: "italic", margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontFamily: fonts.regular, fontSize: 14, color: colors.gray01, fontStyle: "italic", margin: 0, lineHeight: 1.5 }}>
               Now comes the most important question: How do you use these capabilities without compromising accuracy, confidentiality, professional judgment or trust?
             </p>
           </div>
@@ -418,7 +423,7 @@ function HeroSection() {
             <p style={eyebrowStyle(colors.frameBlue)}>AI May Help You</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
               {CAPABILITY_CHIPS.map((chip) => (
-                <span key={chip} style={{ background: colors.surfaceOnDark, border: `1px solid ${colors.borderOnDark}`, borderRadius: 20, padding: "4px 12px", fontFamily: fonts.regular, fontSize: 13, color: colors.white }}>
+                <span key={chip} style={{ background: colors.offWhite, border: `1px solid ${colors.gray02}`, borderRadius: 20, padding: "4px 12px", fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack }}>
                   {chip}
                 </span>
               ))}
@@ -436,7 +441,7 @@ function HeroSection() {
         </div>
 
         {/* Flow row */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, marginBottom: 48 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 0, justifyContent: "center" }}>
             {FLOW_STEPS.map((step, i) => (
               <motion.div
@@ -450,12 +455,12 @@ function HeroSection() {
                   {step.label}
                 </span>
                 {i < FLOW_STEPS.length - 1 && (
-                  <span aria-hidden="true" style={{ fontFamily: fonts.bold, fontSize: 18, color: colors.onDarkMuted, padding: "0 12px" }}>→</span>
+                  <span aria-hidden="true" style={{ fontFamily: fonts.bold, fontSize: 18, color: colors.gray01, padding: "0 12px" }}>→</span>
                 )}
               </motion.div>
             ))}
           </div>
-          <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.onDarkMuted, margin: 0, textAlign: "center", maxWidth: 480 }}>
+          <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: 0, textAlign: "center", maxWidth: 480 }}>
             AI assists. The professional assesses, decides and remains accountable.
           </p>
         </div>
@@ -493,7 +498,7 @@ function ResponsibleAIJourney() {
     >
       <div style={{ ...contentRailStyle }}>
         {/* Center-aligned header */}
-        <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px", textAlign: "center" }}>
+        <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px", textAlign: "center" }}>
           Use the Playbook
         </p>
         <h2
@@ -502,7 +507,7 @@ function ResponsibleAIJourney() {
         >
           The Responsible AI Journey
         </h2>
-        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 16px)", color: colors.onDarkMuted, maxWidth: 560, margin: "0 auto 48px", lineHeight: 1.6, textAlign: "center" }}>
+        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 16px)", color: colors.onDarkMuted, maxWidth: 620, margin: "0 auto 48px", lineHeight: 1.6, textAlign: "center" }}>
           Every responsible use of AI should pass through seven checkpoints.
         </p>
 
@@ -1044,13 +1049,13 @@ function TheChecks() {
       style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.offWhite, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
     >
       <div style={{ ...contentRailStyle }}>
-        <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px", textAlign: "center" }}>
+        <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px", textAlign: "center" }}>
           The Checks
         </p>
         <h2 id="checks-heading" style={{ fontFamily: fonts.bold, fontSize: "clamp(26px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 14px", lineHeight: 1.2, textAlign: "center" }}>
           Seven Checks for Responsible AI
         </h2>
-        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(15px, 1.4vw, 18px)", color: colors.gray01, margin: "0 auto 48px", lineHeight: 1.6, textAlign: "center", maxWidth: 600 }}>
+        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(15px, 1.4vw, 18px)", color: colors.gray01, margin: "0 auto 48px", lineHeight: 1.6, textAlign: "center", maxWidth: 620 }}>
           Each check maps to a step in the Responsible AI Journey. Apply them throughout the task—not only at the end.
         </p>
 
@@ -1181,6 +1186,8 @@ export default function ClosureAiReinforcement({
       <main id="phase4-content">
         <HeroSection />
 
+        <HeroContextSection />
+
         <RecogniseTheRisk />
 
         <ResponsibleAIJourney />
@@ -1198,7 +1205,7 @@ export default function ClosureAiReinforcement({
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, marginBottom: 40 }}>
               <div>
                 {/* eyebrowGold on confidentBlack = 6.35:1 ✓ */}
-                <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 10px" }}>
+                <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 10px" }}>
                   Take-Away
                 </p>
                 {/* white on confidentBlack ≈ 15:1 ✓ */}
