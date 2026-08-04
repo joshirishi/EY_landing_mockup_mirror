@@ -56,7 +56,9 @@
   --ey-on-dark-55: rgba(255, 255, 255, 0.55);
   --ey-surface-on-dark: rgba(255, 255, 255, 0.06);
   --ey-border-on-dark: rgba(255, 255, 255, 0.12);
+  --ey-yellow-alpha-08: rgba(255, 230, 0, 0.08);
   --ey-yellow-alpha-10: rgba(255, 230, 0, 0.10);
+  --ey-yellow-alpha-12: rgba(255, 230, 0, 0.12);
   --ey-bg-card: #2E2E38;
   --ey-card-deep: #54545F;       /* Rise of AI news cards (Figma 3645:4189) */
 
@@ -3409,51 +3411,132 @@ document.addEventListener('keydown', function(e) {
 .inside-acc-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; background:transparent; border:none; border-top:1px solid rgba(46,46,56,0.06); cursor:pointer; text-align:left; }
 .inside-acc-toggle:hover { background:rgba(46,46,56,0.02); }
 .acc-chev { transition:transform 0.25s ease; flex-shrink:0; }
-.inside-tab-strip { display:flex; gap:2px; padding:0 8px; overflow-x:auto; background:var(--off-white); border-bottom:1px solid rgba(46,46,56,0.08); flex-shrink:0; }
-.inside-tab-btn { flex:1 1 0; white-space:nowrap; padding:6px 8px; font-size:10px; font-weight:400; font-family:inherit; border-radius:8px 8px 0 0; border:1px solid transparent; border-bottom:none; background:transparent; color:var(--gray-01); cursor:pointer; transition:background 0.15s ease, color 0.15s ease; }
-.inside-tab-btn:hover { background:rgba(46,46,56,0.03); }
-.inside-tab-btn.is-active { background:var(--white); color:var(--tab-color, var(--ey-dark)); border-color:rgba(46,46,56,0.08); font-weight:700; box-shadow:inset 0 -2px 0 var(--tab-color, var(--accent-blue)); }
+.inside-concepts-card { border:1px solid var(--card-border); border-radius:14px; overflow:hidden; margin-top:0; background:var(--off-white); }
+.inside-tab-strip { display:flex; gap:0; padding:0 12px; overflow-x:auto; background:var(--off-white); border-bottom:1px solid var(--card-border); flex-shrink:0; }
+.inside-tab-btn { flex:1 1 0; white-space:nowrap; padding:10px 8px 8px; font-size:11px; font-weight:400; font-family:inherit; border:none; border-bottom:3px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; transition:color 0.15s ease, border-color 0.15s ease; }
+.inside-tab-btn:hover { color:var(--ey-dark); }
+.inside-tab-btn.is-active { background:transparent; color:var(--ey-dark); font-weight:700; border-bottom-color:var(--ey-yellow); }
 .inside-tab-panel {
-  padding:8px 10px; background:var(--white);
-  flex:1 1 auto; min-height:0; overflow-y:auto;
+  padding:12px; background:var(--white);
+  flex:0 0 auto; overflow-y:visible;
   display:flex; flex-direction:column;
 }
-/* Tab body fills remaining card height; content stays top-aligned inside */
+/* Tab card hugs content; width fills panel, height follows each tab */
 .inside-tab-panel > div {
-  flex:1 1 auto; align-self:stretch; box-sizing:border-box;
+  flex:0 0 auto; align-self:stretch; width:100%; box-sizing:border-box;
 }
-.inside-tab-card { padding:14px; border-radius:10px; border:1px solid rgba(46,46,56,0.08); background:var(--white); }
-.inside-tab-head-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-.inside-tab-headline { font-size:14px; font-weight:700; color:var(--tab-accent, var(--ey-dark)); line-height:1.3; }
-.inside-tab-lead { font-size:12px; color:var(--gray-01); line-height:1.5; margin:0 0 12px; }
-.inside-tab-kicker { font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; }
-.inside-tab-body { font-size:11px; color:var(--text-secondary); line-height:1.45; }
+.inside-tab-card { padding:16px; border-radius:14px; border:1px solid var(--card-border); background:var(--white); display:flex; flex-direction:column; }
+.inside-tab-head-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.inside-tab-head-row svg { flex-shrink:0; stroke:var(--ey-dark); }
+.inside-tab-headline { font-size:15px; font-weight:700; color:var(--ey-dark); line-height:1.3; }
+.inside-tab-analogy {
+  background:var(--ey-yellow-alpha-08);
+  border:1px solid var(--ey-yellow-alpha-12);
+  border-left:4px solid var(--ey-yellow);
+  border-radius:0 8px 8px 0;
+  padding:12px 14px;
+  margin-top:12px;
+  margin-bottom:0;
+}
+.inside-tab-analogy-eyebrow-row {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:6px;
+  color:var(--eyebrow-gold);
+}
+.inside-tab-analogy-eyebrow-row svg { flex-shrink:0; stroke:currentColor; }
+.inside-tab-analogy-eyebrow {
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--eyebrow-gold);
+}
+.inside-tab-analogy-text { font-size:14px; font-weight:700; color:var(--ey-dark); line-height:1.45; margin:0; }
+.inside-tab-lead { font-size:13px; color:var(--ey-dark); line-height:1.55; margin:0 0 12px; }
+.inside-tab-kicker { font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ey-dark); margin-bottom:8px; }
+.inside-tab-body { font-size:13px; color:var(--text-secondary); line-height:1.5; margin-bottom:10px; }
+.inside-tab-body strong { color:var(--ey-dark); font-weight:700; }
 .inside-tab-callout {
-  padding:8px 10px; background:rgba(255,230,0,0.04); border:1px solid rgba(255,230,0,0.12);
-  border-left:3px solid rgba(255,230,0,0.35); border-radius:6px;
+  padding:8px 10px; background:var(--off-white); border:1px solid var(--card-border);
+  border-left:3px solid var(--ey-yellow); border-radius:0 8px 8px 0;
   display:flex; align-items:flex-start; gap:6px; margin-top:10px;
 }
-.inside-tab-callout-text { color:var(--eyebrow-gold); font-size:9px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; line-height:1.4; }
-.inside-tab-inner { background:var(--off-white); border-radius:8px; padding:10px; margin-bottom:10px; }
+.inside-tab-callout-text { color:var(--eyebrow-gold); font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; line-height:1.4; }
+.inside-tab-inner { background:var(--off-white); border-radius:8px; padding:12px; margin-bottom:10px; border:1px solid var(--card-border); }
+.inside-tab-highlight { display:flex; align-items:center; gap:6px; padding:8px 10px; background:var(--off-white); border:1px solid var(--card-border); border-radius:8px; margin-bottom:10px; font-size:12px; font-weight:700; color:var(--ey-dark); }
+.inside-tab-highlight svg { flex-shrink:0; stroke:var(--ey-dark); }
+.inside-tab-prompt { font-size:12px; color:var(--text-secondary); font-style:italic; line-height:1.45; padding:6px 10px; background:var(--white); border-radius:6px; border-left:2px solid var(--card-border); margin-bottom:8px; }
+.inside-token-chip { display:inline-block; padding:3px 8px; border-radius:5px; font-size:11px; font-weight:700; font-family:monospace; background:var(--white); border:1px solid var(--card-border); color:var(--ey-dark); }
+.inside-knowledge-list { display:flex; flex-direction:column; gap:4px; }
+.inside-knowledge-item { display:flex; align-items:center; gap:5px; padding:4px 8px; background:var(--white); border:1px solid var(--card-border); border-radius:6px; }
+.inside-knowledge-item span { color:var(--ey-dark); font-size:12px; }
+.inside-knowledge-item svg { flex-shrink:0; stroke:var(--ey-dark); }
+.inside-tab-next { margin-top:10px; padding-top:8px; border-top:1px solid var(--card-border); }
+.inside-tab-next-btn { display:inline-flex; align-items:center; gap:4px; padding:0; background:none; border:none; font-family:inherit; font-size:12px; font-weight:700; color:var(--ey-dark); cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+.inside-tab-next-btn:hover { color:var(--confident-black); }
+.inside-tab-stat { color:var(--text-secondary); font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:4px; }
+.inside-tab-stat-row { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ey-dark); }
 /* Chat padding lives in CSS so inside-beat can override without fighting inline styles */
 #copilot-chat { padding:28px; box-sizing:border-box; }
 /* Inside beat: 16px chat padding; flip wrap + concepts card fill available chat height */
 #copilot-chat.is-inside-beat { padding:16px; display:flex; flex-direction:column; overflow:hidden; }
 #copilot-chat.is-inside-beat > .inside-beat-wrap {
-  flex:1 1 auto; min-height:0; height:100%; align-self:stretch;
+  flex:0 0 auto; align-self:stretch;
   display:flex; flex-direction:column;
 }
 #copilot-chat.is-inside-beat .inside-concepts-card {
-  flex:1 1 auto; min-height:0; height:100%; align-self:stretch;
+  flex:0 0 auto; align-self:stretch;
   display:flex; flex-direction:column; overflow:hidden;
 }
 /* RAG how-it-works: one horizontal line of compact nodes */
 .rag-flow-row { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:4px; flex-wrap:nowrap; }
-.rag-flow-row .rag-node { flex:0 1 auto; white-space:nowrap; border-radius:6px; padding:5px 8px; text-align:center; font-size:10px; font-weight:700; line-height:1.2; }
-.rag-flow-row .rag-arrow { flex-shrink:0; color:var(--gray-01); opacity:0.45; }
+.rag-flow-row .rag-node { flex:0 1 auto; white-space:nowrap; border-radius:6px; padding:5px 8px; text-align:center; font-size:11px; font-weight:700; line-height:1.2; background:var(--white); border:1px solid var(--card-border); color:var(--ey-dark); }
+.rag-flow-row .rag-arrow { flex-shrink:0; color:var(--text-secondary); opacity:0.6; }
 @media (max-width: 640px) {
   .rag-flow-row { flex-wrap:wrap; justify-content:flex-start; }
 }
+/* Journey recap pipeline — neutral tokens (matches inside-tab / ModulePage patterns) */
+.journey-recap {
+  padding:22px; background:var(--white); border:1px solid var(--card-border);
+  border-radius:16px; animation:fadeInMsg 0.5s ease;
+}
+.journey-recap-header { text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--card-border); }
+.journey-recap-eyebrow {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--ey-yellow-alpha-08); border:1px solid var(--ey-yellow-alpha-12);
+  border-radius:20px; padding:4px 14px; margin-bottom:10px;
+}
+.journey-recap-eyebrow svg { stroke:var(--ey-dark); flex-shrink:0; }
+.journey-recap-eyebrow span { color:var(--ey-dark); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; }
+.journey-recap-title { color:var(--ey-dark); font-size:16px; font-weight:700; margin-bottom:4px; }
+.journey-recap-sub { color:var(--text-muted); font-size:12px; }
+.journey-pipeline { display:flex; flex-direction:column; gap:3px; }
+.journey-stage { display:flex; align-items:center; gap:10px; }
+.journey-stage-dot {
+  width:20px; height:20px; border-radius:50%; border:2px solid var(--card-border);
+  background:var(--off-white); flex-shrink:0; display:flex; align-items:center; justify-content:center;
+}
+.journey-stage-dot-inner { width:5px; height:5px; border-radius:50%; background:var(--gray-01); }
+.journey-stage-row {
+  flex:1; display:flex; align-items:center;
+  background:var(--off-white); border:1px solid var(--card-border); border-radius:8px; overflow:hidden;
+}
+.journey-stage-label {
+  background:var(--white); padding:8px 12px; width:140px; flex-shrink:0;
+  border-right:1px solid var(--card-border);
+}
+.journey-stage-label span { color:var(--ey-dark); font-size:11px; font-weight:700; letter-spacing:0.02em; }
+.journey-stage-desc { padding:8px 12px; flex:1; min-width:0; }
+.journey-stage-desc span { color:var(--text-secondary); font-size:12px; }
+.journey-connector { width:1px; height:6px; background:var(--card-border); margin-left:9px; }
+.journey-stage.is-start .journey-stage-row { border-left:3px solid var(--ey-yellow); }
+.journey-stage.is-warn .journey-stage-row { border-left:3px solid var(--accent-red); }
+.journey-recap-footer {
+  margin-top:16px; padding-top:14px; border-top:1px solid var(--card-border); text-align:center;
+}
+.journey-recap-footer span { color:var(--text-muted); font-size:12px; font-style:italic; }
 @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
 @keyframes tokenPop { 0%{transform:scale(0.3); opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1); opacity:1} }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
@@ -3499,27 +3582,75 @@ document.addEventListener('keydown', function(e) {
   transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,230,0,0.3); outline:none;
 }
 
-/* Newspaper clippings wall — hallucination beat */
+/* Newspaper clippings carousel — hallucination beat */
 .hall-news-wall {
   position:relative; width:100%; min-height:100%;
-  background:#f0ede8;
+  background:var(--off-white);
   overflow:hidden;
-  padding:20px 16px 80px;
+  padding:20px 16px 16px;
   box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
-.hall-clip {
+.hall-news-viewport {
+  position:relative;
+  flex:1;
+  overflow:hidden;
+  min-height:260px;
+}
+.hall-news-slide {
   position:absolute;
-  background:#fff;
-  box-shadow:0 2px 8px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.05);
-  padding:12px 14px;
-  font-family:Georgia, 'Times New Roman', serif;
-  line-height:1.4;
+  inset:0;
+  padding:4px 8px;
+  box-sizing:border-box;
+  opacity:0;
+  transform:translateX(0);
+  transition:transform 680ms cubic-bezier(0.4,0,0.2,1), opacity 480ms ease;
+  pointer-events:none;
+  z-index:1;
 }
-.hall-clip-headline { font-size:15px; font-weight:700; color:#111; margin:0; }
-.hall-clip-sub { font-size:12px; color:#444; margin:4px 0 0; font-family:inherit; }
-.hall-clip-body { font-size:11px; color:#333; margin:6px 0 0; font-family:inherit; line-height:1.5; }
-.hall-clip-kicker { font-size:10px; font-weight:700; color:#c0392b; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 4px; font-family:Arial,sans-serif; }
-.hall-clip-img { width:100%; height:80px; object-fit:cover; margin-bottom:8px; display:block; }
+.hall-news-slide.is-active {
+  opacity:1;
+  pointer-events:auto;
+  z-index:2;
+}
+.hall-news-slide.is-transitioning { z-index:3; }
+.hall-news-slide.hall-slide-exit-left { transform:translateX(-108%); opacity:0; }
+.hall-news-slide.hall-slide-exit-right { transform:translateX(108%); opacity:0; }
+.hall-news-slide.hall-slide-enter-from-right { transform:translateX(108%); opacity:0; }
+.hall-news-slide.hall-slide-enter-from-left { transform:translateX(-108%); opacity:0; }
+.hall-news-slide.hall-slide-enter-from-right.is-active,
+.hall-news-slide.hall-slide-enter-from-left.is-active { transform:translateX(0); opacity:1; }
+.hall-news-clip {
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  background:transparent;
+}
+.hall-news-clip-img {
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  max-height:100%;
+  object-fit:contain;
+  object-position:top center;
+}
+.hall-news-footer {
+  display:flex; align-items:center; justify-content:center;
+  padding-top:4px;
+}
+.hall-news-counter {
+  font-family:var(--font-family, 'EYInterstate', Arial, sans-serif);
+  font-size:11px; font-weight:700; color:var(--text-secondary);
+  letter-spacing:0.3px;
+}
 /* Slide-up transition for copilot-chat */
 #copilot-chat.slide-exit {
   transition: transform 800ms cubic-bezier(0.4,0,0.2,1), opacity 600ms ease;
@@ -3540,6 +3671,7 @@ document.addEventListener('keydown', function(e) {
   .beat-flip-out { animation:fadeOutMsg 0.15s ease forwards; }
   .beat-flip-in { animation:fadeInMsg 0.25s ease forwards; }
   .thinking-highlight { animation:none; border-color:rgba(70,150,255,0.4); }
+  .hall-news-slide { transition:opacity 0.2s ease; transform:none !important; }
 }
 #copilot-window.is-hallucinating { animation:pulseRedBorder 2s ease-in-out infinite; }
 @keyframes pulseRedBorder {
@@ -3777,55 +3909,168 @@ function startDemo() {
   renderBeat();
 }
 
+/* Hallucination beat news carousel — reference/images/ (not Figma exports) */
+const HALL_NEWS_CLIPS = [
+  {
+    src: '/reference-images/hall-news-01.png',
+    alt: 'Tax tribunal order cited fictitious court judgments before it was hastily withdrawn — raising suspicions about Generative AI use'
+  },
+  {
+    src: '/reference-images/hall-news-02.png',
+    alt: 'AI proposes, Tribunal Disposes — Bengaluru ITAT Bench cites non-existent cases in AI-generated order'
+  },
+  {
+    src: '/reference-images/hall-news-03.png',
+    alt: 'Lawyer who used ChatGPT for a phony brief explains fake cases to judge — I failed miserably'
+  },
+  {
+    src: '/reference-images/hall-news-04.png',
+    alt: 'High court tells senior lawyers to take urgent action to prevent misuse of artificial intelligence after fake case-law citations'
+  },
+  {
+    src: '/reference-images/hall-news-05.png',
+    alt: 'High court tells UK lawyers to stop misuse of AI after fake case-law citations — Royal Courts of Justice'
+  }
+];
+
+function buildHallNewsSlideHtml(clip) {
+  return '<figure class="hall-news-clip">' +
+    '<img class="hall-news-clip-img" src="' + clip.src + '" alt="' + clip.alt + '" loading="lazy" decoding="async" />' +
+    '</figure>';
+}
+
+function updateHallNewsCounter() {
+  var counter = document.getElementById('hall-news-counter');
+  if (!counter) return;
+  var idx = (window._hallNewsIndex || 0) + 1;
+  var total = HALL_NEWS_CLIPS.length;
+  counter.textContent = idx + ' of ' + total;
+  counter.setAttribute('aria-label', 'News article ' + idx + ' of ' + total);
+}
+
+function updateHallNewsContinueLabel() {
+  var idx = window._hallNewsIndex || 0;
+  var total = HALL_NEWS_CLIPS.length;
+  var onLast = idx >= total - 1;
+  var cont = document.getElementById('demo-continue-btn');
+  if (cont) {
+    cont.setAttribute('aria-label', onLast ? 'Continue to why hallucinations happen' : 'Next news article, ' + (idx + 2) + ' of ' + total);
+  }
+  appendBeatNext(onLast ? 'Next' : 'Next article');
+}
+
+function resetHallNewsCarousel() {
+  window._hallNewsIndex = 0;
+  window._hallNewsAnimating = false;
+}
+
+function advanceNewsCarousel() {
+  if (window._hallNewsAnimating) return false;
+  var idx = window._hallNewsIndex || 0;
+  if (idx >= HALL_NEWS_CLIPS.length - 1) return false;
+
+  var viewport = document.getElementById('hall-news-viewport');
+  if (!viewport) return false;
+
+  var current = viewport.querySelector('.hall-news-slide.is-active');
+  var nextIdx = idx + 1;
+  var next = viewport.querySelector('.hall-news-slide[data-idx="' + nextIdx + '"]');
+  if (!current || !next) return false;
+
+  window._hallNewsAnimating = true;
+  var fromRight = nextIdx % 2 === 1;
+  var exitClass = fromRight ? 'hall-slide-exit-left' : 'hall-slide-exit-right';
+  var enterClass = fromRight ? 'hall-slide-enter-from-right' : 'hall-slide-enter-from-left';
+
+  next.classList.add('is-transitioning', enterClass);
+  next.setAttribute('aria-hidden', 'false');
+  current.classList.add(exitClass);
+
+  void next.offsetWidth;
+  next.classList.add('is-active');
+
+  setTimeout(function () {
+    current.classList.remove('is-active', exitClass);
+    current.setAttribute('aria-hidden', 'true');
+    next.classList.remove('is-transitioning', enterClass);
+    window._hallNewsIndex = nextIdx;
+    window._hallNewsAnimating = false;
+    updateHallNewsCounter();
+    updateHallNewsContinueLabel();
+  }, 700);
+
+  return true;
+}
+
 function buildNewsWall() {
-  return `<div class="hall-news-wall" style="width:100%;background:#f0ede8;padding:14px 12px;box-sizing:border-box;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:start;">
-    <!-- clip 1: top-left big headline — spans both rows left column -->
-    <div style="background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.13);padding:14px 16px;transform:rotate(-1.2deg);border-left:3px solid #c0392b;">
-      <p style="font-family:Arial,sans-serif;font-size:8px;font-weight:700;color:#c0392b;letter-spacing:0.5px;text-transform:uppercase;margin:0 0 6px;">TAX TODAY</p>
-      <p style="font-family:Georgia,'Times New Roman',serif;font-size:14px;font-weight:700;color:#111;margin:0;line-height:1.35;">Did AI hallucination play mischief with a tax tribunal order?</p>
-      <p style="font-family:Georgia,serif;font-size:10px;color:#555;margin:6px 0 0;line-height:1.5;">A recent tax tribunal order cited fictitious court judgments before it was hastily withdrawn — raising suspicions about the use of Generative AI.</p>
-    </div>
-    <!-- clip 2: top-right scanned newspaper -->
-    <div style="background:#f5f0e8;box-shadow:0 2px 10px rgba(0,0,0,0.18);padding:10px 12px;transform:rotate(0.9deg);border:1px solid #ddd;">
-      <p style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:#111;margin:0 0 4px;line-height:1.3;">'I failed miserably'</p>
-      <p style="font-family:Georgia,serif;font-size:9.5px;color:#444;margin:0 0 6px;line-height:1.4;">Lawyer who used ChatGPT for writing a phony brief explains fake cases to judge</p>
-      <p style="font-family:Georgia,serif;font-size:9px;color:#666;margin:0;line-height:1.5;">Steven Schwartz told a judge he never meant to fool anybody when he filed a court brief full of phony legal precedents invented by ChatGPT…</p>
-    </div>
-    <!-- clip 3: middle-left bench order -->
-    <div style="background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.11);padding:10px 12px;transform:rotate(0.6deg);">
-      <p style="font-family:Georgia,'Times New Roman',serif;font-size:11.5px;font-weight:700;color:#111;margin:0;line-height:1.4;">AI proposes, Tribunal Disposes! Bengaluru ITAT Bench in Soup after AI-generated Order cites non-existent Cases <span style="color:#c0392b;">[Read Order]</span></p>
-    </div>
-    <!-- clip 4: middle-right with photo -->
-    <div style="background:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.15);transform:rotate(-0.8deg);overflow:hidden;">
-      <div style="width:100%;height:60px;background:linear-gradient(135deg,#8a9bb0 0%,#6b7d8e 100%);display:flex;align-items:center;justify-content:center;">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      </div>
-      <div style="padding:8px 10px;">
-        <p style="font-family:Arial,sans-serif;font-size:8px;font-weight:700;color:#c0392b;margin:0 0 3px;text-transform:uppercase;">Artificial Intelligence</p>
-        <p style="font-family:Georgia,serif;font-size:11px;font-weight:700;color:#111;margin:0;line-height:1.35;">High court tells UK lawyers to stop misuse of AI after fake case-law citations</p>
-      </div>
-    </div>
-    <!-- clip 5: bottom spanning full width -->
-    <div style="grid-column:1/-1;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.13);padding:10px 14px;transform:rotate(-0.4deg);">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <p style="font-family:Arial,sans-serif;font-size:9px;color:#888;margin:0;white-space:nowrap;">Fri 6 Jun 2025 · The Guardian</p>
-        <div style="display:inline-flex;align-items:center;gap:4px;border:1px solid #ddd;border-radius:4px;padding:2px 7px;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg><span style="font-size:9px;font-family:Arial,sans-serif;color:#333;font-weight:600;">Share</span></div>
-      </div>
-      <p style="font-family:Georgia,serif;font-size:11px;color:#222;margin:6px 0 0;line-height:1.55;">Senior lawyers told to take urgent action to prevent misuse of <span style="color:#c0392b;font-weight:600;">artificial intelligence</span> after dozens of fake case-law citations were put before courts — either completely fictitious or containing made-up passages.</p>
-    </div>
-  </div>`;
+  resetHallNewsCarousel();
+  var slides = HALL_NEWS_CLIPS.map(function (clip, i) {
+    var active = i === 0;
+    return '<article class="hall-news-slide' + (active ? ' is-active' : '') + '" data-idx="' + i + '" aria-hidden="' + (active ? 'false' : 'true') + '" aria-roledescription="slide">' + buildHallNewsSlideHtml(clip) + '</article>';
+  }).join('');
+  return '<div class="hall-news-wall" role="region" aria-label="Real-world AI hallucination headlines">' +
+    '<div class="hall-news-viewport" id="hall-news-viewport">' + slides + '</div>' +
+    '<div class="hall-news-footer">' +
+      '<span class="hall-news-counter" id="hall-news-counter" aria-live="polite" aria-label="News article 1 of ' + HALL_NEWS_CLIPS.length + '">1 of ' + HALL_NEWS_CLIPS.length + '</span>' +
+    '</div>' +
+  '</div>';
 }
 
 function buildHallucinationReasoning() {
-  return `<div style="padding:16px 18px;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span style="color:var(--accent-red);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Why does this happen?</span></div><div style="background:rgba(255,65,54,0.06);border:1px solid rgba(255,65,54,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">The AI generated this instead:</p></div><div style="background:rgba(255,65,54,0.08);border-left:3px solid var(--accent-red);padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:12px;"><p style="color:var(--accent-red);font-size:13px;font-style:italic;margin:0;">&ldquo;Every online seller is required to register for GST in every Indian state where customers are located.&rdquo;</p></div><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">This sounds professional.</p><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">It sounds confident.</p><p style="color:var(--text-dim);font-size:13px;margin-bottom:14px;">But it is not accurate.</p><div style="border-top:1px solid rgba(46,46,56,0.06);padding-top:12px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin-bottom:4px;">What happened?</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI filled gaps with something that sounded plausible — a confident answer that is wrong.</p></div><div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--accent-red);font-size:13px;font-weight:700;">Hallucination = A confident answer that may be wrong</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;line-height:1.5;">Like a student who doesn&rsquo;t know the answer but writes something that sounds convincing.</span></div></div>`;
+  return `<div style="padding:16px 18px;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span style="color:var(--accent-red);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Why does this happen?</span></div><div style="background:rgba(255,65,54,0.06);border:1px solid rgba(255,65,54,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">The AI slipped in a false claim:</p></div><p style="color:var(--text-secondary);font-size:14px;line-height:1.7;margin:0 0 12px;">One line in the response stated that every online seller must register for GST in every state where customers are located.</p><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">This sounds professional.</p><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">It sounds confident.</p><p style="color:var(--text-dim);font-size:13px;margin-bottom:14px;">But it is not accurate.</p><div style="border-top:1px solid rgba(46,46,56,0.06);padding-top:12px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin-bottom:4px;">What happened?</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI filled gaps with something that sounded plausible — a confident answer that is wrong.</p></div><div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-left:3px solid var(--accent-red);border-radius:8px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--ey-dark);font-size:14px;font-weight:700;line-height:1.5;">Hallucination = A confident answer that may be wrong</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;line-height:1.5;">Like a student who doesn&rsquo;t know the answer but writes something that sounds convincing.</span></div></div>`;
+}
+
+var JOURNEY_STAGES = [
+  { label: 'PROMPT', desc: 'You asked', tone: 'start' },
+  { label: 'TOKENS', desc: 'AI read' },
+  { label: 'LLM', desc: 'AI understood' },
+  { label: 'KNOWLEDGE LAYER', desc: 'AI knew where to look' },
+  { label: 'RAG', desc: 'AI checked' },
+  { label: 'OUTPUT', desc: 'AI drafted' },
+  { label: 'HALLUCINATION', desc: 'AI could still be wrong', tone: 'warn' },
+  { label: 'HUMAN IN THE LOOP', desc: 'Professional judgment ensured accuracy' },
+];
+
+function buildJourneyStageRow(stage, index) {
+  var toneClass = stage.tone ? ' is-' + stage.tone : '';
+  var delay = (index * 0.08).toFixed(2);
+  return (
+    (index > 0 ? '<div class="journey-connector" aria-hidden="true"></div>' : '') +
+    '<div class="journey-stage stagger-in' + toneClass + '" style="animation-delay:' + delay + 's;">' +
+      '<div class="journey-stage-dot" aria-hidden="true"><div class="journey-stage-dot-inner"></div></div>' +
+      '<div class="journey-stage-row">' +
+        '<div class="journey-stage-label"><span>' + stage.label + '</span></div>' +
+        '<div class="journey-stage-desc"><span>' + stage.desc + '</span></div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function buildJourneyRecap(subtitle) {
+  var stagesHtml = JOURNEY_STAGES.map(buildJourneyStageRow).join('');
+  return (
+    '<div class="journey-recap">' +
+      '<div class="journey-recap-header">' +
+        '<div class="journey-recap-eyebrow">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>' +
+          '<span>The full journey</span>' +
+        '</div>' +
+        '<div class="journey-recap-title">Inside Every AI Conversation</div>' +
+        '<div class="journey-recap-sub">' + subtitle + '</div>' +
+      '</div>' +
+      '<div class="journey-pipeline" role="list" aria-label="AI conversation pipeline">' + stagesHtml + '</div>' +
+      '<div class="journey-recap-footer"><span>Now you know what happens inside every AI response.</span></div>' +
+    '</div>'
+  );
 }
 
 function continueBeat() {
   if (currentBeat >= BEATS.length - 1) return;
   var leavingBeat = BEATS[currentBeat];
 
-  // Hallucination beat has two sub-phases: news wall (phase 1) then reasoning boxes (phase 2)
+  // Hallucination beat has two sub-phases: news carousel (phase 1) then reasoning boxes (phase 2)
   if (leavingBeat === 'hallucination' && window._hallPhase === 1) {
+    if (advanceNewsCarousel()) return;
     window._hallPhase = 2;
     var chatEl2 = document.getElementById('copilot-chat');
     var contBtn2 = document.getElementById('demo-continue-btn');
@@ -3883,7 +4128,7 @@ function continueBeat() {
         if (backBtn) { backBtn.disabled = false; backBtn.style.opacity = '1'; }
         var restartBtn = document.getElementById('demo-restart-btn');
         if (restartBtn) restartBtn.style.display = 'inline-flex';
-        appendBeatNext('Next');
+        updateHallNewsContinueLabel();
       }, 950);
     }, 850);
     return;
@@ -3898,6 +4143,7 @@ function backBeat() {
 
 function resetDemo() {
   if (window._typer) clearInterval(window._typer);
+  if (window._sentThinkingInterval) { clearInterval(window._sentThinkingInterval); window._sentThinkingInterval = null; }
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;line-height:30px;margin:0 0 8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;line-height:22.4px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
   document.getElementById('demo-actions').style.display = 'none';
@@ -3908,17 +4154,18 @@ function resetDemo() {
   setCopilotStatus('EY.ai Copilot');
   currentBeat = -1;
   window._hallPhase = 0;
+  resetHallNewsCarousel();
   chatEl.classList.remove('is-inside-beat');
   var bi = document.getElementById('beat-indicator'); if (bi) bi.style.display = 'none';
 }
 
-const INSIDE_TOKENS_HTML = `<div class="inside-tab-card" style="--tab-accent:var(--accent-blue);background:rgba(70,150,255,0.04);border-color:rgba(70,150,255,0.15);"><div class="inside-tab-head-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg><span class="inside-tab-headline">Tokenization</span></div><p class="inside-tab-lead">AI doesn't read words like you. It breaks your sentence into small chunks called <strong style="color:var(--ey-dark);">tokens</strong> — roughly ¾ of a word each.</p><div style="background:var(--off-white);border-radius:8px;padding:10px;margin-bottom:8px;display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;"><div style="min-width:110px;display:flex;flex-direction:column;justify-content:center;gap:4px;"><div style="color:var(--text-dim);font-size:9px;font-weight:700;letter-spacing:0.8px;">YOUR PROMPT → TOKENIZED</div><div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--text-dim);font-size:9px;">16 words</span><span style="color:var(--accent-blue);font-size:13px;line-height:1;">→</span><span style="color:var(--accent-blue);font-size:9px;font-weight:700;">~21 tokens</span></div></div><div style="flex:1;min-width:200px;"><div style="font-size:10px;color:var(--gray-01);margin-bottom:6px;font-style:italic;line-height:1.4;padding:5px 8px;background:var(--white);border-radius:4px;border-left:2px solid rgba(46,46,56,0.06);text-align:center;">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-start;"><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.1s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">Summar</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.2s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">ize</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.35s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-green);font-weight:700;font-family:monospace;">the</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.5s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">G</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.65s both;"><span style="background:rgba(70,150,255,0.2);border:1px solid rgba(70,150,255,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-blue);font-weight:700;font-family:monospace;">ST</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.8s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-orange);font-weight:700;font-family:monospace;">impl</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.95s both;"><span style="background:rgba(255,125,30,0.2);border:1px solid rgba(255,125,30,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-orange);font-weight:700;font-family:monospace;">ications</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.1s both;"><span style="background:rgba(0,200,100,0.2);border:1px solid rgba(0,200,100,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-green);font-weight:700;font-family:monospace;">online</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.25s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-red);font-weight:700;font-family:monospace;">sell</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.4s both;"><span style="background:rgba(255,65,54,0.2);border:1px solid rgba(255,65,54,0.4);padding:3px 8px;border-radius:5px;font-size:11px;color:var(--accent-red);font-weight:700;font-family:monospace;">er</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.55s both;align-self:center;"><span style="color:rgba(46,46,56,0.25);font-size:14px;letter-spacing:2px;">···</span></span></div></div></div><div style="background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like cutting a pizza into slices before eating it.</div></div></div>`;
+const INSIDE_TOKENS_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg><span class="inside-tab-headline">Tokenization</span></div><p class="inside-tab-lead">Before anything else, AI breaks your GST prompt into small chunks called <strong>tokens</strong> — roughly three-quarters of a word each.</p><div class="inside-tab-inner"><div class="inside-tab-stat">Your prompt &rarr; tokenized</div><div class="inside-tab-stat-row" style="margin-bottom:8px;"><span style="color:var(--text-secondary);">16 words</span><span style="color:var(--text-secondary);">&rarr;</span><span style="font-weight:700;">~21 tokens</span></div><div class="inside-tab-prompt">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="display:flex;gap:4px;flex-wrap:wrap;"><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.1s both;"><span class="inside-token-chip">Summar</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.2s both;"><span class="inside-token-chip">ize</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.35s both;"><span class="inside-token-chip">the</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.5s both;"><span class="inside-token-chip">G</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.65s both;"><span class="inside-token-chip">ST</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.8s both;"><span class="inside-token-chip">impl</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.95s both;"><span class="inside-token-chip">ications</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.1s both;"><span class="inside-token-chip">online</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.25s both;"><span class="inside-token-chip">sell</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.4s both;"><span class="inside-token-chip">er</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.55s both;align-self:center;"><span style="color:var(--text-secondary);font-size:14px;letter-spacing:2px;">&middot;&middot;&middot;</span></span></div></div><p class="inside-tab-body">Token count affects cost and context limits. Tax terms like &ldquo;GST&rdquo; and &ldquo;ITC&rdquo; may split across multiple tokens.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like cutting a pizza into slices &mdash; the AI reads bite-sized chunks, not whole words at once.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('llm')">Next: LLM <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
 
-const INSIDE_LLM_HTML = `<div class="inside-tab-card" style="--tab-accent:var(--accent-green);background:rgba(0,200,100,0.04);border-color:rgba(0,200,100,0.15);"><div class="inside-tab-head-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span class="inside-tab-headline">LLM — The Brain Predicts One Word at a Time</span></div><p class="inside-tab-lead">Tokens enter a <strong style="color:var(--ey-dark);">Large Language Model</strong> — The model has learned patterns from <strong style="color:var(--accent-green);">enormous amounts of text</strong>. It <em>predicts</em> the next word, one at a time.</p><div style="background:var(--off-white);border-radius:8px;padding:8px;margin-bottom:6px;"><div style="font-size:9px;color:var(--gray-01);font-style:italic;margin-bottom:4px;padding:3px 6px;background:var(--white);border-radius:4px;border-left:2px solid rgba(46,46,56,0.05);">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="font-family:monospace;font-size:11px;line-height:1.55;"><span style="color:var(--accent-green);">GST</span> <span style="color:var(--text-dim);animation:blink 1s infinite;">▊</span><br><span style="color:var(--accent-green);">GST</span> <span style="color:var(--ey-dark);">implications for an online seller include registration across multiple states, ITC claims...</span></div></div><div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;padding:5px 8px;background:rgba(0,200,100,0.07);border:1px solid rgba(0,200,100,0.2);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:11px;font-weight:700;">LLM = The brain behind the conversation</span></div><div style="padding:5px 8px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:6px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like your phone predicting the next word while typing.</div></div></div>`;
+const INSIDE_LLM_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span class="inside-tab-headline">LLM &mdash; The Brain Predicts One Word at a Time</span></div><p class="inside-tab-lead">Tokens enter a <strong>Large Language Model</strong> trained on enormous amounts of text. It <em>predicts</em> the next word, one at a time, to build your GST summary.</p><div class="inside-tab-inner"><div class="inside-tab-prompt">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="font-family:monospace;font-size:12px;line-height:1.55;color:var(--ey-dark);"><span style="font-weight:700;">GST</span> <span style="color:var(--text-secondary);animation:blink 1s infinite;">&#9612;</span><br><span style="font-weight:700;">GST</span> <span>implications for an online seller include registration across multiple states, ITC claims&hellip;</span></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>LLM = the brain behind the conversation</span></div><p class="inside-tab-body">The model generates fluent language but does not inherently know your firm&rsquo;s latest GST guidance &mdash; that comes next.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like autocomplete at scale &mdash; your phone suggests the next word; an LLM does that for entire tax answers.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('knowledge')">Next: Knowledge Layer <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
 
-const INSIDE_KNOWLEDGE_HTML = `<div class="inside-tab-card" style="--tab-accent:var(--accent-purple);background:rgba(180,0,255,0.04);border-color:rgba(180,0,255,0.15);"><div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg><span class="inside-tab-headline">Knowledge Layer — Where AI Finds Trusted Information</span></div><p class="inside-tab-lead">The model understands the question. <strong style="color:var(--ey-dark);">Now it needs trusted information.</strong></p><div style="background:var(--off-white);border-radius:8px;padding:10px;margin-bottom:8px;"><div style="color:var(--text-dim);font-size:9px;font-weight:600;letter-spacing:0.8px;margin-bottom:6px;">THE KNOWLEDGE LAYER CONTAINS</div><div style="display:flex;flex-direction:column;gap:4px;"><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span style="color:var(--gray-01);font-size:10px;">Company documents</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span style="color:var(--gray-01);font-size:10px;">Tax guidance</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span style="color:var(--gray-01);font-size:10px;">Policies</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span style="color:var(--gray-01);font-size:10px;">Knowledge repositories</span></div><div style="display:flex;align-items:center;gap:5px;padding:3px 8px;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span style="color:var(--gray-01);font-size:10px;">Research material</span></div></div></div><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;padding:6px 10px;background:rgba(180,0,255,0.07);border:1px solid rgba(180,0,255,0.2);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-purple);font-size:11px;font-weight:700;">Knowledge Layer = The library AI can consult</span></div><div style="padding:6px 10px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:6px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like a tax professional reaching for a bookshelf before drafting advice.</div></div></div>`;
+const INSIDE_KNOWLEDGE_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg><span class="inside-tab-headline">Knowledge Layer &mdash; Where AI Finds Trusted Information</span></div><p class="inside-tab-lead">The model understands your question. <strong>Now it needs trusted, organization-specific information</strong> &mdash; not just general internet knowledge.</p><div class="inside-tab-inner"><div class="inside-tab-kicker">The knowledge layer contains</div><div class="inside-knowledge-list"><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Company documents</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Tax guidance &amp; GST circulars</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Policies &amp; SOPs</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span>Knowledge repositories</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Research material</span></div></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Knowledge Layer = the library AI can consult</span></div><p class="inside-tab-body">Without this layer, Copilot may sound confident but cite outdated or generic tax guidance.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like a tax library &mdash; curated shelves of guidance the AI can pull from before drafting advice.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('rag')">Next: RAG <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
 
-const INSIDE_RAG_HTML = `<div class="inside-tab-card" style="--tab-accent:var(--accent-orange);background:rgba(255,125,30,0.04);border-color:rgba(255,125,30,0.15);"><div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="inside-tab-headline">RAG — Retrieval Augmented Generation</span></div><p class="inside-tab-lead">AI searches a knowledge source before answering.</p><div style="padding:6px 10px;background:rgba(255,125,30,0.06);border-left:3px solid rgba(255,125,30,0.5);border-radius:5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><div style="color:var(--accent-orange);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">What Happens Next? — The AI searches that knowledge source before answering.</div></div><div style="background:var(--off-white);border-radius:8px;padding:10px;margin-bottom:8px;"><div style="color:var(--text-dim);font-size:9px;font-weight:600;letter-spacing:0.8px;margin-bottom:8px;text-align:center;">HOW RAG WORKS</div><div class="rag-flow-row"><span class="rag-node" style="background:rgba(255,230,0,0.08);border:1px solid rgba(255,230,0,0.25);color:var(--eyebrow-gold);">Question</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node" style="background:rgba(180,0,255,0.08);border:1px solid rgba(180,0,255,0.25);color:var(--accent-purple);">Search Knowledge Layer</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node" style="background:rgba(255,125,30,0.08);border:1px solid rgba(255,125,30,0.25);color:var(--accent-orange);">Retrieve Relevant Information</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node" style="background:rgba(0,200,100,0.08);border:1px solid rgba(0,200,100,0.25);color:var(--accent-green);">Generate Response</span></div></div><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;padding:6px 10px;background:rgba(0,200,100,0.07);border:1px solid rgba(0,200,100,0.2);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span style="color:var(--accent-green);font-size:11px;font-weight:700;">RAG = AI looking up information before responding</span></div><div style="padding:6px 10px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:6px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="color:var(--eyebrow-gold);font-size:8px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;">Everyday Analogy - Like an open-book exam. With the textbook available. Not relying on memory alone.</div></div></div>`;
+const INSIDE_RAG_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="inside-tab-headline">RAG &mdash; Retrieval Augmented Generation</span></div><p class="inside-tab-lead"><strong>Retrieval Augmented Generation</strong> searches your knowledge layer first, then writes a GST answer grounded in what it found.</p><div class="inside-tab-inner"><div class="inside-tab-kicker" style="text-align:center;">How RAG works</div><div class="rag-flow-row"><span class="rag-node">Question</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Search Knowledge Layer</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Retrieve Relevant Information</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Generate Response</span></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>RAG = AI looking up information before responding</span></div><p class="inside-tab-body">For tax work, RAG helps Copilot cite current GST circulars and firm policies instead of guessing from training data alone.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like an open-book exam &mdash; the AI looks up trusted sources before answering, not from memory alone.</p></div></div>`;
 
 const INSIDE_TABS = [
   { id: 'tokens', label: 'Tokenization', color: 'var(--accent-blue)', html: INSIDE_TOKENS_HTML },
@@ -3929,12 +4176,23 @@ const INSIDE_TABS = [
 
 function buildInsideAccordion() {
   var tabButtons = INSIDE_TABS.map(function (tab, i) {
-    return '<button id="inside-tab-btn-' + tab.id + '" class="inside-tab-btn' + (i === 0 ? ' is-active' : '') + '" style="--tab-color:' + tab.color + ';" onclick="selectInsideTab(\'' + tab.id + '\', this)">' + tab.label + '</button>';
+    return '<button id="inside-tab-btn-' + tab.id + '" class="inside-tab-btn' + (i === 0 ? ' is-active' : '') + '" onclick="selectInsideTab(\'' + tab.id + '\', this)">' + tab.label + '</button>';
   }).join('');
-  return `<div class="inside-concepts-card" style="border:1px solid var(--card-border); border-radius:10px; overflow:hidden; margin-top:0; background:var(--off-white);">
+  return `<div class="inside-concepts-card">
     <div class="inside-tab-strip">${tabButtons}</div>
     <div id="inside-tab-panel" class="inside-tab-panel">${INSIDE_TABS[0].html}</div>
   </div>`;
+}
+
+// Inside beat can scroll on #copilot-chat (inline overflow-y:auto) and, if layout
+// changes, on the concepts card / tab panel — reset all so each tab opens at the headline.
+function resetInsideBeatScroll() {
+  var chat = document.getElementById('copilot-chat');
+  if (chat) chat.scrollTop = 0;
+  var card = document.querySelector('.inside-concepts-card');
+  if (card) card.scrollTop = 0;
+  var panel = document.getElementById('inside-tab-panel');
+  if (panel) panel.scrollTop = 0;
 }
 
 function selectInsideTab(id, el) {
@@ -3949,6 +4207,7 @@ function selectInsideTab(id, el) {
     });
   }
   if (el) el.classList.add('is-active');
+  requestAnimationFrame(function () { resetInsideBeatScroll(); });
 }
 
 // Jump directly to a tab from an in-panel "what happens next" pointer
@@ -3963,6 +4222,7 @@ function renderBeat(flipIn) {
   updateActionBar();
   updateBeatIndicator(currentBeat, BEATS.length);
   if (window._typer) clearInterval(window._typer);
+  if (window._sentThinkingInterval) { clearInterval(window._sentThinkingInterval); window._sentThinkingInterval = null; }
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   chatEl.innerHTML = '';
   chatEl.scrollTop = 0;
@@ -4033,18 +4293,18 @@ function renderBeat(flipIn) {
       'Drafting response…',
       'Processing…',
     ];
-    var _stageIdx = 0;
+    var _stageIdx = 1;
     window._sentThinkingTimers = [];
-    _thinkingStages.forEach(function(stage, i) {
-      window._sentThinkingTimers.push(setTimeout(function () {
-        if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return;
-        var ti = document.getElementById('thinking-indicator');
-        var label = ti && ti.querySelector('span[style*="font-style:italic"]');
-        if (label) label.textContent = stage;
-        var bubble = document.getElementById('thinking-bubble');
-        if (bubble) bubble.classList.add('thinking-highlight');
-      }, 400 + i * 620));
-    });
+    if (window._sentThinkingInterval) clearInterval(window._sentThinkingInterval);
+    window._sentThinkingInterval = setInterval(function () {
+      if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return;
+      var ti = document.getElementById('thinking-indicator');
+      var label = ti && ti.querySelector('span[style*="font-style:italic"]');
+      if (label) label.textContent = _thinkingStages[_stageIdx];
+      var bubble = document.getElementById('thinking-bubble');
+      if (bubble) bubble.classList.add('thinking-highlight');
+      _stageIdx = (_stageIdx + 1) % _thinkingStages.length;
+    }, 620);
     // Figma: yellow reflection bar is the Next control on this beat (no footer Next)
     window._sentThinkingTimers.push(setTimeout(function () {
       if (currentBeat < 0 || BEATS[currentBeat] !== 'sent') return;
@@ -4069,11 +4329,14 @@ function renderBeat(flipIn) {
     acc.innerHTML = buildInsideAccordion();
     chatEl.appendChild(acc);
     appendBeatNext('Next');
-    chatEl.scrollTop = chatEl.scrollHeight;
+    requestAnimationFrame(function () {
+      resetInsideBeatScroll();
+      requestAnimationFrame(resetInsideBeatScroll);
+    });
 
   } else if (beat === 'output') {
     barEl.style.display = 'none';
-    addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.');
+    addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. <span style="color:var(--accent-red);font-weight:700;">Every online seller is required to register for GST in every Indian state where customers are located.</span> Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.');
     var contBtnOut = document.getElementById('demo-continue-btn');
     if (contBtnOut) contBtnOut.style.display = 'none';
     setTimeout(function () {
@@ -4093,7 +4356,8 @@ function renderBeat(flipIn) {
     chatEl.innerHTML = buildNewsWall();
     chatEl.style.overflowY = 'hidden';
     chatEl.style.padding = '0';
-    appendBeatNext('Next');
+    window._hallPhase = 1;
+    updateHallNewsContinueLabel();
 
   } else if (beat === 'you') {
     barEl.style.display = 'none';
@@ -4103,7 +4367,7 @@ function renderBeat(flipIn) {
 
   } else if (beat === 'better') {
     barEl.style.display = 'none';
-    addMessagePlain(`<div style="padding:22px;background:linear-gradient(160deg,rgba(255,230,0,0.04) 0%,rgba(0,200,100,0.04) 100%);border:1px solid var(--gray-02);border-radius:16px;animation:fadeInMsg 0.5s ease;"><div style="text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(46,46,56,0.06);"><div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,230,0,0.07);border:1px solid rgba(255,230,0,0.18);border-radius:20px;padding:4px 14px;margin-bottom:10px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span style="color:var(--eyebrow-gold);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">THE FULL JOURNEY</span></div><div style="color:var(--ey-dark);font-size:16px;font-weight:700;margin-bottom:4px;">Inside Every AI Conversation</div><div style="color:var(--text-muted);font-size:12px;">Every response you receive passes through all of these layers.</div></div><div style="display:flex;flex-direction:column;gap:3px;"><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.0s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--ey-yellow);background:rgba(255,230,0,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--ey-yellow);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,230,0,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,230,0,0.1);"><span style="color:var(--eyebrow-gold);font-size:11px;font-weight:700;">PROMPT</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">You asked</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.08s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-blue);background:rgba(70,150,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-blue);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(70,150,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(70,150,255,0.1);"><span style="color:var(--accent-blue);font-size:11px;font-weight:700;">TOKENS</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI read</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.16s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-green);background:rgba(0,200,100,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-green);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(0,200,100,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(0,200,100,0.1);"><span style="color:var(--accent-green);font-size:11px;font-weight:700;">LLM</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI understood</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.24s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-purple);background:rgba(180,0,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-purple);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(180,0,255,0.04);border:1px solid rgba(180,0,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(180,0,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(180,0,255,0.1);"><span style="color:var(--accent-purple);font-size:11px;font-weight:700;">KNOWLEDGE LAYER</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI knew where to look</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.32s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-orange);background:rgba(255,125,30,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-orange);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,125,30,0.04);border:1px solid rgba(255,125,30,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,125,30,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,125,30,0.1);"><span style="color:var(--accent-orange);font-size:11px;font-weight:700;">RAG</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI checked</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.4s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-blue);background:rgba(70,150,255,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-blue);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(70,150,255,0.04);border:1px solid rgba(70,150,255,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(70,150,255,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(70,150,255,0.1);"><span style="color:var(--accent-blue);font-size:11px;font-weight:700;">OUTPUT</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI drafted</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.48s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-red);background:rgba(255,65,54,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-red);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(255,65,54,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(255,65,54,0.1);"><span style="color:var(--accent-red);font-size:11px;font-weight:700;">HALLUCINATION</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">AI could still be wrong</span></div></div></div><div style="width:1px;height:6px;background:var(--card-border);margin-left:9px;"></div><div class="stagger-in" style="display:flex;align-items:center;gap:10px;animation-delay:0.56s;"><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-green);background:rgba(0,200,100,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent-green);"></div></div><div style="flex:1;display:flex;align-items:center;background:rgba(0,200,100,0.04);border:1px solid rgba(0,200,100,0.1);border-radius:8px;overflow:hidden;"><div style="background:rgba(0,200,100,0.1);padding:8px 12px;width:140px;border-right:1px solid rgba(0,200,100,0.1);"><span style="color:var(--accent-green);font-size:11px;font-weight:700;">HUMAN IN THE LOOP</span></div><div style="padding:8px 12px;"><span style="color:var(--text-secondary);font-size:12px;">Professional judgment ensured accuracy</span></div></div></div></div><div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(46,46,56,0.06);text-align:center;"><span style="color:var(--text-muted);font-size:12px;font-style:italic;">Now you know what happens inside every AI response.</span></div></div>`);
+    addMessagePlain(buildJourneyRecap('Every response you receive passes through all of these layers.'));
     requestAnimationFrame(function () { chatEl.scrollTop = 0; });
     var dBtn = document.getElementById('demo-continue-btn'); if (dBtn) dBtn.style.display = 'none';
   }
@@ -4118,6 +4382,7 @@ window.renderBeat = renderBeat;
 window.selectInsideTab = selectInsideTab;
 window.goToInsideTab = goToInsideTab;
 window.toggleAcc = toggleAcc;
+window.advanceNewsCarousel = advanceNewsCarousel;
 </script>
 
 
