@@ -2091,6 +2091,146 @@ function AgentTemplatesTab() {
   );
 }
 
+/**
+ * Replica of the real M365 Copilot "create an agent" surface (Figma 3844:4944,
+ * where it ships as a flat screenshot). Rebuilt as components so each best-
+ * practice slide can render its own Avoid/Use pair inside the Instructions box.
+ *
+ * Three rails, matching the design's proportions of the 953px canvas:
+ * Copilot nav (18%) · Agent Builder empty state (47%) · Configure panel (35%).
+ */
+function AgentBuilderCanvas({ slide }: { slide: AgentBestPracticeSlide }) {
+  const rail = { fontFamily: F.regular, fontSize: 11.5, color: C.dark2 } as const;
+  const sectionLabel = {
+    fontFamily: F.bold, fontSize: 9, color: C.gray01,
+    letterSpacing: "0.08em", textTransform: "uppercase" as const, margin: "14px 0 6px",
+  };
+  const agents = [
+    { name: "Researcher", dot: "#00C864" },
+    { name: "Analyst", dot: "#B400FF" },
+    { name: "Labour Code Analyst", dot: "#4696FF" },
+    { name: "Tax AI Assessment Evaluator", dot: "#FF3C7E" },
+  ];
+
+  return (
+    <div style={{ flex: 1, minHeight: 0, display: "flex", background: C.white, overflow: "hidden" }}>
+
+      {/* ── Copilot nav rail ── */}
+      <div style={{ flex: "0 0 18%", minWidth: 0, background: C.offWhite, borderRight: `1px solid ${C.gray02}`, padding: "10px 10px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <CopilotIcon size={16} />
+          <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden>
+            {[0, 1].map(r => [0, 1].map(c => (
+              <rect key={`${r}${c}`} x={2 + c * 7} y={2 + r * 7} width="5" height="5" rx="1" fill={C.gray01} />
+            )))}
+          </svg>
+        </div>
+
+        {[{ label: "New chat", Icon: PenLine }, { label: "Search", Icon: Search }, { label: "Library", Icon: FileText }].map(({ label, Icon }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 6px", ...rail }}>
+            <Icon size={13} strokeWidth={1.75} color={C.dark2} aria-hidden />
+            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
+          </div>
+        ))}
+
+        <p style={sectionLabel}>Agents</p>
+        {agents.map(a => (
+          <div key={a.name} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 6px", ...rail }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: a.dot, flexShrink: 0 }} aria-hidden />
+            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.name}</span>
+          </div>
+        ))}
+
+        {/* Selected — the agent being created */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 6px", marginTop: 2, background: "rgba(0,0,0,0.07)", borderRadius: 4, ...rail, fontFamily: F.bold }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: C.teamsViolet, flexShrink: 0 }} aria-hidden />
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>New agent</span>
+        </div>
+        <div style={{ padding: "5px 6px", ...rail, color: C.gray01 }}>··· More agents</div>
+
+        <p style={sectionLabel}>Chats</p>
+      </div>
+
+      {/* ── Agent Builder empty state ── */}
+      <div style={{ flex: "0 0 47%", minWidth: 0, display: "flex", flexDirection: "column", padding: "10px 16px 20px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10 }}>
+          <CheckCircle size={14} strokeWidth={2} color="#00A85A" aria-hidden />
+          <span style={{ fontFamily: F.bold, fontSize: 13, color: C.gray01, letterSpacing: "0.08em" }}>···</span>
+        </div>
+
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 22 }}>
+          <p style={{ fontFamily: F.bold, fontSize: 21, fontWeight: 700, color: C.dark2, textAlign: "center", lineHeight: 1.3, margin: 0, maxWidth: 250 }}>
+            Build your own specialist agent
+          </p>
+          <div style={{ width: "100%", maxWidth: 300, display: "flex", alignItems: "center", gap: 8, padding: "9px 14px", border: `1px solid ${C.gray02}`, borderRadius: 999, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+            <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, flex: 1 }}>+  Message Agent Build</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.gray01} strokeWidth="1.75" strokeLinecap="round" aria-hidden>
+              <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+              <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Configure panel ── */}
+      <div style={{ flex: 1, minWidth: 0, borderLeft: `1px solid ${C.gray02}`, padding: "10px 14px 16px", display: "flex", flexDirection: "column", gap: 10, overflow: "hidden" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, background: "rgba(180,0,255,0.09)", fontFamily: F.regular, fontSize: 10.5, color: C.teamsViolet, whiteSpace: "nowrap" }}>
+            <CopilotIcon size={11} /> Agent Builder
+          </span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 9px", borderRadius: 6, border: `1px solid ${C.gray02}`, fontFamily: F.regular, fontSize: 10.5, color: C.dark2, whiteSpace: "nowrap" }}>
+            Configure <ChevronDown size={10} strokeWidth={2} aria-hidden />
+          </span>
+          <span style={{ flex: 1 }} />
+          {[
+            <span key="plus" style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1 }}>+</span>,
+            <span key="dots" style={{ fontFamily: F.bold, fontSize: 11, color: C.dark2, letterSpacing: "0.08em", lineHeight: 1 }}>···</span>,
+            <X key="close" size={11} strokeWidth={1.75} color={C.dark2} aria-hidden />,
+          ].map((glyph, i) => (
+            <span key={i} style={{ width: 22, height: 22, borderRadius: 5, border: `1px solid ${C.gray02}`, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              {glyph}
+            </span>
+          ))}
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+          <span style={{ width: 36, height: 36, borderRadius: 9, flexShrink: 0, background: "#2563EB", color: C.white, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.bold, fontSize: 14 }} aria-hidden>
+            {"<>"}
+          </span>
+          <p style={{ fontFamily: F.bold, fontSize: 17, fontWeight: 700, color: C.dark2, margin: 0 }}>New Agent</p>
+          <PenLine size={11} strokeWidth={1.75} color={C.gray01} aria-hidden />
+          <span style={{ flex: 1 }} />
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontFamily: F.regular, fontSize: 10.5, color: C.gray01, whiteSpace: "nowrap" }}>
+            Auto <ChevronDown size={10} strokeWidth={2} aria-hidden />
+          </span>
+        </div>
+        <p style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, margin: "-4px 0 0" }}>Describe your agent</p>
+
+        {/* Instructions card — the inner field carries this slide's Avoid/Use pair */}
+        <div style={{ flex: 1, minHeight: 0, border: `1px solid ${C.gray02}`, borderRadius: 10, padding: 12, display: "flex", flexDirection: "column", gap: 9 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
+            <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.dark2, margin: 0 }}>Instructions</p>
+            <span style={{ fontFamily: F.regular, fontSize: 10, color: C.gray01 }}>ⓘ</span>
+            <span style={{ flex: 1 }} />
+            <ExternalLink size={11} strokeWidth={1.75} color={C.gray01} aria-hidden />
+          </div>
+
+          <div style={{ flex: 1, minHeight: 0, border: `1px solid ${C.gray02}`, borderRadius: 8, padding: 11, display: "flex", flexDirection: "column", gap: 10, overflowY: "auto" }}>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <XCircle size={17} strokeWidth={2} color={colors.error} style={{ flexShrink: 0, marginTop: 1 }} aria-hidden />
+              <p style={{ fontFamily: F.regular, fontSize: 11.5, color: C.dark2, lineHeight: 1.5, margin: 0 }}>{slide.bad}</p>
+            </div>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <CheckCircle size={17} strokeWidth={2} color="#00A85A" style={{ flexShrink: 0, marginTop: 1 }} aria-hidden />
+              <p style={{ fontFamily: F.regular, fontSize: 11.5, color: C.dark2, lineHeight: 1.5, margin: 0 }}>{slide.good}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AgentBestPracticesTab() {
   const [slideIndex, setSlideIndex] = useState(0);
   const slide = AGENT_BEST_PRACTICES_SLIDES[slideIndex];
@@ -2154,115 +2294,8 @@ function AgentBestPracticesTab() {
         </span>
       </div>
 
-      {/* ── Presentation slide panel ── */}
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", background: C.confidentBlack, display: "flex" }}>
-        <div style={{ flex: 1, display: "flex", gap: 0, padding: "32px 36px 28px", alignItems: "stretch", minWidth: 0 }}>
-
-          {/* Left col — text */}
-          <div style={{ flex: "0 0 52%", display: "flex", flexDirection: "column", gap: 18, paddingRight: 32, minWidth: 0 }}>
-            {/* Hero heading */}
-            <h2 style={{ fontFamily: F.bold, fontSize: 26, fontWeight: 700, color: C.yellow, margin: 0, lineHeight: 1.25 }}>
-              {slide.heading}
-            </h2>
-
-            {/* Subtitle pill */}
-            <div style={{ border: `1px solid rgba(255,255,255,0.25)`, borderRadius: 8, padding: "10px 14px" }}>
-              <p style={{ fontFamily: F.regular, fontSize: 13, color: C.white, margin: 0, lineHeight: 1.5 }}>
-                {slide.sub}
-              </p>
-            </div>
-
-            {/* Bullets parsed from content */}
-            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
-              {slide.content.split(/\.\s+/).filter(Boolean).map((pt, i) => (
-                <li key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: 1, background: C.yellow, flexShrink: 0, marginTop: 7 }} aria-hidden />
-                  <span style={{ fontFamily: F.regular, fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.6 }}>
-                    {pt.replace(/\.$/, "")}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            {/* Spacer pushes logo + CTA to bottom */}
-            <div style={{ flex: 1 }} />
-
-            {/* Know more CTA */}
-            <a
-              href={MS_LEARN_AGENT_INSTRUCTIONS}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", background: C.yellow, color: C.confidentBlack, borderRadius: 6, fontFamily: F.bold, fontSize: 13, fontWeight: 700, textDecoration: "none", alignSelf: "flex-start" }}
-            >
-              Know more <ArrowRight size={14} strokeWidth={2} aria-hidden />
-            </a>
-
-            {/* EY logo */}
-            <img src="/ey-logo.svg" alt="EY" style={{ height: 32, width: "auto", objectFit: "contain", objectPosition: "left", filter: "brightness(0) invert(1)" }} />
-          </div>
-
-          {/* Right col — mock M365 Agent Builder window */}
-          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
-            <div style={{ width: "100%", maxWidth: 420, borderRadius: 10, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.1)" }}>
-              {/* Window chrome */}
-              <div style={{ background: "#2b2b3b", padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", gap: 6 }}>
-                  {["#FF5F57","#FEBC2E","#28C840"].map(col => (
-                    <span key={col} style={{ width: 11, height: 11, borderRadius: "50%", background: col, display: "block" }} aria-hidden />
-                  ))}
-                </div>
-                <div style={{ display: "flex", gap: 1 }}>
-                  {["Configure","Preview","Create"].map((label, i) => (
-                    <span key={label} style={{ padding: "3px 10px", fontSize: 11, fontFamily: F.regular, color: i === 0 ? C.white : "rgba(255,255,255,0.45)", borderBottom: i === 0 ? `2px solid ${C.teamsViolet}` : "2px solid transparent", cursor: "default" }}>
-                      {label}
-                    </span>
-                  ))}
-                </div>
-                <X size={13} strokeWidth={1.5} color="rgba(255,255,255,0.4)" aria-hidden />
-              </div>
-
-              {/* Agent header */}
-              <div style={{ background: "#1e1e2e", padding: "12px 14px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-                <CopilotIcon size={28} />
-                <div>
-                  <p style={{ fontFamily: F.bold, fontSize: 13, color: C.white, margin: 0 }}>New Agent</p>
-                  <p style={{ fontFamily: F.regular, fontSize: 11, color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>Describe your agent</p>
-                </div>
-              </div>
-
-              {/* Instructions section */}
-              <div style={{ background: "#1e1e2e", padding: "14px" }}>
-                <p style={{ fontFamily: F.bold, fontSize: 10, color: "rgba(255,255,255,0.5)", letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 10px" }}>
-                  Instructions
-                </p>
-
-                {/* Avoid row */}
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", background: "rgba(255,65,54,0.1)", borderRadius: 8, marginBottom: 8 }}>
-                  <div style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${colors.error}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <X size={12} strokeWidth={2.5} color={colors.error} aria-hidden />
-                  </div>
-                  <p style={{ fontFamily: F.regular, fontSize: 12, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>{slide.bad}</p>
-                </div>
-
-                {/* Use row */}
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", background: "rgba(0,200,100,0.08)", borderRadius: 8 }}>
-                  <div style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${colors.success}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Check size={12} strokeWidth={2.5} color={colors.success} aria-hidden />
-                  </div>
-                  <p style={{ fontFamily: F.regular, fontSize: 12, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>{slide.good}</p>
-                </div>
-
-                {/* Prompt bar */}
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, padding: "8px 12px", background: "rgba(255,255,255,0.05)", borderRadius: 8 }}>
-                  <p style={{ fontFamily: F.regular, fontSize: 11, color: "rgba(255,255,255,0.3)", margin: 0, flex: 1 }}>+ Message Agent Builder</p>
-                  <Sparkles size={13} strokeWidth={1.5} color="rgba(255,255,255,0.3)" aria-hidden />
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
+      {/* ── Slide body — M365 agent-creation surface ── */}
+      <AgentBuilderCanvas slide={slide} />
 
       <div
         style={{
