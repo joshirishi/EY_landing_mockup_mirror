@@ -4,7 +4,7 @@ import {
   AlertTriangle, ArrowRight, BarChart3, Calculator, Check, CheckCircle, ChevronDown, ChevronRight,
   ClipboardList, Compass, Copy, ExternalLink, FileText,
   FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
-  ChevronLeft, PenLine, Pin, Rocket, Search, Sparkles, Target, Timer, XCircle,
+  ChevronLeft, PenLine, Pin, Rocket, Search, Sparkles, Target, Timer, X, XCircle,
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
@@ -2154,24 +2154,113 @@ function AgentBestPracticesTab() {
         </span>
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", display: "flex", flexDirection: "column", gap: 20, minHeight: 0 }}>
-        <p style={{ fontFamily: F.regular, fontSize: 15, color: C.dark2, lineHeight: 1.65, margin: 0, maxWidth: 640 }}>{slide.content}</p>
+      {/* ── Presentation slide panel ── */}
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", background: C.confidentBlack, display: "flex" }}>
+        <div style={{ flex: 1, display: "flex", gap: 0, padding: "32px 36px 28px", alignItems: "stretch", minWidth: 0 }}>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
-          <div style={{ background: "rgba(255,65,54,0.06)", borderRadius: 10, padding: "14px 16px", borderLeft: `3px solid ${colors.error}` }}>
-            <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: colors.error, letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
-              <XCircle size={14} strokeWidth={1.75} aria-hidden />
-              Avoid
-            </p>
-            <p style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55, fontStyle: "italic", margin: 0 }}>{slide.bad}</p>
+          {/* Left col — text */}
+          <div style={{ flex: "0 0 52%", display: "flex", flexDirection: "column", gap: 18, paddingRight: 32, minWidth: 0 }}>
+            {/* Hero heading */}
+            <h2 style={{ fontFamily: F.bold, fontSize: 26, fontWeight: 700, color: C.yellow, margin: 0, lineHeight: 1.25 }}>
+              {slide.heading}
+            </h2>
+
+            {/* Subtitle pill */}
+            <div style={{ border: `1px solid rgba(255,255,255,0.25)`, borderRadius: 8, padding: "10px 14px" }}>
+              <p style={{ fontFamily: F.regular, fontSize: 13, color: C.white, margin: 0, lineHeight: 1.5 }}>
+                {slide.sub}
+              </p>
+            </div>
+
+            {/* Bullets parsed from content */}
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+              {slide.content.split(/\.\s+/).filter(Boolean).map((pt, i) => (
+                <li key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 1, background: C.yellow, flexShrink: 0, marginTop: 7 }} aria-hidden />
+                  <span style={{ fontFamily: F.regular, fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.6 }}>
+                    {pt.replace(/\.$/, "")}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Spacer pushes logo + CTA to bottom */}
+            <div style={{ flex: 1 }} />
+
+            {/* Know more CTA */}
+            <a
+              href={MS_LEARN_AGENT_INSTRUCTIONS}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", background: C.yellow, color: C.confidentBlack, borderRadius: 6, fontFamily: F.bold, fontSize: 13, fontWeight: 700, textDecoration: "none", alignSelf: "flex-start" }}
+            >
+              Know more <ArrowRight size={14} strokeWidth={2} aria-hidden />
+            </a>
+
+            {/* EY logo */}
+            <img src="/ey-logo.svg" alt="EY" style={{ height: 32, width: "auto", objectFit: "contain", objectPosition: "left", filter: "brightness(0) invert(1)" }} />
           </div>
-          <div style={{ background: "rgba(0,200,100,0.06)", borderRadius: 10, padding: "14px 16px", borderLeft: `3px solid ${colors.success}` }}>
-            <p style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: colors.success, letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 8px" }}>
-              <CheckCircle size={14} strokeWidth={1.75} aria-hidden />
-              Use
-            </p>
-            <p style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55, fontStyle: "italic", margin: 0 }}>{slide.good}</p>
+
+          {/* Right col — mock M365 Agent Builder window */}
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0 }}>
+            <div style={{ width: "100%", maxWidth: 420, borderRadius: 10, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              {/* Window chrome */}
+              <div style={{ background: "#2b2b3b", padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", gap: 6 }}>
+                  {["#FF5F57","#FEBC2E","#28C840"].map(col => (
+                    <span key={col} style={{ width: 11, height: 11, borderRadius: "50%", background: col, display: "block" }} aria-hidden />
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 1 }}>
+                  {["Configure","Preview","Create"].map((label, i) => (
+                    <span key={label} style={{ padding: "3px 10px", fontSize: 11, fontFamily: F.regular, color: i === 0 ? C.white : "rgba(255,255,255,0.45)", borderBottom: i === 0 ? `2px solid ${C.teamsViolet}` : "2px solid transparent", cursor: "default" }}>
+                      {label}
+                    </span>
+                  ))}
+                </div>
+                <X size={13} strokeWidth={1.5} color="rgba(255,255,255,0.4)" aria-hidden />
+              </div>
+
+              {/* Agent header */}
+              <div style={{ background: "#1e1e2e", padding: "12px 14px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+                <CopilotIcon size={28} />
+                <div>
+                  <p style={{ fontFamily: F.bold, fontSize: 13, color: C.white, margin: 0 }}>New Agent</p>
+                  <p style={{ fontFamily: F.regular, fontSize: 11, color: "rgba(255,255,255,0.4)", margin: "2px 0 0" }}>Describe your agent</p>
+                </div>
+              </div>
+
+              {/* Instructions section */}
+              <div style={{ background: "#1e1e2e", padding: "14px" }}>
+                <p style={{ fontFamily: F.bold, fontSize: 10, color: "rgba(255,255,255,0.5)", letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 10px" }}>
+                  Instructions
+                </p>
+
+                {/* Avoid row */}
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", background: "rgba(255,65,54,0.1)", borderRadius: 8, marginBottom: 8 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${colors.error}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <X size={12} strokeWidth={2.5} color={colors.error} aria-hidden />
+                  </div>
+                  <p style={{ fontFamily: F.regular, fontSize: 12, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>{slide.bad}</p>
+                </div>
+
+                {/* Use row */}
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", background: "rgba(0,200,100,0.08)", borderRadius: 8 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${colors.success}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Check size={12} strokeWidth={2.5} color={colors.success} aria-hidden />
+                  </div>
+                  <p style={{ fontFamily: F.regular, fontSize: 12, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>{slide.good}</p>
+                </div>
+
+                {/* Prompt bar */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, padding: "8px 12px", background: "rgba(255,255,255,0.05)", borderRadius: 8 }}>
+                  <p style={{ fontFamily: F.regular, fontSize: 11, color: "rgba(255,255,255,0.3)", margin: 0, flex: 1 }}>+ Message Agent Builder</p>
+                  <Sparkles size={13} strokeWidth={1.5} color="rgba(255,255,255,0.3)" aria-hidden />
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
 
@@ -2425,13 +2514,15 @@ function TabSection({ tabId }: { tabId: TabId }) {
   return (
     <div style={{ background: C.offWhite, padding: `48px 0 64px` }}>
       <div style={{ ...contentRailStyle }}>
-      {/* Eyebrow with app icon */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-        <AppIcon logo={tabMeta.logo} label={APP_NAME[tabId]} />
-        <span style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
-      </div>
-      <p style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.dark2, marginBottom: 12, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking }}>{d.h2}</p>
-      <p style={{ fontFamily: F.regular, fontSize: 15, color: C.gray01, marginBottom: 36, lineHeight: 1.6 }}>{d.subtitle}</p>
+      {/* Tab header — centered for all tabs */}
+      <header style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 36 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14 }}>
+          <AppIcon logo={tabMeta.logo} label={APP_NAME[tabId]} />
+          <span style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: d.eyebrowColor }}>{d.eyebrow}</span>
+        </div>
+        <p style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.dark2, marginBottom: 12, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking }}>{d.h2}</p>
+        <p style={{ fontFamily: F.regular, fontSize: typeScale.body.size, color: C.gray01, lineHeight: 1.6, maxWidth: 720, margin: "0 auto" }}>{d.subtitle}</p>
+      </header>
 
       {tabId === "agent" ? (
         <AgentHubTabs />
@@ -2487,13 +2578,163 @@ const USEFUL_LINKS = [
   { icon: LINK_ICONS.lock,       title: "Manage Access",               body: "Review your Copilot license status, request access, or manage permissions for your team.", cta: "Manage Access" },
 ];
 
-// ── Security cards (Figma: security-case-studies, 4 horizontal cards, 302px each) ──
-const SECURITY_CARDS = [
-  { num: "01", title: "Quick Check Before You Prompt", src: "/security_Picture1.png" },
-  { num: "02", title: "Share Smartly",                 src: "/security_Picture2.png" },
-  { num: "03", title: "Use Sensitivity Labels",        src: "/security_Picture3.png" },
-  { num: "04", title: "Check Who Has Access",          src: "/security_Picture4.png" },
+type SecurityChecklistItem = {
+  num: string;
+  title: string;
+  body: string;
+  image: string;
+  italic?: boolean;
+};
+
+// ── Security checklist (4-step — click card to open infographic lightbox) ────
+const SECURITY_CHECKLIST: SecurityChecklistItem[] = [
+  {
+    num: "1",
+    title: "Quick Check Before You Use Copilot",
+    body: "Ask yourself: Would I be comfortable if M365 Copilot referenced this content in a colleague's prompt?",
+    image: "/security/copilot1.png",
+    italic: true,
+  },
+  {
+    num: "2",
+    title: "Sharing Smartly: Choose Links That Limit Visibility",
+    body: 'When sending links, choose "People you choose" (or "People with existing access") instead of org-wide sharing.',
+    image: "/security/copilot2.png",
+  },
+  {
+    num: "3",
+    title: "Sensitivity Labels: Your First Line of Copilot Control",
+    body: "Add EY sensitivity labels to emails and files so Copilot is blocked for others (note: the label owner can still use their labelled content).",
+    image: "/security/copilot3.png",
+  },
+  {
+    num: "4",
+    title: "Before You Upload: Check Who Really Has Access",
+    body: 'Find and remove broad access (e.g., "People in EY"). Once someone opens that link, they\'re added to the access list and the file becomes eligible for Copilot in their prompts.',
+    image: "/security/copilot4.png",
+  },
 ];
+
+function SecurityImageLightbox({
+  item,
+  onClose,
+}: {
+  item: SecurityChecklistItem;
+  onClose: () => void;
+}) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !dialogRef.current) return;
+
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      previousFocusRef.current?.focus?.();
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      role="presentation"
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9998,
+        background: `color-mix(in srgb, ${C.dark} 92%, transparent)`,
+        backdropFilter: "blur(8px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 24,
+      }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${item.title} security infographic`}
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: 12,
+          maxWidth: "min(92vw, 1200px)",
+          maxHeight: "92vh",
+        }}
+      >
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={onClose}
+          aria-label="Close infographic"
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: "50%",
+            background: C.surfaceOnDark,
+            border: `1px solid ${C.borderOnDark}`,
+            color: C.onDark,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <X size={22} strokeWidth={1.75} aria-hidden />
+        </button>
+        <img
+          src={item.image}
+          alt={item.title}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "calc(92vh - 68px)",
+            width: "auto",
+            height: "auto",
+            objectFit: "contain",
+            borderRadius: 12,
+            boxShadow: `0 24px 64px color-mix(in srgb, ${C.dark} 60%, transparent)`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function M365CopilotHub({
@@ -2505,6 +2746,7 @@ export default function M365CopilotHub({
 }) {
   useModuleSectionHashScroll();
   const [activeTab, setActiveTab] = useState<TabId>("word");
+  const [securityLightbox, setSecurityLightbox] = useState<SecurityChecklistItem | null>(null);
 
   const openApp = (id: TabId) => {
     setActiveTab(id);
@@ -2631,38 +2873,80 @@ export default function M365CopilotHub({
           <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow }}>GOVERNANCE &amp; TRUST</span>
         </div>
         <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 14 }}>Enterprise-Grade Security</h2>
-        <p style={{ fontSize: 16, color: C.gray02, marginBottom: 52, maxWidth: 800 }}>Before you let Copilot loose on tax data, know the ground rules. Tap any card to view it full-size.</p>
-        {/* 4 horizontal cards (Figma: CaseStudiesGrid — each 302px wide) */}
+        <p style={{ fontFamily: F.bold, fontSize: typeScale.subheading.size, fontWeight: 700, color: C.white, marginBottom: 10 }}>
+          What to do now (your 4-step checklist)
+        </p>
+        <p style={{ fontSize: typeScale.body.size, color: C.gray02, marginBottom: 40, maxWidth: 800, lineHeight: 1.6 }}>
+          Before you let Copilot loose on tax data, work through these four access and sharing checks.
+        </p>
+        {/* 4-step checklist — click a card to open its security infographic */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 26 }}>
-          {SECURITY_CARDS.map(card => (
-            <div key={card.num} style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", transition: "transform 0.25s, box-shadow 0.25s", background: "#2e2e38", border: "1px solid #747480", display: "flex", flexDirection: "column" }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px #ffe600"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "none"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}>
-              {/* Card accent image area */}
-              <div style={{ height: 140, background: "linear-gradient(155deg, rgb(69,69,83) 0%, rgb(37,37,46) 100%)", position: "relative", overflow: "hidden", flexShrink: 0 }}>
-                <img
-                  src={card.src}
-                  alt={card.title}
-                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              {/* Card body */}
-              <div style={{ background: "#2e2e38", padding: "20px 24px", flex: 1, display: "flex", flexDirection: "column" }}>
-                <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 32, color: C.yellow, marginBottom: 10, lineHeight: 1 }}>{card.num}</p>
-                {/* Title grows to fill — pushes separator + CTA to bottom */}
-                <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: 16, color: C.white, lineHeight: 1.35, flex: 1, marginBottom: 14 }}>{card.title}</p>
-                <div style={{ height: 1, background: "rgba(255,255,255,0.1)", marginBottom: 14 }} />
-                {/* CTA — always at the bottom */}
-                <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: C.yellow, fontWeight: 700, textDecoration: "none", fontFamily: F.bold }}>
-                  View Protocol
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                </a>
-              </div>
-            </div>
+          {SECURITY_CHECKLIST.map((step) => (
+            <button
+              key={step.num}
+              type="button"
+              onClick={() => setSecurityLightbox(step)}
+              aria-label={`View ${step.title} infographic`}
+              style={{
+                background: C.dark2,
+                border: `1px solid ${C.borderOnDark}`,
+                borderRadius: 12,
+                padding: "24px 22px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                cursor: "pointer",
+                textAlign: "left",
+                fontFamily: F.regular,
+                transition: "border-color 0.15s, transform 0.15s, box-shadow 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = C.yellowAlpha12;
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = `0 8px 24px color-mix(in srgb, ${C.dark} 35%, transparent)`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = C.borderOnDark;
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = C.yellowAlpha12;
+                e.currentTarget.style.outline = `2px solid ${C.yellow}`;
+                e.currentTarget.style.outlineOffset = "2px";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = C.borderOnDark;
+                e.currentTarget.style.outline = "none";
+              }}
+            >
+              <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: typeScale.h2.size, color: C.yellow, margin: 0, lineHeight: 1 }}>
+                {step.num}
+              </p>
+              <p
+                style={{
+                  fontFamily: F.regular,
+                  fontSize: 14,
+                  color: C.gray02,
+                  margin: 0,
+                  lineHeight: 1.6,
+                  fontStyle: step.italic ? "italic" : "normal",
+                }}
+              >
+                {step.body}
+              </p>
+            </button>
           ))}
         </div>
         </div>
       </section>
+
+      {securityLightbox && (
+        <SecurityImageLightbox
+          item={securityLightbox}
+          onClose={() => setSecurityLightbox(null)}
+        />
+      )}
 
       {/* Shared dark CTA — Phase 1 complete */}
       <EYWhatsNext
