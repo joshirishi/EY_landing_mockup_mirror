@@ -751,96 +751,196 @@ const AGENT_HUB_TABS = [
 ] as const;
 type AgentHubTabId = (typeof AGENT_HUB_TABS)[number]["id"];
 
+/**
+ * One Avoid/Use (or plain reference) block inside the agent Instructions field.
+ * The mailer's Examples column is not uniformly a bad/good pair — some rows are
+ * an unlabelled reference list (domain vocabulary) or a set of neutral, labelled
+ * task tiers (reasoning depth), so `tone` carries that distinction.
+ */
+type ExampleBlock = {
+  tone: "bad" | "good" | "neutral";
+  label?: string;
+  lines: readonly string[];
+};
+
+/**
+ * Verbatim from reference/assets/"Agent Best Practices mailer content.xlsx".
+ * `content` keeps the sheet's own line breaks: a line prefixed "- " renders as
+ * a bullet, anything else as a lead-in paragraph.
+ */
 type AgentBestPracticeSlide = {
   n: string;
   heading: string;
   sub: string;
-  content: string;
-  bad: string;
-  good: string;
+  content: readonly string[];
+  examples: readonly ExampleBlock[];
 };
 
-/** EY tax mailer — 10 instruction best-practice slides with Avoid/Use examples */
 const AGENT_BEST_PRACTICES_SLIDES: readonly AgentBestPracticeSlide[] = [
   {
     n: "01",
     heading: "Use Clear, Actionable Language",
     sub: "Stop Telling Copilot Agent What NOT To Do. Just tell It What TO Do.",
-    content: "Use clear verbs like Ask, Search, Check, Use, Send. The more precise your instructions, the more reliable your agent's output. Avoid vague instructions.",
-    bad: "Review Section 194R applicability",
-    good: "Analyze whether Section 194R applies to the attached sales promotion scheme and identify compliance requirements",
+    content: [
+      "Use clear verbs like Ask, Search, Check, Use, Send",
+      "The more precise your instructions, the more reliable your agent's output",
+      "Avoid vague instructions.",
+    ],
+    examples: [
+      { tone: "bad", lines: ["Review Section 194R applicability"] },
+      { tone: "good", lines: ["Analyze whether Section 194R applies to the attached sales promotion scheme and identify compliance requirements"] },
+    ],
   },
   {
     n: "02",
     heading: "Build Step-by-Step Workflows with transitions",
     sub: "Confused Agents Follow Confused Instructions.",
-    content: "Every workflow should have: Goal, Action, Transition",
-    bad: "Review tax notices and prepare responses.",
-    good: "Step 1: Identify pending notices. Step 2: Extract due dates. Step 3: Draft response summary.",
+    content: ["Every workflow should have:", "- Goal", "- Action", "- Transition"],
+    examples: [
+      { tone: "bad", label: "Instead of", lines: ["Review tax notices and prepare responses."] },
+      { tone: "good", label: "Use", lines: ["Step 1: Identify pending notices.", "Step 2: Extract due dates.", "Step 3: Draft response summary."] },
+    ],
   },
   {
     n: "03",
     heading: "Use strict structure",
     sub: "Great Results Start with Great Structure",
-    content: "Use: Sections for categories, Bullets for parallel tasks, Steps for sequential workflows",
-    bad: "Mixed instructions in one paragraph",
-    good: "Separate sections: Research, Analysis, Output",
+    content: ["Use:", "- Sections for categories", "- Bullets for parallel tasks", "- Steps for sequential workflows"],
+    examples: [
+      { tone: "bad", lines: ["Mixed instructions in one paragraph"] },
+      { tone: "good", label: "Separate sections", lines: ["Research", "Analysis", "Output"] },
+    ],
   },
   {
     n: "04",
     heading: "Make tasks atomic",
     sub: "One Instruction. One Outcome.",
-    content: "Complex work isn't solved in a single leap. Guide your agent through the same logical path you would follow: Review the facts, Identify the issues, Analyze the impact, Recommend the next steps",
-    bad: "Extract case laws and draft litigation arguments",
-    good: "Extract relevant case laws. Summarize legal principles. Draft litigation arguments.",
+    content: [
+      "Complex work isn't solved in a single leap.",
+      "Guide your agent through the same logical path you would follow:",
+      "- Review the facts",
+      "- Identify the issues",
+      "- Analyze the impact",
+      "- Recommend the next steps",
+    ],
+    examples: [
+      { tone: "bad", lines: ["Extract case laws and draft litigation arguments"] },
+      { tone: "good", lines: ["Extract relevant case laws", "Summarize legal principles", "Draft litigation arguments"] },
+    ],
   },
   {
     n: "05",
     heading: "Always specify tone, verbosity, and output format",
     sub: "If You Don't Specify It, Copilot Will Guess.",
-    content: "Always define: Tone, Detail level, Output format",
-    bad: "Draft an email to the client summarising the provisions covered u/s 90",
-    good: "Draft an email to the client summarising the provisions covered u/s 90. Tone: Professional and reassuring. Length: Under 150 words. Output Format: Email ready to send with subject line",
+    content: ["Always define:", "- Tone", "- Detail level", "- Output format"],
+    examples: [
+      { tone: "bad", label: "Poor Instruction", lines: ["Draft an email to the client summarising the provisions covered u/s 90"] },
+      { tone: "good", label: "Better Instruction", lines: [
+        "Draft an email to the client summarising the provisions covered u/s 90",
+        "Tone: Professional and reassuring",
+        "Length: Under 150 words",
+        "Output Format: Email ready to send with subject line",
+      ] },
+    ],
   },
   {
     n: "06",
     heading: "Structure instructions in Markdown",
     sub: "Help Your Agent See the Bigger Picture",
-    content: "Use #, ##, and ### for section headers. Use bullets or numbered lists. Highlight tool or system names. Make critical instructions bold by using **",
-    bad: "Prepare a transfer pricing risk assessment.",
-    good: "Scope: Review FY 2025-26 transactions. Analysis: Identify related party transactions, Evaluate transfer pricing exposure. Risk Assessment: High-risk areas, Supporting documentation gaps. Deliverable: Risk matrix and recommendations",
+    content: [
+      "Use #, ##, and ### for section headers",
+      "Use bullets or numbered lists",
+      "Highlight tool or system names",
+      "Make critical instructions bold by using **",
+    ],
+    examples: [
+      { tone: "bad", lines: ["Prepare a transfer pricing risk assessment."] },
+      { tone: "good", lines: [
+        "Scope",
+        "Review FY 2025-26 transactions",
+        "Analysis",
+        "Identify related party transactions",
+        "Evaluate transfer pricing exposure",
+        "Risk Assessment",
+        "High-risk areas",
+        "Supporting documentation gaps",
+        "Deliverable",
+        "Risk matrix and recommendations",
+      ] },
+    ],
   },
   {
     n: "07",
     heading: "Provide domain vocabulary",
     sub: "Teach Your Agent Your Language",
-    content: "Never Assume Copilot Knows Your Acronyms. Define: Acronyms, Tax terms, Internal terms, Specialized formulas",
-    bad: "TP = Transfer Pricing (undefined)",
-    good: "TP = Transfer Pricing, FAI = Foreign Asset Information, PE = Permanent Establishment, AO = Assessing Officer",
+    content: [
+      "Never Assume Copilot Knows Your Acronyms.",
+      "Define:",
+      "- Acronyms",
+      "- Tax terms",
+      "- Internal terms",
+      "- Specialized formulas",
+    ],
+    examples: [
+      { tone: "neutral", lines: [
+        "TP = Transfer Pricing",
+        "FAI = Foreign Asset Information",
+        "PE = Permanent Establishment",
+        "AO = Assessing Officer",
+      ] },
+    ],
   },
   {
     n: "08",
     heading: "Explicitly reference capabilities, knowledge, and actions",
     sub: "Tell Copilot Where To Look",
-    content: "Tell the agent: Search Teams, Check emails, Use SharePoint knowledge, Use OneDrive documents",
-    bad: "Summarize action items",
-    good: "Search Teams conversations and summarize action items",
+    content: [
+      "Tell the agent:",
+      "- Search Teams",
+      "- Check emails",
+      "- Use SharePoint knowledge",
+      "- Use OneDrive documents",
+    ],
+    examples: [
+      { tone: "bad", label: "Instead", lines: ["Summarize action items"] },
+      { tone: "good", label: "Use", lines: ["Search Teams conversations and summarize action items"] },
+    ],
   },
   {
     n: "09",
     heading: "Provide examples",
     sub: "Examples Are Superpowers",
-    content: "Don't Just Describe It. Show It. Provide examples for more than one example for edge cases. Remove ambiguity and help your agent replicate the outcome you expect.",
-    bad: "Draft a client communication.",
-    good: "Use the tone and structure below: Dear Client, We would like to inform you about the recent amendment impacting withholding tax obligations. Recommended next step: Review current vendor arrangements. Now draft a communication regarding Section 194T using the same style.",
+    content: [
+      "Don't Just Describe It. Show It.",
+      "Provide examples for more than one example for edge cases.",
+      "Remove ambiguity and help your agent replicate the outcome you expect",
+    ],
+    examples: [
+      { tone: "bad", label: "Instruction Only", lines: ["Draft a client communication."] },
+      { tone: "good", label: "Instruction + Example", lines: [
+        "Use the tone and structure below:",
+        "Dear Client, We would like to inform you about the recent amendment impacting withholding tax obligations.",
+        "Recommended next step: Review current vendor arrangements.",
+        "Now draft a communication regarding Section 194T using the same style.",
+      ] },
+    ],
   },
   {
     n: "10",
     heading: "Control reasoning through phrasing",
     sub: "Control How Much Reasoning You Need",
-    content: "Not Every Task Needs Deep Thinking. Choose the right instruction style: Deep reasoning to analyze, derive, evaluate, justify, think step by step, reflect, verify logic and structure tasks into multiple dependent steps. Moderate reasoning (balanced) for concise but structured explanation. Fast and minimal reasoning for short answers, no reasoning on explanation and final result only.",
-    bad: "Analyze litigation strategy considering recent High Court and Supreme Court rulings. (Deep, no signal)",
-    good: "Deep Task: Analyze litigation strategy considering recent High Court and Supreme Court rulings. Moderate Task: Summarize implications of Section 148A. Quick Task: Extract due dates from this notice.",
+    content: [
+      "Not Every Task Needs Deep Thinking.",
+      "Choose the right instruction style:",
+      "- Deep reasoning to analyze, derive, evaluate, justify, think step by step, reflect, verify logic and structure tasks into multiple dependent steps",
+      "- Moderate reasoning (balanced) for concise but structured explanation",
+      "- Fast and minimal reasoning for short answers, no reasoning on explanation and final result only.",
+    ],
+    examples: [
+      { tone: "neutral", label: "Deep Task", lines: ["Analyze litigation strategy considering recent High Court and Supreme Court rulings."] },
+      { tone: "neutral", label: "Moderate Task", lines: ["Summarize implications of Section 148A."] },
+      { tone: "neutral", label: "Quick Task", lines: ["Extract due dates from this notice."] },
+    ],
   },
 ] as const;
 
@@ -2091,138 +2191,187 @@ function AgentTemplatesTab() {
   );
 }
 
+/** Small gradient app tile standing in for each agent's avatar in the rail. */
+function AgentTile({ from, to }: { from: string; to: string }) {
+  return (
+    <span
+      style={{
+        width: 17, height: 17, borderRadius: 5, flexShrink: 0,
+        background: `linear-gradient(135deg, ${from}, ${to})`,
+      }}
+      aria-hidden
+    />
+  );
+}
+
 /**
- * Replica of the real M365 Copilot "create an agent" surface (Figma 3844:4944,
- * where it ships as a flat screenshot). Rebuilt as components so each best-
- * practice slide can render its own Avoid/Use pair inside the Instructions box.
+ * Replica of the real M365 Copilot "create an agent" surface (Figma 3844:4740,
+ * where it ships as a flat screenshot). Rebuilt as components rather than an
+ * image so each of the 10 slides can drive the copy from the mailer sheet:
+ * the Instructions field carries that slide's Examples, and the centre column
+ * carries its Content bullets in place of the product's empty state.
  *
  * Three rails, matching the design's proportions of the 953px canvas:
- * Copilot nav (18%) · Agent Builder empty state (47%) · Configure panel (35%).
+ * Copilot nav (18%) · agent canvas (47%) · Agent Builder panel (35%).
  */
 function AgentBuilderCanvas({ slide }: { slide: AgentBestPracticeSlide }) {
-  const rail = { fontFamily: F.regular, fontSize: 11.5, color: C.dark2 } as const;
-  const sectionLabel = {
-    fontFamily: F.bold, fontSize: 9, color: C.gray01,
-    letterSpacing: "0.08em", textTransform: "uppercase" as const, margin: "14px 0 6px",
-  };
+  const railItem = { fontFamily: F.regular, fontSize: 12, color: C.dark2 } as const;
+  const railLabel = {
+    fontFamily: F.regular, fontSize: 10.5, color: C.gray01, margin: "14px 0 6px",
+  } as const;
   const agents = [
-    { name: "Researcher", dot: "#00C864" },
-    { name: "Analyst", dot: "#B400FF" },
-    { name: "Labour Code Analyst", dot: "#4696FF" },
-    { name: "Tax AI Assessment Evaluator", dot: "#FF3C7E" },
+    { name: "Researcher", from: "#4696FF", to: "#22D3EE" },
+    { name: "Analyst", from: "#B400FF", to: "#FF3C7E" },
+    { name: "Labour Code Analyst", from: "#4696FF", to: "#7C5CFF" },
+    { name: "Tax AI Assessment Evaluator", from: "#FF7A45", to: "#FF3C7E" },
   ];
+  const toneColor = { bad: colors.error, good: "#00A85A", neutral: C.gray01 } as const;
 
   return (
-    <div style={{ flex: 1, minHeight: 0, display: "flex", background: C.white, overflow: "hidden" }}>
-
-      {/* ── Copilot nav rail ── */}
-      <div style={{ flex: "0 0 18%", minWidth: 0, background: C.offWhite, borderRight: `1px solid ${C.gray02}`, padding: "10px 10px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-          <CopilotIcon size={16} />
-          <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden>
-            {[0, 1].map(r => [0, 1].map(c => (
-              <rect key={`${r}${c}`} x={2 + c * 7} y={2 + r * 7} width="5" height="5" rx="1" fill={C.gray01} />
-            )))}
-          </svg>
-        </div>
-
-        {[{ label: "New chat", Icon: PenLine }, { label: "Search", Icon: Search }, { label: "Library", Icon: FileText }].map(({ label, Icon }) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 6px", ...rail }}>
-            <Icon size={13} strokeWidth={1.75} color={C.dark2} aria-hidden />
-            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
-          </div>
-        ))}
-
-        <p style={sectionLabel}>Agents</p>
-        {agents.map(a => (
-          <div key={a.name} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 6px", ...rail }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: a.dot, flexShrink: 0 }} aria-hidden />
-            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.name}</span>
-          </div>
-        ))}
-
-        {/* Selected — the agent being created */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 6px", marginTop: 2, background: "rgba(0,0,0,0.07)", borderRadius: 4, ...rail, fontFamily: F.bold }}>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: C.teamsViolet, flexShrink: 0 }} aria-hidden />
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>New agent</span>
-        </div>
-        <div style={{ padding: "5px 6px", ...rail, color: C.gray01 }}>··· More agents</div>
-
-        <p style={sectionLabel}>Chats</p>
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", background: C.white, overflow: "hidden" }}>
+      {/* Desktop window chrome */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 16, padding: "8px 16px", flexShrink: 0 }}>
+        <span style={{ width: 11, height: 1.5, background: C.gray01, display: "block" }} aria-hidden />
+        <span style={{ width: 9, height: 9, border: `1.5px solid ${C.gray01}`, borderRadius: 2, display: "block" }} aria-hidden />
+        <X size={13} strokeWidth={1.75} color={C.gray01} aria-hidden />
       </div>
 
-      {/* ── Agent Builder empty state ── */}
-      <div style={{ flex: "0 0 47%", minWidth: 0, display: "flex", flexDirection: "column", padding: "10px 16px 20px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10 }}>
-          <CheckCircle size={14} strokeWidth={2} color="#00A85A" aria-hidden />
-          <span style={{ fontFamily: F.bold, fontSize: 13, color: C.gray01, letterSpacing: "0.08em" }}>···</span>
+      <div style={{ flex: 1, minHeight: 0, display: "flex", borderTop: `1px solid ${C.gray02}` }}>
+
+        {/* ── Copilot nav rail ── */}
+        <div style={{ flex: "0 0 18%", minWidth: 0, background: "linear-gradient(180deg, #FDF0E6 0%, #FBEAEA 45%, #F3EAF8 100%)", padding: "12px 12px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+            <CopilotIcon size={17} />
+            <svg width="14" height="14" viewBox="0 0 18 18" aria-hidden>
+              {[0, 1, 2].map(r => [0, 1, 2].map(c => (
+                <circle key={`${r}${c}`} cx={3 + c * 6} cy={3 + r * 6} r="1.4" fill={C.gray01} />
+              )))}
+            </svg>
+          </div>
+
+          {[{ label: "New chat", Icon: PenLine }, { label: "Search", Icon: Search }, { label: "Library", Icon: FileText }].map(({ label, Icon }) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: 9, padding: "6px 6px", ...railItem }}>
+              <Icon size={14} strokeWidth={1.75} color={C.dark2} aria-hidden />
+              <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
+            </div>
+          ))}
+
+          <p style={railLabel}>Agents</p>
+          {agents.map(a => (
+            <div key={a.name} style={{ display: "flex", alignItems: "center", gap: 9, padding: "6px 6px", ...railItem }}>
+              <AgentTile from={a.from} to={a.to} />
+              <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.name}</span>
+            </div>
+          ))}
+
+          {/* Selected — the agent being created */}
+          <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "6px 6px", background: "rgba(255,255,255,0.75)", borderRadius: 7, ...railItem, fontFamily: F.bold }}>
+            <AgentTile from="#7C5CFF" to="#FF3C7E" />
+            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>New agent</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "6px 6px", ...railItem, color: C.gray01 }}>
+            <span style={{ fontFamily: F.bold, letterSpacing: "0.06em" }} aria-hidden>···</span>
+            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>More agents</span>
+          </div>
+
+          <p style={railLabel}>Chats</p>
         </div>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 22 }}>
-          <p style={{ fontFamily: F.bold, fontSize: 21, fontWeight: 700, color: C.dark2, textAlign: "center", lineHeight: 1.3, margin: 0, maxWidth: 250 }}>
-            Build your own specialist agent
-          </p>
-          <div style={{ width: "100%", maxWidth: 300, display: "flex", alignItems: "center", gap: 8, padding: "9px 14px", border: `1px solid ${C.gray02}`, borderRadius: 999, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
-            <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, flex: 1 }}>+  Message Agent Build</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.gray01} strokeWidth="1.75" strokeLinecap="round" aria-hidden>
+        {/* ── Agent canvas — carries this slide's Content ── */}
+        <div style={{ flex: "0 0 47%", minWidth: 0, display: "flex", flexDirection: "column", padding: "10px 20px 20px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 12, flexShrink: 0 }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00A85A" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            <span style={{ fontFamily: F.bold, fontSize: 13, color: C.gray01, letterSpacing: "0.08em" }} aria-hidden>···</span>
+          </div>
+
+          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 9, overflowY: "auto", padding: "8px 0" }}>
+            {slide.content.map((line, i) => {
+              const isBullet = line.startsWith("- ");
+              return isBullet ? (
+                <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.teamsViolet, flexShrink: 0, marginTop: 7 }} aria-hidden />
+                  <p style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1.55, margin: 0 }}>{line.slice(2)}</p>
+                </div>
+              ) : (
+                <p key={i} style={{ fontFamily: F.bold, fontSize: 13.5, color: C.dark2, lineHeight: 1.5, margin: 0 }}>{line}</p>
+              );
+            })}
+          </div>
+
+          <div style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", border: `1px solid ${C.gray02}`, borderRadius: 999, boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}>
+            <span style={{ fontFamily: F.regular, fontSize: 14, color: C.gray01, lineHeight: 1 }} aria-hidden>+</span>
+            <span style={{ fontFamily: F.regular, fontSize: 12.5, color: C.gray01, flex: 1 }}>Message Agent Build</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gray01} strokeWidth="1.75" strokeLinecap="round" aria-hidden>
               <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
               <path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4" />
             </svg>
           </div>
         </div>
-      </div>
 
-      {/* ── Configure panel ── */}
-      <div style={{ flex: 1, minWidth: 0, borderLeft: `1px solid ${C.gray02}`, padding: "10px 14px 16px", display: "flex", flexDirection: "column", gap: 10, overflow: "hidden" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, background: "rgba(180,0,255,0.09)", fontFamily: F.regular, fontSize: 10.5, color: C.teamsViolet, whiteSpace: "nowrap" }}>
-            <CopilotIcon size={11} /> Agent Builder
-          </span>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 9px", borderRadius: 6, border: `1px solid ${C.gray02}`, fontFamily: F.regular, fontSize: 10.5, color: C.dark2, whiteSpace: "nowrap" }}>
-            Configure <ChevronDown size={10} strokeWidth={2} aria-hidden />
-          </span>
-          <span style={{ flex: 1 }} />
-          {[
-            <span key="plus" style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, lineHeight: 1 }}>+</span>,
-            <span key="dots" style={{ fontFamily: F.bold, fontSize: 11, color: C.dark2, letterSpacing: "0.08em", lineHeight: 1 }}>···</span>,
-            <X key="close" size={11} strokeWidth={1.75} color={C.dark2} aria-hidden />,
-          ].map((glyph, i) => (
-            <span key={i} style={{ width: 22, height: 22, borderRadius: 5, border: `1px solid ${C.gray02}`, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              {glyph}
+        {/* ── Agent Builder panel — carries this slide's Examples ── */}
+        <div style={{ flex: 1, minWidth: 0, borderLeft: `1px solid ${C.gray02}`, padding: "10px 16px 16px", display: "flex", flexDirection: "column", gap: 12, overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", borderRadius: 999, border: `1px solid ${C.gray02}`, fontFamily: F.regular, fontSize: 11, color: C.dark2, whiteSpace: "nowrap" }}>
+              <CopilotIcon size={12} /> Agent Builder
             </span>
-          ))}
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-          <span style={{ width: 36, height: 36, borderRadius: 9, flexShrink: 0, background: "#2563EB", color: C.white, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.bold, fontSize: 14 }} aria-hidden>
-            {"<>"}
-          </span>
-          <p style={{ fontFamily: F.bold, fontSize: 17, fontWeight: 700, color: C.dark2, margin: 0 }}>New Agent</p>
-          <PenLine size={11} strokeWidth={1.75} color={C.gray01} aria-hidden />
-          <span style={{ flex: 1 }} />
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontFamily: F.regular, fontSize: 10.5, color: C.gray01, whiteSpace: "nowrap" }}>
-            Auto <ChevronDown size={10} strokeWidth={2} aria-hidden />
-          </span>
-        </div>
-        <p style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, margin: "-4px 0 0" }}>Describe your agent</p>
-
-        {/* Instructions card — the inner field carries this slide's Avoid/Use pair */}
-        <div style={{ flex: 1, minHeight: 0, border: `1px solid ${C.gray02}`, borderRadius: 10, padding: 12, display: "flex", flexDirection: "column", gap: 9 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
-            <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.dark2, margin: 0 }}>Instructions</p>
-            <span style={{ fontFamily: F.regular, fontSize: 10, color: C.gray01 }}>ⓘ</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "5px 11px", borderRadius: 8, border: `1px solid ${C.gray02}`, fontFamily: F.regular, fontSize: 11, color: C.dark2, whiteSpace: "nowrap" }}>
+              Configure <ChevronDown size={11} strokeWidth={2} aria-hidden />
+            </span>
             <span style={{ flex: 1 }} />
-            <ExternalLink size={11} strokeWidth={1.75} color={C.gray01} aria-hidden />
+            <span style={{ display: "inline-flex", alignItems: "center", border: `1px solid ${C.gray02}`, borderRadius: 8, overflow: "hidden", flexShrink: 0 }}>
+              <span style={{ width: 24, height: 24, background: C.offWhite, display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: F.regular, fontSize: 14, color: C.dark2, lineHeight: 1 }} aria-hidden>+</span>
+              <span style={{ width: 24, height: 24, display: "inline-flex", alignItems: "center", justifyContent: "center", fontFamily: F.bold, fontSize: 11, color: C.dark2, letterSpacing: "0.06em" }} aria-hidden>···</span>
+              <span style={{ width: 24, height: 24, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                <X size={12} strokeWidth={1.75} color={C.dark2} aria-hidden />
+              </span>
+            </span>
           </div>
 
-          <div style={{ flex: 1, minHeight: 0, border: `1px solid ${C.gray02}`, borderRadius: 8, padding: 11, display: "flex", flexDirection: "column", gap: 10, overflowY: "auto" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-              <XCircle size={17} strokeWidth={2} color={colors.error} style={{ flexShrink: 0, marginTop: 1 }} aria-hidden />
-              <p style={{ fontFamily: F.regular, fontSize: 11.5, color: C.dark2, lineHeight: 1.5, margin: 0 }}>{slide.bad}</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 11, flexShrink: 0 }}>
+            <span style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, background: "linear-gradient(135deg,#2BC7C7,#2563EB)", color: C.white, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.bold, fontSize: 15 }} aria-hidden>
+              {"</>"}
+            </span>
+            <p style={{ fontFamily: F.bold, fontSize: 20, fontWeight: 700, color: C.dark2, margin: 0 }}>New Agent</p>
+            <PenLine size={13} strokeWidth={1.75} color={C.gray01} aria-hidden />
+            <span style={{ flex: 1 }} />
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: F.regular, fontSize: 11, color: C.gray01, whiteSpace: "nowrap" }}>
+              Auto <ChevronDown size={11} strokeWidth={2} aria-hidden />
+            </span>
+          </div>
+          <p style={{ fontFamily: F.regular, fontSize: 11.5, color: C.gray01, margin: "-6px 0 0", flexShrink: 0 }}>Describe your agent</p>
+
+          {/* Instructions card — the inner field carries the slide's Examples */}
+          <div style={{ flex: 1, minHeight: 0, border: `1px solid ${C.gray02}`, borderRadius: 12, padding: 14, display: "flex", flexDirection: "column", gap: 11 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+              <p style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.dark2, margin: 0 }}>Instructions</p>
+              <span style={{ fontFamily: F.regular, fontSize: 10, color: C.gray01 }} aria-hidden>ⓘ</span>
+              <span style={{ flex: 1 }} />
+              <ExternalLink size={12} strokeWidth={1.75} color={C.gray01} aria-hidden />
             </div>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-              <CheckCircle size={17} strokeWidth={2} color="#00A85A" style={{ flexShrink: 0, marginTop: 1 }} aria-hidden />
-              <p style={{ fontFamily: F.regular, fontSize: 11.5, color: C.dark2, lineHeight: 1.5, margin: 0 }}>{slide.good}</p>
+
+            <div style={{ flex: 1, minHeight: 0, border: `1px solid ${C.gray02}`, borderRadius: 8, padding: 12, display: "flex", flexDirection: "column", gap: 12, overflowY: "auto" }}>
+              {slide.examples.map((block, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+                  {block.tone === "bad" && <XCircle size={16} strokeWidth={2} color={colors.error} style={{ flexShrink: 0, marginTop: 1 }} aria-hidden />}
+                  {block.tone === "good" && <CheckCircle size={16} strokeWidth={2} color="#00A85A" style={{ flexShrink: 0, marginTop: 1 }} aria-hidden />}
+                  {block.tone === "neutral" && <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.gray01, flexShrink: 0, marginTop: 7 }} aria-hidden />}
+                  <div style={{ minWidth: 0 }}>
+                    {block.label && (
+                      <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: toneColor[block.tone], margin: "0 0 3px" }}>
+                        {block.label}
+                      </p>
+                    )}
+                    {block.lines.map((line, j) => (
+                      <p key={j} style={{ fontFamily: F.regular, fontSize: 11.5, color: C.dark2, lineHeight: 1.5, margin: j === 0 ? 0 : "3px 0 0" }}>
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
