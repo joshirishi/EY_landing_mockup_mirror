@@ -5,7 +5,7 @@
  * Fixed 1536×450 artboard, scales to container width via ResizeObserver.
  */
 
-import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { CirclePlay } from "lucide-react";
 import { colors, fonts, typeScale } from "@/design-kit";
 
@@ -147,8 +147,129 @@ const STAGE_NODES = [
   { left: 1221, top: 94, icon: ASSET.iconShield, alt: "Peak Performance" },
 ] as const;
 
+/** Vertical gap between marker button bottom and its title label box. */
+const TITLE_LABEL_GAP = 8;
+
+/**
+ * Title labels sit below each marker and share the callout's left edge + width
+ * so they stay horizontally aligned with that stage's thought-bubble callout.
+ */
+const STAGE_TITLE_LABELS = [
+  { title: "Base Camp", markerTop: 366, markerSize: 46, calloutIndex: 0 },
+  { title: "Laying the Foundation", markerTop: 295, markerSize: 40, calloutIndex: 1 },
+  { title: "Discovering Opportunities", markerTop: 260, markerSize: 40, calloutIndex: 2 },
+  { title: "Building Solutions", markerTop: 240, markerSize: 40, calloutIndex: 3 },
+  { title: "Embedding Confidence", markerTop: 227, markerSize: 40, calloutIndex: 4 },
+  { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 5 },
+] as const;
+
 /** null = hidden; 0 = base camp callout … 5 = summit stage callout. */
 type CalloutIndex = 0 | 1 | 2 | 3 | 4 | 5;
+
+type MarkerVisualInput = {
+  isActive: boolean;
+  isReached: boolean;
+  isHovered: boolean;
+};
+
+type MarkerVisualStyles = {
+  background: string;
+  borderColor: string;
+  boxShadow: string;
+  transform: string;
+};
+
+/** Computes marker button visuals for default, hover, active, and visited states. */
+function getMarkerVisualStyles({
+  isActive,
+  isReached,
+  isHovered,
+}: MarkerVisualInput): MarkerVisualStyles {
+  let background: string = colors.confidentBlack;
+  const borderColor = colors.yellow;
+  let boxShadow = "0px 0px 6px 0px rgba(255, 230, 0, 0.25)";
+  let transform = "scale(1)";
+
+  if (isReached && !isActive) {
+    background = colors.yellowAlpha10;
+    boxShadow =
+      "0px 0px 8px 0px rgba(255, 230, 0, 0.4), 0px 0px 16px 0px rgba(255, 230, 0, 0.22)";
+  }
+
+  if (isActive) {
+    background = colors.yellowAlpha12;
+    boxShadow =
+      "0px 0px 12px 0px rgba(255, 230, 0, 0.65), 0px 0px 24px 0px rgba(255, 230, 0, 0.45), 0px 0px 40px 0px rgba(255, 230, 0, 0.2)";
+    transform = "scale(1.06)";
+  }
+
+  if (isHovered && !isActive) {
+    background = isReached ? colors.yellowAlpha10 : colors.surfaceOnDark;
+    boxShadow = isReached
+      ? "0px 0px 10px 0px rgba(255, 230, 0, 0.5), 0px 0px 22px 0px rgba(255, 230, 0, 0.35)"
+      : "0px 0px 10px 0px rgba(255, 230, 0, 0.45), 0px 0px 18px 0px rgba(255, 230, 0, 0.28)";
+  }
+
+  if (isHovered && isActive) {
+    boxShadow =
+      "0px 0px 14px 0px rgba(255, 230, 0, 0.72), 0px 0px 28px 0px rgba(255, 230, 0, 0.52), 0px 0px 44px 0px rgba(255, 230, 0, 0.24)";
+    transform = "scale(1.08)";
+  }
+
+  return { background, borderColor, boxShadow, transform };
+}
+
+function JourneyMarkerButton({
+  shapeClassName,
+  positionStyle,
+  isActive,
+  isReached,
+  onClick,
+  ariaLabel,
+  children,
+}: {
+  shapeClassName: string;
+  positionStyle: CSSProperties;
+  isActive: boolean;
+  isReached: boolean;
+  onClick: () => void;
+  ariaLabel: string;
+  children: React.ReactNode;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  const visual = getMarkerVisualStyles({ isActive, isReached, isHovered });
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      aria-expanded={isActive}
+      data-active={isActive || undefined}
+      data-reached={isReached || undefined}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`absolute flex cursor-pointer items-center justify-center border-2 border-solid transition-[background-color,border-color,box-shadow,transform] duration-[650ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${shapeClassName}`}
+      style={{
+        ...positionStyle,
+        background: visual.background,
+        borderColor: visual.borderColor,
+        outlineColor: colors.yellow,
+        boxShadow: visual.boxShadow,
+        transform: visual.transform,
+      }}
+    >
+      {children}
+      {isReached && !isActive ? (
+        <span
+          className="absolute bottom-1 right-1 size-1.5 rounded-full"
+          style={{ background: colors.yellow, boxShadow: "0 0 6px rgba(255, 230, 0, 0.55)" }}
+          aria-hidden
+        />
+      ) : null}
+    </button>
+  );
+}
 
 function CalloutBox({
   quote,
@@ -185,35 +306,75 @@ function CalloutBox({
   );
 }
 
+/** Title box below a journey marker — visible only while its callout is open. */
+function StageTitleLabel({
+  title,
+  left,
+  top,
+  width,
+  isActive,
+  isReached,
+}: {
+  title: string;
+  left: number;
+  top: number;
+  width: number;
+  isActive: boolean;
+  isReached: boolean;
+}) {
+  return (
+    <div
+      className="pointer-events-none absolute py-1.5 transition-[background-color,border-color,box-shadow] duration-[650ms] ease-out"
+      style={{
+        left,
+        top,
+        width,
+        paddingLeft: 4,
+        paddingRight: 4,
+        background: isActive ? colors.yellowAlpha12 : colors.confidentBlack,
+        border: `1px solid ${colors.yellow}`,
+        borderRadius: 4,
+        boxShadow: isActive
+          ? "0px 0px 8px 0px rgba(255, 230, 0, 0.35)"
+          : isReached
+            ? "0px 0px 4px 0px rgba(255, 230, 0, 0.2)"
+            : undefined,
+      }}
+      aria-hidden
+    >
+      <p
+        className="text-center text-[10px] uppercase leading-[14px]"
+        style={{
+          fontFamily: fonts.bold,
+          color: isActive || isReached ? colors.yellow : colors.white,
+        }}
+      >
+        {title}
+      </p>
+    </div>
+  );
+}
+
 function BaseCampStartMarker({
-  isExpanded,
+  isActive,
   isReached,
   onClick,
 }: {
-  isExpanded: boolean;
+  isActive: boolean;
   isReached: boolean;
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
+    <JourneyMarkerButton
+      shapeClassName="size-[46px] rounded-full"
+      positionStyle={{ left: 156, top: 366 }}
+      isActive={isActive}
+      isReached={isReached}
       onClick={onClick}
-      aria-label="Base Camp — start of journey"
-      aria-expanded={isExpanded}
-      className="absolute flex size-[46px] cursor-pointer items-center justify-center rounded-full border-2 border-solid transition-[opacity,box-shadow] duration-[650ms] ease-out hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-      style={{
-        left: 156,
-        top: 366,
-        background: colors.confidentBlack,
-        borderColor: colors.yellow,
-        outlineColor: colors.yellow,
-        boxShadow: isReached
-          ? "0px 0px 8px 0px rgba(255,230,0,0.4), 0px 0px 20px 0px rgba(255,230,0,0.35)"
-          : "0px 0px 8px 0px rgba(255,230,0,0.4)",
-      }}
+      ariaLabel="Base Camp — start of journey"
     >
       <CirclePlay size={22} strokeWidth={1.75} color={colors.yellow} aria-hidden />
-    </button>
+    </JourneyMarkerButton>
   );
 }
 
@@ -222,7 +383,7 @@ function StageNode({
   top,
   icon,
   alt,
-  isExpanded,
+  isActive,
   isReached,
   onClick,
 }: {
@@ -230,32 +391,23 @@ function StageNode({
   top: number;
   icon: string;
   alt: string;
-  isExpanded: boolean;
+  isActive: boolean;
   isReached: boolean;
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
+    <JourneyMarkerButton
+      shapeClassName="size-10 rounded-[20px]"
+      positionStyle={{ left, top }}
+      isActive={isActive}
+      isReached={isReached}
       onClick={onClick}
-      aria-label={alt}
-      aria-expanded={isExpanded}
-      className="absolute flex size-10 cursor-pointer items-center justify-center rounded-[20px] border-2 border-solid transition-[opacity,box-shadow] duration-[650ms] ease-out hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-      style={{
-        left,
-        top,
-        background: colors.confidentBlack,
-        borderColor: colors.yellow,
-        outlineColor: colors.yellow,
-        boxShadow: isReached
-          ? "0px 0px 8px 0px rgba(255,230,0,0.4), 0px 0px 20px 0px rgba(255,230,0,0.35)"
-          : undefined,
-      }}
+      ariaLabel={alt}
     >
       <div className="relative size-[18px] shrink-0 overflow-clip" aria-hidden>
         <img alt="" className="absolute inset-0 block size-full max-w-none" src={icon} />
       </div>
-    </button>
+    </JourneyMarkerButton>
   );
 }
 
@@ -595,8 +747,28 @@ function AscentCanvas() {
         ) : null,
       )}
 
+      {/* Stage title labels — shown below markers only while that callout is open */}
+      {STAGE_TITLE_LABELS.map(({ title, markerTop, markerSize, calloutIndex }) => {
+        if (!openCallouts.has(calloutIndex)) return null;
+
+        const callout = CALLOUTS[calloutIndex];
+        const progressThreshold = (calloutIndex + 1) as ProgressLevel;
+
+        return (
+          <StageTitleLabel
+            key={title}
+            title={title}
+            left={callout.left}
+            top={markerTop + markerSize + TITLE_LABEL_GAP}
+            width={callout.width}
+            isActive={openCallouts.has(calloutIndex)}
+            isReached={activeProgress >= progressThreshold}
+          />
+        );
+      })}
+
       <BaseCampStartMarker
-        isExpanded={openCallouts.has(0)}
+        isActive={openCallouts.has(0)}
         isReached={activeProgress >= 1}
         onClick={() => toggleCallout(0)}
       />
@@ -606,7 +778,7 @@ function AscentCanvas() {
         <StageNode
           key={node.alt}
           {...node}
-          isExpanded={openCallouts.has((index + 1) as CalloutIndex)}
+          isActive={openCallouts.has((index + 1) as CalloutIndex)}
           isReached={activeProgress >= index + 2}
           onClick={() => toggleCallout((index + 1) as CalloutIndex)}
         />

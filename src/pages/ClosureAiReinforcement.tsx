@@ -2,7 +2,6 @@ import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
-import { EYFooter } from "../design-kit/EYFooter";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { colors, contentRailStyle, fonts, spacing, spectrumCss } from "../design-kit/tokens";
 import { StepBadge } from "../design-kit/EYCard";
@@ -1516,9 +1515,6 @@ export default function ClosureAiReinforcement({
         onContinue={() => window.open("/control-room.html", "_blank", "noopener")}
         meta="Interactive assessment  ·  10 scenarios  ·  40 points"
       />
-
-      {/* EYFooter takes no onNavigate — its links carry their own href/onClick. */}
-      <EYFooter />
     </div>
   );
 }

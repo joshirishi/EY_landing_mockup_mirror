@@ -5,7 +5,6 @@
  *   - EY Logo (mark-only variant)
  *   - Optional link columns (Services, About, Legal)
  *   - Spectrum gradient top border accent
- *   - Copyright line
  *   - Optional social links slot
  *
  * Usage:
@@ -16,7 +15,7 @@
  */
 
 import { useState } from 'react';
-import { colors, fonts, spectrumCss } from './tokens';
+import { colors, contentRailStyle, fonts, spectrumCss } from './tokens';
 import { EYLogo } from './EYLogo';
 import type { CSSProperties, ReactNode } from 'react';
 
@@ -33,6 +32,7 @@ interface FooterColumn {
 
 interface EYFooterProps {
   columns?: FooterColumn[];
+  /** @deprecated Copyright row removed; kept for API compatibility */
   copyright?: string;
   /** Slot for social icons or extra content */
   socialSlot?: ReactNode;
@@ -44,7 +44,6 @@ interface EYFooterProps {
 
 export function EYFooter({
   columns = [],
-  copyright = '© EY. All Rights Reserved.',
   socialSlot,
   gradient = 4,
   style,
@@ -73,36 +72,26 @@ export function EYFooter({
 
       <div
         style={{
-          maxWidth: 1440,
-          margin: '0 auto',
-          padding: '40px 32px 32px',
+          ...contentRailStyle,
+          padding: '40px 0 32px',
         }}
       >
-        {/* ── Top row: logo + columns ──────────────────────────────────── */}
+        {/* ── Logo + optional link columns ─────────────────────────────── */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: columns.length > 0 ? `220px repeat(${columns.length}, 1fr)` : '1fr',
             gap: 48,
-            marginBottom: 40,
+            alignItems: columns.length > 0 ? 'start' : 'center',
           }}
         >
-          {/* Logo + tagline */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <EYLogo variant="horizontal-sm" theme="dark" />
-            <p style={{
-              fontFamily: "'EYInterstate:Light', Arial, sans-serif",
-              fontSize: 13,
-              color: colors.gray02,
-              lineHeight: 1.55,
-              margin: 0,
-              maxWidth: 180,
-            }}>
-              Building a better working world.
-            </p>
+            <EYLogo variant="mark-only" theme="dark" />
+            {socialSlot && (
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{socialSlot}</div>
+            )}
           </div>
 
-          {/* Link columns */}
           {columns.map((col) => (
             <div key={col.heading}>
               <p style={{
@@ -125,29 +114,6 @@ export function EYFooter({
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* ── Bottom row: copyright + social ───────────────────────────── */}
-        <div
-          style={{
-            borderTop: `1px solid rgba(255,255,255,0.08)`,
-            paddingTop: 20,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-            flexWrap: 'wrap',
-          }}
-        >
-          <p style={{
-            fontFamily: "'EYInterstate:Light', Arial, sans-serif",
-            fontSize: 12,
-            color: colors.gray02,
-            margin: 0,
-          }}>
-            {copyright}
-          </p>
-          {socialSlot && <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{socialSlot}</div>}
         </div>
       </div>
     </footer>
