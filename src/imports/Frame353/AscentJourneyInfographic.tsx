@@ -567,18 +567,20 @@ function AscentCanvas() {
       </div>
 
       {/* Thought-bubble callout — one visible at a time */}
-      {activeCallout !== null && (
-        <div
-          className="absolute"
-          style={{ left: CALLOUTS[activeCallout].left, top: CALLOUTS[activeCallout].top }}
-        >
-          <CalloutBox
-            quote={CALLOUTS[activeCallout].quote}
-            width={CALLOUTS[activeCallout].width}
-            rounded={"rounded" in CALLOUTS[activeCallout] ? CALLOUTS[activeCallout].rounded : 12}
-          />
-        </div>
-      )}
+      {activeCallout !== null && (() => {
+        // Bind once: re-indexing CALLOUTS on each access defeats the `in`
+        // narrowing below (only the summit entry carries `rounded`).
+        const callout = CALLOUTS[activeCallout];
+        return (
+          <div className="absolute" style={{ left: callout.left, top: callout.top }}>
+            <CalloutBox
+              quote={callout.quote}
+              width={callout.width}
+              rounded={"rounded" in callout ? callout.rounded : 12}
+            />
+          </div>
+        );
+      })()}
 
       <BaseCampStartMarker
         isExpanded={activeCallout === 0}

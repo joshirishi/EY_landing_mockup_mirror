@@ -68,11 +68,11 @@ export function EYNavbar({
         margin: '0 auto',
       }}>
         {/* Logo */}
+        {/* EYLogo has no style prop; it already derives cursor from onClick. */}
         <EYLogo
           variant="horizontal-sm"
           theme="dark"
           onClick={onLogoClick}
-          style={{ cursor: onLogoClick ? 'pointer' : 'default' }}
         />
 
         {/* Desktop nav links */}

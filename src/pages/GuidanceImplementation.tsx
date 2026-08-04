@@ -352,7 +352,7 @@ function Panel2() {
         <div style={sectionHeader}>
           <p style={eyebrow(C.yellow)}>Prompt Engineering Refresher</p>
           <h2 style={{ ...h2Style, color: C.onDark }}>Building Better Tax Prompts</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.onDarkMuted, marginBottom: 0 }}>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
             A prompt is the control surface for quality, scope and reviewability. Click an element to see it at work.
           </p>
         </div>
@@ -577,7 +577,7 @@ function Panel3() {
         <div style={sectionHeader}>
           <p style={eyebrow(C.eyebrowGold)}>Anatomy of a Good M365 Agent</p>
           <h2 style={{ ...h2Style, color: C.confidentBlack }}>Instruction Components</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 0 }}>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, marginBottom: 0 }}>
             Design the assistant like a repeatable tax process — not a generic chatbot. Click a component to see it in the workflow.
           </p>
         </div>
@@ -1251,7 +1251,7 @@ function Panel5() {
         <div style={sectionHeader}>
           <p style={eyebrow(C.confidentBlack)}>Sample Prompt Templates</p>
           <h2 style={{ ...h2Style, color: C.confidentBlack }}>Workshop Reference Library</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.gray01, marginBottom: 0 }}>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, marginBottom: 0 }}>
             Use the programme handouts for detailed templates; use this slide as the build menu.
           </p>
         </div>
@@ -1816,7 +1816,7 @@ function Panel6() {
         <div style={sectionHeader}>
           <p style={eyebrow(C.yellow)}>Sample M365 Agent Templates</p>
           <h2 style={{ ...h2Style, color: C.onDark }}>From Build Lab to Controlled Deployment</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body, color: C.onDarkMuted, marginBottom: 0 }}>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
             Convert draft instructions into pilots, adoption rituals and continuous refinement. Click an agent to see what it does.
           </p>
         </div>

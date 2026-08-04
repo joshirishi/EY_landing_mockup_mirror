@@ -2217,7 +2217,6 @@ function PromptingTechniquesWizard() {
           gap: 14,
         }}>
           {TECHNIQUE_FACETS.map(f => {
-            const isExample = f.key === "without" || f.key === "with";
             const text = technique[f.key];
             return (
               <section key={f.key} aria-labelledby={`tech-facet-${technique.id}-${f.key}`}>
@@ -2240,7 +2239,9 @@ function PromptingTechniquesWizard() {
                 >
                   {f.label}
                 </span>
-                {isExample ? (
+                {/* Inlined rather than a boolean flag so TS narrows f.key to
+                    the "without" | "with" variant TechniqueExampleQuote wants. */}
+                {f.key === "without" || f.key === "with" ? (
                   <TechniqueExampleQuote text={text} variant={f.key} />
                 ) : (
                   <p style={{

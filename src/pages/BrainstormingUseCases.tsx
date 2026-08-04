@@ -2004,7 +2004,7 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
                   borderTop: `3px solid ${phase.accent}`,
                   borderRight: i < 2 ? `1px solid rgba(255,255,255,0.08)` : "none",
                   padding: "18px 24px",
-                  background: phase.current ? "rgba(255,230,0,0.06)" : "transparent",
+                  background: "current" in phase && phase.current ? "rgba(255,230,0,0.06)" : "transparent",
                 }}
               >
                 <span style={{
