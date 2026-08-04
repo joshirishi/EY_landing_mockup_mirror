@@ -5,17 +5,19 @@
  * Fixed 1536×450 artboard, scales to container width via ResizeObserver.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { CirclePlay } from "lucide-react";
-import { colors, fonts } from "@/design-kit";
+import { colors, fonts, typeScale } from "@/design-kit";
 
 const W = 1536;
 const H = 450;
+const BANNER_HEIGHT = 44;
+const BANNER_TOP = H - BANNER_HEIGHT;
+const BANNER_FONT_SIZE = typeScale.label.size;
 
 const ASSET = {
   cleanBackground: "/ascent/clean-background.png",
   flag: "/ascent/flag.svg",
-  personStanding: "/ascent/person-standing.svg",
   iconBookOpen: "/ascent/icon-book-open.svg",
   iconSearch: "/ascent/icon-search.svg",
   iconCpu: "/ascent/icon-cpu.svg",
@@ -24,8 +26,96 @@ const ASSET = {
   bannerDot: "/ascent/banner-dot.svg",
   bannerLine: "/ascent/banner-line.svg",
   accentLine: "/ascent/accent-line.svg",
-  journeyPath: "/ascent/journey-path.svg",
 } as const;
+
+/** Figma Vector 2 — dashed ascending path (node 3811:4139). */
+const JOURNEY_PATH_D =
+  "M150.534 437.099L234.534 405.099C257.367 395.266 308.434 375.799 330.034 376.599C357.034 377.599 417.534 367.598 450.034 361.098C482.534 354.598 528.034 325.098 584.534 323.598C641.034 322.098 684.534 335.098 721.034 332.598C757.534 330.098 775.034 301.599 820.534 295.099C866.034 288.599 877.534 313.099 924.034 310.599C970.534 308.099 971.034 263.099 1012.03 265.599C1053.03 268.099 1054.03 295.099 1084.03 295.099C1114.03 295.099 1146.03 259.098 1159.03 243.598C1172.03 228.098 1179.03 216.098 1191.53 189.098C1201.53 167.498 1200.7 154.431 1199.03 150.598";
+
+const JOURNEY_PATH_LAYOUT = {
+  left: 187,
+  top: 116,
+  width: 1049.519,
+  height: 286.501,
+  viewBox: "0 0 1351.43 588.501",
+  /** Matches SVG `inset-[-52.56%_-14.42%_-52.85%_-14.34%]` — artboard → viewBox. */
+  svgInset: { top: 0.5256, right: 0.1442, bottom: 0.5285, left: 0.1434 },
+} as const;
+
+/** Artboard centers for base camp + 5 stages (button center = left/top + half size). */
+const PROGRESS_MARKER_CENTERS = [
+  { x: 179, y: 389 }, // base camp (156 + 23, 366 + 23)
+  { x: 379, y: 315 }, // stage 1
+  { x: 574, y: 280 }, // stage 2
+  { x: 789, y: 260 }, // stage 3
+  { x: 1038, y: 247 }, // stage 4
+  { x: 1241, y: 114 }, // stage 5
+] as const;
+
+/** 0 = none (dim baseline only), 1 = base camp, 2–6 = stages 1–5 / full path. */
+type ProgressLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+/** Max progress level — full yellow path when user selects summit (level 6). */
+const DEFAULT_PROGRESS: ProgressLevel = 6;
+
+const PATH_REVEAL_MS = 650;
+
+function getLitLength(
+  progressLevel: ProgressLevel,
+  pathMetrics: { total: number; stops: number[] } | null,
+): number {
+  if (progressLevel <= 0 || !pathMetrics) return 0;
+  if (progressLevel >= DEFAULT_PROGRESS) return pathMetrics.total;
+  return pathMetrics.stops[progressLevel - 1] ?? 0;
+}
+
+function artboardToViewBox(ax: number, ay: number) {
+  const svgLeft =
+    JOURNEY_PATH_LAYOUT.left - JOURNEY_PATH_LAYOUT.width * JOURNEY_PATH_LAYOUT.svgInset.left;
+  const svgTop =
+    JOURNEY_PATH_LAYOUT.top - JOURNEY_PATH_LAYOUT.height * JOURNEY_PATH_LAYOUT.svgInset.top;
+  return { x: ax - svgLeft, y: ay - svgTop };
+}
+
+/** Binary-search the closest path length to a viewBox point. */
+function closestPathLength(path: SVGPathElement, targetX: number, targetY: number): number {
+  const total = path.getTotalLength();
+  if (total <= 0) return 0;
+
+  const sampleSteps = 240;
+  let bestLen = 0;
+  let bestDist = Infinity;
+
+  for (let i = 0; i <= sampleSteps; i++) {
+    const len = (i / sampleSteps) * total;
+    const pt = path.getPointAtLength(len);
+    const dist = (pt.x - targetX) ** 2 + (pt.y - targetY) ** 2;
+    if (dist < bestDist) {
+      bestDist = dist;
+      bestLen = len;
+    }
+  }
+
+  const window = total / sampleSteps * 4;
+  let lo = Math.max(0, bestLen - window);
+  let hi = Math.min(total, bestLen + window);
+
+  for (let i = 0; i < 24; i++) {
+    const m1 = lo + (hi - lo) / 3;
+    const m2 = hi - (hi - lo) / 3;
+    const d1 = distAt(path, m1, targetX, targetY);
+    const d2 = distAt(path, m2, targetX, targetY);
+    if (d1 < d2) hi = m2;
+    else lo = m1;
+  }
+
+  return (lo + hi) / 2;
+}
+
+function distAt(path: SVGPathElement, len: number, tx: number, ty: number) {
+  const pt = path.getPointAtLength(len);
+  return (pt.x - tx) ** 2 + (pt.y - ty) ** 2;
+}
 
 const CALLOUTS = [
   { left: 44, top: 277, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
@@ -44,13 +134,8 @@ const STAGE_NODES = [
   { left: 1221, top: 94, icon: ASSET.iconShield, alt: "Peak Performance" },
 ] as const;
 
-const STAGE_LABELS = [
-  { left: 290, top: 346, width: 187, title: "1. Laying the Foundation", body: "I now have the basics of AI, prompting and M365 Copilot." },
-  { left: 509, top: 316, width: 160, title: "2. Discovering Opportunities", body: "I can identify high-value tax use cases and decide when to use prompts or Agents." },
-  { left: 726, top: 296, width: 150, title: "3. Building Solutions", body: "I can design effective prompts and build no-code Agents with confidence." },
-  { left: 956, top: 278, width: 164, title: "4. Embedding Confidence", body: "I am using AI in my day-to-day tax activities with greater confidence." },
-  { left: 1267, top: 148, width: 155, title: "5. Peak Performance", body: "I use AI responsibly, apply the right safeguards and continuously drive better outcomes for my business." },
-] as const;
+/** null = hidden; 0 = base camp callout … 5 = summit stage callout. */
+type CalloutIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
 function CalloutBox({
   quote,
@@ -87,70 +172,77 @@ function CalloutBox({
   );
 }
 
-function BaseCampStartMarker() {
+function BaseCampStartMarker({
+  isExpanded,
+  isReached,
+  onClick,
+}: {
+  isExpanded: boolean;
+  isReached: boolean;
+  onClick: () => void;
+}) {
   return (
-    <div
-      className="absolute flex size-[46px] items-center justify-center rounded-full border-2 border-solid shadow-[0px_0px_8px_0px_rgba(255,230,0,0.4)]"
-      style={{ left: 156, top: 366, background: colors.confidentBlack, borderColor: colors.yellow }}
+    <button
+      type="button"
+      onClick={onClick}
       aria-label="Base Camp — start of journey"
+      aria-expanded={isExpanded}
+      className="absolute flex size-[46px] cursor-pointer items-center justify-center rounded-full border-2 border-solid transition-[opacity,box-shadow] duration-[650ms] ease-out hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+      style={{
+        left: 156,
+        top: 366,
+        background: colors.confidentBlack,
+        borderColor: colors.yellow,
+        outlineColor: colors.yellow,
+        boxShadow: isReached
+          ? "0px 0px 8px 0px rgba(255,230,0,0.4), 0px 0px 20px 0px rgba(255,230,0,0.35)"
+          : "0px 0px 8px 0px rgba(255,230,0,0.4)",
+      }}
     >
       <CirclePlay size={22} strokeWidth={1.75} color={colors.yellow} aria-hidden />
-    </div>
+    </button>
   );
 }
 
-function StageNode({ left, top, icon, alt }: { left: number; top: number; icon: string; alt: string }) {
-  return (
-    <div
-      className="absolute flex size-10 items-center justify-center rounded-[20px] border-2 border-solid"
-      style={{ left, top, background: colors.confidentBlack, borderColor: colors.yellow }}
-      aria-hidden
-    >
-      <div className="relative size-[18px] shrink-0 overflow-clip">
-        <img alt={alt} className="absolute inset-0 block size-full max-w-none" src={icon} />
-      </div>
-    </div>
-  );
-}
-
-function StageLabel({
+function StageNode({
   left,
   top,
-  width,
-  title,
-  body,
+  icon,
+  alt,
+  isExpanded,
+  isReached,
+  onClick,
 }: {
   left: number;
   top: number;
-  width: number;
-  title: string;
-  body: string;
+  icon: string;
+  alt: string;
+  isExpanded: boolean;
+  isReached: boolean;
+  onClick: () => void;
 }) {
   return (
-    <div
-      className="absolute flex flex-col gap-1 px-1 py-3 mix-blend-hard-light"
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={alt}
+      aria-expanded={isExpanded}
+      className="absolute flex size-10 cursor-pointer items-center justify-center rounded-[20px] border-2 border-solid transition-[opacity,box-shadow] duration-[650ms] ease-out hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       style={{
         left,
         top,
-        width,
         background: colors.confidentBlack,
-        border: `1px solid ${colors.yellow}`,
-        borderRadius: 4,
+        borderColor: colors.yellow,
+        outlineColor: colors.yellow,
+        boxShadow: isReached
+          ? "0px 0px 8px 0px rgba(255,230,0,0.4), 0px 0px 20px 0px rgba(255,230,0,0.35)"
+          : undefined,
       }}
     >
-      <p
-        className="w-full text-[11px] uppercase leading-normal"
-        style={{ fontFamily: fonts.bold, color: colors.yellow }}
-      >
-        {title}
-      </p>
-      <p
-        className="w-full text-[10px] leading-[14px]"
-        style={{ fontFamily: fonts.regular, color: colors.gray02 }}
-      >
-        {body}
-      </p>
-    </div>
+      <div className="relative size-[18px] shrink-0 overflow-clip" aria-hidden>
+        <img alt="" className="absolute inset-0 block size-full max-w-none" src={icon} />
+      </div>
+    </button>
   );
 }
 
@@ -185,61 +277,241 @@ function HeaderTitleBlock() {
   );
 }
 
-function JourneyPath() {
+/** Figma node 3811:4139 — dashed ascending path with progressive yellow reveal. */
+function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
+  const uid = useId().replace(/:/g, "");
+  const glowFilterId = `${uid}-glow`;
+  const revealMaskId = `${uid}-reveal`;
+  const measureRef = useRef<SVGPathElement>(null);
+  const [pathMetrics, setPathMetrics] = useState<{ total: number; stops: number[] } | null>(null);
+
+  useLayoutEffect(() => {
+    const path = measureRef.current;
+    if (!path) return;
+
+    const total = path.getTotalLength();
+    const stops = PROGRESS_MARKER_CENTERS.map(({ x, y }) => {
+      const { x: vx, y: vy } = artboardToViewBox(x, y);
+      return closestPathLength(path, vx, vy);
+    });
+
+    // Ensure stops are monotonically increasing along the path.
+    for (let i = 1; i < stops.length; i++) {
+      stops[i] = Math.max(stops[i], stops[i - 1]);
+    }
+
+    setPathMetrics({ total, stops });
+  }, []);
+
+  const totalLength = pathMetrics?.total ?? 0;
+  const revealedLength = Math.min(getLitLength(progressLevel, pathMetrics), totalLength);
+
+  // The visible stroke carries the decorative "6 6" dashes, so its own dashoffset
+  // can only slide that pattern along — it cannot clip the path. The reveal is
+  // driven by a separate solid stroke inside a mask, whose dasharray is the full
+  // path length: animating its offset from `total` → `total - lit` wipes the
+  // yellow in (and back out again when a previous marker is selected).
+  const maskDashArray = totalLength || 1;
+  const maskDashOffset = maskDashArray - revealedLength;
+
   return (
     <div
-      className="pointer-events-none absolute"
-      style={{ left: 187, top: 116, width: 1049.519, height: 286.501 }}
-      data-node-id="3754:4251"
-      aria-hidden
+      className="absolute"
+      style={{
+        left: JOURNEY_PATH_LAYOUT.left,
+        top: JOURNEY_PATH_LAYOUT.top,
+        width: JOURNEY_PATH_LAYOUT.width,
+        height: JOURNEY_PATH_LAYOUT.height,
+      }}
+      data-name="journey-path-container"
+      data-node-id="3811:4139"
     >
-      <div
-        className="absolute"
-        style={{
-          top: "-52.56%",
-          right: "-14.42%",
-          bottom: "-52.85%",
-          left: "-14.34%",
-        }}
+      <svg
+        id="journey-path"
+        data-name="journey-path"
+        className="absolute block overflow-visible inset-[-52.56%_-14.42%_-52.85%_-14.34%]"
+        style={{ pointerEvents: "none" }}
+        viewBox={JOURNEY_PATH_LAYOUT.viewBox}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden
       >
-        <img alt="" className="block size-full max-w-none" src={ASSET.journeyPath} />
-      </div>
+        <defs>
+          <filter
+            id={glowFilterId}
+            x="0"
+            y="0"
+            width="1351.43"
+            height="588.501"
+            filterUnits="userSpaceOnUse"
+            colorInterpolationFilters="sRGB"
+          >
+            <feFlood floodOpacity="0" result="BackgroundImageFix" />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feMorphology radius="2" operator="dilate" in="SourceAlpha" result="effect1_dropShadow" />
+            <feOffset />
+            <feGaussianBlur stdDeviation="3" />
+            <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.901961 0 0 0 0 0 0 0 0 0.95 0" />
+            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feMorphology radius="4" operator="dilate" in="SourceAlpha" result="effect2_dropShadow" />
+            <feOffset />
+            <feGaussianBlur stdDeviation="8" />
+            <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.901961 0 0 0 0 0 0 0 0 0.9 0" />
+            <feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow" />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feMorphology radius="6" operator="dilate" in="SourceAlpha" result="effect3_dropShadow" />
+            <feOffset />
+            <feGaussianBlur stdDeviation="20" />
+            <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.901961 0 0 0 0 0 0 0 0 0.6 0" />
+            <feBlend mode="normal" in2="effect2_dropShadow" result="effect3_dropShadow" />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feMorphology radius="8" operator="dilate" in="SourceAlpha" result="effect4_dropShadow" />
+            <feOffset />
+            <feGaussianBlur stdDeviation="40" />
+            <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.901961 0 0 0 0 0 0 0 0 0.3 0" />
+            <feBlend mode="normal" in2="effect3_dropShadow" result="effect4_dropShadow" />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feMorphology radius="10" operator="dilate" in="SourceAlpha" result="effect5_dropShadow" />
+            <feOffset />
+            <feGaussianBlur stdDeviation="70" />
+            <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.901961 0 0 0 0 0 0 0 0 0.12 0" />
+            <feBlend mode="normal" in2="effect4_dropShadow" result="effect5_dropShadow" />
+            <feBlend mode="normal" in="SourceGraphic" in2="effect5_dropShadow" result="shape" />
+          </filter>
+
+          {/*
+            Progressive reveal wipe. One solid dash the length of the whole path;
+            sliding its offset uncovers the yellow stroke up to the selected
+            marker. Stroke is wider than the 3px path so the dashes are never
+            clipped along their edges, and butt caps keep the leading edge a
+            clean vertical wipe rather than a rounded bulge.
+          */}
+          <mask id={revealMaskId} maskUnits="userSpaceOnUse">
+            <path
+              d={JOURNEY_PATH_D}
+              fill="none"
+              stroke="#fff"
+              strokeWidth={24}
+              strokeLinecap="butt"
+              strokeDasharray={maskDashArray}
+              strokeDashoffset={maskDashOffset}
+              style={{ transition: `stroke-dashoffset ${PATH_REVEAL_MS}ms ease` }}
+            />
+          </mask>
+        </defs>
+
+        {/* Hidden geometry used to sample marker stops along the path */}
+        <path ref={measureRef} d={JOURNEY_PATH_D} fill="none" stroke="none" visibility="hidden" />
+
+        {/* Dim baseline — full path, always drawn; the lit stroke covers it dash-for-dash */}
+        <path
+          d={JOURNEY_PATH_D}
+          fill="none"
+          stroke={colors.white}
+          strokeOpacity={0.22}
+          strokeWidth={3}
+          strokeMiterlimit={4.28366}
+          strokeDasharray="6 6"
+          strokeLinecap="round"
+          style={{ pointerEvents: "stroke", cursor: "pointer" }}
+          data-name="journey-path-baseline"
+        />
+
+        {/* Lit overlay — yellow dashed stroke with glow, wiped in by the reveal mask */}
+        <g filter={`url(#${glowFilterId})`}>
+          <g mask={`url(#${revealMaskId})`}>
+            <path
+              id="journey-path-stroke"
+              data-name="journey-path-stroke"
+              d={JOURNEY_PATH_D}
+              fill="none"
+              stroke={colors.yellow}
+              strokeWidth={3}
+              strokeMiterlimit={4.28366}
+              strokeDasharray="6 6"
+              strokeLinecap="round"
+              style={{ pointerEvents: "stroke", cursor: "pointer" }}
+            />
+          </g>
+        </g>
+
+        {/* Wide invisible hit target — keeps glow path selectable without blocking markers */}
+        <path
+          d={JOURNEY_PATH_D}
+          fill="none"
+          stroke="transparent"
+          strokeWidth={16}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ pointerEvents: "stroke", cursor: "pointer" }}
+          data-name="journey-path-hit"
+        />
+      </svg>
     </div>
   );
 }
 
+const bannerTextStyle = {
+  fontFamily: fonts.bold,
+  fontSize: BANNER_FONT_SIZE,
+  letterSpacing: typeScale.label.tracking,
+  textTransform: "uppercase" as const,
+};
+
 function BottomBanner() {
   return (
     <div
-      className="absolute left-0 top-[424px] flex h-[26px] w-full items-center justify-center border-t border-solid"
-      style={{ background: colors.confidentBlack, borderColor: colors.borderOnDark }}
+      className="absolute left-0 flex w-full items-center justify-center border-t border-solid"
+      style={{
+        top: BANNER_TOP,
+        height: BANNER_HEIGHT,
+        background: colors.confidentBlack,
+        borderColor: colors.borderOnDark,
+      }}
     >
-      <div className="flex items-center gap-4">
-        <p
-          className="shrink-0 whitespace-nowrap text-[9px] uppercase tracking-[1px]"
-          style={{ fontFamily: fonts.bold, color: colors.gray02 }}
-        >
+      <div className="flex items-center gap-6">
+        <p className="shrink-0 whitespace-nowrap" style={{ ...bannerTextStyle, color: colors.gray02 }}>
           From uncertainty to impact
         </p>
-        <div className="relative size-1 shrink-0 overflow-clip">
+        <div className="relative size-1.5 shrink-0 overflow-clip">
           <img alt="" className="absolute inset-0 block size-full max-w-none" src={ASSET.bannerDot} />
         </div>
-        <p
-          className="shrink-0 whitespace-nowrap text-[9px] uppercase tracking-[1px]"
-          style={{ fontFamily: fonts.bold, color: colors.gray02 }}
-        >
+        <p className="shrink-0 whitespace-nowrap" style={{ ...bannerTextStyle, color: colors.gray02 }}>
           From learning to leading
         </p>
-        <div className="relative size-1 shrink-0 overflow-clip">
+        <div className="relative size-1.5 shrink-0 overflow-clip">
           <img alt="" className="absolute inset-0 block size-full max-w-none" src={ASSET.bannerDot} />
         </div>
-        <p
-          className="shrink-0 whitespace-nowrap text-[9px] uppercase tracking-[1px]"
-          style={{ fontFamily: fonts.bold, color: colors.yellow }}
-        >
+        <p className="shrink-0 whitespace-nowrap" style={{ ...bannerTextStyle, color: colors.yellow }}>
           From user to AI-enabled tax professional
         </p>
-        <div className="relative h-0 w-[60px] shrink-0">
+        <div className="relative h-0 w-[72px] shrink-0">
           <img alt="" className="block size-full max-w-none" src={ASSET.bannerLine} />
         </div>
       </div>
@@ -248,6 +520,21 @@ function BottomBanner() {
 }
 
 function AscentCanvas() {
+  /** Which callout is visible; null = all hidden. One at a time. */
+  const [activeCallout, setActiveCallout] = useState<CalloutIndex | null>(null);
+  /** Path lit level — 0 = dim baseline only; 1–6 = lit to marker when selected. */
+  const [activeProgress, setActiveProgress] = useState<ProgressLevel>(0);
+
+  const handleMarkerClick = (calloutIndex: CalloutIndex, progressLevel: ProgressLevel) => {
+    if (activeCallout === calloutIndex) {
+      setActiveCallout(null);
+      setActiveProgress(0);
+    } else {
+      setActiveCallout(calloutIndex);
+      setActiveProgress(progressLevel);
+    }
+  };
+
   return (
     <div
       className="relative size-full overflow-clip"
@@ -255,25 +542,20 @@ function AscentCanvas() {
       data-name="the-ascent-journey-infographic"
       data-node-id="3743:16946"
     >
-      {/* Mountain photograph + tint overlay */}
-      <div className="absolute left-0 top-0 h-[444px] w-full">
+      {/* Mountain photograph — hiker + sunset baked into clean-background.png */}
+      <div className="absolute left-0 top-0 w-full" style={{ height: BANNER_TOP }}>
         <img
           alt=""
-          className="pointer-events-none absolute inset-0 size-full max-w-none object-cover"
+          className="pointer-events-none absolute inset-0 size-full max-w-none object-cover object-center"
           src={ASSET.cleanBackground}
         />
       </div>
-      <div
-        className="absolute left-0 top-0 h-[450px] w-full"
-        style={{ background: "rgba(26, 26, 36, 0.45)" }}
-        aria-hidden
-      />
 
       <HeaderTitleBlock />
-      <JourneyPath />
+      <JourneyPath progressLevel={activeProgress} />
 
-      {/* Summit flag */}
-      <div className="absolute left-[1300px] top-[45px] flex flex-col items-center gap-1">
+      {/* Summit flag — anchored to Stage 5 (Peak Performance) node center */}
+      <div className="absolute left-[1229px] flex flex-col items-center gap-1" style={{ top: 47 }}>
         <div className="relative size-6 shrink-0 overflow-clip">
           <img alt="" className="absolute inset-0 block size-full max-w-none" src={ASSET.flag} />
         </div>
@@ -284,46 +566,35 @@ function AscentCanvas() {
         />
       </div>
 
-      {/* Base camp hiker silhouette */}
-      <div className="absolute left-[158px] top-[178px] flex flex-col items-center">
-        <div className="relative h-16 w-8 shrink-0 overflow-clip">
-          <img alt="" className="absolute inset-0 block size-full max-w-none" src={ASSET.personStanding} />
+      {/* Thought-bubble callout — one visible at a time */}
+      {activeCallout !== null && (
+        <div
+          className="absolute"
+          style={{ left: CALLOUTS[activeCallout].left, top: CALLOUTS[activeCallout].top }}
+        >
+          <CalloutBox
+            quote={CALLOUTS[activeCallout].quote}
+            width={CALLOUTS[activeCallout].width}
+            rounded={"rounded" in CALLOUTS[activeCallout] ? CALLOUTS[activeCallout].rounded : 12}
+          />
         </div>
-      </div>
+      )}
 
-      {/* Thought-bubble callouts */}
-      {CALLOUTS.map((c) => (
-        <div key={c.quote.slice(0, 24)} className="absolute" style={{ left: c.left, top: c.top }}>
-          <CalloutBox quote={c.quote} width={c.width} rounded={"rounded" in c ? c.rounded : 12} />
-        </div>
-      ))}
-
-      <BaseCampStartMarker />
+      <BaseCampStartMarker
+        isExpanded={activeCallout === 0}
+        isReached={activeProgress >= 1}
+        onClick={() => handleMarkerClick(0, 1)}
+      />
 
       {/* Stage icon nodes */}
-      {STAGE_NODES.map((node) => (
-        <StageNode key={node.alt} {...node} />
-      ))}
-
-      {/* Base camp label */}
-      <div className="absolute left-[41px] top-[374px] flex w-[115px] flex-col items-end gap-0.5">
-        <p
-          className="shrink-0 whitespace-nowrap text-[11px] uppercase"
-          style={{ fontFamily: fonts.bold, color: colors.yellow }}
-        >
-          Base Camp
-        </p>
-        <p
-          className="min-w-full text-right text-[10px] leading-[14px]"
-          style={{ fontFamily: fonts.regular, color: colors.gray02 }}
-        >
-          Uncertain and unsure
-        </p>
-      </div>
-
-      {/* Stage labels */}
-      {STAGE_LABELS.map((label) => (
-        <StageLabel key={label.title} {...label} />
+      {STAGE_NODES.map((node, index) => (
+        <StageNode
+          key={node.alt}
+          {...node}
+          isExpanded={activeCallout === index + 1}
+          isReached={activeProgress >= index + 2}
+          onClick={() => handleMarkerClick((index + 1) as CalloutIndex, (index + 2) as ProgressLevel)}
+        />
       ))}
 
       <BottomBanner />
