@@ -131,7 +131,7 @@ function distAt(path: SVGPathElement, len: number, tx: number, ty: number) {
 }
 
 const CALLOUTS = [
-  { left: 44, top: 277, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
+  { left: 210, top: 310, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
   { left: 290, top: 195, width: 187, quote: "AI feels a lot less intimidating now. I finally understand how prompts and Microsoft 365 Copilot work." },
   { left: 502, top: 123, width: 167, quote: "I can clearly see where AI fits across our tax processes. Some use cases need prompts. Others need Agents." },
   { left: 722, top: 106, width: 150, quote: "I never thought I could build an Agent without coding. I'm starting to solve tax problems differently." },
