@@ -17,7 +17,7 @@ const BANNER_FONT_SIZE = typeScale.label.size;
 
 const ASSET = {
   cleanBackground: "/ascent/clean-background.png",
-  flag: "/ascent/flag.svg",
+  flag: "/ascent/Flag.png",
   iconBookOpen: "/ascent/icon-book-open.svg",
   iconSearch: "/ascent/icon-search.svg",
   iconCpu: "/ascent/icon-cpu.svg",
@@ -60,13 +60,26 @@ const DEFAULT_PROGRESS: ProgressLevel = 6;
 
 const PATH_REVEAL_MS = 650;
 
+/**
+ * How much of the path is lit, measured from the start.
+ *
+ * The reveal is cumulative: selecting a marker extends the glow up to the span
+ * that ends at the NEXT marker, so each new selection adds to what is already
+ * lit rather than moving it. Deselecting back to an earlier marker shortens
+ * this value, and the stroke recoils along the same path.
+ *
+ *   level 1 (base camp) → stops[1]  (lit through the first span)
+ *   level 2 (stage 1)   → stops[2]
+ *   …
+ *   level 6 (summit)    → the whole path
+ */
 function getLitLength(
   progressLevel: ProgressLevel,
   pathMetrics: { total: number; stops: number[] } | null,
 ): number {
   if (progressLevel <= 0 || !pathMetrics) return 0;
   if (progressLevel >= DEFAULT_PROGRESS) return pathMetrics.total;
-  return pathMetrics.stops[progressLevel - 1] ?? 0;
+  return pathMetrics.stops[progressLevel] ?? pathMetrics.total;
 }
 
 function artboardToViewBox(ax: number, ay: number) {
@@ -307,10 +320,10 @@ function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
   const revealedLength = Math.min(getLitLength(progressLevel, pathMetrics), totalLength);
 
   // The visible stroke carries the decorative "6 6" dashes, so its own dashoffset
-  // can only slide that pattern along — it cannot clip the path. The reveal is
-  // driven by a separate solid stroke inside a mask, whose dasharray is the full
-  // path length: animating its offset from `total` → `total - lit` wipes the
-  // yellow in (and back out again when a previous marker is selected).
+  // could only slide that pattern along — it cannot clip the path. The reveal is
+  // driven instead by a solid stroke inside a mask whose dasharray is the whole
+  // path length. Keeping that dasharray CONSTANT and animating only the offset
+  // makes the lit edge grow and recoil smoothly along the path.
   const maskDashArray = totalLength || 1;
   const maskDashOffset = maskDashArray - revealedLength;
 
@@ -520,20 +533,26 @@ function BottomBanner() {
 }
 
 function AscentCanvas() {
-  /** Which callout is visible; null = all hidden. One at a time. */
-  const [activeCallout, setActiveCallout] = useState<CalloutIndex | null>(null);
-  /** Path lit level — 0 = dim baseline only; 1–6 = lit to marker when selected. */
-  const [activeProgress, setActiveProgress] = useState<ProgressLevel>(0);
+  /** Every marker the user has opened. Callouts persist until clicked again. */
+  const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(
+    () => new Set<CalloutIndex>(),
+  );
 
-  const handleMarkerClick = (calloutIndex: CalloutIndex, progressLevel: ProgressLevel) => {
-    if (activeCallout === calloutIndex) {
-      setActiveCallout(null);
-      setActiveProgress(0);
-    } else {
-      setActiveCallout(calloutIndex);
-      setActiveProgress(progressLevel);
-    }
+  const toggleCallout = (calloutIndex: CalloutIndex) => {
+    setOpenCallouts((prev) => {
+      const next = new Set(prev);
+      if (next.has(calloutIndex)) next.delete(calloutIndex);
+      else next.add(calloutIndex);
+      return next;
+    });
   };
+
+  // The glow reaches as far as the furthest marker still open, so closing the
+  // leading marker recoils the path back to the one before it.
+  const activeProgress: ProgressLevel =
+    openCallouts.size === 0
+      ? 0
+      : ((Math.max(...openCallouts) + 1) as ProgressLevel);
 
   return (
     <div
@@ -555,37 +574,31 @@ function AscentCanvas() {
       <JourneyPath progressLevel={activeProgress} />
 
       {/* Summit flag — anchored to Stage 5 (Peak Performance) node center */}
-      <div className="absolute left-[1229px] flex flex-col items-center gap-1" style={{ top: 47 }}>
-        <div className="relative size-6 shrink-0 overflow-clip">
-          <img alt="" className="absolute inset-0 block size-full max-w-none" src={ASSET.flag} />
-        </div>
-        <div
-          className="absolute left-[6px] top-[15px] h-8 w-3 opacity-15"
-          style={{ background: colors.yellow }}
-          aria-hidden
-        />
+      <div className="absolute left-[1221px]" style={{ top: 40 }}>
+        <img alt="" className="block h-16 w-auto" src={ASSET.flag} />
       </div>
 
-      {/* Thought-bubble callout — one visible at a time */}
-      {activeCallout !== null && (() => {
-        // Bind once: re-indexing CALLOUTS on each access defeats the `in`
-        // narrowing below (only the summit entry carries `rounded`).
-        const callout = CALLOUTS[activeCallout];
-        return (
-          <div className="absolute" style={{ left: callout.left, top: callout.top }}>
+      {/* Thought-bubble callouts — every opened marker stays visible */}
+      {CALLOUTS.map((callout, index) =>
+        openCallouts.has(index as CalloutIndex) ? (
+          <div
+            key={callout.quote}
+            className="absolute"
+            style={{ left: callout.left, top: callout.top }}
+          >
             <CalloutBox
               quote={callout.quote}
               width={callout.width}
               rounded={"rounded" in callout ? callout.rounded : 12}
             />
           </div>
-        );
-      })()}
+        ) : null,
+      )}
 
       <BaseCampStartMarker
-        isExpanded={activeCallout === 0}
+        isExpanded={openCallouts.has(0)}
         isReached={activeProgress >= 1}
-        onClick={() => handleMarkerClick(0, 1)}
+        onClick={() => toggleCallout(0)}
       />
 
       {/* Stage icon nodes */}
@@ -593,9 +606,9 @@ function AscentCanvas() {
         <StageNode
           key={node.alt}
           {...node}
-          isExpanded={activeCallout === index + 1}
+          isExpanded={openCallouts.has((index + 1) as CalloutIndex)}
           isReached={activeProgress >= index + 2}
-          onClick={() => handleMarkerClick((index + 1) as CalloutIndex, (index + 2) as ProgressLevel)}
+          onClick={() => toggleCallout((index + 1) as CalloutIndex)}
         />
       ))}
 
