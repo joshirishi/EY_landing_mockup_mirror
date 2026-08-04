@@ -37,6 +37,7 @@ import {
   isModuleAvailable,
   type CurriculumModule,
   type ModuleId,
+  type SubModule,
 } from "./curriculum";
 
 /**
@@ -88,6 +89,12 @@ type ModuleHeaderProps =
       phaseNumber?: number;
       /** Sub-phase label shown after the module chip (e.g. "2.1"). When provided, renders the two-chip style. */
       subPhaseLabel?: string;
+      /**
+       * Section tabs for phase-overview pages, which have no curriculum module to
+       * derive them from. When provided, these drive the learn/apply tab rows and
+       * the scroll-spy instead of getSubModuleGroups().
+       */
+      sections?: SubModule[];
     };
 
 export function ModuleHeader(props: ModuleHeaderProps) {
@@ -104,6 +111,11 @@ export function ModuleHeader(props: ModuleHeaderProps) {
     : undefined;
   const subPhaseLabel = isPhaseOverview
     ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).subPhaseLabel
+    : undefined;
+  // Phase-overview pages have no curriculum module to derive section tabs from,
+  // so they pass their own list; module pages always use getSubModuleGroups().
+  const overrideSections = isPhaseOverview
+    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections
     : undefined;
 
   const workshopDisplayLabel = overridePhaseLabel

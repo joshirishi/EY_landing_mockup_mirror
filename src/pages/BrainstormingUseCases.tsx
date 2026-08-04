@@ -1461,6 +1461,9 @@ function ActivityLevelChoiceSection() {
                   {row.response}
                 </span>
               </div>
+            );
+          })}
+        </div>
 
         {/* Key message bar */}
         <div style={{
