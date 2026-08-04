@@ -10,7 +10,7 @@ import { CirclePlay } from "lucide-react";
 import { colors, fonts, typeScale } from "@/design-kit";
 
 const W = 1536;
-const H = 450;
+const H = 490;
 const BANNER_HEIGHT = 44;
 const BANNER_TOP = H - BANNER_HEIGHT;
 const BANNER_FONT_SIZE = typeScale.label.size;
