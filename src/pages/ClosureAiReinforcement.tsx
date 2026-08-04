@@ -302,7 +302,9 @@ function HeroSection() {
     padding: "28px 28px 32px",
   };
 
-  const eyebrowStyle = (c = colors.yellow): React.CSSProperties => ({
+  // `c: string` — without it the default narrows the param to the literal
+  // "#FFE600" and every other token colour is rejected.
+  const eyebrowStyle = (c: string = colors.yellow): React.CSSProperties => ({
     fontFamily: fonts.bold,
     fontSize: 10,
     letterSpacing: "0.1em",
@@ -1158,7 +1160,8 @@ export default function ClosureAiReinforcement({
   onNavigate: (path: string) => void;
 }) {
   useModuleSectionHashScroll();
-  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); }, []);
+  // Scroll-to-top is handled globally by <ScrollToTop/> in routes.tsx. A
+  // window.scrollTo() here was a no-op anyway — the scroller is the Root shell.
 
   return (
     <div
@@ -1514,7 +1517,8 @@ export default function ClosureAiReinforcement({
         meta="Interactive assessment  ·  10 scenarios  ·  40 points"
       />
 
-      <EYFooter onNavigate={onNavigate} />
+      {/* EYFooter takes no onNavigate — its links carry their own href/onClick. */}
+      <EYFooter />
     </div>
   );
 }
