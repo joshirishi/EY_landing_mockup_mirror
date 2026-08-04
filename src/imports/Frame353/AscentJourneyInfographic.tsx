@@ -64,8 +64,7 @@ function getLitLength(
   progressLevel: ProgressLevel,
   pathMetrics: { total: number; stops: number[] } | null,
 ): number {
-  if (progressLevel <= 0) return 0;
-  if (!pathMetrics) return progressLevel >= DEFAULT_PROGRESS ? Number.MAX_SAFE_INTEGER : 0;
+  if (progressLevel <= 0 || !pathMetrics) return 0;
   if (progressLevel >= DEFAULT_PROGRESS) return pathMetrics.total;
   return pathMetrics.stops[progressLevel - 1] ?? 0;
 }
@@ -280,7 +279,9 @@ function HeaderTitleBlock() {
 
 /** Figma node 3811:4139 — dashed ascending path with progressive yellow reveal. */
 function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
-  const glowFilterId = useId().replace(/:/g, "");
+  const uid = useId().replace(/:/g, "");
+  const glowFilterId = `${uid}-glow`;
+  const revealMaskId = `${uid}-reveal`;
   const measureRef = useRef<SVGPathElement>(null);
   const [pathMetrics, setPathMetrics] = useState<{ total: number; stops: number[] } | null>(null);
 
@@ -303,15 +304,15 @@ function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
   }, []);
 
   const totalLength = pathMetrics?.total ?? 0;
-  const litLength = getLitLength(progressLevel, pathMetrics);
-  const revealedLength = pathMetrics ? Math.min(litLength, totalLength) : litLength;
-  const dashOffset =
-    pathMetrics || progressLevel < DEFAULT_PROGRESS
-      ? Math.max(0, totalLength - revealedLength)
-      : 0;
+  const revealedLength = Math.min(getLitLength(progressLevel, pathMetrics), totalLength);
 
-  const dashTransition = `stroke-dashoffset ${PATH_REVEAL_MS}ms ease`;
-  const isFullyLit = progressLevel >= DEFAULT_PROGRESS;
+  // The visible stroke carries the decorative "6 6" dashes, so its own dashoffset
+  // can only slide that pattern along — it cannot clip the path. The reveal is
+  // driven by a separate solid stroke inside a mask, whose dasharray is the full
+  // path length: animating its offset from `total` → `total - lit` wipes the
+  // yellow in (and back out again when a previous marker is selected).
+  const maskDashArray = totalLength || 1;
+  const maskDashOffset = maskDashArray - revealedLength;
 
   return (
     <div
@@ -403,49 +404,61 @@ function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
             <feBlend mode="normal" in2="effect4_dropShadow" result="effect5_dropShadow" />
             <feBlend mode="normal" in="SourceGraphic" in2="effect5_dropShadow" result="shape" />
           </filter>
+
+          {/*
+            Progressive reveal wipe. One solid dash the length of the whole path;
+            sliding its offset uncovers the yellow stroke up to the selected
+            marker. Stroke is wider than the 3px path so the dashes are never
+            clipped along their edges, and butt caps keep the leading edge a
+            clean vertical wipe rather than a rounded bulge.
+          */}
+          <mask id={revealMaskId} maskUnits="userSpaceOnUse">
+            <path
+              d={JOURNEY_PATH_D}
+              fill="none"
+              stroke="#fff"
+              strokeWidth={24}
+              strokeLinecap="butt"
+              strokeDasharray={maskDashArray}
+              strokeDashoffset={maskDashOffset}
+              style={{ transition: `stroke-dashoffset ${PATH_REVEAL_MS}ms ease` }}
+            />
+          </mask>
         </defs>
 
         {/* Hidden geometry used to sample marker stops along the path */}
         <path ref={measureRef} d={JOURNEY_PATH_D} fill="none" stroke="none" visibility="hidden" />
 
-        {/* Dim baseline — unlit remainder only; hidden when the full path is lit */}
+        {/* Dim baseline — full path, always drawn; the lit stroke covers it dash-for-dash */}
         <path
           d={JOURNEY_PATH_D}
           fill="none"
           stroke={colors.white}
-          strokeOpacity={isFullyLit ? 0 : 0.22}
+          strokeOpacity={0.22}
           strokeWidth={3}
           strokeMiterlimit={4.28366}
           strokeDasharray="6 6"
           strokeLinecap="round"
-          style={{
-            pointerEvents: "stroke",
-            cursor: "pointer",
-            transition: `stroke-opacity ${PATH_REVEAL_MS}ms ease`,
-          }}
+          style={{ pointerEvents: "stroke", cursor: "pointer" }}
           data-name="journey-path-baseline"
         />
 
-        {/* Lit overlay — yellow dashed stroke with glow, revealed via dashoffset */}
+        {/* Lit overlay — yellow dashed stroke with glow, wiped in by the reveal mask */}
         <g filter={`url(#${glowFilterId})`}>
-          <path
-            id="journey-path-stroke"
-            data-name="journey-path-stroke"
-            d={JOURNEY_PATH_D}
-            fill="none"
-            stroke={colors.yellow}
-            strokeWidth={3}
-            strokeMiterlimit={4.28366}
-            strokeDasharray="6 6"
-            strokeDashoffset={dashOffset}
-            strokeLinecap="round"
-            style={{
-              pointerEvents: "stroke",
-              cursor: "pointer",
-              transition: dashTransition,
-              opacity: progressLevel <= 0 || revealedLength <= 0 ? 0 : 1,
-            }}
-          />
+          <g mask={`url(#${revealMaskId})`}>
+            <path
+              id="journey-path-stroke"
+              data-name="journey-path-stroke"
+              d={JOURNEY_PATH_D}
+              fill="none"
+              stroke={colors.yellow}
+              strokeWidth={3}
+              strokeMiterlimit={4.28366}
+              strokeDasharray="6 6"
+              strokeLinecap="round"
+              style={{ pointerEvents: "stroke", cursor: "pointer" }}
+            />
+          </g>
         </g>
 
         {/* Wide invisible hit target — keeps glow path selectable without blocking markers */}
