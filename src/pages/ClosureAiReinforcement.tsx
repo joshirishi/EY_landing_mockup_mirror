@@ -61,7 +61,6 @@ function RecogniseTheRisk() {
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.white,
-        borderTop: `1px solid ${colors.gray02}`,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
