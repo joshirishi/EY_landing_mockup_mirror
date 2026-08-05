@@ -60,7 +60,8 @@ function RecogniseTheRisk() {
       aria-labelledby="risk-heading"
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.offWhite,
+        background: colors.white,
+        borderTop: `1px solid ${colors.gray02}`,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
