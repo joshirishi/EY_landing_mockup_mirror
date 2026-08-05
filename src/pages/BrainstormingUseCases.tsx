@@ -5,6 +5,7 @@ import { ModuleHeader } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
+import heroImg from "../assets/images/GettyImages-2212662948.jpg";
 
 // ── Quick Recall data — verbatim from PDF slide 2 ────────────────────────────
 const PROMPT_TASKS = [
@@ -2365,12 +2366,20 @@ function HeroSection() {
     <section
       id="hero"
       style={{
-        background: colors.confidentBlack,
+        backgroundColor: colors.confidentBlack,
+        backgroundImage: `url(${heroImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
+        backgroundRepeat: "no-repeat",
         padding: `${spacing.sectionPaddingY} 0 64px`,
         width: "100%",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column", gap: 0 }}>
+      {/* Left scrim — keeps type readable over the image bloom */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(26,26,36,0.97) 0%, rgba(26,26,36,0.84) 45%, rgba(26,26,36,0.45) 72%, rgba(26,26,36,0.28) 100%)", pointerEvents: "none" }} />
+      <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column", gap: 0, position: "relative", zIndex: 1 }}>
 
         {/* Headline line 1 */}
         <h1

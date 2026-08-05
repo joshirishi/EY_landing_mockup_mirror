@@ -4,6 +4,7 @@ import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
+import heroImg from "../assets/images/GettyImages-1399150019.jpg";
 import { StepBadge } from "../design-kit/EYCard";
 import { EYQuote } from "../design-kit/EYTypography";
 
@@ -326,14 +327,20 @@ function HeroSection() {
     <section
       aria-labelledby="hero-heading"
       style={{
-        background: colors.confidentBlack,
+        backgroundColor: colors.confidentBlack,
+        backgroundImage: `url(${heroImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
+        backgroundRepeat: "no-repeat",
         position: "relative",
         overflow: "hidden",
         width: "100%",
         padding: "80px 0 80px",
       }}
     >
-      <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column" }}>
+      {/* Left scrim — keeps type readable over the image bloom */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(26,26,36,0.97) 0%, rgba(26,26,36,0.84) 45%, rgba(26,26,36,0.45) 72%, rgba(26,26,36,0.28) 100%)", pointerEvents: "none" }} />
+      <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column", position: "relative", zIndex: 1 }}>
 
         {/* H1 */}
         <h1 id="hero-heading" style={{ fontFamily: fonts.bold, fontSize: "clamp(28px, 3.4vw, 48px)", letterSpacing: "-0.025em", lineHeight: 1.1, margin: 0 }}>
