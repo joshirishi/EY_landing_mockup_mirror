@@ -60,7 +60,7 @@ function RecogniseTheRisk() {
       aria-labelledby="risk-heading"
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.white,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1414,7 +1414,6 @@ export default function ClosureAiReinforcement({
         </section>
 
         {/* ── p4-org ────────────────────────────────────────────────────── */}
-        {/* Section bg: confidentBlack — flows from p4-checklist dark zone */}
         <section
           id="p4-org"
           style={{

@@ -666,7 +666,7 @@ function GuidedExamplesSection() {
     <section
       id="guided-examples"
       style={{
-        background: colors.yellowAlpha10,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1011,7 +1011,7 @@ function AgentExamplesSection() {
     <section
       id="agent-examples"
       style={{
-        background: "rgba(134,48,255,0.05)",
+        background: colors.white,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -2431,7 +2431,7 @@ function HeroContextSection() {
   return (
     <section
       style={{
-        background: colors.offWhite,
+        background: colors.white,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -2440,7 +2440,7 @@ function HeroContextSection() {
 
         {/* Challenge card — light-theme */}
         <div style={{
-          background: colors.white,
+          background: colors.offWhite,
           border: `1px solid ${colors.gray02}`,
           borderTop: `3px solid ${colors.yellow}`,
           borderRadius: 10,
@@ -2470,33 +2470,6 @@ function HeroContextSection() {
           </p>
         </div>
 
-        {/* CTA */}
-        <div style={{ marginBottom: 48 }}>
-          <button
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: 15,
-              fontWeight: 700,
-              color: colors.confidentBlack,
-              background: colors.yellow,
-              border: "none",
-              borderRadius: 6,
-              padding: "14px 32px",
-              cursor: "pointer",
-              letterSpacing: "-0.01em",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-            onClick={() => {
-              document.getElementById("quick-recall")?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            Begin Brainstorm
-            <ArrowRight size={18} aria-hidden="true" />
-          </button>
-        </div>
-
         {/* FROM → TO orientation strip */}
         <div style={{
           display: "grid",
@@ -2506,7 +2479,7 @@ function HeroContextSection() {
         }}>
           {/* FROM */}
           <div style={{
-            background: colors.white,
+            background: colors.offWhite,
             border: `1px solid ${colors.gray02}`,
             borderRadius: 8,
             padding: "clamp(16px, 2vw, 24px)",
@@ -2547,7 +2520,7 @@ function HeroContextSection() {
 
           {/* TO */}
           <div style={{
-            background: colors.white,
+            background: colors.offWhite,
             border: `1px solid ${colors.gray02}`,
             borderTop: `3px solid ${colors.yellow}`,
             borderRadius: 8,
