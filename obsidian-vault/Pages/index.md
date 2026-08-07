@@ -1,7 +1,7 @@
 ---
 type: index
 description: All routed pages in the EY Tax Labs SPA — source files, routes, chrome, sections
-last-updated: 2026-07-31
+last-updated: 2026-08-04
 tags: [pages, routes, navigation]
 ---
 
@@ -17,15 +17,16 @@ tags: [pages, routes, navigation]
 | `/foundational` | [[Pages/FoundationalConcepts]] | `src/pages/FoundationalConcepts.tsx` | Learning + `ModuleHeader module` |
 | `/ai-tax-prompting` | [[Pages/AiTaxPrompting]] | `src/pages/AiTaxPrompting.tsx` | Learning + `ModuleHeader module` |
 | `/copilot-hub` | [[Pages/M365CopilotHub]] | `src/pages/M365CopilotHub.tsx` | Learning + `ModuleHeader module` |
-| `/brainstorming-use-cases` | [[Pages/BrainstormingUseCases]] | `src/pages/BrainstormingUseCases.tsx` | Learning + SectionNav |
-| `/guidance-implementation` | [[Pages/GuidanceImplementation]] | `src/pages/GuidanceImplementation.tsx` | Learning + SectionNav |
+| `/phase2` | [[Pages/BrainstormingUseCases]] | `src/pages/BrainstormingUseCases.tsx` | Learning + `ModuleHeader` |
+| `/guidance-implementation` | [[Pages/GuidanceImplementation]] | `src/pages/GuidanceImplementation.tsx` | Learning + `ModuleHeader` |
+| `/closure-ai-reinforcement` | ClosureAiReinforcement | `src/pages/ClosureAiReinforcement.tsx` | Learning + `ModuleHeader` |
 
 ## Page categories
 
 **Hub pages** (marketing/overview): Home, PhasedEngagement  
-**Phase overview**: Phase1 (course card grid + workshop picker)  
+**Phase overview**: Phase1 (five module cards + workshop picker)  
 **Module pages** (learning content): FoundationalConcepts, AiTaxPrompting, M365CopilotHub  
-**Supporting pages**: BrainstormingUseCases, GuidanceImplementation
+**Supporting pages**: BrainstormingUseCases (`/phase2`), GuidanceImplementation, ClosureAiReinforcement
 
 ## Coming-soon modules
 

@@ -4,7 +4,8 @@ import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
-import { colors, contentRailStyle, fonts, spacing, spectrumCss } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
+import heroImg from "../assets/images/GettyImages-2212662948.jpg";
 
 // ── Quick Recall data — verbatim from PDF slide 2 ────────────────────────────
 const PROMPT_TASKS = [
@@ -146,7 +147,7 @@ function MemoryRefreshSection() {
         {/* Eyebrow + heading */}
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
             textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
           }}>
             Memory Refresh
@@ -373,7 +374,7 @@ function ProblemFirstSection() {
         {/* Eyebrow + heading + progress */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
             textTransform: "uppercase", color: colors.eyebrowGold, margin: 0,
           }}>
             Problem First
@@ -666,7 +667,7 @@ function GuidedExamplesSection() {
     <section
       id="guided-examples"
       style={{
-        background: colors.yellowAlpha10,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -676,7 +677,7 @@ function GuidedExamplesSection() {
         {/* Eyebrow + heading + disclaimer */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
             textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
           }}>
             Guided Examples
@@ -1011,7 +1012,7 @@ function AgentExamplesSection() {
     <section
       id="agent-examples"
       style={{
-        background: "rgba(134,48,255,0.05)",
+        background: colors.white,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1021,7 +1022,7 @@ function AgentExamplesSection() {
         {/* Eyebrow + heading + intro */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
             textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
           }}>
             Guided Examples
@@ -1278,7 +1279,7 @@ function ActivityLevelChoiceSection() {
         {/* Eyebrow + heading */}
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.08em",
+            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
             textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
           }}>
             Activity-Level Choice
@@ -1572,19 +1573,18 @@ function LiveBrainstormSection() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        {/* Eyebrow */}
+        {/* Eyebrow + heading + subhead — centered per section pattern */}
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
         <p style={{
           color: colors.yellow,
           fontFamily: fonts.bold,
-          fontSize: 11,
-          letterSpacing: "0.1em",
+          fontSize: typeScale.label.size,
+          letterSpacing: typeScale.label.tracking,
           textTransform: "uppercase",
           margin: "0 0 14px",
         }}>
           Live Brainstorm
         </p>
-
-        {/* Heading */}
         <h2 style={{
           color: colors.white,
           fontFamily: fonts.bold,
@@ -1595,6 +1595,7 @@ function LiveBrainstormSection() {
         }}>
           Your Tax Process. Your Pain Points. Your Opportunities.
         </h2>
+        </div>
 
         {/* Subhead */}
         <p style={{
@@ -1604,6 +1605,9 @@ function LiveBrainstormSection() {
           margin: "0 0 32px",
           lineHeight: 1.6,
           maxWidth: 640,
+          marginLeft: "auto",
+          marginRight: "auto",
+          textAlign: "center",
         }}>
           EY's guided samples open the conversation. The client's validated process and pain points determine the opportunity.
         </p>
@@ -1775,15 +1779,14 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
     <>
       <section id="deliverables" style={{ background: "#F4F4F8", padding: "80px 0 0" }}>
         <div style={{ ...contentRailStyle }}>
-          {/* Eyebrow */}
+          {/* Eyebrow + heading — centered per section pattern */}
+          <div style={{ textAlign: "center", marginBottom: 8 }}>
           <p style={{
             color: colors.eyebrowGold, fontFamily: fonts.bold,
-            fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 14px",
+            fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", margin: "0 0 14px",
           }}>
             Phase 2 Outputs
           </p>
-
-          {/* Heading */}
           <h2 style={{
             color: colors.offBlack, fontFamily: fonts.bold,
             fontSize: "clamp(26px, 3.2vw, 40px)", margin: "0 0 12px",
@@ -1791,12 +1794,14 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
           }}>
             From Workshop Discussion to a Reimagined Tax Process
           </h2>
+          </div>
 
           {/* Subhead */}
           <p style={{
             color: colors.gray01, fontFamily: fonts.regular,
             fontSize: "clamp(13px, 1.4vw, 15px)", margin: "0 0 40px",
-            lineHeight: 1.6, maxWidth: 600,
+            lineHeight: 1.6, maxWidth: 600, textAlign: "center",
+            marginLeft: "auto", marginRight: "auto",
           }}>
             The workshop converts validated client inputs into two practical Phase 2 deliverables.
           </p>
@@ -2053,11 +2058,12 @@ function QuickRecallSection() {
     >
       <div style={{ ...contentRailStyle }}>
 
-        {/* Eyebrow + heading */}
+        {/* Eyebrow + heading — centered per section pattern */}
+        <div style={{ textAlign: "center", marginBottom: 8 }}>
         <p style={{
           fontFamily: fonts.bold,
-          fontSize: 11,
-          letterSpacing: "0.08em",
+          fontSize: typeScale.label.size,
+          letterSpacing: typeScale.label.tracking,
           textTransform: "uppercase",
           color: colors.eyebrowGold,
           margin: "0 0 12px",
@@ -2074,12 +2080,17 @@ function QuickRecallSection() {
         }}>
           Prompt or M365 Agent? Start with the Nature of the Activity.
         </h2>
+        </div>
         <p style={{
           fontFamily: fonts.regular,
           fontSize: "clamp(14px, 1.5vw, 16px)",
           color: colors.gray01,
           margin: "0 0 40px",
           lineHeight: 1.5,
+          textAlign: "center",
+          maxWidth: 620,
+          marginLeft: "auto",
+          marginRight: "auto",
         }}>
           {agentsRevealed ? (
             <>
@@ -2355,28 +2366,20 @@ function HeroSection() {
     <section
       id="hero"
       style={{
-        background: colors.confidentBlack,
+        backgroundColor: colors.confidentBlack,
+        backgroundImage: `url(${heroImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
+        backgroundRepeat: "no-repeat",
         padding: `${spacing.sectionPaddingY} 0 64px`,
         width: "100%",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column", gap: 0 }}>
-
-        {/* Eyebrow */}
-        <p
-          className="ey-hero-line1"
-          style={{
-            fontFamily: fonts.bold,
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: colors.yellow,
-            margin: "0 0 20px",
-            ...anim(0, 360),
-          }}
-        >
-          Phase 2 · Tax AI Discovery
-        </p>
+      {/* Left scrim — keeps type readable over the image bloom */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(26,26,36,0.97) 0%, rgba(26,26,36,0.84) 45%, rgba(26,26,36,0.45) 72%, rgba(26,26,36,0.28) 100%)", pointerEvents: "none" }} />
+      <div style={{ ...contentRailStyle, display: "flex", flexDirection: "column", gap: 0, position: "relative", zIndex: 1 }}>
 
         {/* Headline line 1 */}
         <h1
@@ -2412,18 +2415,6 @@ function HeroSection() {
           Now, Where Should It Work for You?
         </h1>
 
-        {/* Spectrum rule — draws left→right with line 2 */}
-        <div
-          className="ey-hero-rule"
-          style={{
-            height: 4,
-            borderRadius: 2,
-            background: spectrumCss(4),
-            marginBottom: 28,
-            ...ruleAnim,
-          }}
-        />
-
         {/* Subheading */}
         <p
           className="ey-hero-sub"
@@ -2439,25 +2430,38 @@ function HeroSection() {
         >
           From foundational learning to tax-process opportunity discovery.
         </p>
+      </div>
+    </section>
+  );
+}
 
-        {/* Workshop challenge card */}
-        <div
-          className="ey-hero-challenge"
-          style={{
-            background: colors.eyBgCard,
-            border: `1px solid ${colors.borderOnDark}`,
-            borderRadius: 10,
-            padding: "clamp(20px, 3vw, 32px)",
-            marginBottom: 40,
-            ...anim(680, 440),
-          }}
-        >
+// ── Hero context — challenge + FROM→TO (separated from dark hero per pattern) ─
+function HeroContextSection() {
+  return (
+    <section
+      style={{
+        background: colors.white,
+        padding: `${spacing.sectionPaddingY} 0`,
+        width: "100%",
+      }}
+    >
+      <div style={{ ...contentRailStyle }}>
+
+        {/* Challenge card — light-theme */}
+        <div style={{
+          background: colors.offWhite,
+          border: `1px solid ${colors.gray02}`,
+          borderTop: `3px solid ${colors.yellow}`,
+          borderRadius: 10,
+          padding: "clamp(20px, 3vw, 32px)",
+          marginBottom: 32,
+        }}>
           <p style={{
             fontFamily: fonts.bold,
-            fontSize: 11,
-            letterSpacing: "0.08em",
+            fontSize: typeScale.label.size,
+            letterSpacing: typeScale.label.tracking,
             textTransform: "uppercase",
-            color: colors.yellow,
+            color: colors.eyebrowGold,
             margin: "0 0 12px",
           }}>
             Today's Challenge
@@ -2465,7 +2469,7 @@ function HeroSection() {
           <p style={{
             fontFamily: fonts.bold,
             fontSize: "clamp(16px, 2vw, 22px)",
-            color: colors.white,
+            color: colors.offBlack,
             margin: 0,
             lineHeight: 1.4,
             letterSpacing: "-0.01em",
@@ -2475,110 +2479,83 @@ function HeroSection() {
           </p>
         </div>
 
-        {/* CTA button */}
-        <div className="ey-hero-cta" style={{ ...anim(820, 380) }}>
-          <button
-            style={{
+        {/* FROM → TO orientation strip */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
+          gap: "clamp(12px, 2vw, 32px)",
+          alignItems: "start",
+        }}>
+          {/* FROM */}
+          <div style={{
+            background: colors.offWhite,
+            border: `1px solid ${colors.gray02}`,
+            borderRadius: 8,
+            padding: "clamp(16px, 2vw, 24px)",
+          }}>
+            <p style={{
               fontFamily: fonts.bold,
-              fontSize: 15,
-              fontWeight: 700,
-              color: colors.confidentBlack,
-              background: colors.yellow,
-              border: "none",
-              borderRadius: 6,
-              padding: "14px 32px",
-              cursor: "pointer",
-              letterSpacing: "-0.01em",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-            onClick={() => {
-              document.getElementById("quick-recall")?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            Begin Brainstorm
-            <ArrowRight size={18} aria-hidden="true" />
-          </button>
-        </div>
-      </div>
+              fontSize: typeScale.label.size,
+              letterSpacing: typeScale.label.tracking,
+              textTransform: "uppercase",
+              color: colors.gray01,
+              margin: "0 0 12px",
+            }}>
+              Phase 1 — From
+            </p>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+              {FROM_ITEMS.map((item) => (
+                <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{ color: colors.gray01, flexShrink: 0, lineHeight: "22px", fontSize: typeScale.label.size }}>·</span>
+                  <span style={{ fontFamily: fonts.regular, fontSize: typeScale.label.size, color: colors.gray01, lineHeight: 1.5 }}>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      {/* FROM → TO orientation strip */}
-      <div style={{
-        ...contentRailStyle,
-        marginTop: 64,
-        display: "grid",
-        gridTemplateColumns: "1fr auto 1fr",
-        gap: "clamp(12px, 2vw, 32px)",
-        alignItems: "start",
-      }}>
-        {/* FROM */}
-        <div style={{
-          background: colors.surfaceOnDark,
-          border: `1px solid ${colors.borderOnDark}`,
-          borderRadius: 8,
-          padding: "clamp(16px, 2vw, 24px)",
-        }}>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: 10,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: colors.gray01,
-            margin: "0 0 12px",
+          {/* Arrow connector */}
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingTop: 36,
+            gap: 4,
           }}>
-            Phase 1 — From
-          </p>
-          <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
-            {FROM_ITEMS.map((item) => (
-              <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-                <span style={{ color: colors.gray01, flexShrink: 0, lineHeight: "22px", fontSize: 13 }}>·</span>
-                <span style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.onDarkSubtle, lineHeight: 1.5 }}>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+            <div style={{ width: 2, height: 20, background: colors.gray02 }} />
+            <ArrowRight size={20} color={colors.yellow} aria-hidden="true" />
+            <div style={{ width: 2, height: 20, background: colors.gray02 }} />
+          </div>
 
-        {/* Arrow connector */}
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: 36,
-          gap: 4,
-        }}>
-          <div style={{ width: 2, height: 20, background: colors.borderOnDark }} />
-          <ArrowRight size={20} color={colors.yellow} aria-hidden="true" />
-          <div style={{ width: 2, height: 20, background: colors.borderOnDark }} />
-        </div>
-
-        {/* TO */}
-        <div style={{
-          background: colors.yellowAlpha10,
-          border: `1px solid rgba(255,230,0,0.18)`,
-          borderRadius: 8,
-          padding: "clamp(16px, 2vw, 24px)",
-        }}>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: 10,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: colors.yellow,
-            margin: "0 0 12px",
+          {/* TO */}
+          <div style={{
+            background: colors.offWhite,
+            border: `1px solid ${colors.gray02}`,
+            borderTop: `3px solid ${colors.yellow}`,
+            borderRadius: 8,
+            padding: "clamp(16px, 2vw, 24px)",
           }}>
-            Phase 2 — To
-          </p>
-          <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
-            {TO_ITEMS.map((item) => (
-              <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-                <span style={{ color: colors.yellow, flexShrink: 0, lineHeight: "22px", fontSize: 13 }}>·</span>
-                <span style={{ fontFamily: fonts.bold, fontSize: 13, color: colors.white, lineHeight: 1.5 }}>{item}</span>
-              </li>
-            ))}
-          </ul>
+            <p style={{
+              fontFamily: fonts.bold,
+              fontSize: typeScale.label.size,
+              letterSpacing: typeScale.label.tracking,
+              textTransform: "uppercase",
+              color: colors.eyebrowGold,
+              margin: "0 0 12px",
+            }}>
+              Phase 2 — To
+            </p>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+              {TO_ITEMS.map((item) => (
+                <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{ color: colors.yellow, flexShrink: 0, lineHeight: "22px", fontSize: typeScale.label.size }}>·</span>
+                  <span style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, color: colors.offBlack, lineHeight: 1.5 }}>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
+
       </div>
     </section>
   );
@@ -2617,6 +2594,8 @@ export default function BrainstormingUseCases({
       <main id="phase2-content">
 
         <HeroSection />
+
+        <HeroContextSection />
 
         <QuickRecallSection />
 
