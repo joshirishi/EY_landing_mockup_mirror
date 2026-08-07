@@ -131,12 +131,12 @@ function distAt(path: SVGPathElement, len: number, tx: number, ty: number) {
 }
 
 const CALLOUTS = [
-  { left: 210, top: 310, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
+  { left: 140, top: 250, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
   { left: 290, top: 195, width: 187, quote: "AI feels a lot less intimidating now. I finally understand how prompts and Microsoft 365 Copilot work." },
   { left: 502, top: 123, width: 167, quote: "I can clearly see where AI fits across our tax processes. Some use cases need prompts. Others need Agents." },
   { left: 722, top: 106, width: 150, quote: "I never thought I could build an Agent without coding. I'm starting to solve tax problems differently." },
   { left: 953, top: 114, width: 170, quote: "AI has become part of how I work. I rely on it to research, analyze and get work done faster." },
-  { left: 1267, top: 10, width: 155, quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.", rounded: 4 },
+  { left: 1247, top: 8, width: 180, quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.", rounded: 4 },
 ] as const;
 
 const STAGE_NODES = [
@@ -331,7 +331,7 @@ function StageTitleLabel({
         width,
         paddingLeft: 4,
         paddingRight: 4,
-        background: isActive ? colors.yellowAlpha12 : colors.confidentBlack,
+        background: colors.confidentBlack,
         border: `1px solid ${colors.yellow}`,
         borderRadius: 4,
         boxShadow: isActive
@@ -346,7 +346,7 @@ function StageTitleLabel({
         className="text-center text-[10px] uppercase leading-[14px]"
         style={{
           fontFamily: fonts.bold,
-          color: isActive || isReached ? colors.yellow : colors.white,
+          color: colors.yellow,
         }}
       >
         {title}
