@@ -1275,8 +1275,9 @@ function ActivityLevelChoiceSection() {
   return (
     <section
       id="use-case-map"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: "rgba(0,163,255,0.05)",
+      style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -1795,7 +1796,7 @@ const D2_ACCENT = "#7B5EA7";
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
     <>
-      <section id="deliverables" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: "#F4F4F8", padding: "80px 0 0" }}>
+      <section id="deliverables" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.white, padding: "80px 0 0" }}>
         <div style={{ ...contentRailStyle }}>
           {/* Eyebrow + heading — centered per section pattern */}
           <div style={{ textAlign: "center", marginBottom: 8 }}>
