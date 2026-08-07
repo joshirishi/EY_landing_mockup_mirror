@@ -12,7 +12,7 @@ import { useEffect, useMemo, useRef } from "react";
 import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
+import { EYWhatsNext } from "../design-kit/EYWhatsNext";
 import { colors, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
 
 /**
@@ -445,6 +445,68 @@ function parseLessonHtml(html: string): { css: string; body: string; scripts: st
   return { css, body, scripts };
 }
 
+/** Marker on dynamically injected lesson scripts so cleanup can find them. */
+const FC_SCRIPT_ATTR = "data-fc-lesson-script";
+
+type FcLessonWindow = Window & {
+  initEvoExplorer?: () => void;
+  __fcNavScrollHandler?: () => void;
+};
+
+/**
+ * Wrap inline lesson scripts so they can run again after HMR / Strict Mode
+ * remount without re-declaring top-level `const` / `let` in the global scope.
+ * Top-level `function` declarations are re-published onto `window` for inline
+ * `onclick=""` handlers in the HTML markup.
+ */
+function wrapLessonScript(source: string): string {
+  const trimmed = source.trim();
+  // Already an IIFE (cheat accordion, GVA sticky, etc.) — safe to re-execute.
+  if (/^\(function\b/.test(trimmed)) {
+    return trimmed.endsWith(";") ? trimmed : `${trimmed};`;
+  }
+
+  const fnNames = [
+    ...trimmed.matchAll(/^\s*function\s+([A-Za-z_$][\w$]*)\s*\(/gm),
+  ].map((m) => m[1]);
+
+  const exports =
+    fnNames.length > 0
+      ? fnNames.map((name) => `w.${name}=${name};`).join("\n")
+      : "";
+
+  return `(function(w){
+${trimmed}
+${exports}
+})(typeof globalThis!=="undefined"?globalThis:window);`;
+}
+
+/** Remove prior injected scripts and duplicate scroll listener from a prior mount. */
+function cleanupLessonScripts(): void {
+  document.querySelectorAll(`script[${FC_SCRIPT_ATTR}]`).forEach((node) => {
+    node.remove();
+  });
+
+  const win = window as FcLessonWindow;
+  if (win.__fcNavScrollHandler) {
+    window.removeEventListener("scroll", win.__fcNavScrollHandler);
+    delete win.__fcNavScrollHandler;
+  }
+}
+
+/** Patch scroll-nav listener so remounts don't stack duplicate handlers. */
+function patchNavScrollListener(source: string): string {
+  return source.replace(
+    /window\.addEventListener\s*\(\s*['"]scroll['"]\s*,\s*\(\)\s*=>\s*\{/,
+    `(function(w){
+if(w.__fcNavScrollHandler){w.removeEventListener('scroll',w.__fcNavScrollHandler);}
+w.__fcNavScrollHandler=function(){`,
+  ).replace(
+    /\}\s*\)\s*;\s*\n(?=\/\/ Pipeline stage tabs)/,
+    `};w.addEventListener('scroll',w.__fcNavScrollHandler);})(typeof globalThis!=='undefined'?globalThis:window);\n`,
+  );
+}
+
 export default function FoundationalConcepts({
   onBack,
   onNavigate,
@@ -457,32 +519,28 @@ export default function FoundationalConcepts({
     [foundationalHtml]
   );
   const contentRef = useRef<HTMLDivElement>(null);
-  const scriptsRan = useRef(false);
   useModuleSectionHashScroll();
 
   // Inline onclick="" handlers work via innerHTML; <script> blocks do not —
-  // re-run them once after the markup is in the DOM.
+  // re-run them after the markup is in the DOM. Wrapped in IIFEs so HMR /
+  // Strict Mode remounts don't throw on duplicate `const` / `let` globals.
   useEffect(() => {
-    if (scriptsRan.current) return;
-    scriptsRan.current = true;
+    cleanupLessonScripts();
 
-    const nodes: HTMLScriptElement[] = [];
-    for (const source of scripts) {
+    for (const raw of scripts) {
+      const patched = patchNavScrollListener(raw);
       const el = document.createElement("script");
-      el.text = source;
+      el.setAttribute(FC_SCRIPT_ATTR, "");
+      el.text = wrapLessonScript(patched);
       document.body.appendChild(el);
-      nodes.push(el);
     }
 
     // Lesson scripts may listen for DOMContentLoaded — that already fired in SPA
     // mode, so boot explorers that expose a window init (e.g. era tabs).
-    const boot = window as Window & { initEvoExplorer?: () => void };
+    const boot = window as FcLessonWindow;
     if (typeof boot.initEvoExplorer === "function") boot.initEvoExplorer();
 
-    return () => {
-      nodes.forEach((n) => n.remove());
-      scriptsRan.current = false;
-    };
+    return cleanupLessonScripts;
   }, [scripts]);
 
   return (
@@ -497,14 +555,7 @@ export default function FoundationalConcepts({
 
       {/* Shared dark CTA — Figma 3455:18320 palette */}
       <EYWhatsNext
-        title={
-          <>
-            Fundamentals are clear.
-            <br />
-            Now it&apos;s time to <EYWhatsNextHighlight>use AI effectively.</EYWhatsNextHighlight>
-          </>
-        }
-        description="You now understand what AI is, how it works, where it fails, and why fundamentals matter. The next step is learning how to interact with it — how to craft prompts that deliver real, usable results in tax work."
+        title="Fundamentals are clear."
         ctaLabel="Continue to Part 2: Basics of Prompting in Tax"
         onContinue={() => onNavigate("/ai-tax-prompting")}
         meta="Part 2 covers: prompt structure, role-setting, context framing, output formatting, and real tax prompt templates"

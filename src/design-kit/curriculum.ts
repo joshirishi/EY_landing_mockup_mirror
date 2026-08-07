@@ -85,10 +85,7 @@ export const MODULES: CurriculumModule[] = [
     supportsInPageNav: true,
     subModules: [
       { id: "pipeline", label: "Prompt Basics", group: "learn" },
-      { id: "team-briefing", label: "Team Briefing", group: "learn" },
-      { id: "elements", label: "7 Elements", group: "learn" },
-      { id: "lazy-vs-pro", label: "Weak vs Strong", group: "learn" },
-      { id: "stack-builder", label: "Stack Builder", group: "learn" },
+      { id: "elements", label: "Elements", group: "learn" },
       { id: "advanced", label: "Techniques", group: "learn" },
       { id: "match-activity", label: "Activity", group: "apply" },
       { id: "dos-donts", label: "Do's & Don'ts", group: "apply" },

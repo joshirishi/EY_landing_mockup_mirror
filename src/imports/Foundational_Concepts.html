@@ -267,6 +267,7 @@ body {
 .section { padding: 90px 60px; text-align: center; background: var(--white); }
 .section h2 { font-size: 34px; font-weight: 700; color: var(--ey-dark); margin-bottom: 12px; letter-spacing: -0.8px; }
 .section-subtitle { color: var(--gray-01); font-size: 16px; margin-bottom: 50px; max-width: 650px; margin-left: auto; margin-right: auto; }
+#terminology > .section-subtitle { max-width: 980px; }
 
 /* ===== SURFACE CYCLE (Light → Neutral → Dark) ===== */
 .surface-light {
@@ -3342,7 +3343,7 @@ document.addEventListener('keydown', function(e) {
 <section class="section sim-section surface-light" id="terminology" style="padding:80px 40px;">
   <p class="sim-label">Guided demo</p>
   <h2 style="font-size:36px; margin-bottom:8px; color:var(--ey-dark);">Inside Every Gen AI Conversation</h2>
-  <p class="section-subtitle" style="max-width:700px; color:var(--gray-01);">Follow a prompt and discover what happens behind the scenes—from your question to the final answer.</p>
+  <p class="section-subtitle" style="color:var(--gray-01);">Follow a prompt and discover what happens behind the scenes—from your question to the final answer.</p>
 
   <div style="max-width:1400px; margin:0 auto;">
 
@@ -3353,9 +3354,9 @@ document.addEventListener('keydown', function(e) {
       <div style="display:flex; align-items:center; padding:12px 20px; background:var(--confident-black); border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0;">
         <div style="display:flex; align-items:center; gap:8px; min-width:0;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span id="copilot-status" style="color:var(--white); font-size:14px; font-weight:400; line-height:22.4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">EY.ai Copilot</span>
+          <span id="copilot-status" style="color:var(--white); font-size:14px; font-weight:400; line-height:22.4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Copilot</span>
         </div>
-        <span style="margin-left:auto; flex-shrink:0; font-size:10px; line-height:16px; color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.08); padding:3px 10px; border-radius:10px;">GPT-4o • EY Secure</span>
+        <span style="margin-left:auto; flex-shrink:0; font-size:10px; line-height:16px; color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.08); padding:3px 10px; border-radius:10px;">GPT</span>
       </div>
 
       <!-- Beat progress indicator — hidden until demo starts -->
@@ -3367,14 +3368,14 @@ document.addEventListener('keydown', function(e) {
       <div id="copilot-chat" style="flex:1 1 auto; min-height:0; overflow-y:auto; background:var(--white);">
         <div id="copilot-welcome" style="text-align:center; padding:60px 20px;">
           <h3 style="color:var(--ey-dark); font-size:20px; font-weight:700; line-height:30px; margin:0 0 8px;">Welcome to EY.ai Copilot</h3>
-          <p style="color:var(--gray-01); font-size:14px; line-height:22.4px; max-width:400px; margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p>
+          <p style="color:var(--gray-01); font-size:14px; line-height:22.4px; max-width:400px; margin:0 auto 24px;">Ask me anything about India tax.</p>
           <button onclick="startDemo()" style="background:var(--ey-yellow); color:var(--ey-dark); border:none; padding:14px 32px; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,230,0,0.3)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough
           </button>
         </div>
       </div>
 
-      <!-- Input bar — visible only in the Ask beat -->
+      <!-- Input bar — visible in Ask + Output beats -->
       <div id="copilot-input-bar" style="display:none; align-items:center; gap:12px; padding:15px 20px 14px; background:var(--off-white); border-top:1px solid rgba(46,46,56,0.05); flex-shrink:0;">
         <input id="copilot-input" type="text" placeholder="Ask me about tax..." readonly onkeydown="if(event.key==='Enter'){event.preventDefault();continueBeat();}" style="flex:1; background:var(--white); border:1px solid rgba(255,230,0,0.35); border-radius:10px; padding:13px 17px; color:var(--gray-01); font-size:13px; outline:none;">
         <button type="button" onclick="continueBeat()" aria-label="Send" style="width:38px; height:38px; border-radius:8px; background:var(--ey-yellow); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ey-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -3569,6 +3570,12 @@ document.addEventListener('keydown', function(e) {
 #output-prompt-cta button:hover,
 #output-prompt-cta button:focus-visible {
   transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,230,0,0.3); outline:none;
+}
+/* Output beat: false-claim line stays normal until CTA reveal */
+#output-red-highlight.is-revealed {
+  color:var(--accent-red);
+  font-weight:700;
+  animation:fadeInMsg 0.45s ease-out forwards;
 }
 /* Hallucination beat: inline yellow CTA below the warning card (replaces footer Next) */
 #hallucination-prompt-cta { margin:16px 0 8px; text-align:center; animation:fadeInMsg 0.45s ease-out forwards; opacity:0; }
@@ -4145,13 +4152,14 @@ function resetDemo() {
   if (window._typer) clearInterval(window._typer);
   if (window._sentThinkingInterval) { clearInterval(window._sentThinkingInterval); window._sentThinkingInterval = null; }
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
-  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;line-height:30px;margin:0 0 8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;line-height:22.4px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax. I'll show you how AI processes your question — and where things can go wrong.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
+  if (window._outputRevealTimer) { clearTimeout(window._outputRevealTimer); window._outputRevealTimer = null; }
+  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;line-height:30px;margin:0 0 8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;line-height:22.4px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
   document.getElementById('demo-actions').style.display = 'none';
   var bar = document.getElementById('copilot-input-bar'); if (bar) bar.style.display = 'none';
   var askEx = document.getElementById('ask-explainer'); if (askEx) askEx.innerHTML = '';
   var inp = document.getElementById('copilot-input'); if (inp) { inp.value = ''; inp.style.color = 'var(--text-secondary)'; inp.style.borderColor = 'rgba(255,230,0,0.35)'; }
   var win = document.getElementById('copilot-window'); if (win) win.classList.remove('is-hallucinating');
-  setCopilotStatus('EY.ai Copilot');
+  setCopilotStatus('Copilot');
   currentBeat = -1;
   window._hallPhase = 0;
   resetHallNewsCarousel();
@@ -4224,6 +4232,7 @@ function renderBeat(flipIn) {
   if (window._typer) clearInterval(window._typer);
   if (window._sentThinkingInterval) { clearInterval(window._sentThinkingInterval); window._sentThinkingInterval = null; }
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
+  if (window._outputRevealTimer) { clearTimeout(window._outputRevealTimer); window._outputRevealTimer = null; }
   chatEl.innerHTML = '';
   chatEl.scrollTop = 0;
   // Window is fixed at 480px; chat flexes and scrolls — no per-beat height rewriting
@@ -4238,7 +4247,7 @@ function renderBeat(flipIn) {
   if (winEl) winEl.classList.remove('is-hallucinating');
   var beat = BEATS[currentBeat];
   chatEl.classList.toggle('is-inside-beat', beat === 'inside');
-  setCopilotStatus(BEAT_STATUS[beat] || 'EY.ai Copilot');
+  setCopilotStatus(BEAT_STATUS[beat] || 'Copilot');
 
   if (beat === 'ask') {
     barEl.style.display = 'flex';
@@ -4335,19 +4344,26 @@ function renderBeat(flipIn) {
     });
 
   } else if (beat === 'output') {
-    barEl.style.display = 'none';
-    addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. <span style="color:var(--accent-red);font-weight:700;">Every online seller is required to register for GST in every Indian state where customers are located.</span> Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.');
+    var promptTxt = 'Summarize the GST implications for an online seller selling goods across multiple Indian states';
+    barEl.style.display = 'flex';
+    inputEl.value = promptTxt;
+    inputEl.style.color = 'var(--ey-dark)';
+    inputEl.style.borderColor = 'rgba(255,230,0,0.35)';
+    addChatBubble('You', promptTxt);
+    addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. <span id="output-red-highlight">Every online seller is required to register for GST in every Indian state where customers are located.</span> Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.');
     var contBtnOut = document.getElementById('demo-continue-btn');
     if (contBtnOut) contBtnOut.style.display = 'none';
-    setTimeout(function () {
+    window._outputRevealTimer = setTimeout(function () {
       if (currentBeat < 0 || BEATS[currentBeat] !== 'output') return;
       if (document.getElementById('output-prompt-cta')) return;
+      var highlight = document.getElementById('output-red-highlight');
+      if (highlight) highlight.classList.add('is-revealed');
       var ctaOut = document.createElement('div');
       ctaOut.id = 'output-prompt-cta';
       ctaOut.innerHTML = '<button type="button" onclick="continueBeat()" aria-label="Continue — But can you trust the output?">But can you trust the output?</button>';
       chatEl.appendChild(ctaOut);
       chatEl.scrollTop = chatEl.scrollHeight;
-    }, 400);
+    }, 1000);
 
   } else if (beat === 'hallucination') {
     // Rendered via continueBeat slide intercept; this path only runs on backBeat

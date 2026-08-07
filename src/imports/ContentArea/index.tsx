@@ -3,7 +3,7 @@ import svgPaths from "./svg-1dplfat9j5";
 function Frame1() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 w-full" data-name="Frame">
-      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[40px] relative shrink-0 text-[#2e2e38] text-[32px] whitespace-nowrap">Phased Approach</p>
+      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[40px] relative shrink-0 text-[#2e2e38] text-[32px] whitespace-nowrap">Step by Step Approach</p>
       <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[24px] min-w-full relative shrink-0 text-[#747480] text-[16px] w-[min-content]">{`A progressive journey from understanding to application to adoption, tailored for your organization's specific tax needs.`}</p>
     </div>
   );

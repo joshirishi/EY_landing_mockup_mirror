@@ -6,7 +6,7 @@
  *     ("About EY India AI Tax Hub" | "EY.ai Tax Labs").
  *
  *   variant="learning" — Phase 1 overview and every module page (Figma 3508:4135).
- *     Brand block "EY.ai Tax Labs" / "INDIA TAX HUB" + "PLATFORM MODE: ACTIVE LEARNING".
+ *     Brand block "EY.ai Tax Labs" / "INDIA TAX HUB".
  *     No site-section row — breadcrumb navigation lives in <ModuleHeader/> below.
  */
 
@@ -21,7 +21,7 @@ interface SiteHeaderProps {
   variant?: "hub" | "learning";
   activeSection?: SiteSection;
   onNavigate: (path: string) => void;
-  /** Right-aligned content on the hub brand bar (ignored for learning — Platform Mode is built-in). */
+  /** Right-aligned content on the hub brand bar (learning variant has no right slot). */
   rightSlot?: React.ReactNode;
   /** When set, renders an invisible-until-focused "Skip to content" link pointing at this id. */
   skipLinkTarget?: string;
@@ -82,11 +82,11 @@ export function SiteHeader({
   );
 }
 
-/** Figma Level 1 — brand + platform mode (Phase 1 + modules). */
+/** Figma Level 1 — brand bar (Phase 1 + modules). */
 function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
     <div
-      className="flex items-center justify-between gap-3 w-full px-4 sm:px-6 md:px-10 py-3 md:py-4"
+      className="flex items-center gap-3 w-full px-4 sm:px-6 md:px-10 py-3 md:py-4"
       style={{
         background: colors.confidentBlack,
         borderBottom: "1px solid #2E2E38",
@@ -143,11 +143,6 @@ function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }
           </span>
         </div>
       </button>
-
-      {/* Hide platform badge on narrow screens — it fights the brand for space */}
-      <div className="hidden sm:block shrink-0">
-        <PlatformModeBadge />
-      </div>
     </div>
   );
 }
@@ -212,24 +207,6 @@ function HubBrandBar({
         />
       </nav>
     </>
-  );
-}
-
-/** Small right-aligned status badge for the learning brand bar. */
-export function PlatformModeBadge() {
-  return (
-    <span
-      style={{
-        color: colors.yellow,
-        fontFamily: fonts.bold,
-        fontSize: 12,
-        textTransform: "uppercase",
-        letterSpacing: "0.04em",
-        whiteSpace: "nowrap",
-      }}
-    >
-      Platform Mode: Active Learning
-    </span>
   );
 }
 

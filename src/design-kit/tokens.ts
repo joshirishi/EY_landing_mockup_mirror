@@ -28,7 +28,8 @@ export const colors = {
 
   // ── Semantic ─────────────────────────────────────────────────────────────
   error:           '#FF4136',
-  eyebrowGold:     '#B89B00', // eyebrow label on light backgrounds
+  eyebrowGold:     '#B89B00', // gold accent on dark surfaces, borders, decorative fills
+  eyebrowGoldDark: '#7A6800', // accessible eyebrow text on light/neutral surfaces (WCAG AA)
   success:         '#00C864', // alias of frameGreen — positive/correct states
   destructive:     '#FF4136', // alias of error — negative/incorrect states
   info:            '#4696FF', // alias of frameBlue — informational accents

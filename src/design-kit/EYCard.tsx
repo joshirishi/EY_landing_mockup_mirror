@@ -176,7 +176,7 @@ export function EYCard({
             fontSize: 11,
             letterSpacing: '0.05em',
             textTransform: 'uppercase',
-            color: isDark ? colors.yellow : colors.eyebrowGold,
+            color: isDark ? colors.yellow : colors.eyebrowGoldDark,
             margin: 0,
           }}>
             {eyebrow}

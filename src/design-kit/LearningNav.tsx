@@ -95,6 +95,8 @@ type ModuleHeaderProps =
        * the scroll-spy instead of getSubModuleGroups().
        */
       sections?: SubModule[];
+      /** Hide the module/workshop title picker — e.g. Phase 1 hub where cards are the entry points. */
+      hideModuleDropdown?: boolean;
     };
 
 export function ModuleHeader(props: ModuleHeaderProps) {
@@ -117,6 +119,9 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   const overrideSections = isPhaseOverview
     ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).sections
     : undefined;
+  const hideModuleDropdown = isPhaseOverview
+    ? (props as Extract<ModuleHeaderProps, { mode: "phase-overview" }>).hideModuleDropdown ?? false
+    : false;
 
   const workshopDisplayLabel = overridePhaseLabel
     ? overridePhaseLabel.replace(/^Phase \d+: /, "")
@@ -224,94 +229,98 @@ export function ModuleHeader(props: ModuleHeaderProps) {
             </span>
           </button>
 
-          <span className="hidden sm:inline shrink-0" aria-hidden="true">
-            <ChevronSep />
-          </span>
-
-          <div ref={pickerRef} className="relative min-w-0">
-            <button
-              onClick={() => setPickerOpen((v) => !v)}
-              aria-haspopup="menu"
-              aria-expanded={pickerOpen}
-              className="flex items-center gap-2 min-w-0 max-w-[min(100%,260px)] sm:max-w-none"
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                borderRadius: 4,
-                fontFamily: fonts.bold,
-                fontSize: 14,
-                color: colors.yellow,
-              }}
-              onFocus={applyFocusRing}
-              onBlur={clearFocusRing}
-            >
-              {isPhaseOverview && (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 18,
-                    height: 18,
-                    borderRadius: "50%",
-                    fontSize: 11,
-                    fontFamily: fonts.bold,
-                    background: colors.yellow,
-                    color: colors.offBlack,
-                    flexShrink: 0,
-                  }}
-                  aria-hidden="true"
-                >
-                  {activePhaseNumber}
-                </span>
-              )}
-              {!isPhaseOverview && current && (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 18,
-                    height: 18,
-                    borderRadius: "50%",
-                    fontSize: 11,
-                    fontFamily: fonts.bold,
-                    background: colors.yellow,
-                    color: colors.offBlack,
-                    flexShrink: 0,
-                  }}
-                  aria-hidden="true"
-                >
-                  {current.order}
-                </span>
-              )}
-              <span className="truncate">{pickerLabel}</span>
-              <span
-                style={{
-                  fontSize: 8,
-                  color: colors.yellow,
-                  transform: pickerOpen ? "rotate(180deg)" : "none",
-                  transition: "transform 0.15s",
-                  display: "inline-block",
-                  flexShrink: 0,
-                }}
-                aria-hidden="true"
-              >
-                ▼
+          {!hideModuleDropdown && (
+            <>
+              <span className="hidden sm:inline shrink-0" aria-hidden="true">
+                <ChevronSep />
               </span>
-            </button>
 
-            {pickerOpen && (
-              <ModulePickerMenu
-                isPhaseOverview={isPhaseOverview}
-                currentModuleId={currentModuleId}
-                onNavigate={onNavigate}
-                onClose={() => setPickerOpen(false)}
-              />
-            )}
-          </div>
+              <div ref={pickerRef} className="relative min-w-0">
+                <button
+                  onClick={() => setPickerOpen((v) => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={pickerOpen}
+                  className="flex items-center gap-2 min-w-0 max-w-[min(100%,260px)] sm:max-w-none"
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                    borderRadius: 4,
+                    fontFamily: fonts.bold,
+                    fontSize: 14,
+                    color: colors.yellow,
+                  }}
+                  onFocus={applyFocusRing}
+                  onBlur={clearFocusRing}
+                >
+                  {isPhaseOverview && (
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 18,
+                        height: 18,
+                        borderRadius: "50%",
+                        fontSize: 11,
+                        fontFamily: fonts.bold,
+                        background: colors.yellow,
+                        color: colors.offBlack,
+                        flexShrink: 0,
+                      }}
+                      aria-hidden="true"
+                    >
+                      {activePhaseNumber}
+                    </span>
+                  )}
+                  {!isPhaseOverview && current && (
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 18,
+                        height: 18,
+                        borderRadius: "50%",
+                        fontSize: 11,
+                        fontFamily: fonts.bold,
+                        background: colors.yellow,
+                        color: colors.offBlack,
+                        flexShrink: 0,
+                      }}
+                      aria-hidden="true"
+                    >
+                      {current.order}
+                    </span>
+                  )}
+                  <span className="truncate">{pickerLabel}</span>
+                  <span
+                    style={{
+                      fontSize: 8,
+                      color: colors.yellow,
+                      transform: pickerOpen ? "rotate(180deg)" : "none",
+                      transition: "transform 0.15s",
+                      display: "inline-block",
+                      flexShrink: 0,
+                    }}
+                    aria-hidden="true"
+                  >
+                    ▼
+                  </span>
+                </button>
+
+                {pickerOpen && (
+                  <ModulePickerMenu
+                    isPhaseOverview={isPhaseOverview}
+                    currentModuleId={currentModuleId}
+                    onNavigate={onNavigate}
+                    onClose={() => setPickerOpen(false)}
+                  />
+                )}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex items-center gap-3 md:gap-5 shrink-0">

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
+import { EYWhatsNext } from "../design-kit/EYWhatsNext";
 import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, typeScale } from "../design-kit/tokens";
 
@@ -968,8 +968,7 @@ function CopilotUseCasePanel({ useCases }: {
               <Icon size={18} strokeWidth={1.75} aria-hidden />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 13, color: C.dark2, marginBottom: 4, lineHeight: 1.3 }}>{uc.title}</p>
-              <p style={{ fontFamily: F.regular, fontSize: 11.5, color: C.gray01, lineHeight: 1.45 }}>{uc.body}</p>
+              <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 13, color: C.dark2, margin: 0, lineHeight: 1.3 }}>{uc.title}</p>
             </div>
           </div>
         );
@@ -1038,16 +1037,15 @@ function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; acc
 }
 
 // ── Pattern 2b: "Ask Copilot in {App}" prompt panel — 5 clickable prompts ──
-function CopilotPromptPanel({ appLabel, subtitle, prompts, activeIndex, onSelect }: {
-  appLabel: string; subtitle: string; prompts: { label: string; text: string }[];
+function CopilotPromptPanel({ appLabel, prompts, activeIndex, onSelect }: {
+  appLabel: string; prompts: { label: string; text: string }[];
   activeIndex: number | null; onSelect: (idx: number) => void;
 }) {
   return (
     <div style={{ flex: "1 1 392px", minWidth: 0, maxHeight: 800, minHeight: 598, background: `linear-gradient(151deg, ${C.dark2} 8.5%, ${C.dark} 91.5%)`, border: "0.75px solid rgba(255,255,255,0.08)", borderRadius: 22, padding: "22.75px", boxShadow: "0 20px 25px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
-      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, marginBottom: 4, display: "flex", alignItems: "center", gap: 8, lineHeight: 1.5 }}>
+      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, marginBottom: 16, display: "flex", alignItems: "center", gap: 8, lineHeight: 1.5 }}>
         <Sparkles size={16} strokeWidth={1.75} color={C.yellow} aria-hidden /> Ask Copilot in {appLabel}
       </p>
-      <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray02, lineHeight: 1.5, marginBottom: 16 }}>{subtitle}</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 8, overflowY: "auto", minHeight: 0, flex: 1, paddingRight: 4 }}>
         {prompts.map((p, i) => {
           const active = i === activeIndex;
@@ -1066,10 +1064,7 @@ function CopilotPromptPanel({ appLabel, subtitle, prompts, activeIndex, onSelect
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
             >
               <span style={{ width: 24, height: 24, minWidth: 24, borderRadius: 12, background: active ? C.yellow : "rgba(255,255,255,0.12)", color: active ? C.dark : C.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{i + 1}</span>
-              <span style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: C.white, marginBottom: 2, lineHeight: 1.5 }}>{p.label}</span>
-                <span style={{ display: "block", fontSize: 11, color: "rgba(255,255,255,0.55)", lineHeight: 1.4 }}>{p.text}</span>
-              </span>
+              <span style={{ flex: 1, minWidth: 0, fontSize: 13, fontWeight: 700, color: C.white, lineHeight: 1.5 }}>{p.label}</span>
               <ArrowRight size={14} strokeWidth={1.75} color={active ? C.yellow : "rgba(255,255,255,0.35)"} aria-hidden style={{ flexShrink: 0 }} />
             </button>
           );
@@ -1096,7 +1091,6 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
         <CopilotAppMock appLabel={appLabel} accent={tabMeta.appColor} typedText={typedText} />
         <CopilotPromptPanel
           appLabel={appLabel}
-          subtitle={d.panelSubtitle}
           prompts={d.prompts}
           activeIndex={activeIndex}
           onSelect={idx => select(idx, d.prompts[idx].text)}
@@ -3138,7 +3132,7 @@ export default function M365CopilotHub({
           </div>
           <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 14 }}>Enterprise-Grade Security</h2>
           <p style={{ fontFamily: F.bold, fontSize: typeScale.subheading.size, fontWeight: 700, color: C.white, marginBottom: 10 }}>
-            What to do now (your 4-step checklist)
+            Your 4-step checklist
           </p>
           <p style={{ fontFamily: F.regular, fontSize: typeScale.body.size, color: C.gray02, maxWidth: 800, lineHeight: 1.6, margin: "0 auto" }}>
             Before you let Copilot loose on tax data, work through these four access and sharing checks.
@@ -3215,14 +3209,7 @@ export default function M365CopilotHub({
 
       {/* Shared dark CTA — Phase 1 complete */}
       <EYWhatsNext
-        title={
-          <>
-            You&apos;ve completed Phase 1.
-            <br />
-            Keep practising with <EYWhatsNextHighlight>real tax workflows.</EYWhatsNextHighlight>
-          </>
-        }
-        description="You now have the foundations, prompting craft, and Copilot patterns to use AI safely in tax work. Revisit any module anytime — or return to Tax Labs to explore what's next."
+        title="You've completed Phase 1"
         ctaLabel="Back to Tax Labs"
         onContinue={() => onNavigate?.("/phase1")}
         meta="Phase 1 covered: AI foundations, tax prompting, and M365 Copilot"

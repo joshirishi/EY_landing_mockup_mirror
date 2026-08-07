@@ -1182,6 +1182,7 @@ export default function ClosureAiReinforcement({
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase4-content" />
       <ModuleHeader
         mode="phase-overview"
+        hideModuleDropdown
         phaseLabel={PHASE4_LABEL}
         phaseNumber={PHASE4_NUMBER}
         subPhaseLabel="4.1"

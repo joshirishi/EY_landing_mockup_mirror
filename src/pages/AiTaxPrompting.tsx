@@ -22,14 +22,14 @@ const SURFACE: Record<SurfaceTone, { bg: string; heading: string; body: string; 
     bg: C.offWhite,
     heading: C.confidentBlack,
     body: C.gray01,
-    eyebrow: C.eyebrowGold,
+    eyebrow: C.eyebrowGoldDark,
     border: "rgba(46,46,56,0.10)",
   },
   light: {
     bg: C.white,
     heading: C.confidentBlack,
     body: C.gray01,
-    eyebrow: C.eyebrowGold,
+    eyebrow: C.eyebrowGoldDark,
     border: "rgba(46,46,56,0.10)",
   },
 };
@@ -1087,7 +1087,6 @@ function AiLazyProSection() {
   return (
     <section id="lazy-vs-pro" style={{ background: s.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       <div style={{ ...contentRailStyle }}>
-        <SectionAnchorTitle theme="dark" align="center">Weak vs Strong</SectionAnchorTitle>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: s.heading, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Same AI. Two Very Different Results.
         </h2>
@@ -1102,7 +1101,7 @@ function AiLazyProSection() {
               <span style={{ color: C.destructive, fontSize: 11, fontWeight: 700, letterSpacing: "1px", fontFamily: F.bold }}>THE LAZY ASK</span>
             </div>
             <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
-              <div style={{ background: C.surfaceOnDark, borderRadius: 8, padding: "16px 18px", borderLeft: `3px solid ${C.destructive}`, minHeight: 128, display: "flex", alignItems: "flex-start" }}>
+              <div style={{ background: C.surfaceOnDark, borderRadius: 8, padding: "12px 16px", borderLeft: `3px solid ${C.destructive}`, minHeight: 72, display: "flex", alignItems: "flex-start" }}>
                 <p style={{ color: s.heading, fontSize: 15, fontStyle: "italic", lineHeight: 1.65, fontFamily: F.light, margin: 0 }}>&ldquo;Summarise this document&rdquo;</p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, minHeight: 76 }}>
@@ -1132,7 +1131,7 @@ function AiLazyProSection() {
               <span style={{ color: C.success, fontSize: 11, fontWeight: 700, letterSpacing: "1px", fontFamily: F.bold }}>THE PRO ASK</span>
             </div>
             <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
-              <div style={{ background: C.surfaceOnDark, borderRadius: 8, padding: "16px 18px", borderLeft: `3px solid ${C.success}`, minHeight: 128, display: "flex", alignItems: "flex-start" }}>
+              <div style={{ background: C.surfaceOnDark, borderRadius: 8, padding: "12px 16px", borderLeft: `3px solid ${C.success}`, minHeight: 72, display: "flex", alignItems: "flex-start" }}>
                 <p style={{ color: s.heading, fontSize: 14, fontStyle: "italic", lineHeight: 1.65, fontFamily: F.light, margin: 0 }}>
                   &ldquo;You are a <strong style={{ color: C.yellow, fontStyle: "normal" }}>tax advisor</strong>. Summarise the key <strong style={{ color: C.frameBlue, fontStyle: "normal" }}>transfer pricing changes</strong> in this circular for a <strong style={{ color: C.frameOrange, fontStyle: "normal" }}>client memo</strong>. Use <strong style={{ color: C.framePurple, fontStyle: "normal" }}>bullet points</strong>. Keep it under <strong style={{ color: C.success, fontStyle: "normal" }}>200 words</strong>.&rdquo;
                 </p>
@@ -1251,11 +1250,6 @@ function WhatsNextSection({ onContinue }: { onContinue: () => void }) {
   return (
     <EYWhatsNext
       title="Prompting skills — unlocked."
-      description={
-        <>
-          Now see them in action with M365 Copilot. The next module takes you into Microsoft 365 Copilot — where you&apos;ll apply these skills across Word, Excel, Outlook, and Teams with real tax use cases.
-        </>
-      }
       ctaLabel="Continue to Part 3: M365 Copilot Deep Dive →"
       onContinue={onContinue}
       meta="Part 3 covers: Copilot in Word, Excel, Outlook, Teams, and real tax workflows"
@@ -1832,9 +1826,9 @@ function EightElementsWizard() {
   const focusRing = `2px solid ${C.yellow}`;
 
   return (
-    <section id="elements" style={{ background: C.gray02, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
+    <section id="elements" style={{ background: s.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       <div style={{ ...contentRailStyle, textAlign: "center" }}>
-        <SectionAnchorTitle align="center">7 Elements</SectionAnchorTitle>
+        <SectionAnchorTitle align="center">Elements</SectionAnchorTitle>
         <h2 style={{ fontSize: 32, fontWeight: 700, color: s.heading, fontFamily: F.bold, letterSpacing: "-0.02em", margin: "0 0 12px", textAlign: "center" }}>
           Prompt like a Pro
         </h2>
@@ -2225,18 +2219,21 @@ function PromptingTechniquesWizard() {
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
-                    marginBottom: 8,
-                    padding: "3px 9px",
+                    gap: 8,
+                    marginBottom: 10,
+                    padding: "4px 10px",
                     borderRadius: 100,
-                    border: "1px solid rgba(46,46,56,0.12)",
-                    background: C.offWhite,
+                    border: `1px solid ${f.color}55`,
+                    background: f.color + "14",
                     fontSize: 12,
                     fontWeight: 700,
-                    color: C.offBlack,
+                    color: f.color,
                     fontFamily: F.bold,
                     lineHeight: 1.3,
                   }}
                 >
+                  {f.key === "without" && <MatchResultBadge kind="bad" label="Without the technique" />}
+                  {f.key === "with" && <MatchResultBadge kind="ok" label="With the technique" />}
                   {f.label}
                 </span>
                 {/* Inlined rather than a boolean flag so TS narrows f.key to
@@ -2774,7 +2771,7 @@ type AdvancedTab = "techniques" | "advanced";
 function AdvancedBlockToggle({ activeTab, onChange, onDark = false }: { activeTab: AdvancedTab; onChange: (t: AdvancedTab) => void; onDark?: boolean }) {
   const focusRing = `2px solid ${C.yellow}`;
   const options: { id: AdvancedTab; label: string }[] = [
-    { id: "techniques", label: "Prompting Techniques" },
+    { id: "techniques", label: "Basic Prompting Techniques" },
     { id: "advanced", label: "Advanced Prompting Techniques" },
   ];
 
@@ -3309,7 +3306,6 @@ export default function AiTaxPrompting({
       {/* ── 6. PROMPT STACK BUILDER — light ── */}
       <section id="stack-builder" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
-          <SectionAnchorTitle align="center">Stack Builder</SectionAnchorTitle>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
             Build a Perfect Prompt — Piece by Piece
           </h2>
@@ -3403,12 +3399,6 @@ export default function AiTaxPrompting({
             </p>
             <p style={{ fontSize: 13, color: C.offBlack, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
               Clear Instructions + Context + Validation = Effective AI Usage
-            </p>
-          </div>
-
-          <div style={{ marginTop: 16, padding: "14px 22px", background: C.yellowAlpha10, border: `1px solid ${C.yellow}33`, borderRadius: 8, textAlign: "center" }}>
-            <p style={{ fontSize: 12, color: C.eyebrowGold, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
-              FOR INFORMATIONAL PURPOSES ONLY. ALWAYS CONSULT YOUR QUALIFIED TAX ADVISOR BEFORE ACTING ON ANY AI-GENERATED OUTPUT.
             </p>
           </div>
         </div>

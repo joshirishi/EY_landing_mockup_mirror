@@ -2603,6 +2603,7 @@ export default function BrainstormingUseCases({
         <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
         <ModuleHeader
           mode="phase-overview"
+          hideModuleDropdown
           phaseLabel={PHASE2_LABEL}
           phaseNumber={PHASE2_NUMBER}
           subPhaseLabel="2.1"

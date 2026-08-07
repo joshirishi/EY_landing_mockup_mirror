@@ -181,6 +181,7 @@
   --color-ey-frame-blue:       #4696FF;
   --color-ey-error:            #FF4136;
   --color-ey-eyebrow-gold:     #B89B00;
+  --color-ey-eyebrow-gold-dark: #7A6800;
 }
 
 @layer base {

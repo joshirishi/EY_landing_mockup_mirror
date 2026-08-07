@@ -742,7 +742,14 @@ const VALIDATE        = ["Facts", "Assumptions", "Calculations", "Legal referenc
 const NEVER_DELEGATE  = ["Technical tax positions", "Tax authority submissions", "Litigation strategy", "Return sign-offs", "Professional opinions"];
 
 function Panel4() {
+  const [activeStep, setActiveStep] = useState<string | null>(null);
   const [replayKey, setReplayKey] = useState(0);
+  const hitlActive = activeStep === "04";
+
+  const handleStepClick = (stepN: string) => {
+    setActiveStep(stepN);
+    if (stepN === "04") setReplayKey((k) => k + 1);
+  };
 
   return (
     <section
@@ -794,10 +801,13 @@ function Panel4() {
                   <motion.div
                     key={`pulse-${replayKey}`}
                     initial={{ scale: 1 }}
-                    whileInView={{ scale: [1, 1.04, 1] }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ delay: 0.7, duration: 0.4, ease: "easeInOut" }}
-                    onClick={() => setReplayKey(k => k + 1)}
+                    animate={
+                      hitlActive
+                        ? { scale: [1, 1.04, 1], boxShadow: "0 0 0 2px rgba(255,230,0,0.45)" }
+                        : { scale: 1, boxShadow: "0 0 0 0 rgba(255,230,0,0)" }
+                    }
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    onClick={() => handleStepClick(step.n)}
                     style={{
                       background: C.yellow,
                       borderRadius: 4,
@@ -811,9 +821,22 @@ function Panel4() {
                   </motion.div>
                 ) : (
                   <div
-                    style={{ background: "rgba(255,255,255,0.07)", borderRadius: 4, padding: "16px 20px", height: "100%", transition: "background 150ms ease" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; }}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleStepClick(step.n)}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleStepClick(step.n); }}
+                    style={{
+                      background: activeStep === step.n ? "rgba(255,230,0,0.12)" : "rgba(255,255,255,0.07)",
+                      borderRadius: 4,
+                      padding: "16px 20px",
+                      height: "100%",
+                      cursor: "pointer",
+                      outline: activeStep === step.n ? `2px solid ${C.yellow}` : "none",
+                      outlineOffset: 2,
+                      transition: "background 150ms ease, outline 150ms ease",
+                    }}
+                    onMouseEnter={(e) => { if (activeStep !== step.n) e.currentTarget.style.background = "rgba(255,255,255,0.12)"; }}
+                    onMouseLeave={(e) => { if (activeStep !== step.n) e.currentTarget.style.background = "rgba(255,255,255,0.07)"; }}
                   >
                     <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.onDarkMuted, letterSpacing: "0.06em", marginBottom: 4 }}>{step.n}</p>
                     <p style={{ fontFamily: F.bold, fontSize: 15, fontWeight: 700, color: C.onDark }}>{step.label}</p>
@@ -831,23 +854,38 @@ function Panel4() {
 
         {/* Validate / Never delegate — interactive hover/click, validate items cascade yellow when step 04 replays */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 40 }}>
-          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 4, padding: "24px 28px", borderTop: `3px solid ${C.frameGreen}`, transition: "background 150ms ease" }}>
+          <div
+            style={{
+              background: hitlActive ? "rgba(255,230,0,0.06)" : "rgba(255,255,255,0.04)",
+              borderRadius: 4,
+              padding: "24px 28px",
+              borderTop: `3px solid ${C.frameGreen}`,
+              boxShadow: hitlActive ? "0 0 0 1px rgba(255,230,0,0.28), inset 0 0 20px rgba(255,230,0,0.05)" : "none",
+              transition: "background 200ms ease, box-shadow 200ms ease",
+            }}
+          >
             <p style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.confidentBlack, marginBottom: 16, letterSpacing: "0.04em", background: C.yellow, display: "inline-block", padding: "6px 12px", borderRadius: 3 }}>Human review should validate</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               {VALIDATE.map((item, idx) => (
                 <motion.p
-                  key={item}
-                  animate={replayKey > 0 ? { backgroundColor: ["rgba(255,230,0,0.18)", "rgba(255,255,255,0)"] } : {}}
-                  transition={{ delay: idx * 0.08, duration: 0.6, ease: "easeOut" }}
+                  key={`${item}-${replayKey}`}
+                  initial={{ backgroundColor: "rgba(255,255,255,0.03)" }}
+                  animate={
+                    hitlActive
+                      ? { backgroundColor: ["rgba(255,230,0,0.35)", "rgba(255,230,0,0.18)"] }
+                      : { backgroundColor: "rgba(255,255,255,0.03)" }
+                  }
+                  transition={{ delay: hitlActive ? idx * 0.08 : 0, duration: 0.6, ease: "easeOut" }}
                   style={{
-                    fontFamily: F.light, fontSize: 13, color: C.onDarkMuted, lineHeight: 1.4,
+                    fontFamily: F.light, fontSize: 13, color: hitlActive ? C.onDark : C.onDarkMuted, lineHeight: 1.4,
                     padding: "6px 10px", borderRadius: 3, margin: 0,
-                    background: "rgba(255,255,255,0.03)",
                     cursor: "default",
-                    transition: "background 150ms ease, color 150ms ease",
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,200,100,0.12)"; e.currentTarget.style.color = C.onDark; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.color = C.onDarkMuted; }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = hitlActive ? "rgba(255,230,0,0.18)" : "rgba(255,255,255,0.03)";
+                    e.currentTarget.style.color = hitlActive ? C.onDark : C.onDarkMuted;
+                  }}
                 >{item}</motion.p>
               ))}
             </div>
@@ -1983,6 +2021,7 @@ export default function GuidanceImplementation({ onBack, onNavigate }: Props) {
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase3-content" />
       <ModuleHeader
         mode="phase-overview"
+        hideModuleDropdown
         phaseLabel={PHASE3_LABEL}
         phaseNumber={PHASE3_NUMBER}
         subPhaseLabel="3.1"

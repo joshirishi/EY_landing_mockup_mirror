@@ -166,10 +166,17 @@ const STAGE_TITLE_LABELS = [
 /** null = hidden; 0 = base camp callout … 5 = summit stage callout. */
 type CalloutIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
+/** Marker at callout index i is reached when activeProgress >= i + 1. */
+function getNextCalloutIndex(activeProgress: ProgressLevel): CalloutIndex | null {
+  if (activeProgress >= DEFAULT_PROGRESS) return null;
+  return activeProgress as CalloutIndex;
+}
+
 type MarkerVisualInput = {
   isActive: boolean;
   isReached: boolean;
   isHovered: boolean;
+  isNext: boolean;
 };
 
 type MarkerVisualStyles = {
@@ -184,11 +191,16 @@ function getMarkerVisualStyles({
   isActive,
   isReached,
   isHovered,
+  isNext,
 }: MarkerVisualInput): MarkerVisualStyles {
   let background: string = colors.confidentBlack;
   const borderColor = colors.yellow;
   let boxShadow = "0px 0px 6px 0px rgba(255, 230, 0, 0.25)";
   let transform = "scale(1)";
+
+  if (isNext && !isActive) {
+    boxShadow = "0px 0px 8px 0px rgba(255, 230, 0, 0.32)";
+  }
 
   if (isReached && !isActive) {
     background = colors.yellowAlpha10;
@@ -224,6 +236,7 @@ function JourneyMarkerButton({
   positionStyle,
   isActive,
   isReached,
+  isNext,
   onClick,
   ariaLabel,
   children,
@@ -232,12 +245,14 @@ function JourneyMarkerButton({
   positionStyle: CSSProperties;
   isActive: boolean;
   isReached: boolean;
+  isNext: boolean;
   onClick: () => void;
   ariaLabel: string;
   children: React.ReactNode;
 }) {
   const [isHovered, setIsHovered] = useState(false);
-  const visual = getMarkerVisualStyles({ isActive, isReached, isHovered });
+  const visual = getMarkerVisualStyles({ isActive, isReached, isHovered, isNext });
+  const showNextPulse = isNext && !isActive;
 
   return (
     <button
@@ -247,6 +262,7 @@ function JourneyMarkerButton({
       aria-expanded={isActive}
       data-active={isActive || undefined}
       data-reached={isReached || undefined}
+      data-next={showNextPulse || undefined}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`absolute flex cursor-pointer items-center justify-center border-2 border-solid transition-[background-color,border-color,box-shadow,transform] duration-[650ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${shapeClassName}`}
@@ -259,6 +275,9 @@ function JourneyMarkerButton({
         transform: visual.transform,
       }}
     >
+      {showNextPulse ? (
+        <span className="ascent-marker-next-pulse absolute inset-0 rounded-[inherit]" aria-hidden />
+      ) : null}
       {children}
       {isReached && !isActive ? (
         <span
@@ -358,10 +377,12 @@ function StageTitleLabel({
 function BaseCampStartMarker({
   isActive,
   isReached,
+  isNext,
   onClick,
 }: {
   isActive: boolean;
   isReached: boolean;
+  isNext: boolean;
   onClick: () => void;
 }) {
   return (
@@ -370,6 +391,7 @@ function BaseCampStartMarker({
       positionStyle={{ left: 156, top: 366 }}
       isActive={isActive}
       isReached={isReached}
+      isNext={isNext}
       onClick={onClick}
       ariaLabel="Base Camp — start of journey"
     >
@@ -385,6 +407,7 @@ function StageNode({
   alt,
   isActive,
   isReached,
+  isNext,
   onClick,
 }: {
   left: number;
@@ -393,6 +416,7 @@ function StageNode({
   alt: string;
   isActive: boolean;
   isReached: boolean;
+  isNext: boolean;
   onClick: () => void;
 }) {
   return (
@@ -401,6 +425,7 @@ function StageNode({
       positionStyle={{ left, top }}
       isActive={isActive}
       isReached={isReached}
+      isNext={isNext}
       onClick={onClick}
       ariaLabel={alt}
     >
@@ -645,40 +670,40 @@ function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
 const bannerTextStyle = {
   fontFamily: fonts.bold,
   fontSize: BANNER_FONT_SIZE,
+  fontWeight: typeScale.label.weight,
   letterSpacing: typeScale.label.tracking,
   textTransform: "uppercase" as const,
+};
+
+const BANNER_PHRASES = [
+  "From uncertainty to impact",
+  "From learning to leading",
+  "From user to AI-enabled tax professional",
+] as const;
+
+const bannerBoxStyle: CSSProperties = {
+  ...bannerTextStyle,
+  color: colors.yellow,
+  background: colors.confidentBlack,
+  padding: "10px 16px",
+  borderRadius: "var(--radius-sm)",
 };
 
 function BottomBanner() {
   return (
     <div
-      className="absolute left-0 flex w-full items-center justify-center border-t border-solid"
+      className="absolute left-0 flex w-full items-center justify-center"
       style={{
         top: BANNER_TOP,
         height: BANNER_HEIGHT,
-        background: colors.confidentBlack,
-        borderColor: colors.borderOnDark,
       }}
     >
-      <div className="flex items-center gap-6">
-        <p className="shrink-0 whitespace-nowrap" style={{ ...bannerTextStyle, color: colors.gray02 }}>
-          From uncertainty to impact
-        </p>
-        <div className="relative size-1.5 shrink-0 overflow-clip">
-          <img alt="" className="absolute inset-0 block size-full max-w-none" src={ASSET.bannerDot} />
-        </div>
-        <p className="shrink-0 whitespace-nowrap" style={{ ...bannerTextStyle, color: colors.gray02 }}>
-          From learning to leading
-        </p>
-        <div className="relative size-1.5 shrink-0 overflow-clip">
-          <img alt="" className="absolute inset-0 block size-full max-w-none" src={ASSET.bannerDot} />
-        </div>
-        <p className="shrink-0 whitespace-nowrap" style={{ ...bannerTextStyle, color: colors.yellow }}>
-          From user to AI-enabled tax professional
-        </p>
-        <div className="relative h-0 w-[72px] shrink-0">
-          <img alt="" className="block size-full max-w-none" src={ASSET.bannerLine} />
-        </div>
+      <div className="flex items-center gap-3">
+        {BANNER_PHRASES.map((phrase) => (
+          <p key={phrase} className="m-0 shrink-0 whitespace-nowrap" style={bannerBoxStyle}>
+            {phrase}
+          </p>
+        ))}
       </div>
     </div>
   );
@@ -687,7 +712,7 @@ function BottomBanner() {
 function AscentCanvas() {
   /** Every marker the user has opened. Callouts persist until clicked again. */
   const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(
-    () => new Set<CalloutIndex>(),
+    () => new Set<CalloutIndex>([0]),
   );
 
   const toggleCallout = (calloutIndex: CalloutIndex) => {
@@ -706,6 +731,8 @@ function AscentCanvas() {
       ? 0
       : ((Math.max(...openCallouts) + 1) as ProgressLevel);
 
+  const nextCalloutIndex = getNextCalloutIndex(activeProgress);
+
   return (
     <div
       className="relative size-full overflow-clip"
@@ -713,6 +740,27 @@ function AscentCanvas() {
       data-name="the-ascent-journey-infographic"
       data-node-id="3743:16946"
     >
+      <style>{`
+        @keyframes ascent-marker-next-glow {
+          0%, 100% {
+            box-shadow:
+              0 0 8px 2px rgba(255, 230, 0, 0.28),
+              0 0 18px 4px rgba(255, 230, 0, 0.14);
+            opacity: 0.65;
+          }
+          50% {
+            box-shadow:
+              0 0 14px 4px rgba(255, 230, 0, 0.55),
+              0 0 28px 8px rgba(255, 230, 0, 0.32),
+              0 0 44px 12px rgba(255, 230, 0, 0.14);
+            opacity: 1;
+          }
+        }
+        .ascent-marker-next-pulse {
+          pointer-events: none;
+          animation: ascent-marker-next-glow 2s ease-in-out infinite;
+        }
+      `}</style>
       {/* Mountain photograph — hiker + sunset baked into clean-background.png */}
       <div className="absolute left-0 top-0 w-full" style={{ height: BANNER_TOP }}>
         <img
@@ -770,19 +818,25 @@ function AscentCanvas() {
       <BaseCampStartMarker
         isActive={openCallouts.has(0)}
         isReached={activeProgress >= 1}
+        isNext={nextCalloutIndex === 0}
         onClick={() => toggleCallout(0)}
       />
 
       {/* Stage icon nodes */}
-      {STAGE_NODES.map((node, index) => (
-        <StageNode
-          key={node.alt}
-          {...node}
-          isActive={openCallouts.has((index + 1) as CalloutIndex)}
-          isReached={activeProgress >= index + 2}
-          onClick={() => toggleCallout((index + 1) as CalloutIndex)}
-        />
-      ))}
+      {STAGE_NODES.map((node, index) => {
+        const calloutIndex = (index + 1) as CalloutIndex;
+
+        return (
+          <StageNode
+            key={node.alt}
+            {...node}
+            isActive={openCallouts.has(calloutIndex)}
+            isReached={activeProgress >= index + 2}
+            isNext={nextCalloutIndex === calloutIndex}
+            onClick={() => toggleCallout(calloutIndex)}
+          />
+        );
+      })}
 
       <BottomBanner />
     </div>

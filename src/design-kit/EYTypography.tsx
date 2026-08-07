@@ -43,11 +43,13 @@ export function SectionAnchorTitle({
   className,
   ...rest
 }: TypoProps & { align?: "left" | "center" | "right" }) {
+  // eyebrowGold (#B89B00) fails WCAG AA on white/offWhite/gray02 — use confidentBlack on light surfaces.
+  const lightEyebrowColor = theme !== "dark" ? colors.confidentBlack : undefined;
   return (
     <EYEyebrow
       theme={theme}
       className={className}
-      style={{ textAlign: align, marginBottom: 8, ...style }}
+      style={{ textAlign: align, marginBottom: 8, color: lightEyebrowColor, ...style }}
       {...rest}
     >
       {children}
@@ -57,7 +59,7 @@ export function SectionAnchorTitle({
 
 /** Small ALL-CAPS eyebrow / category label */
 export function EYEyebrow({ children, theme, style, className, ...rest }: TypoProps) {
-  const color = theme === 'dark' ? colors.yellow : colors.eyebrowGold;
+  const color = theme === 'dark' ? colors.yellow : colors.eyebrowGoldDark;
   return (
     <p
       {...rest}

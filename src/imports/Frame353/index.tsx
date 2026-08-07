@@ -804,7 +804,7 @@ function AiMs365Schematic() {
 function Frame2() {
   return (
     <div className="[word-break:break-word] content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-[#2e2e38] w-full" data-name="Frame">
-      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-[24px] sm:text-[28px] md:text-[32px] md:leading-[40px]">Phased Approach</p>
+      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-[24px] sm:text-[28px] md:text-[32px] md:leading-[40px]">Step by Step Approach</p>
       <p className="font-['EYInterstate:Regular',sans-serif] leading-[24px] relative shrink-0 text-[15px] md:text-[16px] w-full">{`A progressive journey from understanding to application.`}</p>
     </div>
   );
@@ -1171,7 +1171,7 @@ const PHASE_CARDS = [
     week: "Week 1-2",
     number: 1,
     title: "Foundational Training Workshops",
-    description: "2 workshops 1.5 hours each",
+    description: "2 workshops x 1.5 hours each",
     locked: false,
     completed: false,
     coverage: ["AI concepts in Tax", "Prompt engineering (basics)", "M365 Copilot across tax use cases"],
@@ -1195,7 +1195,7 @@ const PHASE_CARDS = [
     number: 3,
     title: "AI Agents & Prompts",
     // description: "Advanced, hands-on training in prompt engineering and M365 Copilot agent design for the use cases identified in Phase 2.",
-    description: "2 workshops 1.5 hours each",
+    description: "2 workshops x 1.5 hours each",
     locked: false,
     completed: false,
     coverage: ["Advanced prompt engineering (hands-on)", "M365 Copilot Agent design (hands-on)", "Guided Prompt Library Development"],
@@ -1258,79 +1258,77 @@ function CardCheckIcon() {
 
 function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS[0]; onProceed?: () => void; onNavigate?: () => void }) {
   return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] h-full flex flex-col min-w-px relative rounded-[8px]">
+    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] h-full min-w-px relative rounded-[8px] grid grid-rows-subgrid row-span-6 gap-y-[20px] p-[24px] xl:p-[28px] w-full min-h-0">
       <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[8px]" />
-      <div className="content-stretch flex flex-col flex-1 gap-[24px] h-full items-start p-[32px] relative w-full min-h-0">
-        {/* Phase number + week */}
-        <div className="content-stretch flex items-center justify-between relative shrink-0 w-full min-w-0">
-          <div className="bg-[var(--ey-brand-yellow)] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[48px]">
-            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#1A1A24] text-[20px] whitespace-nowrap">{phase.number}</p>
-          </div>
-          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">{phase.week}</p>
+      {/* Row 1: Phase number + week */}
+      <div className="content-stretch flex items-center justify-between gap-[8px] relative w-full min-w-0">
+        <div className="bg-[var(--ey-brand-yellow)] content-stretch flex items-center justify-center relative rounded-[24px] shrink-0 size-[40px]">
+          <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#1A1A24] text-[18px] whitespace-nowrap">{phase.number}</p>
         </div>
-        {/* Title + description */}
-        <div className="[word-break:break-word] content-stretch flex flex-col gap-[12px] items-start not-italic relative shrink-0 w-full">
-          <p className="font-['EYInterstate:Bold',sans-serif] leading-[normal] relative shrink-0 text-[#2e2e38] text-[24px]">{phase.title}</p>
-          <p className="font-['EYInterstate:Regular',sans-serif] leading-[22px] min-w-full relative shrink-0 text-[#747480] text-[14px] w-[min-content]">{phase.description}</p>
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[11px] uppercase text-right">{phase.week}</p>
+      </div>
+      {/* Row 2: Title + description */}
+      <div className="[word-break:break-word] content-stretch flex flex-col gap-[10px] items-start not-italic relative w-full min-h-0">
+        <p className="font-['EYInterstate:Bold',sans-serif] leading-[1.25] relative text-[#2e2e38] text-[22px]">{phase.title}</p>
+        <p className="font-['EYInterstate:Regular',sans-serif] leading-[20px] relative text-[#747480] text-[14px] w-full">{phase.description}</p>
+      </div>
+      {/* Row 3: Coverage */}
+      <div className="content-stretch flex flex-col gap-[8px] items-start relative w-full min-h-0">
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Coverage</p>
+        <div className="content-stretch flex flex-col gap-[6px] items-start relative w-full">
+          {phase.coverage.map((item) => (
+            <div key={item} className="content-stretch flex gap-[8px] items-start relative w-full">
+              <BulletCircle />
+              <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
+            </div>
+          ))}
         </div>
-        {/* Coverage + Deliverables */}
-        <div className="content-stretch flex flex-col flex-1 gap-[16px] items-start relative w-full min-h-0">
-          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Coverage</p>
-            <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              {phase.coverage.map((item) => (
-                <div key={item} className="content-stretch flex gap-[8px] items-center relative shrink-0">
-                  <BulletCircle />
-                  <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
-                </div>
-              ))}
+      </div>
+      {/* Row 4: Deliverables */}
+      <div className="content-stretch flex flex-col gap-[8px] items-start relative w-full min-h-0">
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Deliverables</p>
+        <div className="content-stretch flex flex-col gap-[6px] items-start relative w-full">
+          {phase.deliverables.map((item) => (
+            <div key={item} className="content-stretch flex gap-[8px] items-start relative w-full">
+              <BulletCircle />
+              <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
             </div>
-          </div>
-          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Deliverables</p>
-            <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-              {phase.deliverables.map((item) => (
-                <div key={item} className="content-stretch flex gap-[8px] items-center relative shrink-0">
-                  <BulletCircle />
-                  <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Outcome</p>
-            <div className="bg-[#FFFBE0] border border-[#FFE600] rounded-[6px] px-[14px] py-[10px] relative shrink-0 w-full">
-              <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative text-[#2e2e38] text-[13px]">{phase.outcome}</p>
-            </div>
-          </div>
+          ))}
         </div>
-        {/* CTA */}
-        <div className="mt-auto w-full flex flex-col gap-[8px] shrink-0">
-          {phase.completed ? (
-            <div className="w-full bg-[#00C864] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
-              <CardCheckIcon />
-              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-white text-[16px] whitespace-nowrap">Completed</p>
-            </div>
-          ) : phase.locked ? (
-            <div className="w-full bg-[var(--border)] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
-              <CardLockIcon />
-              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[var(--muted-foreground)] text-[16px] whitespace-nowrap">This journey is locked</p>
-            </div>
-          ) : (
-            <div
-              className="w-full bg-[var(--ey-brand-yellow)] content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0 cursor-pointer"
-              onClick={onNavigate ?? onProceed}
-            >
-              <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[16px] whitespace-nowrap">Click here to Proceed</p>
-            </div>
-          )}
-          <p
-            className={`[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[16px] not-italic relative shrink-0 text-[12px] min-h-[32px] ${phase.locked ? "text-[var(--muted-foreground)]" : "invisible"}`}
-            aria-hidden={!phase.locked}
+      </div>
+      {/* Row 5: Outcome */}
+      <div className="content-stretch flex flex-col gap-[8px] items-start relative w-full min-h-0">
+        <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Outcome</p>
+        <div className="bg-[#FFFBE0] border border-[#FFE600] rounded-[6px] px-[12px] py-[8px] relative w-full">
+          <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[18px] not-italic relative text-[#2e2e38] text-[13px]">{phase.outcome}</p>
+        </div>
+      </div>
+      {/* Row 6: CTA */}
+      <div className="w-full flex flex-col gap-[8px] self-end">
+        {phase.completed ? (
+          <div className="w-full bg-[#00C864] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
+            <CardCheckIcon />
+            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-white text-[16px] whitespace-nowrap">Completed</p>
+          </div>
+        ) : phase.locked ? (
+          <div className="w-full bg-[var(--border)] content-stretch flex gap-[8px] items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0">
+            <CardLockIcon />
+            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[var(--muted-foreground)] text-[15px] text-center">This journey is locked</p>
+          </div>
+        ) : (
+          <div
+            className="w-full bg-[var(--ey-brand-yellow)] content-stretch flex items-center justify-center px-[20px] py-[10px] relative rounded-[6px] shrink-0 cursor-pointer"
+            onClick={onNavigate ?? onProceed}
           >
-            {phase.locked ? `Complete Phase ${phase.number - 1} to unlock this journey` : "\u00a0"}
-          </p>
-        </div>
+            <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2E2E38] text-[15px] text-center">Click here to Proceed</p>
+          </div>
+        )}
+        <p
+          className={`[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[16px] not-italic relative shrink-0 text-[12px] min-h-[32px] ${phase.locked ? "text-[var(--muted-foreground)]" : "invisible"}`}
+          aria-hidden={!phase.locked}
+        >
+          {phase.locked ? `Complete Phase ${phase.number - 1} to unlock this journey` : "\u00a0"}
+        </p>
       </div>
     </div>
   );
@@ -1340,7 +1338,7 @@ function CardGrid({ onProceed, onNavigateToBrainstorming, onNavigateToImplementa
   return (
     <div className="relative shrink-0 w-full min-w-0">
       <div className="content-stretch flex flex-col gap-[24px] items-stretch px-4 sm:px-8 md:px-[64px] relative size-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-[24px] items-stretch relative shrink-0 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-[24px] items-stretch relative shrink-0 w-full max-w-[85%] mx-auto">
           <PhaseCard phase={PHASE_CARDS[0]} onProceed={onProceed} />
           <PhaseCard phase={PHASE_CARDS[1]} onNavigate={onNavigateToBrainstorming} />
           <PhaseCard phase={PHASE_CARDS[2]} onNavigate={onNavigateToImplementation} />
@@ -1783,22 +1781,11 @@ function Navigation() {
 function Hero() {
   return (
     <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full min-w-0">
-      {/* Eyebrow + progress — tells users where they are without a click */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-        <p style={{ fontFamily: "'EYInterstate:Bold',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: "0.05em", textTransform: "uppercase", color: "#B89B00", margin: 0 }}>
-          Phase 1 of 4
-        </p>
-        <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
-          {[0, 1, 2, 3].map(i => (
-            <div key={i} style={{ width: i === 0 ? 20 : 8, height: 8, borderRadius: 999, background: i === 0 ? "#2e2e38" : "#c4c4cd", transition: "width 0.2s" }} />
-          ))}
-        </div>
-      </div>
       <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.15] relative shrink-0 text-[#2e2e38] text-[28px] sm:text-[36px] md:text-[48px] md:leading-[56px] w-full max-w-full">
         Phase 1 — Foundational Training
       </p>
-      <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[26px] md:leading-[28px] relative shrink-0 text-[#747480] text-[16px] md:text-[18px] w-full max-w-[800px]">
-        Select a module below to begin your foundational journey into AI concepts, prompting, and M365 Copilot capabilities.
+      <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[24px] min-w-full relative shrink-0 text-[#747480] text-[16px] w-[min-content]">
+        Select card below to begin
       </p>
     </div>
   );
@@ -2423,7 +2410,7 @@ export function Phase1View({
       {/* Learning chrome — full viewport width; content below may still scroll horizontally on very small screens */}
       <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]" data-name="Top Navigation">
         <SiteHeader variant="learning" onNavigate={go} skipLinkTarget="#phase1-content" />
-        <ModuleHeader mode="phase-overview" onNavigate={go} onBack={() => go("/phased")} />
+        <ModuleHeader mode="phase-overview" hideModuleDropdown onNavigate={go} onBack={() => go("/phased")} />
       </div>
       <div id="phase1-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0 overflow-x-hidden">
         <ContentArea1 onOpenFoundational={onNavigateToFoundational} onOpenAiTaxPrompting={onNavigateToAiTaxPrompting} onOpenCopilotHub={onNavigateToCopilotHub} />
