@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
+import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { EYQuote } from "../design-kit/EYTypography";
+import { EYQuote, SectionAnchorTitle } from "../design-kit/EYTypography";
 import {
   colors as C,
   contentInlinePad,
@@ -20,69 +21,17 @@ interface Props {
   onNavigate: (path: string) => void;
 }
 
-// ── Section nav ───────────────────────────────────────────────────────────────
+export const PHASE3_LABEL = "Phase 3: Guidance for Implementation";
+export const PHASE3_NUMBER = 3;
 
-const SECTIONS = [
-  { id: "p3-workshop",  label: "Workshop" },
-  { id: "p3-prompts",   label: "Tax Prompts" },
-  { id: "p3-agents",    label: "M365 Agents" },
-  { id: "p3-hitl",      label: "Human-in-Loop" },
-  { id: "p5-templates", label: "Reference Library" },
-  { id: "p3-closing",   label: "Deployment" },
+const PHASE3_SECTIONS = [
+  { id: "p3-workshop", label: "Workshop", group: "learn" as const },
+  { id: "p3-prompts", label: "Tax Prompts", group: "learn" as const },
+  { id: "p3-agents", label: "M365 Agents", group: "learn" as const },
+  { id: "p3-hitl", label: "Human-in-Loop", group: "learn" as const },
+  { id: "p5-templates", label: "Reference Library", group: "apply" as const },
+  { id: "p3-closing", label: "Deployment", group: "apply" as const },
 ];
-
-function SectionNav({ activeId }: { activeId: string }) {
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    const container = document.querySelector(".overflow-auto");
-    if (el && container) {
-      const top = el.getBoundingClientRect().top + container.scrollTop - 80;
-      container.scrollTo({ top, behavior: "smooth" });
-    }
-  };
-
-  return (
-    <div
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
-        background: "rgba(26,26,36,0.95)",
-        backdropFilter: "blur(8px)",
-        borderBottom: `1px solid rgba(255,255,255,0.08)`,
-        overflowX: "auto",
-      }}
-    >
-      <div style={{ ...contentRailStyle, display: "flex", alignItems: "center", gap: 4, height: 44, paddingTop: 0, paddingBottom: 0 }}>
-        {SECTIONS.map((sec) => {
-          const active = activeId === sec.id;
-          return (
-            <button
-              key={sec.id}
-              onClick={() => scrollTo(sec.id)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "0 12px",
-                height: "100%",
-                fontFamily: F.regular,
-                fontSize: 12,
-                color: active ? C.yellow : C.onDarkMuted,
-                borderBottom: active ? `2px solid ${C.yellow}` : "2px solid transparent",
-                transition: "color 150ms ease, border-color 150ms ease",
-                whiteSpace: "nowrap",
-                flexShrink: 0,
-              }}
-            >
-              {sec.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
@@ -158,7 +107,7 @@ const WORKSHOP_COLS = [
 
 function Panel1() {
   return (
-    <section id="p3-workshop" style={{ position: "relative" }}>
+    <section id="p3-workshop" style={{ position: "relative", scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       {/* Hero — matches Foundational Concepts #home.hero (420px, spectrum bg) */}
       <div
         style={{
@@ -344,6 +293,7 @@ function Panel2() {
     <section
       id="p3-prompts"
       style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: C.confidentBlack,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
       }}
@@ -569,6 +519,7 @@ function Panel3() {
     <section
       id="p3-agents"
       style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: C.white,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
       }}
@@ -797,6 +748,7 @@ function Panel4() {
     <section
       id="p3-hitl"
       style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: C.confidentBlack,
         paddingTop: spacing.sectionPaddingY,
         paddingBottom: 80,
@@ -1243,6 +1195,7 @@ function Panel5() {
     <section
       id="p5-templates"
       style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: C.offWhite,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
       }}
@@ -1523,8 +1476,10 @@ function AgentInstructionTabs() {
   const groups = ["Best Practices", "Common Failures", "Templates & Patterns"];
 
   return (
-    <div style={{ marginTop: 56, marginBottom: 24 }}>
-      <p style={{ ...eyebrow(C.yellow), textAlign: "center", marginBottom: 16 }}>Reference Guidance</p>
+    <div style={{ marginBottom: 24 }}>
+      <SectionAnchorTitle align="center" style={{ marginBottom: 16 }}>
+        Reference Guidance
+      </SectionAnchorTitle>
 
       {/* Wizard — split panel (same pattern as #elements / EightElementsWizard) */}
       <div style={{
@@ -1786,10 +1741,10 @@ function AgentInstructionTabs() {
         </div>
       </div>
 
-      {/* Source attribution */}
-      <div style={{ marginTop: 16, background: "rgba(255,230,0,0.06)", borderRadius: 8, padding: "14px 18px", border: `1px solid rgba(255,230,0,0.2)` }}>
-        <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.yellow, marginBottom: 4 }}>Source</p>
-        <p style={{ fontFamily: F.regular, fontSize: 12, color: C.onDarkMuted, lineHeight: 1.5 }}>
+      {/* Source attribution — light-surface variant */}
+      <div style={{ marginTop: 16, background: C.yellowAlpha10, borderRadius: 8, padding: "14px 18px", border: `1px solid ${C.yellowAlpha12}` }}>
+        <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.eyebrowGold, marginBottom: 4 }}>Source</p>
+        <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, lineHeight: 1.5 }}>
           Write effective instructions for declarative agents | Microsoft Learn — https://learn.microsoft.com/hi-in/microsoft-365/copilot/extensibility/declarative-agent-instructions
         </p>
       </div>
@@ -1802,36 +1757,38 @@ function Panel6() {
   const agent = AGENT_LIBRARY[activeIdx];
 
   return (
-    <section
-      id="p3-agent-templates"
-      style={{
-        background: C.confidentBlack,
-        paddingTop: spacing.sectionPaddingY,
-        paddingBottom: 80,
-        paddingLeft: contentInlinePad,
-        paddingRight: contentInlinePad,
-      }}
-    >
-      <div style={{ ...contentRailStyle }}>
-        <div style={sectionHeader}>
-          <p style={eyebrow(C.yellow)}>Sample M365 Agent Templates</p>
-          <h2 style={{ ...h2Style, color: C.onDark }}>From Build Lab to Controlled Deployment</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
-            Convert draft instructions into pilots, adoption rituals and continuous refinement. Click an agent to see what it does.
-          </p>
-        </div>
+    <>
+      <section
+        id="p3-agent-templates"
+        style={{
+          scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+          background: C.confidentBlack,
+          paddingTop: spacing.sectionPaddingY,
+          paddingBottom: spacing.sectionPaddingY,
+          paddingLeft: contentInlinePad,
+          paddingRight: contentInlinePad,
+        }}
+      >
+        <div style={{ ...contentRailStyle }}>
+          <div style={sectionHeader}>
+            <p style={eyebrow(C.yellow)}>Sample M365 Agent Templates</p>
+            <h2 style={{ ...h2Style, color: C.onDark }}>From Build Lab to Controlled Deployment</h2>
+            <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
+              Convert draft instructions into pilots, adoption rituals and continuous refinement. Click an agent to see what it does.
+            </p>
+          </div>
 
-        {/* Agent wizard — split panel (same pattern as EightElementsWizard / pt-wizard) */}
-        <div style={{
-          border: `1px solid ${C.borderOnDark}`,
-          borderRadius: 12,
-          overflow: "hidden",
-          display: "grid",
-          gridTemplateColumns: "minmax(260px, 300px) 1fr",
-          height: 620,
-          textAlign: "left",
-          background: C.eyBgCard,
-        }}>
+          {/* Agent wizard — split panel (same pattern as EightElementsWizard / pt-wizard) */}
+          <div style={{
+            border: `1px solid ${C.borderOnDark}`,
+            borderRadius: 12,
+            overflow: "hidden",
+            display: "grid",
+            gridTemplateColumns: "minmax(260px, 300px) 1fr",
+            height: 620,
+            textAlign: "left",
+            background: C.eyBgCard,
+          }}>
           {/* LEFT — agent picker sidebar */}
           <nav aria-label="M365 Agent templates" style={{
             background: C.confidentBlack,
@@ -1948,22 +1905,40 @@ function Panel6() {
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
+    <section
+      style={{
+        background: C.offWhite,
+        padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
+      }}
+    >
+      <div style={{ ...contentRailStyle }}>
         {/* 3-tab reference section — Agent Best Practices / Common Failures / Templates & Patterns */}
         <AgentInstructionTabs />
 
-        {/* You now have */}
-        <p style={{ ...eyebrow(C.yellow), textAlign: "center", marginTop: 40 }}>You Now Have</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 56 }}>
+        {/* You now have — deliverables grid */}
+        <p style={{ ...eyebrow(C.eyebrowGold), textAlign: "center", marginTop: 40 }}>You Now Have</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {YOU_NOW_HAVE.map((item) => (
-            <div key={item.label} style={{ background: "rgba(255,255,255,0.05)", borderRadius: 4, padding: "24px 22px", borderTop: `3px solid ${item.color}` }}>
-              <p style={{ fontFamily: F.bold, fontSize: 15, fontWeight: 700, color: C.onDark, lineHeight: 1.4 }}>{item.label}</p>
+            <div
+              key={item.label}
+              style={{
+                background: C.white,
+                borderRadius: 4,
+                padding: "24px 22px",
+                borderTop: `3px solid ${item.color}`,
+                boxShadow: "0 2px 8px rgba(26,26,36,0.07)",
+              }}
+            >
+              <p style={{ fontFamily: F.bold, fontSize: 15, fontWeight: 700, color: C.confidentBlack, lineHeight: 1.4 }}>{item.label}</p>
             </div>
           ))}
         </div>
-
       </div>
     </section>
+    </>
   );
 }
 
@@ -1973,6 +1948,7 @@ function Panel7({ onBack }: { onBack: () => void }) {
   return (
     <EYWhatsNext
       id="p3-closing"
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN }}
       eyebrow="What's next?"
       title={
         <>
@@ -1990,26 +1966,7 @@ function Panel7({ onBack }: { onBack: () => void }) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function GuidanceImplementation({ onBack, onNavigate }: Props) {
-  const [activeSection, setActiveSection] = useState(SECTIONS[0].id);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  useEffect(() => {
-    const container = document.querySelector(".overflow-auto");
-    const options = { root: container, rootMargin: "-20% 0px -60% 0px", threshold: 0 };
-
-    observerRef.current = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) setActiveSection(entry.target.id);
-      }
-    }, options);
-
-    SECTIONS.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observerRef.current?.observe(el);
-    });
-
-    return () => observerRef.current?.disconnect();
-  }, []);
+  useModuleSectionHashScroll();
 
   return (
     <div style={{ width: "100%", minHeight: "100vh", background: C.confidentBlack }}>
@@ -2024,25 +1981,15 @@ export default function GuidanceImplementation({ onBack, onNavigate }: Props) {
         }
       `}</style>
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase3-content" />
-
-      {/* Breadcrumb */}
-      <div style={{ background: C.offBlack, padding: "16px 0", borderBottom: `1px solid rgba(255,255,255,0.08)` }}>
-        <div style={{ ...contentRailStyle, display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            onClick={onBack}
-            style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontFamily: F.regular, fontSize: 13, color: C.onDarkMuted, padding: 0 }}
-          >
-            ← Back
-          </button>
-          <span style={{ color: C.borderOnDark }}>|</span>
-          <p style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.onDarkSubtle, letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>
-            Phase 3 · Guidance for Implementation
-          </p>
-        </div>
-      </div>
-
-      {/* Section nav */}
-      <SectionNav activeId={activeSection} />
+      <ModuleHeader
+        mode="phase-overview"
+        phaseLabel={PHASE3_LABEL}
+        phaseNumber={PHASE3_NUMBER}
+        subPhaseLabel="3.1"
+        sections={PHASE3_SECTIONS}
+        onNavigate={onNavigate}
+        onBack={onBack}
+      />
 
       <main id="phase3-content" style={{ position: "relative" }}>
         <Panel1 />

@@ -2467,19 +2467,31 @@ function AgentBestPracticesTab() {
       </div>
 
       {/* ── Slide body — teaching copy left, live agent surface right ── */}
-      <div style={{ flex: 1, minHeight: 0, display: "flex", background: C.offWhite, overflow: "hidden" }}>
+      <div style={{ flex: 1, minHeight: 0, display: "flex", background: C.confidentBlack, overflow: "hidden" }}>
 
         {/* Left — title, subtitle, content, CTA, EY mark */}
-        <div style={{ flex: "0 0 36%", minWidth: 0, display: "flex", flexDirection: "column", gap: 16, padding: "26px 24px 20px", overflowY: "auto" }}>
+        <div
+          style={{
+            flex: "0 0 36%",
+            minWidth: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            padding: "26px 24px 20px",
+            overflowY: "auto",
+            background: C.eyBgCard,
+            borderRight: `1px solid ${C.borderOnDark}`,
+          }}
+        >
           <div style={{ flexShrink: 0 }}>
-            <h3 style={{ fontFamily: F.bold, fontSize: 25, fontWeight: 700, color: C.confidentBlack, margin: 0, lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: F.bold, fontSize: 25, fontWeight: 700, color: C.onDark, margin: 0, lineHeight: 1.2 }}>
               {slide.heading}
             </h3>
             <span style={{ display: "block", width: 44, height: 3, background: C.yellow, marginTop: 10 }} aria-hidden />
           </div>
 
-          <div style={{ flexShrink: 0, padding: "11px 15px", background: C.white, border: `1px solid ${C.gray02}`, borderLeft: `3px solid ${C.yellow}`, borderRadius: 6 }}>
-            <p style={{ fontFamily: F.regular, fontSize: 13.5, color: C.dark2, margin: 0, lineHeight: 1.5 }}>
+          <div style={{ flexShrink: 0, padding: "11px 15px", background: C.surfaceOnDark, border: `1px solid ${C.borderOnDark}`, borderLeft: `3px solid ${C.yellow}`, borderRadius: 6 }}>
+            <p style={{ fontFamily: F.regular, fontSize: 13.5, color: C.onDarkMuted, margin: 0, lineHeight: 1.5 }}>
               {slide.sub}
             </p>
           </div>
@@ -2488,7 +2500,7 @@ function AgentBestPracticesTab() {
             {slide.content.map((line, i) => (
               <li key={i} style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
                 <span style={{ width: 6, height: 6, background: C.yellow, flexShrink: 0, marginTop: 7 }} aria-hidden />
-                <span style={{ fontFamily: F.regular, fontSize: 13.5, color: C.dark2, lineHeight: 1.6 }}>
+                <span style={{ fontFamily: F.regular, fontSize: 13.5, color: C.onDarkMuted, lineHeight: 1.6 }}>
                   {line.startsWith("- ") ? line.slice(2) : line}
                 </span>
               </li>
@@ -2505,17 +2517,10 @@ function AgentBestPracticesTab() {
           >
             Know more <ArrowRight size={14} strokeWidth={2} aria-hidden />
           </a>
-
-          <div style={{ flexShrink: 0 }}>
-            <img src="/ey-logo.svg" alt="EY" style={{ height: 34, width: "auto", display: "block" }} />
-            <p style={{ fontFamily: F.bold, fontSize: 10.5, color: C.dark2, margin: "6px 0 0", lineHeight: 1.35 }}>
-              Shape the future<br />with confidence
-            </p>
-          </div>
         </div>
 
         {/* Right — the agent-creation surface, floating as in the mailer */}
-        <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", padding: "20px 22px 20px 0" }}>
+        <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", padding: "20px 22px 20px 0", background: C.confidentBlack }}>
           <div style={{ flex: 1, minWidth: 0, height: "100%", maxHeight: 430, display: "flex", background: C.white, border: `1px solid ${C.gray02}`, borderRadius: 12, boxShadow: "0 10px 34px rgba(0,0,0,0.13)", overflow: "hidden" }}>
             <AgentBuilderCanvas slide={slide} />
           </div>
@@ -3125,18 +3130,20 @@ export default function M365CopilotHub({
       {/* ── Security (Figma: security-case-studies — 4 horizontal cards) ─────── */}
       <section id="security" style={{ background: C.dark, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
-        <SectionAnchorTitle theme="dark" align="left">Security &amp; Governance</SectionAnchorTitle>
-        {/* GOVERNANCE & TRUST kicker badge */}
-        <div style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,230,0,0.12)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, padding: "5px 14px", marginBottom: 24 }}>
-          <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow }}>GOVERNANCE &amp; TRUST</span>
-        </div>
-        <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 14 }}>Enterprise-Grade Security</h2>
-        <p style={{ fontFamily: F.bold, fontSize: typeScale.subheading.size, fontWeight: 700, color: C.white, marginBottom: 10 }}>
-          What to do now (your 4-step checklist)
-        </p>
-        <p style={{ fontSize: typeScale.body.size, color: C.gray02, marginBottom: 40, maxWidth: 800, lineHeight: 1.6 }}>
-          Before you let Copilot loose on tax data, work through these four access and sharing checks.
-        </p>
+        <SectionAnchorTitle theme="dark" align="center">Security &amp; Governance</SectionAnchorTitle>
+        <header style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 40 }}>
+          {/* GOVERNANCE & TRUST kicker badge */}
+          <div style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,230,0,0.12)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, padding: "5px 14px", marginBottom: 24 }}>
+            <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow }}>GOVERNANCE &amp; TRUST</span>
+          </div>
+          <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 14 }}>Enterprise-Grade Security</h2>
+          <p style={{ fontFamily: F.bold, fontSize: typeScale.subheading.size, fontWeight: 700, color: C.white, marginBottom: 10 }}>
+            What to do now (your 4-step checklist)
+          </p>
+          <p style={{ fontFamily: F.regular, fontSize: typeScale.body.size, color: C.gray02, maxWidth: 800, lineHeight: 1.6, margin: "0 auto" }}>
+            Before you let Copilot loose on tax data, work through these four access and sharing checks.
+          </p>
+        </header>
         {/* 4-step checklist — click a card to open its security infographic */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 26 }}>
           {SECURITY_CHECKLIST.map((step) => (
