@@ -1,11 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Lock, PlusCircle } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { ModuleHeader } from "../design-kit/LearningNav";
+import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-2212662948.jpg";
+
+/**
+ * Section tabs for the Phase 2 sub-nav. Phase-overview pages have no curriculum
+ * module to derive these from, so they are declared here and passed to
+ * <ModuleHeader sections={…}>. Each `id` must match a section id in the page.
+ * Labels follow each section's own eyebrow copy.
+ */
+const PHASE2_SECTIONS = [
+  { id: "quick-recall", label: "Quick Recall", group: "learn" as const },
+  { id: "memory-refresh", label: "Memory Refresh", group: "learn" as const },
+  { id: "problem-first", label: "Problem First", group: "learn" as const },
+  { id: "guided-examples", label: "Prompt Examples", group: "learn" as const },
+  { id: "agent-examples", label: "Agent Examples", group: "learn" as const },
+  { id: "use-case-map", label: "Activity Choice", group: "apply" as const },
+  { id: "live-brainstorm", label: "Live Brainstorm", group: "apply" as const },
+  { id: "deliverables", label: "Outputs", group: "apply" as const },
+  { id: "next-steps", label: "What's Next", group: "apply" as const },
+];
 
 // ── Quick Recall data — verbatim from PDF slide 2 ────────────────────────────
 const PROMPT_TASKS = [
@@ -136,7 +154,7 @@ function MemoryRefreshSection() {
   return (
     <section
       id="memory-refresh"
-      style={{
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.confidentBlack,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -356,7 +374,7 @@ function ProblemFirstSection() {
   return (
     <section
       id="problem-first"
-      style={{ background: colors.white, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.white, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
     >
       <style>{`
         @keyframes ey-row-step-back {
@@ -666,7 +684,7 @@ function GuidedExamplesSection() {
   return (
     <section
       id="guided-examples"
-      style={{
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -1011,7 +1029,7 @@ function AgentExamplesSection() {
   return (
     <section
       id="agent-examples"
-      style={{
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.white,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -1257,7 +1275,7 @@ function ActivityLevelChoiceSection() {
   return (
     <section
       id="use-case-map"
-      style={{
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: "rgba(0,163,255,0.05)",
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -1567,7 +1585,7 @@ function LiveBrainstormSection() {
   return (
     <section
       id="live-brainstorm"
-      style={{
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.confidentBlack,
         padding: "80px 0",
       }}
@@ -1777,7 +1795,7 @@ const D2_ACCENT = "#7B5EA7";
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
     <>
-      <section id="deliverables" style={{ background: "#F4F4F8", padding: "80px 0 0" }}>
+      <section id="deliverables" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: "#F4F4F8", padding: "80px 0 0" }}>
         <div style={{ ...contentRailStyle }}>
           {/* Eyebrow + heading — centered per section pattern */}
           <div style={{ textAlign: "center", marginBottom: 8 }}>
@@ -1992,6 +2010,7 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
       {/* What's Next CTA */}
       <EYWhatsNext
         id="next-steps"
+        style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN }}
         title={
           <>
             Phase 2 complete.{" "}
@@ -2050,7 +2069,7 @@ function QuickRecallSection() {
   return (
     <section
       id="quick-recall"
-      style={{
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
@@ -2569,6 +2588,8 @@ export default function BrainstormingUseCases({
   onBack: () => void;
   onNavigate: (path: string) => void;
 }) {
+  useModuleSectionHashScroll();
+
   return (
     <div
       className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden"
@@ -2585,6 +2606,7 @@ export default function BrainstormingUseCases({
           phaseLabel={PHASE2_LABEL}
           phaseNumber={PHASE2_NUMBER}
           subPhaseLabel="2.1"
+          sections={PHASE2_SECTIONS}
           onNavigate={onNavigate}
           onBack={onBack}
         />
