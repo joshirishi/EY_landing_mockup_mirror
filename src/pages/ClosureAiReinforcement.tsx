@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
@@ -13,7 +13,6 @@ export const PHASE4_NUMBER = 4;
 
 const PHASE4_SECTIONS = [
   { id: "p4-risk",       label: "The Risk",       group: "learn" as const },
-  { id: "p4-playbook",   label: "The Playbook",   group: "learn" as const },
   { id: "p4-checks",     label: "The Checks",     group: "learn" as const },
   { id: "p4-checklist",  label: "Your Checklist", group: "apply" as const },
   { id: "p4-org",        label: "For Organisations", group: "apply" as const },
@@ -396,14 +395,6 @@ function HeroContextSection() {
     >
       <div style={{ ...contentRailStyle }}>
 
-        {/* Today's Question card */}
-        <div style={{ ...cardStyle, borderTop: `3px solid ${colors.yellow}`, marginBottom: 24 }}>
-          <p style={eyebrowStyle()}>Today's Question</p>
-          <p style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.6vw, 20px)", color: colors.offBlack, margin: 0, lineHeight: 1.5 }}>
-            How do you use these capabilities without compromising accuracy, confidentiality, professional judgment or trust?
-          </p>
-        </div>
-
         {/* Two-column capability cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 32 }}>
           {/* Left card */}
@@ -477,145 +468,7 @@ function HeroContextSection() {
   );
 }
 
-// ── Slide 3: The Responsible AI Journey ─────────────────────────────────────
-const JOURNEY_STEPS = [
-  { n: 1, label: "DEFINE",   color: colors.frameBlue,    question: "What am I trying to achieve?" },
-  { n: 2, label: "DECIDE",   color: colors.yellow,       question: "Is AI suitable for this activity?" },
-  { n: 3, label: "PROTECT",  color: colors.frameGreen,   question: "What information will AI receive?" },
-  { n: 4, label: "CONTROL",  color: colors.framePurple,  question: "What instructions, sources and boundaries will I provide?" },
-  { n: 5, label: "VERIFY",   color: colors.frameOrange,  question: "Are the facts, calculations and authorities correct?" },
-  { n: 6, label: "APPROVE",  color: colors.frameRed,     question: "Has an appropriately qualified person reviewed the output?" },
-  { n: 7, label: "RECORD",   color: colors.frameBlue,    question: "What evidence of review, decisions or issues should be retained?" },
-] as const;
 
-function ResponsibleAIJourney() {
-  const [active, setActive] = useState(0);
-  const step = JOURNEY_STEPS[active];
-
-  return (
-    <section
-      id="p4-playbook"
-      aria-labelledby="playbook-heading"
-      style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.confidentBlack,
-        padding: `${spacing.sectionPaddingY} 0`,
-        width: "100%",
-      }}
-    >
-      <div style={{ ...contentRailStyle }}>
-        {/* Center-aligned header */}
-        <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px", textAlign: "center" }}>
-          Use the Playbook
-        </p>
-        <h2
-          id="playbook-heading"
-          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.onDark, margin: "0 0 12px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
-        >
-          The Responsible AI Journey
-        </h2>
-        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 16px)", color: colors.onDarkMuted, maxWidth: 620, margin: "0 auto 48px", lineHeight: 1.6, textAlign: "center" }}>
-          Every responsible use of AI should pass through seven checkpoints.
-        </p>
-
-        {/* Hint above pills */}
-        <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.onDarkSubtle, textAlign: "center", margin: "0 0 16px" }}>
-          Click any checkpoint to explore it
-        </p>
-
-        {/* Clickable label rail — all 7 always visible */}
-        <div
-          role="tablist"
-          aria-label="Responsible AI checkpoints"
-          className="journey-tabs-rail"
-          style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "8px 0", marginBottom: 24 }}
-        >
-          {JOURNEY_STEPS.map((s, i) => {
-            const isActive = i === active;
-            return (
-              <Fragment key={s.n}>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls="journey-panel"
-                  onClick={() => setActive(i)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "7px 12px",
-                    borderRadius: 32,
-                    justifySelf: "center",
-                    border: `1.5px solid ${isActive ? s.color : colors.borderOnDark}`,
-                    background: isActive ? `${s.color}18` : "transparent",
-                    cursor: "pointer",
-                    transition: "border-color 0.2s, background 0.2s",
-                  }}
-                >
-                  <StepBadge n={s.n} color={s.color} size={22} />
-                  <span style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 11,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: isActive ? s.color : colors.onDarkMuted,
-                    transition: "color 0.2s",
-                  }}>
-                    {s.label}
-                  </span>
-                </button>
-              </Fragment>
-            );
-          })}
-        </div>
-
-        {/* Active question panel */}
-        <motion.div
-          id="journey-panel"
-          role="tabpanel"
-          key={active}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            background: colors.eyBgCard,
-            border: `1px solid ${colors.borderOnDark}`,
-            borderTop: `3px solid ${step.color}`,
-            borderRadius: 10,
-            padding: "24px 36px",
-            marginBottom: 24,
-            minHeight: 110,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
-          <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: step.color, margin: "0 0 16px" }}>
-            Step {step.n} — {step.label}
-          </p>
-          <p style={{ fontFamily: fonts.quote, fontStyle: "italic", fontSize: "clamp(20px, 2.4vw, 30px)", color: colors.onDark, margin: 0, lineHeight: 1.4 }}>
-            {step.question}
-          </p>
-        </motion.div>
-
-        {/* Callout strip — verbatim PDF, yellow left border */}
-        <div
-          style={{
-            background: colors.eyBgCard,
-            borderLeft: `4px solid ${colors.yellow}`,
-            borderRadius: 6,
-            padding: "20px 28px",
-          }}
-        >
-          <p style={{ fontFamily: fonts.bold, fontSize: "clamp(13px, 1.3vw, 15px)", color: colors.yellow, margin: 0, lineHeight: 1.5 }}>
-            Responsible AI is not one final check. It is a discipline applied throughout the task.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ── TheChecks ─────────────────────────────────────────────────────────────────
 
@@ -659,6 +512,12 @@ function Check1Body() {
   ];
   return (
     <div>
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.ui, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.ui, fontSize: 13, color: colors.white, margin: 0 }}><strong>DEFINE:</strong> What am I trying to achieve?</p>
+        <p style={{ fontFamily: fonts.ui, fontSize: 13, color: colors.white, margin: 0 }}><strong>DECIDE:</strong> Is AI suitable for this activity?</p>
+      </div>
       {/* Zone A: PSIO — unified horizontal panel, 4 columns */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.10)", marginBottom: 14 }}>
         {psio.map((q, i) => (
@@ -723,6 +582,11 @@ function Check2Body() {
   ];
   return (
     <div>
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.ui, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.ui, fontSize: 13, color: colors.white, margin: 0 }}><strong>PROTECT:</strong> What information will AI receive?</p>
+      </div>
       {/* Zone A: 8 pre-flight questions as 2×4 numbered cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.10)", marginBottom: 14 }}>
         {questions.map((q, i) => (
@@ -787,6 +651,11 @@ function Check3Body() {
   ];
   return (
     <div>
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.ui, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.ui, fontSize: 13, color: colors.white, margin: 0 }}><strong>CONTROL:</strong> What instructions, sources and boundaries will I provide?</p>
+      </div>
       {/* Zone A: unified 3×2 sequenced dimension panel */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.10)", marginBottom: 14 }}>
         {dimensions.map((d, i) => (
@@ -877,6 +746,11 @@ function Check5Body() {
   ] as const;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.ui, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.ui, fontSize: 13, color: colors.white, margin: 0 }}><strong>VERIFY:</strong> Are the facts, calculations and authorities correct?</p>
+      </div>
       {/* Zone A: VERIFY — 3×2 unified panel */}
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.1)" }}>
         {verifyCards.map((card, i) => (
@@ -943,98 +817,6 @@ function Check5Body() {
   );
 }
 
-function Check67Body() {
-  const parts = [
-    {
-      label: "Part A — Human approval",
-      color: colors.frameGreen, // frameGreen on confidentBlack = 7.76:1 ✓ WCAG AA
-      items: [
-        "Reviewed by an appropriately qualified person",
-        "Material errors and omissions corrected",
-        "Assumptions and limitations considered",
-        "Final communication is appropriate for its audience",
-        "Responsible professional approved the final work",
-      ],
-    },
-    {
-      label: "Part B — Appropriate record",
-      color: colors.frameBlue, // frameBlue on confidentBlack = 5.80:1 ✓ WCAG AA
-      items: [
-        "Purpose and use case",
-        "Tool used",
-        "Material prompt or Agent instructions",
-        "Sources or knowledge repositories used",
-        "Significant assumptions and limitations",
-        "Facts, authorities and calculations checked",
-        "Material corrections made",
-        "Reviewer or approver",
-        "Issues identified and escalated",
-      ],
-    },
-    {
-      label: "Part C — Escalate when",
-      color: colors.frameRed, // frameRed on confidentBlack = 4.84:1 ✓ WCAG AA
-      items: [
-        "Sensitive information may have been disclosed",
-        "A source, citation or quotation cannot be verified",
-        "An Agent acts outside its defined purpose",
-        "Access permissions appear inappropriate",
-        "Outputs are persistently inaccurate or misleading",
-        "A potentially biased or unfair outcome is identified",
-        "Use conflicts with organisational or client requirements",
-        "Reviewer cannot independently support the conclusion",
-      ],
-    },
-  ] as const;
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      {/* Zone A: Three dark columns — part headers on dark = all accessible */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-        {parts.map((part) => (
-          <div
-            key={part.label}
-            style={{
-              background: colors.confidentBlack,
-              borderTop: `3px solid ${part.color}`,
-              borderRadius: 10,
-              padding: "18px 16px",
-            }}
-          >
-            <p style={{ fontFamily: fonts.bold, fontSize: 13, color: part.color, margin: "0 0 12px", lineHeight: 1.3 }}>
-              {part.label}
-            </p>
-            <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-              {part.items.map((item) => (
-                <li key={item} style={{ position: "relative", paddingLeft: 12, marginBottom: 7, fontFamily: fonts.regular, fontSize: 12, color: colors.onDark, lineHeight: 1.5 }}>
-                  <span aria-hidden="true" style={{ position: "absolute", left: 0, top: "0.55em", width: 4, height: 4, borderRadius: "50%", background: part.color }} />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {/* Zone B: Hero callout — yellow text on dark (yellow on confidentBlack ≈ 14:1 ✓) */}
-      <div style={{ background: colors.confidentBlack, borderLeft: `4px solid ${colors.yellow}`, borderRadius: 6, padding: "18px 22px" }}>
-        <p style={{ fontFamily: fonts.bold, fontSize: 14, color: colors.yellow, margin: 0, lineHeight: 1.55 }}>
-          Documentation is not about saving everything. It is about retaining the appropriate evidence that responsible review occurred.
-        </p>
-      </div>
-
-      {/* Zone C: Leader note — offBlack on offWhite (14:1 ✓) */}
-      <div style={{ borderLeft: `3px solid rgba(46,46,56,0.2)`, background: colors.offWhite, borderRadius: "0 6px 6px 0", padding: "12px 14px" }}>
-        <p style={{ fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 4px" }}>
-          Leader note
-        </p>
-        <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, margin: 0, lineHeight: 1.6 }}>
-          Consider whether AI-enabled efficiencies affect time recording, pricing, billing or client communication, in accordance with applicable policies and engagement terms.
-        </p>
-      </div>
-    </div>
-  );
-}
 
 const CHECKS_META = [
   { n: "1",   label: "Check 1: Pause Before You Prompt",                                subtitle: "Clarify the purpose, suitability, impact and ownership before using AI.",                                                                              journey: "DEFINE • DECIDE",  color: colors.frameBlue,   onColor: colors.offBlack, Body: Check1Body  },
@@ -1042,7 +824,6 @@ const CHECKS_META = [
   { n: "3",   label: "Check 3: A Responsible Prompt Sets Boundaries",                   subtitle: "A responsible prompt does not merely tell AI what to do—it also tells AI where to stop.",                                                               journey: "CONTROL",          color: colors.framePurple, onColor: colors.white,    Body: Check3Body  },
   { n: "4",   label: "Check 4: Build No-Code Agents with Guardrails",                   subtitle: "No Agent should have broader access, authority or autonomy than its approved purpose requires.",                                                         journey: "CONTROL",          color: colors.frameTeal,   onColor: colors.offBlack, Body: Check4Body  },
   { n: "5",   label: "Check 5: Do Not Approve What You Cannot Defend",                  subtitle: "Evaluate whether the output's stated rationale is supported by verified facts, calculations and authorities.",                                            journey: "VERIFY",           color: colors.frameOrange, onColor: colors.offBlack, Body: Check5Body  },
-  { n: "6·7", label: "Checks 6 and 7: Responsible Use Must Be Reviewable",              subtitle: "Human approval, an appropriate review trail and prompt escalation complete the control cycle.",                                                           journey: "APPROVE • RECORD", color: colors.frameMagenta, onColor: colors.offBlack, Body: Check67Body },
 ];
 
 function TheChecks() {
@@ -1060,7 +841,7 @@ function TheChecks() {
           The Checks
         </p>
         <h2 id="checks-heading" style={{ fontFamily: fonts.bold, fontSize: "clamp(26px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 14px", lineHeight: 1.2, textAlign: "center" }}>
-          Seven Checks for Responsible AI
+          Checks for Responsible AI
         </h2>
         <p style={{ fontFamily: fonts.regular, fontSize: "clamp(15px, 1.4vw, 18px)", color: colors.gray01, margin: "0 auto 48px", lineHeight: 1.6, textAlign: "center", maxWidth: 620 }}>
           Each check maps to a step in the Responsible AI Journey. Apply them throughout the task—not only at the end.
@@ -1113,34 +894,35 @@ function TheChecks() {
                   <span style={{
                     display: "inline-flex", alignItems: "center", justifyContent: "center",
                     width: 32, height: 32, borderRadius: "50%", flexShrink: 0, marginTop: 1,
-                    background: isOpen ? colors.offBlack : "transparent",
-                    border: `1.5px solid ${isOpen ? colors.offBlack : "rgba(46,46,56,0.25)"}`,
-                    color: isOpen ? colors.yellow : colors.gray01,
-                    fontFamily: fonts.bold, fontSize: check.n === "6·7" ? 9 : 13,
+                    background: isOpen ? colors.offBlack : `${check.color}22`,
+                    border: `1.5px solid ${isOpen ? colors.offBlack : check.color}`,
+                    color: isOpen ? colors.yellow : colors.offBlack,
+                    fontFamily: fonts.bold, fontSize: 13,
                     transition: "background 0.25s, border-color 0.25s, color 0.25s",
                   }}>
                     {check.n}
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ display: "block", fontFamily: fonts.bold, fontSize: "clamp(13px, 1.3vw, 15px)", color: isOpen ? colors.offBlack : colors.gray01, transition: "color 0.2s", lineHeight: 1.3 }}>
+                    <span style={{ display: "block", fontFamily: fonts.bold, fontSize: "clamp(13px, 1.3vw, 15px)", color: colors.offBlack, transition: "color 0.2s", lineHeight: 1.3 }}>
                       {check.label}
                     </span>
-                    <span style={{ display: "block", fontFamily: fonts.regular, fontSize: 12, color: isOpen ? colors.gray01 : colors.gray02, marginTop: 3, lineHeight: 1.5, transition: "color 0.2s" }}>
+                    <span style={{ display: "block", fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, marginTop: 3, lineHeight: 1.5, transition: "color 0.2s" }}>
                       {check.subtitle}
                     </span>
                   </div>
                   <span style={{
                     fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.07em", textTransform: "uppercase",
                     flexShrink: 0, marginTop: 2, whiteSpace: "nowrap",
-                    background: isOpen ? colors.offBlack : "transparent",
-                    color: isOpen ? colors.yellow : colors.gray02,
-                    borderRadius: 3, padding: isOpen ? "3px 7px" : "3px 0px",
-                    transition: "background 0.25s, color 0.25s, padding 0.25s",
+                    background: isOpen ? colors.offBlack : `${check.color}22`,
+                    color: isOpen ? colors.yellow : colors.offBlack,
+                    border: isOpen ? "none" : `1px solid ${check.color}`,
+                    borderRadius: 3, padding: "3px 7px",
+                    transition: "background 0.25s, color 0.25s",
                   }}>
                     {check.journey}
                   </span>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ flexShrink: 0, marginTop: 4, transition: "transform 0.3s ease", transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
-                    <path d="M4 6l4 4 4-4" stroke={colors.gray01} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M4 6l4 4 4-4" stroke={colors.offBlack} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
                 <div
@@ -1197,8 +979,6 @@ export default function ClosureAiReinforcement({
         <HeroContextSection />
 
         <RecogniseTheRisk />
-
-        <ResponsibleAIJourney />
 
         <TheChecks />
 
