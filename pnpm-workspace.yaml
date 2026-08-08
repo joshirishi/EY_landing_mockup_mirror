@@ -7,7 +7,7 @@ allowBuilds:
   analyzthis_design: true
   esbuild: true
 minimumReleaseAgeExclude:
-  - analyzthis_design@1.10.0
+  - analyzthis_design@1.10.0 || 1.20.1
 supportedArchitectures:
   os:
     - linux
