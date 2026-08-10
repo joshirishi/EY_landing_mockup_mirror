@@ -166,6 +166,11 @@ const STAGE_TITLE_LABELS = [
 /** null = hidden; 0 = base camp callout … 5 = summit stage callout. */
 type CalloutIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
+export type AscentJourneyInfographicProps = {
+  completedStage?: 0 | 1 | 2 | 3 | 4 | 5;
+  defaultOpenCallout?: 0 | 1 | 2 | 3 | 4 | 5;
+};
+
 /** Marker at callout index i is reached when activeProgress >= i + 1. */
 function getNextCalloutIndex(activeProgress: ProgressLevel): CalloutIndex | null {
   if (activeProgress >= DEFAULT_PROGRESS) return null;
@@ -709,11 +714,20 @@ function BottomBanner() {
   );
 }
 
-function AscentCanvas() {
+function AscentCanvas({
+  completedStage,
+  defaultOpenCallout,
+}: {
+  completedStage?: AscentJourneyInfographicProps["completedStage"];
+  defaultOpenCallout?: AscentJourneyInfographicProps["defaultOpenCallout"];
+}) {
   /** Every marker the user has opened. Callouts persist until clicked again. */
-  const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(
-    () => new Set<CalloutIndex>([0]),
-  );
+  const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(() => {
+    if (defaultOpenCallout !== undefined) {
+      return new Set<CalloutIndex>([defaultOpenCallout]);
+    }
+    return new Set<CalloutIndex>([0]);
+  });
 
   const toggleCallout = (calloutIndex: CalloutIndex) => {
     setOpenCallouts((prev) => {
@@ -726,10 +740,15 @@ function AscentCanvas() {
 
   // The glow reaches as far as the furthest marker still open, so closing the
   // leading marker recoils the path back to the one before it.
-  const activeProgress: ProgressLevel =
+  const derivedProgress: ProgressLevel =
     openCallouts.size === 0
       ? 0
       : ((Math.max(...openCallouts) + 1) as ProgressLevel);
+
+  const activeProgress: ProgressLevel =
+    completedStage !== undefined
+      ? ((completedStage + 1) as ProgressLevel)
+      : derivedProgress;
 
   const nextCalloutIndex = getNextCalloutIndex(activeProgress);
 
@@ -843,7 +862,10 @@ function AscentCanvas() {
   );
 }
 
-export default function AscentJourneyInfographic() {
+export default function AscentJourneyInfographic({
+  completedStage,
+  defaultOpenCallout,
+}: AscentJourneyInfographicProps = {}) {
   const shellRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -873,7 +895,10 @@ export default function AscentJourneyInfographic() {
           transformOrigin: "top center",
         }}
       >
-        <AscentCanvas />
+        <AscentCanvas
+          completedStage={completedStage}
+          defaultOpenCallout={defaultOpenCallout}
+        />
       </div>
     </div>
   );
