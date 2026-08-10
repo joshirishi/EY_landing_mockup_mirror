@@ -461,13 +461,6 @@ function HeaderTitleBlock() {
           <img alt="" className="block size-full max-w-none" src={ASSET.accentLine} />
         </div>
       </div>
-
-      <p
-        className="min-w-full text-[14px] leading-[20px]"
-        style={{ fontFamily: fonts.regular, color: colors.gray02 }}
-      >
-        Evolving into an AI-enabled tax professional.
-      </p>
     </div>
   );
 }

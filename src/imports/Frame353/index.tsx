@@ -1188,7 +1188,7 @@ const PHASE_CARDS = [
     locked: false,
     completed: false,
     coverage: ["Identify 5–7 tax processes for AI", "Use cases across current tax workflow", "Agent vs Prompt classification"],
-    deliverables: ["AI first process maps for 5-7 tax use cases", "Recommendation note for Prompt vs M365 Agent"],
+    deliverables: ["AI first process maps for 5-7 tax use cases", "Recommendation Note with Sample Prompt and No-code Agent templates"],
     outcome: "AI first process maps with clarity on agents vs prompts",
   },
   {

@@ -72,13 +72,10 @@ function RecogniseTheRisk() {
         </p>
         <h2
           id="risk-heading"
-          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
+          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 48px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
         >
           Why Responsible Use Matters
         </h2>
-        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(15px, 1.5vw, 17px)", color: colors.gray01, maxWidth: 620, margin: "0 0 48px", lineHeight: 1.6, textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>
-          An AI response may appear polished, detailed and confident—even when part of it is incomplete, misleading or incorrect.
-        </p>
 
         {/* 2-col × 3-row grid — all 6 in one viewport, no interaction, clean gridlines only */}
         <div
@@ -255,16 +252,6 @@ function PlaceholderBlock({
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 
-const LEARNED_BULLETS = [
-  "Give AI effective instructions",
-  "Use prompts for tax activities",
-  "Identify suitable AI use cases",
-  "Design no-code Agents",
-  "Review AI-assisted outputs",
-];
-
-const CAPABILITY_CHIPS = ["search", "organise", "compare", "analyse", "draft"];
-
 const DOES_NOT_BULLETS = [
   "The facts used",
   "The authorities cited",
@@ -361,15 +348,6 @@ function HeroContextSection() {
     padding: "28px 28px 32px",
   };
 
-  const eyebrowStyle = (c: string = colors.eyebrowGold): React.CSSProperties => ({
-    fontFamily: fonts.bold,
-    fontSize: typeScale.label.size,
-    letterSpacing: typeScale.label.tracking,
-    textTransform: "uppercase",
-    color: c,
-    margin: "0 0 10px",
-  });
-
   const bulletStyle: React.CSSProperties = {
     fontFamily: fonts.regular,
     fontSize: 14,
@@ -390,35 +368,12 @@ function HeroContextSection() {
     >
       <div style={{ ...contentRailStyle }}>
 
-        {/* Two-column capability cards */}
+        {/* Right card — limits of AI responsibility (Echo: remove left card, chips, and "AI May Help You" label) */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 32 }}>
-          {/* Left card */}
-          <div style={{ ...cardStyle, borderTop: `3px solid ${colors.yellow}` }}>
-            <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.8vw, 18px)", color: colors.offBlack, margin: "0 0 20px", lineHeight: 1.3 }}>
-              AI Can Assist the Work.<br />You Remain Accountable.
-            </h2>
-            <p style={eyebrowStyle()}>You have learned how to:</p>
-            <ul style={{ margin: "0 0 20px", padding: 0, listStyle: "none" }}>
-              {LEARNED_BULLETS.map((b) => (
-                <li key={b} style={bulletStyle}>
-                  <span aria-hidden="true" style={{ position: "absolute", left: 0, color: colors.yellow }}>›</span>
-                  {b}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Right card */}
           <div style={{ ...cardStyle, borderTop: `3px solid ${colors.frameBlue}` }}>
-            <p style={eyebrowStyle(colors.frameBlue)}>AI May Help You</p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
-              {CAPABILITY_CHIPS.map((chip) => (
-                <span key={chip} style={{ background: colors.offWhite, border: `1px solid ${colors.gray02}`, borderRadius: 20, padding: "4px 12px", fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack }}>
-                  {chip}
-                </span>
-              ))}
-            </div>
-            <p style={eyebrowStyle()}>AI does not take responsibility for:</p>
+            <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.8vw, 18px)", color: colors.offBlack, margin: "0 0 20px", lineHeight: 1.3 }}>
+              AI Does Not Take Responsibility For
+            </h2>
             <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
               {DOES_NOT_BULLETS.map((b) => (
                 <li key={b} style={bulletStyle}>
