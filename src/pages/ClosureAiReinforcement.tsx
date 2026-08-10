@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-1399150019.jpg";
 import { StepBadge } from "../design-kit/EYCard";
 import { EYQuote } from "../design-kit/EYTypography";
@@ -254,11 +254,6 @@ function PlaceholderBlock({
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
-const FLOW_STEPS = [
-  { label: "AI assists", color: colors.frameBlue },
-  { label: "Human verifies", color: colors.yellow },
-  { label: "Professional decides", color: colors.frameGreen },
-] as const;
 
 const LEARNED_BULLETS = [
   "Give AI effective instructions",
@@ -357,7 +352,7 @@ function HeroSection() {
   );
 }
 
-// ── Hero context — capability cards + flow (separated from dark hero) ─
+// ── Hero context — capability cards + accountability card ─
 function HeroContextSection() {
   const cardStyle: React.CSSProperties = {
     background: colors.white,
@@ -435,28 +430,25 @@ function HeroContextSection() {
           </div>
         </div>
 
-        {/* Flow row */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 0, justifyContent: "center" }}>
-            {FLOW_STEPS.map((step, i) => (
-              <motion.div
-                key={step.label}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.15, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <span style={{ background: step.color, borderRadius: 20, padding: "8px 20px", fontFamily: fonts.bold, fontSize: 14, color: step.color === colors.yellow ? colors.offBlack : colors.white, whiteSpace: "nowrap" }}>
-                  {step.label}
-                </span>
-                {i < FLOW_STEPS.length - 1 && (
-                  <span aria-hidden="true" style={{ fontFamily: fonts.bold, fontSize: 18, color: colors.gray01, padding: "0 12px" }}>→</span>
-                )}
-              </motion.div>
-            ))}
-          </div>
-          <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: 0, textAlign: "center", maxWidth: 480 }}>
-            AI assists. The professional assesses, decides and remains accountable.
+        {/* Common accountability card — spans full width below capability cards */}
+        <div
+          style={{
+            ...cardStyle,
+            borderTop: `3px solid ${colors.yellow}`,
+            marginTop: 4,
+          }}
+        >
+          <p
+            style={{
+              fontFamily: fonts.bold,
+              fontSize: "clamp(15px, 1.8vw, 18px)",
+              color: colors.offBlack,
+              margin: 0,
+              lineHeight: 1.45,
+              textAlign: "center",
+            }}
+          >
+            How do you use AI capabilities without compromising accuracy, confidentiality, professional judgement or trust?
           </p>
         </div>
 

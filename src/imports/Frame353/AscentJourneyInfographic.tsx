@@ -132,9 +132,9 @@ function distAt(path: SVGPathElement, len: number, tx: number, ty: number) {
 
 const CALLOUTS = [
   { left: 140, top: 250, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
-  { left: 290, top: 195, width: 187, quote: "AI feels a lot less intimidating now. I finally understand how prompts and Microsoft 365 Copilot work." },
-  { left: 502, top: 123, width: 167, quote: "I can clearly see where AI fits across our tax processes. Some use cases need prompts. Others need Agents." },
-  { left: 722, top: 106, width: 150, quote: "I never thought I could build an Agent without coding. I'm starting to solve tax problems differently." },
+  { left: 290, top: 195, width: 187, quote: "I understand AI concepts which can help me work towards atleast 20%++ efficiency gains." },
+  { left: 502, top: 123, width: 167, quote: "I have reimagined atleast 5-7 tax use cases via prompts and/or M365 Agents." },
+  { left: 722, top: 106, width: 150, quote: "I have built 10 no-code agents assisting me in my day-to-day Tax work." },
   { left: 953, top: 114, width: 170, quote: "AI has become part of how I work. I rely on it to research, analyze and get work done faster." },
   { left: 1247, top: 8, width: 180, quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.", rounded: 4 },
 ] as const;

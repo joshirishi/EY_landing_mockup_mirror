@@ -30,6 +30,7 @@ import {
   PHASE_NUMBER,
   PHASE_PATH,
   TOTAL_PHASES,
+  BRAND_LABEL,
   getAdjacentModules,
   getCurrentPhase,
   getModule,
@@ -216,7 +217,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
               padding: 0,
               borderRadius: 4,
             }}
-            aria-label="Back to Tax Labs"
+            aria-label={`Back to ${BRAND_LABEL}`}
             onFocus={applyFocusRing}
             onBlur={clearFocusRing}
           >
@@ -225,7 +226,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
               className="hidden sm:inline"
               style={{ fontFamily: fonts.bold, fontSize: 14, color: colors.yellow, whiteSpace: "nowrap" }}
             >
-              Tax Labs
+              {BRAND_LABEL}
             </span>
           </button>
 
@@ -628,7 +629,7 @@ function ModulePickerMenu({
           minHeight: 0,
         }}
       >
-        {phase.modules.map((mod) => (
+        {phase.modules.filter(isModuleAvailable).map((mod) => (
           <PickerItem
             key={mod.id}
             label={mod.title}

@@ -189,7 +189,7 @@ function Frame36() {
     <div className="bg-[#ffe600] relative shrink-0 w-full">
       <div className="[word-break:break-word] content-stretch flex flex-col items-start not-italic px-[24px] py-[8px] relative size-full text-[#2e2e38] whitespace-nowrap">
         <p className="[text-underline-position:from-font] decoration-from-font decoration-solid font-['EYInterstate:Bold',sans-serif] leading-[32px] relative shrink-0 text-[20px] underline">{`AI PIPELINE & CONTEXT`}</p>
-        <p className="font-['EYInterstate:Light',sans-serif] leading-[22px] relative shrink-0 text-[14px]">© 2026 EY.ai Tax Labs. Secure Workspace Architecture.</p>
+        <p className="font-['EYInterstate:Light',sans-serif] leading-[22px] relative shrink-0 text-[14px]">© 2026 AI for Tax Excellence. Secure Workspace Architecture.</p>
       </div>
     </div>
   );
@@ -831,8 +831,9 @@ function Frame1() {
 function Frame39() {
   return (
     <div className="bg-[#c4c4cd] relative shrink-0 w-full">
-      <div className="content-stretch flex flex-col items-start px-4 sm:px-8 md:px-[64px] py-[24px] relative size-full">
-        <Frame1 />
+      <div className="content-stretch flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-4 sm:px-8 md:px-[64px] py-[24px] relative size-full">
+        <Frame2 />
+        <Frame3 />
       </div>
     </div>
   );
@@ -1170,7 +1171,7 @@ const PHASE_CARDS = [
   {
     week: "Week 1-2",
     number: 1,
-    title: "Foundational Training Workshops",
+    title: "Foundation Workshops",
     description: "2 workshops x 1.5 hours each",
     locked: false,
     completed: false,
@@ -1199,7 +1200,7 @@ const PHASE_CARDS = [
     locked: false,
     completed: false,
     coverage: ["Advanced prompt engineering (hands-on)", "M365 Copilot Agent design (hands-on)", "Guided Prompt Library Development"],
-    deliverables: ["Sample Prompt Templates", "Instructions for M365 Agents"],
+    deliverables: ["Library of Prompt and No-code Agent templates", "5-10 self-developed no-code agents"],
     outcome: "Power users capable of building no-code agents independently",
   },
   {
@@ -1210,7 +1211,7 @@ const PHASE_CARDS = [
     description: "1 call/meeting x 2 hours",
     locked: false,
     completed: false,
-    coverage: ["AI Readiness Assessment", "Viva Insights Dashboard", "AI governance guidance"],
+    coverage: ["AI governance guidance", "Viva Insights Dashboard", "AI Readiness Assessment"],
     deliverables: ["Governance Playbook", "Copilot Monitoring Guidance"],
     outcome: "Real-time visibility into AI adoption, aligned with responsible AI",
   },
@@ -2006,7 +2007,7 @@ function CourseGrid({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub
         onNavigate={onOpenCopilotHub}
         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>}
         activeIcon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>}
-        title="M365 Copilot Dashboard"
+        title="M365 Copilot Hub"
         description="Hands-on exploration of Microsoft 365 Copilot capabilities across tax use cases."
         estimatedTime="~60 min"
       />

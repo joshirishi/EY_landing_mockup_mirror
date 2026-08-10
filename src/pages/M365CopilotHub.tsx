@@ -130,14 +130,14 @@ const SECTION_DATA: Record<TabId, {
       { icon: BarChart3,     title: "Analyse Tax Data",      body: "Summarise large datasets and identify key trends, gaps, mismatches and exceptions." },
       { icon: Calculator,    title: "Build Reconciliations", body: "Create formulas and logic checks to compare books, returns and working papers." },
       { icon: AlertTriangle, title: "Spot Exceptions",       body: "Detect anomalies such as missing details, rate mismatches or duplicates." },
-      { icon: LineChart,     title: "Visualise Compliance",  body: "Create dashboards to show status, exposures, ageing and risk movement." },
+      { icon: LineChart,     title: "Visualise Compliance",  body: "Create summary views to show status, exposures, ageing and risk movement." },
     ],
     panelSubtitle: "Analyse tax data, reconciliations and compliance trackers with precision.",
     prompts: [
       { label: "Reconcile Two Ledgers",           text: "Compare the GST returns and books data in these two sheets and flag every mismatch above ₹10,000." },
       { label: "Explain This Formula",            text: "Explain what this VLOOKUP + IFERROR formula in column F is actually doing, in plain language." },
       { label: "Spot Withholding Gaps",           text: "Scan this vendor payment sheet and flag any transaction where TDS appears under-deducted." },
-      { label: "Build a Compliance Dashboard",    text: "Turn this data into a one-page dashboard showing filing status, ageing, and open exposures by entity." },
+      { label: "Build a Compliance Summary",    text: "Turn this data into a one-page summary showing filing status, ageing, and open exposures by entity." },
       { label: "Forecast the Effective Tax Rate", text: "Using this P&L, calculate the projected effective tax rate for FY26 factoring in surcharge and cess." },
     ],
     screenshotSide: "right",
@@ -3210,7 +3210,7 @@ export default function M365CopilotHub({
       {/* Shared dark CTA — Phase 1 complete */}
       <EYWhatsNext
         title="You've completed Phase 1"
-        ctaLabel="Back to Tax Labs"
+        ctaLabel="Back to overview"
         onContinue={() => onNavigate?.("/phase1")}
         meta="Phase 1 covered: AI foundations, tax prompting, and M365 Copilot"
       />

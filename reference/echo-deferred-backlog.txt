@@ -1,0 +1,17 @@
+Echo Wave 3 — deferred items (Tax Labs AI)
+==========================================
+
+Blocked on stakeholder sign-off:
+- Copilot Hub reorg (DOs/Donts, Templates, Agent Best Practices) — thread 28e70c4c / 157578
+  Contact: Gayatri and PriyaDarshini
+
+Blocked on assets:
+- Real PPT/template files for Phase 3 Preview/Download UI → public/templates/
+- Hallucination / newspaper article images → reference/hallucination images/
+- Foundational section image/layout redesigns with attached Figma assets
+
+Blocked on product spec:
+- Phase 2 Memory Refresh drag-and-drop mechanic (prior plan Note 6)
+
+Design sign-off required:
+- Full Figma redesign threads (Jul 2026 foundational layout batches)

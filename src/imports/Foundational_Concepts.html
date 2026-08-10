@@ -267,7 +267,10 @@ body {
 .section { padding: 90px 60px; text-align: center; background: var(--white); }
 .section h2 { font-size: 34px; font-weight: 700; color: var(--ey-dark); margin-bottom: 12px; letter-spacing: -0.8px; }
 .section-subtitle { color: var(--gray-01); font-size: 16px; margin-bottom: 50px; max-width: 650px; margin-left: auto; margin-right: auto; }
-#terminology > .section-subtitle { max-width: 980px; }
+#terminology > .section-subtitle { max-width: 980px; white-space: nowrap; }
+@media (max-width: 768px) {
+  #terminology > .section-subtitle { white-space: normal; }
+}
 
 /* ===== SURFACE CYCLE (Light → Neutral → Dark) ===== */
 .surface-light {
@@ -1172,13 +1175,26 @@ body {
   color: var(--eyebrow-gold);
 }
 .paths-section .paths-title {
-  margin: 0;
-  max-width: 900px;
   font-size: 32px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  color: var(--ey-dark);
+  line-height: 1.2;
+  color: var(--off-black);
+  margin: 0;
+  text-align: center;
+}
+.paths-title-formula {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 14px;
+}
+.paths-title-formula .formula-op {
+  font-family: inherit;
+  font-weight: 700;
+  color: var(--ey-yellow);
+  font-size: 28px;
+  line-height: 1;
 }
 .paths-row {
   display: flex;
@@ -1391,9 +1407,9 @@ body {
   padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
-/* Breadcrumb strip hidden — Figma uses nested left panel only */
+/* Era step indicators — visible breadcrumb timeline */
 .evo-breadcrumb {
-  display: none;
+  display: flex;
 }
 /* ===== BREADCRUMB → TIMELINE BAR (rectangular pills + connector) ===== */
 .evo-breadcrumb--legacy {
@@ -3145,7 +3161,15 @@ document.addEventListener('keydown', function(e) {
 <!-- ======== STRATEGIC DIVIDE — Two Paths (Figma 3519:3180) ======== -->
 <section id="strategic-divide" class="paths-section surface-light" aria-labelledby="paths-heading">
   <div class="paths-header">
-    <h2 id="paths-heading" class="paths-title">AI Hype + Zero Fundamentals = Missed Opportunities</h2>
+    <h2 id="paths-heading" class="paths-title">
+      <span class="paths-title-formula">
+        <span>AI Hype</span>
+        <span class="formula-op" aria-hidden="true">+</span>
+        <span>Zero Fundamentals</span>
+        <span class="formula-op" aria-hidden="true">=</span>
+        <span>Missed Opportunities</span>
+      </span>
+    </h2>
   </div>
 
   <div class="paths-row">
@@ -3220,7 +3244,7 @@ document.addEventListener('keydown', function(e) {
   <p class="evo-sub">Each layer is a subset of the one before it — building on the last</p>
 
   <div id="evo-timeline-view">
-    <nav class="evo-breadcrumb" id="evo-breadcrumb" aria-label="AI evolution eras timeline, current era highlighted" hidden></nav>
+    <nav class="evo-breadcrumb evo-breadcrumb--legacy" id="evo-breadcrumb" aria-label="AI evolution eras timeline, current era highlighted"></nav>
 
     <div class="evo-layout">
       <!-- Left: nested technology layers (Figma left panel) -->
@@ -3341,7 +3365,7 @@ document.addEventListener('keydown', function(e) {
 
 <!-- ======== KEY AI TERMINOLOGY — GUIDED DEMO ======== -->
 <section class="section sim-section surface-light" id="terminology" style="padding:80px 40px;">
-  <p class="sim-label">Guided demo</p>
+  <p class="sim-label">Gen AI Convo</p>
   <h2 style="font-size:36px; margin-bottom:8px; color:var(--ey-dark);">Inside Every Gen AI Conversation</h2>
   <p class="section-subtitle" style="color:var(--gray-01);">Follow a prompt and discover what happens behind the scenes—from your question to the final answer.</p>
 
@@ -3367,8 +3391,7 @@ document.addEventListener('keydown', function(e) {
       <!-- Chat body — flexes inside the 480px window; scrolls when content overflows -->
       <div id="copilot-chat" style="flex:1 1 auto; min-height:0; overflow-y:auto; background:var(--white);">
         <div id="copilot-welcome" style="text-align:center; padding:60px 20px;">
-          <h3 style="color:var(--ey-dark); font-size:20px; font-weight:700; line-height:30px; margin:0 0 8px;">Welcome to EY.ai Copilot</h3>
-          <p style="color:var(--gray-01); font-size:14px; line-height:22.4px; max-width:400px; margin:0 auto 24px;">Ask me anything about India tax.</p>
+          <h3 style="color:var(--ey-dark); font-size:20px; font-weight:700; line-height:30px; margin:0 0 24px;">Welcome</h3>
           <button onclick="startDemo()" style="background:var(--ey-yellow); color:var(--ey-dark); border:none; padding:14px 32px; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,230,0,0.3)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough
           </button>
@@ -4153,7 +4176,7 @@ function resetDemo() {
   if (window._sentThinkingInterval) { clearInterval(window._sentThinkingInterval); window._sentThinkingInterval = null; }
   if (window._sentThinkingTimers) { window._sentThinkingTimers.forEach(clearTimeout); window._sentThinkingTimers = null; }
   if (window._outputRevealTimer) { clearTimeout(window._outputRevealTimer); window._outputRevealTimer = null; }
-  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;line-height:30px;margin:0 0 8px;">Welcome to EY.ai Copilot</h3><p style="color:var(--gray-01);font-size:14px;line-height:22.4px;max-width:400px;margin:0 auto 24px;">Ask me anything about India tax.</p><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
+  chatEl.innerHTML = `<div id="copilot-welcome" style="text-align:center;padding:60px 20px;"><h3 style="color:var(--ey-dark);font-size:20px;font-weight:700;line-height:30px;margin:0 0 24px;">Welcome</h3><button onclick="startDemo()" style="background:var(--ey-yellow);color:var(--ey-dark);border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough</button></div>`;
   document.getElementById('demo-actions').style.display = 'none';
   var bar = document.getElementById('copilot-input-bar'); if (bar) bar.style.display = 'none';
   var askEx = document.getElementById('ask-explainer'); if (askEx) askEx.innerHTML = '';
@@ -6039,7 +6062,7 @@ function selectEra(i) {
 
 function initEvoExplorer() {
   if (!document.getElementById('evo-featured')) return;
-  selectEra(EVO_ERAS.length - 1);
+  selectEra(0);
 }
 
 // Expose for inline handlers + React late inject (DOMContentLoaded already fired)

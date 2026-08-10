@@ -2,13 +2,15 @@
  * SiteHeader — shared top chrome. Two variants:
  *
  *   variant="hub" (default) — Home + Phased Engagement only.
- *     Yellow strip, EY mark + "India AI Tax Hub", then the site-section row
- *     ("About EY India AI Tax Hub" | "EY.ai Tax Labs").
+ *     Yellow strip, EY mark + "AI for Tax Excellence", tagline row below.
  *
  *   variant="learning" — Phase 1 overview and every module page (Figma 3508:4135).
- *     Brand block "EY.ai Tax Labs" / "INDIA TAX HUB".
+ *     Brand block "AI for Tax Excellence" + tagline.
  *     No site-section row — breadcrumb navigation lives in <ModuleHeader/> below.
  */
+
+export const PRODUCT_TITLE = "AI for Tax Excellence";
+export const PRODUCT_TAGLINE = "Practical AI skills for the modern tax professional";
 
 import { colors, fonts } from "./tokens";
 import { EYLogo } from "./EYLogo";
@@ -102,7 +104,7 @@ function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }
           padding: 0,
           borderRadius: 4,
         }}
-        aria-label={`${BRAND_LABEL} — back to Tax Labs overview`}
+        aria-label={`${BRAND_LABEL} — back to overview`}
         onFocus={applyFocusRing}
         onBlur={clearFocusRing}
       >
@@ -127,19 +129,17 @@ function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }
             className="text-[16px] md:text-[20px] truncate"
             style={{ color: "#FFFFFF", fontFamily: fonts.bold, lineHeight: 1.2 }}
           >
-            EY.ai <span style={{ fontFamily: fonts.regular }}>Tax Labs</span>
+            {PRODUCT_TITLE}
           </span>
           <span
-            className="text-[9px] md:text-[10px]"
+            className="text-[11px] md:text-[12px] truncate"
             style={{
-              color: colors.yellow,
-              fontFamily: fonts.bold,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
+              color: colors.gray02,
+              fontFamily: fonts.regular,
+              lineHeight: 1.3,
             }}
           >
-            India Tax Hub
+            {PRODUCT_TAGLINE}
           </span>
         </div>
       </button>
@@ -181,61 +181,38 @@ function HubBrandBar({
           <span
             style={{
               color: "#FFFFFF",
-              fontFamily: fonts.regular,
-              fontSize: 13,
+              fontFamily: fonts.bold,
+              fontSize: 14,
               borderLeft: "1px solid rgba(255,255,255,0.3)",
               paddingLeft: 12,
               whiteSpace: "nowrap",
             }}
           >
-            India AI Tax Hub
+            {PRODUCT_TITLE}
           </span>
         </button>
         {rightSlot}
       </div>
 
-      <nav aria-label="Site sections" style={{ background: colors.confidentBlack, display: "flex", alignItems: "center", padding: "0 16px", overflowX: "auto" }}>
-        <SiteNavLink
-          label="About EY India AI Tax Hub"
-          isActive={activeSection === "home"}
-          onClick={() => onNavigate("/")}
-        />
-        <SiteNavLink
-          label="EY.ai Tax Labs"
-          isActive={activeSection === "tax-labs"}
-          onClick={() => onNavigate("/phased")}
-        />
-      </nav>
+      <div
+        style={{
+          background: colors.confidentBlack,
+          padding: "10px 16px",
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <p
+          style={{
+            margin: 0,
+            color: colors.gray02,
+            fontFamily: fonts.regular,
+            fontSize: 13,
+            lineHeight: 1.4,
+          }}
+        >
+          {PRODUCT_TAGLINE}
+        </p>
+      </div>
     </>
-  );
-}
-
-function SiteNavLink({ label, isActive, onClick }: { label: string; isActive: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={isActive ? undefined : onClick}
-      aria-current={isActive ? "page" : undefined}
-      style={{
-        background: "none",
-        border: "none",
-        cursor: isActive ? "default" : "pointer",
-        padding: "10px 14px",
-        fontFamily: fonts.regular,
-        fontSize: 13,
-        color: isActive ? colors.yellow : colors.gray02,
-        whiteSpace: "nowrap",
-        transition: "color 0.15s",
-      }}
-      onMouseEnter={(e) => {
-        if (!isActive) e.currentTarget.style.color = "#FFFFFF";
-      }}
-      onMouseLeave={(e) => {
-        if (!isActive) e.currentTarget.style.color = colors.gray02;
-      }}
-      onFocus={applyFocusRing}
-      onBlur={clearFocusRing}
-    >
-      {label}
-    </button>
   );
 }
