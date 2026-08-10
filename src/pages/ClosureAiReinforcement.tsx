@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
+import { X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { colors, contentRailStyle, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, spacing, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-1399150019.jpg";
-import { StepBadge } from "../design-kit/EYCard";
-import { EYQuote } from "../design-kit/EYTypography";
 
 export const PHASE4_LABEL = "Phase 4: Closure & AI Reinforcement";
 export const PHASE4_NUMBER = 4;
@@ -19,41 +18,216 @@ const PHASE4_SECTIONS = [
   { id: "whats-next",   label: "What's Next",       group: "apply" as const },
 ];
 
-// ── Slide 2: Recognise the Risk ──────────────────────────────────────────────
-const RISK_CARDS = [
+// ── Slide 2: Recognise the Risk — newspaper article cards (Module 1.1 rise-card pattern) ──
+const RESPONSIBLE_USE_NEWS = [
   {
-    num: "01",
-    title: "Incorrect content",
-    body: "Facts, dates, calculations or technical statements may be wrong.",
+    src: "/reference-images/p4-news-data-leakage.png",
+    tag: "Data leakage",
+    headline: "Samsung Bans ChatGPT After Sensitive Code Leak",
+    source: "Forbes",
+    date: "2 May 2023",
+    description: "Following multiple incidents involving confidential source code and internal information being uploaded to ChatGPT, Samsung imposed company-wide restrictions on generative AI tools.",
   },
   {
-    num: "02",
-    title: "Fabricated or misapplied authorities",
-    body: "A provision, circular, judgment, quotation or citation may not exist—or may not support the conclusion.",
+    src: "/reference-images/p4-news-confidentiality.png",
+    tag: "Confidentiality exposure",
+    headline: "Major Banks Restricted Employee Use of ChatGPT",
+    source: "Forbes",
+    date: "2023",
+    description: "Financial institutions including JPMorgan imposed restrictions on ChatGPT due to concerns that employees could inadvertently expose sensitive financial and customer information.",
   },
   {
-    num: "03",
-    title: "Hidden assumptions",
-    body: "AI may fill information gaps without clearly telling the user.",
+    src: "/reference-images/p4-news-shadow-ai.png",
+    tag: "Shadow AI",
+    headline: "38% of Korean Workers Use Personal AI, Exposing Firms to Shadow AI Risk",
+    source: "Seoul Economic Daily",
+    date: "27 July 2026",
+    description: "A Samsung SDS survey found that 38% of employees were using personally subscribed AI services for work instead of enterprise-approved platforms.",
   },
   {
-    num: "04",
-    title: "Confidentiality exposure",
-    body: "Client, taxpayer, employee or transaction information may enter an inappropriate tool or unsuitable source.",
+    src: "/reference-images/p4-news-tokenmaxxing.png",
+    tag: "Tokenmaxxing",
+    headline: "Uber CTO Says Tokenmaxxing Era Is Ending After AI Budget Burnout",
+    source: "The Hans India",
+    date: "2026",
+    description: "Uber's CTO warned against indiscriminately consuming AI tokens and model capacity without considering cost, efficiency, or business value.",
   },
   {
-    num: "05",
-    title: "Bias or incomplete perspective",
-    body: "The output may reflect gaps or imbalance in the source information.",
-  },
-  {
-    num: "06",
-    title: "Uncontrolled action",
-    body: "A no-code Agent may retrieve, draft, organise or communicate information beyond its intended role.",
+    src: "/reference-images/p4-news-value-leakage.png",
+    tag: "Value leakage",
+    headline: "IBM Apptio Helps CFOs Connect AI Spend to Business Value",
+    source: "CFO Dive",
+    date: "2026",
+    description: "As AI budgets grow, many leadership teams struggle to distinguish genuine business impact from AI experimentation and usage statistics.",
   },
 ] as const;
 
+function NewsLightbox({
+  src,
+  caption,
+  onClose,
+}: {
+  src: string;
+  caption: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Full article view"
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9000,
+        background: "rgba(26,26,36,0.88)",
+        backdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 24,
+      }}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        style={{
+          position: "fixed",
+          top: 24,
+          right: 28,
+          width: 44,
+          height: 44,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.1)",
+          border: `1px solid ${colors.borderOnDark}`,
+          color: colors.white,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <X size={20} strokeWidth={1.75} aria-hidden />
+      </button>
+      <img
+        src={src}
+        alt={caption}
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          maxWidth: "88vw",
+          maxHeight: "84vh",
+          borderRadius: 12,
+          boxShadow: "0 32px 80px rgba(0,0,0,0.7)",
+        }}
+      />
+      <p
+        style={{
+          position: "fixed",
+          bottom: 28,
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "rgba(0,0,0,0.7)",
+          border: `1px solid ${colors.borderOnDark}`,
+          borderRadius: 20,
+          padding: "8px 20px",
+          fontFamily: fonts.regular,
+          fontSize: 12,
+          color: colors.onDarkMuted,
+          margin: 0,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {caption}
+      </p>
+    </div>
+  );
+}
+
+function ResponsibleUseNewsCard({
+  article,
+  index,
+  onOpen,
+}: {
+  article: (typeof RESPONSIBLE_USE_NEWS)[number];
+  index: number;
+  onOpen: () => void;
+}) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ delay: index * 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+      role="button"
+      tabIndex={0}
+      onClick={onOpen}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(); } }}
+      aria-label={`${article.source} — ${article.headline}. Click to view full article.`}
+      style={{
+        background: colors.white,
+        borderRadius: 0,
+        overflow: "hidden",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        textAlign: "left",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+        transition: "transform 0.18s ease, box-shadow 0.18s ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.14)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.08)";
+      }}
+    >
+      {/* wrong-card-top — matches Module 1.1 Reality Check cards */}
+      <div style={{ position: "relative", width: "100%", height: 220, overflow: "hidden", flexShrink: 0, lineHeight: 0 }}>
+        <img
+          src={article.src}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
+        />
+      </div>
+      {/* wrong-card-body */}
+      <div style={{ padding: "16px 16px 20px", display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0, background: colors.white }}>
+        <p style={{ fontFamily: fonts.bold, fontSize: 15, color: colors.offBlack, margin: 0, lineHeight: 1.4, letterSpacing: "-0.01em" }}>
+          {article.headline}
+        </p>
+        <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, margin: 0, lineHeight: 1.55, flex: 1 }}>
+          {article.description}
+        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "auto", paddingTop: 10 }}>
+          <span style={{ fontFamily: fonts.regular, fontSize: 11, color: colors.gray01 }}>{article.date}</span>
+          <span aria-hidden style={{ fontSize: 11, color: colors.gray02 }}>|</span>
+          <span style={{ fontFamily: fonts.bold, fontSize: 11, color: colors.offBlack }}>
+            {article.source}
+          </span>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
 function RecogniseTheRisk() {
+  const [lightbox, setLightbox] = useState<(typeof RESPONSIBLE_USE_NEWS)[number] | null>(null);
   return (
     <section
       id="p4-risk"
@@ -72,55 +246,42 @@ function RecogniseTheRisk() {
         </p>
         <h2
           id="risk-heading"
-          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 48px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
+          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 12px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
         >
           Why Responsible Use Matters
         </h2>
+        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 16px)", color: colors.gray01, margin: "0 auto 40px", lineHeight: 1.5, textAlign: "center", maxWidth: 560 }}>
+          Real-world headlines on AI governance risks
+        </p>
 
-        {/* 2-col × 3-row grid — all 6 in one viewport, no interaction, clean gridlines only */}
+        {/* Newspaper article cards — same rise-card / wrong-card pattern as Module 1.1 */}
         <div
           role="list"
-          aria-label="AI output risks"
+          aria-label="Real-world AI governance headlines"
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            borderTop: `1px solid rgba(26,26,36,0.08)`,
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: 20,
+            alignItems: "stretch",
           }}
         >
-          {RISK_CARDS.map((card, i) => {
-            const isLeftCol = i % 2 === 0;
-            const isLastRow = i >= RISK_CARDS.length - 2;
-            return (
-              <motion.div
-                key={card.num}
-                role="listitem"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: i * 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "44px 1fr",
-                  gap: "0 16px",
-                  padding: isLeftCol ? "20px 28px 20px 0" : "20px 0 20px 28px",
-                  borderRight: isLeftCol ? `1px solid rgba(26,26,36,0.08)` : "none",
-                  borderBottom: isLastRow ? "none" : `1px solid rgba(26,26,36,0.08)`,
-                  alignItems: "start",
-                }}
-              >
-                <StepBadge n={card.num} color={colors.frameRed} variant="outline" size={32} />
-                <div>
-                  <p style={{ fontFamily: fonts.bold, fontSize: "clamp(13px, 1.2vw, 15px)", color: colors.offBlack, margin: "0 0 4px", lineHeight: 1.3 }}>
-                    {card.title}
-                  </p>
-                  <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: 0, lineHeight: 1.6 }}>
-                    {card.body}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
+          {RESPONSIBLE_USE_NEWS.map((article, i) => (
+            <ResponsibleUseNewsCard
+              key={article.src}
+              article={article}
+              index={i}
+              onOpen={() => setLightbox(article)}
+            />
+          ))}
         </div>
+
+        {lightbox && (
+          <NewsLightbox
+            src={lightbox.src}
+            caption={`${lightbox.source} — ${lightbox.headline} · ${lightbox.date}`}
+            onClose={() => setLightbox(null)}
+          />
+        )}
 
         {/* Callout strip — verbatim from PDF slide 2: yellow left border, left=yellow bold, right=white regular */}
         <motion.div
