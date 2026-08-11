@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Lock, PlusCircle } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
-import AscentJourneyInfographic from "../imports/Frame353/AscentJourneyInfographic";
+import AscentJourneyInfographic, { type AscentCalloutEntry, type AscentStageNodeEntry, type AscentStageTitleEntry } from "../imports/Frame353/AscentJourneyInfographic";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-2212662948.jpg";
@@ -307,7 +307,29 @@ function MemoryRefreshSection() {
           })}
         </div>
 
-        {/* Show/hide descriptions */}
+        {/* Drag & Drop placeholder */}
+        <div style={{ marginBottom: 40 }}>
+          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 20px" }}>
+            Drag &amp; Drop Exercise
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            {["Column A", "Column B"].map((col) => (
+              <div key={col} style={{
+                border: "1.5px dashed rgba(255,255,255,0.25)",
+                borderRadius: 8,
+                padding: 24,
+                minHeight: 160,
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+              }}>
+                <p style={{ fontFamily: fonts.bold, fontSize: 12, color: colors.white, margin: 0, letterSpacing: "0.04em" }}>{col}</p>
+                <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.onDarkMuted, margin: 0, fontStyle: "italic" }}>Content coming soon</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Transition line — verbatim from PDF */}
         <div style={{
           borderTop: "1px solid rgba(255,255,255,0.1)",
@@ -918,11 +940,12 @@ function GuidedExamplesSection() {
                   transition: "border-color 150ms, color 150ms",
                 }}
               >
-                {isLast ? "Next" : <>Next <ChevronRight size={14} /></>}
+                {isLast ? <>See discussion prompt <ChevronDown size={14} /></> : <>Next <ChevronRight size={14} /></>}
               </button>
             </div>
           </div>
         </div>
+
 
       </div>
     </section>
@@ -1175,15 +1198,43 @@ function AgentExamplesSection() {
   );
 }
 
+
+// ── Live Brainstorm Section ──────────────────────────────────────────────────
+
 // ── Deliverables Section ─────────────────────────────────────────────────────
 
 const D1_ACCENT = "#0076A8";
 const D2_ACCENT = "#7B5EA7";
 
+// Phase 2 section data for the journey infographic in What's Next
+const P2_CALLOUTS: readonly AscentCalloutEntry[] = [
+  { left: 140, top: 250, width: 149, quote: "I know exactly where AI fits in my tax work." },
+  { left: 290, top: 195, width: 187, quote: "I memorised which AI lever to use for every task." },
+  { left: 502, top: 123, width: 167, quote: "I feel confident mapping AI to my daily activities." },
+  { left: 722, top: 106, width: 150, quote: "I learned to lead with the problem, not the tool." },
+  { left: 953, top: 114, width: 170, quote: "I can now build prompts that get real results." },
+  { left: 1247, top: 8, width: 180, quote: "I feel ready to automate what once seemed impossible.", rounded: 4 },
+];
+const P2_STAGE_NODES: readonly AscentStageNodeEntry[] = [
+  { left: 359, top: 295, icon: "/ascent/icon-book-open.svg", alt: "Quick Recall" },
+  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "Memory Refresh" },
+  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "Problem First" },
+  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "Prompt Examples" },
+  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Agent Examples" },
+];
+const P2_STAGE_TITLE_LABELS: readonly AscentStageTitleEntry[] = [
+  { title: "Phase 2 Start", markerTop: 366, markerSize: 46, calloutIndex: 0 },
+  { title: "Quick Recall", markerTop: 295, markerSize: 40, calloutIndex: 1 },
+  { title: "Memory Refresh", markerTop: 260, markerSize: 40, calloutIndex: 2 },
+  { title: "Problem First", markerTop: 240, markerSize: 40, calloutIndex: 3 },
+  { title: "Prompt Examples", markerTop: 227, markerSize: 40, calloutIndex: 4 },
+  { title: "Agent Examples", markerTop: 94, markerSize: 40, calloutIndex: 5 },
+];
+
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
     <>
-      <section id="deliverables" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: "#F4F4F8", padding: "80px 0 0" }}>
+      <section id="deliverables" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.white, padding: "80px 0 0" }}>
         <div style={{ ...contentRailStyle }}>
           {/* Eyebrow + heading — centered per section pattern */}
           <div style={{ textAlign: "center", marginBottom: 8 }}>
@@ -1395,57 +1446,31 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
         </div>
       </section>
 
-      {/* What's Next — journey infographic + Phase 3 CTA */}
+      {/* What's Next — Journey Map */}
       <section
         id="next-steps"
-        style={{
-          scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-          background: colors.confidentBlack,
-          padding: `${spacing.sectionPaddingY} 0`,
-        }}
+        style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.confidentBlack, width: "100%" }}
       >
-        <div style={{ ...contentRailStyle }}>
-          <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <p style={{
-              fontFamily: fonts.bold,
-              fontSize: typeScale.label.size,
-              letterSpacing: typeScale.label.tracking,
-              textTransform: "uppercase",
-              color: colors.yellow,
-              margin: "0 0 12px",
-            }}>
-              What's Next
-            </p>
-          </div>
-
-          <AscentJourneyInfographic completedStage={2} defaultOpenCallout={2} />
-
-          <div style={{ textAlign: "center", marginTop: 32 }}>
-            <button
-              type="button"
-              onClick={() => onNavigate("/guidance-implementation")}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                padding: "14px 28px",
-                fontSize: 15,
-                fontWeight: 700,
-                fontFamily: fonts.bold,
-                background: colors.yellow,
-                color: colors.confidentBlack,
-                border: "none",
-                borderRadius: 8,
-                cursor: "pointer",
-                lineHeight: 1.2,
-              }}
-            >
-              Continue to Phase 3 — Guidance for Implementation
-              <ArrowRight size={16} aria-hidden />
-            </button>
-          </div>
+        {/* Header */}
+        <div style={{ ...contentRailStyle, paddingTop: spacing.sectionPaddingY, paddingBottom: 32, textAlign: "center" }}>
+          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px" }}>
+            What's Next
+          </p>
+          <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.white, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+            Continue Your Learning Journey
+          </h2>
         </div>
+
+        {/* Journey map infographic */}
+        <AscentJourneyInfographic
+          callouts={P2_CALLOUTS}
+          stageNodes={P2_STAGE_NODES}
+          stageTitleLabels={P2_STAGE_TITLE_LABELS}
+          defaultAllOpen
+          lastNodeCtaLabel="Building Solutions"
+          onLastNodeCta={() => onNavigate("/guidance-implementation")}
+        />
+
       </section>
     </>
   );

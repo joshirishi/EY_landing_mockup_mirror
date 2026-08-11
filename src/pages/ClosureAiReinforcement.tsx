@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
-import { colors, contentRailStyle, fonts, spacing, typeScale } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-1399150019.jpg";
+import { StepBadge } from "../design-kit/EYCard";
+import { EYQuote } from "../design-kit/EYTypography";
 
 export const PHASE4_LABEL = "Phase 4: Closure & AI Reinforcement";
 export const PHASE4_NUMBER = 4;
@@ -18,339 +19,41 @@ const PHASE4_SECTIONS = [
   { id: "whats-next",   label: "What's Next",       group: "apply" as const },
 ];
 
-// ── Slide 2: Recognise the Risk — newspaper article cards (Module 1.1 rise-card pattern) ──
-const RESPONSIBLE_USE_NEWS = [
+// ── Slide 2: Recognise the Risk ──────────────────────────────────────────────
+const RISK_CARDS = [
   {
-    src: "/reference-images/p4-news-data-leakage.png",
-    tag: "Data leakage",
-    headline: "Samsung Bans ChatGPT After Sensitive Code Leak",
-    source: "Forbes",
-    date: "2 May 2023",
-    description: "Following multiple incidents involving confidential source code and internal information being uploaded to ChatGPT, Samsung imposed company-wide restrictions on generative AI tools.",
+    num: "01",
+    title: "Incorrect content",
+    body: "Facts, dates, calculations or technical statements may be wrong.",
   },
   {
-    src: "/reference-images/p4-news-confidentiality.png",
-    tag: "Confidentiality exposure",
-    headline: "Major Banks Restricted Employee Use of ChatGPT",
-    source: "Forbes",
-    date: "2023",
-    description: "Financial institutions including JPMorgan imposed restrictions on ChatGPT due to concerns that employees could inadvertently expose sensitive financial and customer information.",
+    num: "02",
+    title: "Fabricated or misapplied authorities",
+    body: "A provision, circular, judgment, quotation or citation may not exist—or may not support the conclusion.",
   },
   {
-    src: "/reference-images/p4-news-shadow-ai.png",
-    tag: "Shadow AI",
-    headline: "38% of Korean Workers Use Personal AI, Exposing Firms to Shadow AI Risk",
-    source: "Seoul Economic Daily",
-    date: "27 July 2026",
-    description: "A Samsung SDS survey found that 38% of employees were using personally subscribed AI services for work instead of enterprise-approved platforms.",
+    num: "03",
+    title: "Hidden assumptions",
+    body: "AI may fill information gaps without clearly telling the user.",
   },
   {
-    src: "/reference-images/p4-news-tokenmaxxing.png",
-    tag: "Tokenmaxxing",
-    headline: "Uber CTO Says Tokenmaxxing Era Is Ending After AI Budget Burnout",
-    source: "The Hans India",
-    date: "2026",
-    description: "Uber's CTO warned against indiscriminately consuming AI tokens and model capacity without considering cost, efficiency, or business value.",
+    num: "04",
+    title: "Confidentiality exposure",
+    body: "Client, taxpayer, employee or transaction information may enter an inappropriate tool or unsuitable source.",
   },
   {
-    src: "/reference-images/p4-news-value-leakage.png",
-    tag: "Value leakage",
-    headline: "IBM Apptio Helps CFOs Connect AI Spend to Business Value",
-    source: "CFO Dive",
-    date: "2026",
-    description: "As AI budgets grow, many leadership teams struggle to distinguish genuine business impact from AI experimentation and usage statistics.",
+    num: "05",
+    title: "Bias or incomplete perspective",
+    body: "The output may reflect gaps or imbalance in the source information.",
+  },
+  {
+    num: "06",
+    title: "Uncontrolled action",
+    body: "A no-code Agent may retrieve, draft, organise or communicate information beyond its intended role.",
   },
 ] as const;
 
-function NewsLightbox({
-  src,
-  caption,
-  onClose,
-}: {
-  src: string;
-  caption: string;
-  onClose: () => void;
-}) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Full article view"
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9000,
-        background: "rgba(26,26,36,0.88)",
-        backdropFilter: "blur(10px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="Close"
-        style={{
-          position: "fixed",
-          top: 24,
-          right: 28,
-          width: 44,
-          height: 44,
-          borderRadius: "50%",
-          background: "rgba(255,255,255,0.1)",
-          border: `1px solid ${colors.borderOnDark}`,
-          color: colors.white,
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <X size={20} strokeWidth={1.75} aria-hidden />
-      </button>
-      <img
-        src={src}
-        alt={caption}
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          maxWidth: "88vw",
-          maxHeight: "84vh",
-          borderRadius: 12,
-          boxShadow: "0 32px 80px rgba(0,0,0,0.7)",
-        }}
-      />
-      <p
-        style={{
-          position: "fixed",
-          bottom: 28,
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "rgba(0,0,0,0.7)",
-          border: `1px solid ${colors.borderOnDark}`,
-          borderRadius: 20,
-          padding: "8px 20px",
-          fontFamily: fonts.regular,
-          fontSize: 12,
-          color: colors.onDarkMuted,
-          margin: 0,
-          whiteSpace: "nowrap",
-        }}
-      >
-        {caption}
-      </p>
-    </div>
-  );
-}
-
-function ResponsibleUseNewsCard({
-  article,
-  onOpen,
-}: {
-  article: (typeof RESPONSIBLE_USE_NEWS)[number];
-  onOpen: () => void;
-}) {
-  return (
-    <article
-      role="button"
-      tabIndex={0}
-      onClick={onOpen}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(); } }}
-      aria-label={`${article.source} — ${article.headline}. Click to view full article.`}
-      style={{
-        background: colors.white,
-        borderRadius: 0,
-        overflow: "hidden",
-        cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        textAlign: "left",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-        transition: "transform 0.18s ease, box-shadow 0.18s ease",
-        width: "100%",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-4px)";
-        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.14)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.08)";
-      }}
-    >
-      {/* wrong-card-top — matches Module 1.1 Reality Check cards */}
-      <div style={{ position: "relative", width: "100%", height: 220, overflow: "hidden", flexShrink: 0, lineHeight: 0 }}>
-        <img
-          src={article.src}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
-        />
-      </div>
-      {/* wrong-card-body */}
-      <div style={{ padding: "16px 16px 20px", display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0, background: colors.white }}>
-        <p style={{ fontFamily: fonts.bold, fontSize: 15, color: colors.offBlack, margin: 0, lineHeight: 1.4, letterSpacing: "-0.01em" }}>
-          {article.headline}
-        </p>
-        <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, margin: 0, lineHeight: 1.55, flex: 1 }}>
-          {article.description}
-        </p>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "auto", paddingTop: 10 }}>
-          <span style={{ fontFamily: fonts.regular, fontSize: 11, color: colors.gray01 }}>{article.date}</span>
-          <span aria-hidden style={{ fontSize: 11, color: colors.gray02 }}>|</span>
-          <span style={{ fontFamily: fonts.bold, fontSize: 11, color: colors.offBlack }}>
-            {article.source}
-          </span>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-const NEWS_CARD_GAP = 20;
-const NEWS_VISIBLE_COUNT = 3;
-
-function ResponsibleUseNewsCarousel({
-  onOpen,
-}: {
-  onOpen: (article: (typeof RESPONSIBLE_USE_NEWS)[number]) => void;
-}) {
-  const count = RESPONSIBLE_USE_NEWS.length;
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-
-  const visibleArticles = useMemo(
-    () =>
-      Array.from({ length: Math.min(NEWS_VISIBLE_COUNT, count) }, (_, i) => ({
-        article: RESPONSIBLE_USE_NEWS[(activeIndex + i) % count],
-        key: `${activeIndex}-${i}-${RESPONSIBLE_USE_NEWS[(activeIndex + i) % count].src}`,
-      })),
-    [activeIndex, count],
-  );
-
-  const go = (delta: number) => {
-    setDirection(delta);
-    setActiveIndex((i) => (i + delta + count) % count);
-  };
-
-  const navBtnStyle = (primary = false): CSSProperties => ({
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 6,
-    padding: "10px 16px",
-    minHeight: 44,
-    borderRadius: 8,
-    border: primary ? "none" : `1px solid ${colors.gray02}`,
-    background: primary ? colors.yellow : colors.white,
-    cursor: "pointer",
-    fontFamily: fonts.regular,
-    fontSize: 13,
-    fontWeight: 700,
-    color: colors.offBlack,
-  });
-
-  return (
-    <div>
-      <div
-        role="list"
-        aria-label="Real-world AI governance headlines"
-        aria-live="polite"
-        style={{ overflow: "hidden", marginBottom: 20 }}
-      >
-        <motion.div
-          key={activeIndex}
-          initial={{ opacity: 0.72, x: direction * 56 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${Math.min(NEWS_VISIBLE_COUNT, count)}, minmax(0, 1fr))`,
-            gap: NEWS_CARD_GAP,
-            alignItems: "stretch",
-          }}
-        >
-          {visibleArticles.map(({ article, key }) => (
-            <div key={key} role="listitem" style={{ minWidth: 0 }}>
-              <ResponsibleUseNewsCard article={article} onOpen={() => onOpen(article)} />
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-          flexWrap: "wrap",
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => go(-1)}
-          aria-label="Previous headline"
-          style={navBtnStyle()}
-        >
-          <ChevronLeft size={16} strokeWidth={1.75} aria-hidden />
-          Previous
-        </button>
-
-        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
-          {RESPONSIBLE_USE_NEWS.map((article, i) => (
-            <button
-              key={article.src}
-              type="button"
-              aria-label={`Go to headline ${i + 1}: ${article.tag}`}
-              aria-current={i === activeIndex ? "true" : undefined}
-              onClick={() => {
-                setDirection(i === activeIndex ? 0 : i > activeIndex ? 1 : -1);
-                setActiveIndex(i);
-              }}
-              style={{
-                width: i === activeIndex ? 22 : 8,
-                height: 8,
-                borderRadius: 999,
-                border: "none",
-                padding: 0,
-                cursor: "pointer",
-                background: i === activeIndex ? colors.yellow : colors.gray02,
-                transition: "width 0.2s, background 0.2s",
-              }}
-            />
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => go(1)}
-          aria-label="Next headline"
-          style={navBtnStyle(true)}
-        >
-          Next
-          <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function RecogniseTheRisk() {
-  const [lightbox, setLightbox] = useState<(typeof RESPONSIBLE_USE_NEWS)[number] | null>(null);
   return (
     <section
       id="p4-risk"
@@ -369,24 +72,58 @@ function RecogniseTheRisk() {
         </p>
         <h2
           id="risk-heading"
-          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 12px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
+          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 16px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
         >
           Why Responsible Use Matters
         </h2>
-        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 16px)", color: colors.gray01, margin: "0 auto 40px", lineHeight: 1.5, textAlign: "center", maxWidth: 560 }}>
-          Real-world headlines on AI governance risks
+        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(15px, 1.5vw, 17px)", color: colors.gray01, maxWidth: 620, margin: "0 0 48px", lineHeight: 1.6, textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>
+          An AI response may appear polished, detailed and confident—even when part of it is incomplete, misleading or incorrect.
         </p>
 
-        {/* Newspaper article cards — horizontal scroll + prev/next cycle */}
-        <ResponsibleUseNewsCarousel onOpen={setLightbox} />
-
-        {lightbox && (
-          <NewsLightbox
-            src={lightbox.src}
-            caption={`${lightbox.source} — ${lightbox.headline} · ${lightbox.date}`}
-            onClose={() => setLightbox(null)}
-          />
-        )}
+        {/* 2-col × 3-row grid — all 6 in one viewport, no interaction, clean gridlines only */}
+        <div
+          role="list"
+          aria-label="AI output risks"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            borderTop: `1px solid rgba(26,26,36,0.08)`,
+          }}
+        >
+          {RISK_CARDS.map((card, i) => {
+            const isLeftCol = i % 2 === 0;
+            const isLastRow = i >= RISK_CARDS.length - 2;
+            return (
+              <motion.div
+                key={card.num}
+                role="listitem"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ delay: i * 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "44px 1fr",
+                  gap: "0 16px",
+                  padding: isLeftCol ? "20px 28px 20px 0" : "20px 0 20px 28px",
+                  borderRight: isLeftCol ? `1px solid rgba(26,26,36,0.08)` : "none",
+                  borderBottom: isLastRow ? "none" : `1px solid rgba(26,26,36,0.08)`,
+                  alignItems: "start",
+                }}
+              >
+                <StepBadge n={card.num} color={colors.frameRed} variant="outline" size={32} />
+                <div>
+                  <p style={{ fontFamily: fonts.bold, fontSize: "clamp(13px, 1.2vw, 15px)", color: colors.offBlack, margin: "0 0 4px", lineHeight: 1.3 }}>
+                    {card.title}
+                  </p>
+                  <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: 0, lineHeight: 1.6 }}>
+                    {card.body}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
 
         {/* Callout strip — verbatim from PDF slide 2: yellow left border, left=yellow bold, right=white regular */}
         <motion.div
@@ -517,6 +254,21 @@ function PlaceholderBlock({
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
+const FLOW_STEPS = [
+  { label: "AI assists", color: colors.frameBlue },
+  { label: "Human verifies", color: colors.yellow },
+  { label: "Professional decides", color: colors.frameGreen },
+] as const;
+
+const LEARNED_BULLETS = [
+  "Give AI effective instructions",
+  "Use prompts for tax activities",
+  "Identify suitable AI use cases",
+  "Design no-code Agents",
+  "Review AI-assisted outputs",
+];
+
+const CAPABILITY_CHIPS = ["search", "organise", "compare", "analyse", "draft"];
 
 const DOES_NOT_BULLETS = [
   "The facts used",
@@ -605,7 +357,7 @@ function HeroSection() {
   );
 }
 
-// ── Hero context — capability cards + accountability card ─
+// ── Hero context — Today's Question + capability cards + flow (separated from dark hero) ─
 function HeroContextSection() {
   const cardStyle: React.CSSProperties = {
     background: colors.white,
@@ -613,6 +365,15 @@ function HeroContextSection() {
     borderRadius: 10,
     padding: "28px 28px 32px",
   };
+
+  const eyebrowStyle = (c: string = colors.eyebrowGold): React.CSSProperties => ({
+    fontFamily: fonts.bold,
+    fontSize: typeScale.label.size,
+    letterSpacing: typeScale.label.tracking,
+    textTransform: "uppercase",
+    color: c,
+    margin: "0 0 10px",
+  });
 
   const bulletStyle: React.CSSProperties = {
     fontFamily: fonts.regular,
@@ -634,12 +395,38 @@ function HeroContextSection() {
     >
       <div style={{ ...contentRailStyle }}>
 
-        {/* Right card — limits of AI responsibility (Echo: remove left card, chips, and "AI May Help You" label) */}
+        {/* Two-column capability cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 32 }}>
-          <div style={{ ...cardStyle, borderTop: `3px solid ${colors.frameBlue}` }}>
+          {/* Left card */}
+          <div style={{ ...cardStyle, borderTop: `3px solid ${colors.yellow}` }}>
             <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.8vw, 18px)", color: colors.offBlack, margin: "0 0 20px", lineHeight: 1.3 }}>
-              AI Does Not Take Responsibility For
+              AI Can Assist the Work.<br />You Remain Accountable.
             </h2>
+            <p style={eyebrowStyle()}>You have learned how to:</p>
+            <ul style={{ margin: "0 0 20px", padding: 0, listStyle: "none" }}>
+              {LEARNED_BULLETS.map((b) => (
+                <li key={b} style={bulletStyle}>
+                  <span aria-hidden="true" style={{ position: "absolute", left: 0, color: colors.yellow }}>›</span>
+                  {b}
+                </li>
+              ))}
+            </ul>
+            <p style={{ fontFamily: fonts.regular, fontSize: 14, color: colors.gray01, fontStyle: "italic", margin: 0, lineHeight: 1.5 }}>
+              Now comes the most important question: How do you use these capabilities without compromising accuracy, confidentiality, professional judgment or trust?
+            </p>
+          </div>
+
+          {/* Right card */}
+          <div style={{ ...cardStyle, borderTop: `3px solid ${colors.frameBlue}` }}>
+            <p style={eyebrowStyle(colors.frameBlue)}>AI May Help You</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
+              {CAPABILITY_CHIPS.map((chip) => (
+                <span key={chip} style={{ background: colors.offWhite, border: `1px solid ${colors.gray02}`, borderRadius: 20, padding: "4px 12px", fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack }}>
+                  {chip}
+                </span>
+              ))}
+            </div>
+            <p style={eyebrowStyle()}>AI does not take responsibility for:</p>
             <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
               {DOES_NOT_BULLETS.map((b) => (
                 <li key={b} style={bulletStyle}>
@@ -651,25 +438,28 @@ function HeroContextSection() {
           </div>
         </div>
 
-        {/* Common accountability card — spans full width below capability cards */}
-        <div
-          style={{
-            ...cardStyle,
-            borderTop: `3px solid ${colors.yellow}`,
-            marginTop: 4,
-          }}
-        >
-          <p
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: "clamp(15px, 1.8vw, 18px)",
-              color: colors.offBlack,
-              margin: 0,
-              lineHeight: 1.45,
-              textAlign: "center",
-            }}
-          >
-            How do you use AI capabilities without compromising accuracy, confidentiality, professional judgement or trust?
+        {/* Flow row */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 0, justifyContent: "center" }}>
+            {FLOW_STEPS.map((step, i) => (
+              <motion.div
+                key={step.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.15, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <span style={{ background: step.color, borderRadius: 20, padding: "8px 20px", fontFamily: fonts.bold, fontSize: 14, color: step.color === colors.yellow ? colors.offBlack : colors.white, whiteSpace: "nowrap" }}>
+                  {step.label}
+                </span>
+                {i < FLOW_STEPS.length - 1 && (
+                  <span aria-hidden="true" style={{ fontFamily: fonts.bold, fontSize: 18, color: colors.gray01, padding: "0 12px" }}>→</span>
+                )}
+              </motion.div>
+            ))}
+          </div>
+          <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: 0, textAlign: "center", maxWidth: 480 }}>
+            AI assists. The professional assesses, decides and remains accountable.
           </p>
         </div>
 
@@ -678,65 +468,7 @@ function HeroContextSection() {
   );
 }
 
-// ── Journey questions merged into Checks ────────────────────────────────────
-const JOURNEY_STEPS = [
-  { n: 1, label: "DEFINE",   color: colors.frameBlue,    question: "What am I trying to achieve?" },
-  { n: 2, label: "DECIDE",   color: colors.yellow,       question: "Is AI suitable for this activity?" },
-  { n: 3, label: "PROTECT",  color: colors.frameGreen,   question: "What information will AI receive?" },
-  { n: 4, label: "CONTROL",  color: colors.framePurple,  question: "What instructions, sources and boundaries will I provide?" },
-  { n: 5, label: "VERIFY",   color: colors.frameOrange,  question: "Are the facts, calculations and authorities correct?" },
-  { n: 6, label: "APPROVE",  color: colors.frameRed,     question: "Has an appropriately qualified person reviewed the output?" },
-  { n: 7, label: "RECORD",   color: colors.frameBlue,    question: "What evidence of review, decisions or issues should be retained?" },
-] as const;
 
-function journeyByLabel(...labels: (typeof JOURNEY_STEPS[number]["label"])[]) {
-  return JOURNEY_STEPS.filter((s) => labels.includes(s.label));
-}
-
-function JourneyQuoteStrip({ steps }: { steps: readonly { label: string; question: string }[] }) {
-  return (
-    <div
-      style={{
-        background: colors.offWhite,
-        borderLeft: `4px solid ${colors.yellow}`,
-        borderRadius: 6,
-        padding: "16px 20px",
-        marginBottom: 14,
-      }}
-    >
-      {steps.map((s, i) => (
-        <div key={s.label} style={{ marginBottom: i < steps.length - 1 ? 12 : 0 }}>
-          <p style={{ fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 6px" }}>
-            {s.label}
-          </p>
-          <p style={{ fontFamily: fonts.quote, fontStyle: "italic", fontSize: "clamp(15px, 1.6vw, 18px)", color: colors.offBlack, margin: 0, lineHeight: 1.45 }}>
-            {s.question}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function JourneyFooterCallout({ label, question }: { label: string; question: string }) {
-  return (
-    <div
-      style={{
-        background: colors.offWhite,
-        borderLeft: `4px solid ${colors.yellow}`,
-        borderRadius: 6,
-        padding: "14px 18px",
-      }}
-    >
-      <p style={{ fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 6px" }}>
-        {label}
-      </p>
-      <p style={{ fontFamily: fonts.quote, fontStyle: "italic", fontSize: 14, color: colors.offBlack, margin: 0, lineHeight: 1.5 }}>
-        {question}
-      </p>
-    </div>
-  );
-}
 
 // ── TheChecks ─────────────────────────────────────────────────────────────────
 
@@ -780,7 +512,12 @@ function Check1Body() {
   ];
   return (
     <div>
-      <JourneyQuoteStrip steps={journeyByLabel("DEFINE", "DECIDE")} />
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.white, margin: 0 }}><strong>DEFINE:</strong> What am I trying to achieve?</p>
+        <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.white, margin: 0 }}><strong>DECIDE:</strong> Is AI suitable for this activity?</p>
+      </div>
       {/* Zone A: PSIO — unified horizontal panel, 4 columns */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.10)", marginBottom: 14 }}>
         {psio.map((q, i) => (
@@ -845,7 +582,11 @@ function Check2Body() {
   ];
   return (
     <div>
-      <JourneyQuoteStrip steps={journeyByLabel("PROTECT")} />
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.white, margin: 0 }}><strong>PROTECT:</strong> What information will AI receive?</p>
+      </div>
       {/* Zone A: 8 pre-flight questions as 2×4 numbered cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.10)", marginBottom: 14 }}>
         {questions.map((q, i) => (
@@ -910,7 +651,11 @@ function Check3Body() {
   ];
   return (
     <div>
-      <JourneyQuoteStrip steps={journeyByLabel("CONTROL")} />
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.white, margin: 0 }}><strong>CONTROL:</strong> What instructions, sources and boundaries will I provide?</p>
+      </div>
       {/* Zone A: unified 3×2 sequenced dimension panel */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.10)", marginBottom: 14 }}>
         {dimensions.map((d, i) => (
@@ -953,7 +698,6 @@ function Check4Body() {
   ];
   return (
     <div>
-      <JourneyQuoteStrip steps={journeyByLabel("CONTROL")} />
       {/* Unified 3×2 guardrail panel */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.10)", marginBottom: 14 }}>
         {guardrails.map((g, i) => (
@@ -1002,7 +746,11 @@ function Check5Body() {
   ] as const;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <JourneyQuoteStrip steps={journeyByLabel("VERIFY")} />
+      {/* Journey Checkpoint callout */}
+      <div style={{ background: colors.confidentBlack, borderRadius: 8, padding: "14px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
+        <p style={{ fontFamily: fonts.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: colors.yellow, margin: 0 }}>Journey Checkpoint</p>
+        <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.white, margin: 0 }}><strong>VERIFY:</strong> Are the facts, calculations and authorities correct?</p>
+      </div>
       {/* Zone A: VERIFY — 3×2 unified panel */}
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, borderRadius: 10, overflow: "hidden", border: "1px solid rgba(46,46,56,0.1)" }}>
         {verifyCards.map((card, i) => (
@@ -1065,23 +813,17 @@ function Check5Body() {
           <span style={{ fontFamily: fonts.bold, color: colors.offBlack }}>Do not claim</span> that the model's internal reasoning has been verified. Instead, evaluate whether the stated rationale is supported by verified facts, calculations and authorities.
         </p>
       </div>
-
-      {/* Zone E: APPROVE + RECORD journey callouts */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
-        {journeyByLabel("APPROVE", "RECORD").map((s) => (
-          <JourneyFooterCallout key={s.label} label={s.label} question={s.question} />
-        ))}
-      </div>
     </div>
   );
 }
+
 
 const CHECKS_META = [
   { n: "1",   label: "Check 1: Pause Before You Prompt",                                subtitle: "Clarify the purpose, suitability, impact and ownership before using AI.",                                                                              journey: "DEFINE • DECIDE",  color: colors.frameBlue,   onColor: colors.offBlack, Body: Check1Body  },
   { n: "2",   label: "Check 2: If the Input Is Sensitive, the AI Use Is Sensitive",     subtitle: "Control what enters the AI environment before focusing on what comes out.",                                                                             journey: "PROTECT",          color: colors.frameGreen,  onColor: colors.offBlack, Body: Check2Body  },
   { n: "3",   label: "Check 3: A Responsible Prompt Sets Boundaries",                   subtitle: "A responsible prompt does not merely tell AI what to do—it also tells AI where to stop.",                                                               journey: "CONTROL",          color: colors.framePurple, onColor: colors.white,    Body: Check3Body  },
   { n: "4",   label: "Check 4: Build No-Code Agents with Guardrails",                   subtitle: "No Agent should have broader access, authority or autonomy than its approved purpose requires.",                                                         journey: "CONTROL",          color: colors.frameTeal,   onColor: colors.offBlack, Body: Check4Body  },
-  { n: "5",   label: "Check 5: Do Not Approve What You Cannot Defend",                  subtitle: "Evaluate whether the output's stated rationale is supported by verified facts, calculations and authorities.",                                            journey: "VERIFY • APPROVE • RECORD", color: colors.frameOrange, onColor: colors.offBlack, Body: Check5Body  },
+  { n: "5",   label: "Check 5: Do Not Approve What You Cannot Defend",                  subtitle: "Evaluate whether the output's stated rationale is supported by verified facts, calculations and authorities.",                                            journey: "VERIFY",           color: colors.frameOrange, onColor: colors.offBlack, Body: Check5Body  },
 ];
 
 function TheChecks() {
@@ -1102,11 +844,11 @@ function TheChecks() {
           Checks for Responsible AI
         </h2>
         <p style={{ fontFamily: fonts.regular, fontSize: "clamp(15px, 1.4vw, 18px)", color: colors.gray01, margin: "0 auto 48px", lineHeight: 1.6, textAlign: "center", maxWidth: 620 }}>
-          Five practical checks with the key questions to ask at each stage. Apply them throughout the task—not only at the end.
+          Each check maps to a step in the Responsible AI Journey. Apply them throughout the task—not only at the end.
         </p>
 
         {/* Accordion */}
-        <div role="list" aria-label="The five checks for responsible AI">
+        <div role="list" aria-label="The seven checks">
           {CHECKS_META.map((check, i) => {
             const isOpen = openIdx === i;
             return (
@@ -1152,34 +894,35 @@ function TheChecks() {
                   <span style={{
                     display: "inline-flex", alignItems: "center", justifyContent: "center",
                     width: 32, height: 32, borderRadius: "50%", flexShrink: 0, marginTop: 1,
-                    background: isOpen ? colors.offBlack : "transparent",
-                    border: `1.5px solid ${isOpen ? colors.offBlack : "rgba(46,46,56,0.25)"}`,
-                    color: isOpen ? colors.yellow : colors.gray01,
+                    background: isOpen ? colors.offBlack : `${check.color}22`,
+                    border: `1.5px solid ${isOpen ? colors.offBlack : check.color}`,
+                    color: isOpen ? colors.yellow : colors.offBlack,
                     fontFamily: fonts.bold, fontSize: 13,
                     transition: "background 0.25s, border-color 0.25s, color 0.25s",
                   }}>
                     {check.n}
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ display: "block", fontFamily: fonts.bold, fontSize: "clamp(13px, 1.3vw, 15px)", color: isOpen ? colors.offBlack : colors.gray01, transition: "color 0.2s", lineHeight: 1.3 }}>
+                    <span style={{ display: "block", fontFamily: fonts.bold, fontSize: "clamp(13px, 1.3vw, 15px)", color: colors.offBlack, transition: "color 0.2s", lineHeight: 1.3 }}>
                       {check.label}
                     </span>
-                    <span style={{ display: "block", fontFamily: fonts.regular, fontSize: 12, color: isOpen ? colors.gray01 : colors.gray02, marginTop: 3, lineHeight: 1.5, transition: "color 0.2s" }}>
+                    <span style={{ display: "block", fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, marginTop: 3, lineHeight: 1.5, transition: "color 0.2s" }}>
                       {check.subtitle}
                     </span>
                   </div>
                   <span style={{
                     fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.07em", textTransform: "uppercase",
                     flexShrink: 0, marginTop: 2, whiteSpace: "nowrap",
-                    background: isOpen ? colors.offBlack : "transparent",
-                    color: isOpen ? colors.yellow : colors.gray02,
-                    borderRadius: 3, padding: isOpen ? "3px 7px" : "3px 0px",
-                    transition: "background 0.25s, color 0.25s, padding 0.25s",
+                    background: isOpen ? colors.offBlack : `${check.color}22`,
+                    color: isOpen ? colors.yellow : colors.offBlack,
+                    border: isOpen ? "none" : `1px solid ${check.color}`,
+                    borderRadius: 3, padding: "3px 7px",
+                    transition: "background 0.25s, color 0.25s",
                   }}>
                     {check.journey}
                   </span>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ flexShrink: 0, marginTop: 4, transition: "transform 0.3s ease", transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
-                    <path d="M4 6l4 4 4-4" stroke={colors.gray01} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M4 6l4 4 4-4" stroke={colors.offBlack} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
                 <div
