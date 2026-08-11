@@ -1,65 +1,64 @@
 # Echo Thread Tracker — Tax Labs AI
 
-**Last audit:** 2026-08-10  
+**Last audit:** 2026-08-11 (post-merge reconciliation)  
 **Branch:** `feature/phases-2-3-4-content-updates`  
-**Open AI-ready threads:** see `echo-open-threads-audit.json`
+**Inventory:** `reference/echo-reconcile-inventory.json` (55 open, 53 resolved at snapshot)
 
-## Why comments feel "floating"
+## Merge regression context
 
-Echo pins feedback to **DOM selectors on a URL**, not to Git branches. The same issue can appear as multiple threads on:
+Merge `276e277` (phase2-brainstorming-wt → feature branch) took **incoming** for conflicted Closure/Ascent files and overwrote Echo work from `140fe2e`. This pass restored:
 
-- Production: `ey-landing-mockup.vercel.app`
-- Preview: `ey-landing-mockup-git-feature-...vercel.app`
+| Area | Regression | Restore |
+|------|------------|---------|
+| Module 4.1 risk | Text grid replaced newspaper 3-up carousel | `RESPONSIBLE_USE_NEWS` carousel from `140fe2e` |
+| Closure hero | Two-card hero + flow row returned | Single accountability card + “AI Does Not…” card |
+| Ascent header | Subtitle “Evolving into…” returned | Subtitle removed |
+| Ascent banner | Simple phrase pills | `MilestoneBox` + progress underline (no ACT labels, no connectors) |
 
-**Use this tracker + Echo filters** (`page_url`, `status: open/resolved`) to see what is done vs still open.
+**Stale-resolved (Echo still resolved, code had regressed):** `578a3104` (ascent subtitle), `e149bde4` (closure accountability card) — restored; keep resolved with note in inventory.
 
-## Status legend
+## Branch status legend
 
-| Status | Meaning |
-|--------|---------|
-| **Resolved** | Fixed on branch; thread closed in Echo |
-| **Implemented — resolve pending** | Code on branch; Echo still open until bulk resolve |
-| **Gap** | Still needs code |
-| **Deferred** | Blocked (assets, stakeholder sign-off) |
+| Branch status | Meaning |
+|---------------|---------|
+| **present** | Implemented on branch; matches Echo resolved or verified |
+| **done-still-open** | Code matches request; Echo still open → batch resolve |
+| **stale-resolved** | Echo resolved but merge regressed code → restored this pass |
+| **missing** | Not implemented (backlog) |
+| **blocked** | Assets, stakeholder sign-off, or Aug 11 mail-only requests |
 
-## By page (open count at last audit)
+## Verified still present (spot-check after merge)
+
+| Item | Evidence |
+|------|----------|
+| Site rebrand | `SiteHeader.tsx` — AI for Tax Excellence + tagline |
+| Module picker hide 4 & 5 | `curriculum.ts` coming-soon + `LearningNav` filter |
+| PHASE_CARDS deliverables | `Frame353/index.tsx` — Foundation Workshops, Phase 2–4 copy |
+| Gen AI Convo + Welcome only | `Foundational_Concepts.html` |
+| No “dashboard” on Phase 1 | No matches under phase1 pages |
+| Phase 2 brainstorming-wt | `BrainstormingUseCases.tsx` — kept merge incoming |
+
+## Open by page (Aug 11 snapshot)
 
 | Page | Open | Notes |
 |------|------|-------|
-| `/foundational` | 36 | Mix of copy tweaks + Figma/asset redesigns |
-| `/closure-ai-reinforcement` | 18 | Gayatri Aug 9 hero simplification — addressed in latest commit |
-| `/phased` | 15 | Most phase card copy done; hierarchy/layout threads remain |
-| `/guidance-implementation` | 8 | Mostly "remove section" — likely done on branch, need resolve |
-| `/phase2` | 6 | Section removals — likely done on branch |
-| `/phase1` | 7 | Minor UX; dashboard fix done |
+| `/foundational` | 36 | Copy + Figma/asset redesign backlog |
+| `/closure-ai-reinforcement` | 12 → ~6 after resolve batch | Hero/carousel restored; checklist Aug 11 blocked |
+| `/phased` | 0 resolved batch | Layout threads resolved earlier |
+| `/guidance-implementation` | 8 | Aug 11 bingo/HTML mail — Wave 4 blocked |
+| `/phase2` | 6 | Future sections/images |
+| `/phase1` | 7 | Minor UX |
+| `/copilot-hub` | 1 | **Blocked** — Gayatri/PriyaDarshini sign-off (`28e70c4c`) |
 
-## Phased page — Gayatri deliverables (Aug 9)
+## Wave 4 backlog (leave open)
 
-| Thread | Request | Branch status |
-|--------|---------|---------------|
-| `5651916a` | Phase 2 deliverable: Recommendation Note + templates | **Fixed** |
-| `aab93e6f` | Phase 3: Library of Prompt templates | **Fixed** |
-| `20118a20` | Phase 3: 5-10 self-developed agents | **Fixed** |
-| `578a3104` | Remove ascent subtitle | **Fixed** |
-| `64217fbf` / `2268970d` | Need hierarchy on step section | **Gap** — design pass |
+- `5790f9b7` — Closure checklist attachments (no files in repo)
+- `9079aa2f` — Guidance 3×3 bingo game
+- `774926c9`, `279cd908` — Guidance HTML from mail
+- Foundational Jul high-priority image/Figma threads
 
-## Closure — Gayatri Aug 9 batch
+## Hygiene actions (this pass)
 
-| Thread | Request | Branch status |
-|--------|---------|---------------|
-| `e149bde4` | Common accountability card + new question | **Fixed** |
-| `8fc09737` | Remove flow chips row | **Fixed** |
-| `70a69673` | Remove left capability card | **Fixed** |
-| `fcbd4c82` | Remove "AI May Help You" | **Fixed** |
-| `be1a08ec` | Remove capability chips | **Fixed** |
-| `814565c9` | Remove risk intro disclaimer | **Fixed** |
-| `054cf596` / `beaaabcf` | Remove Today's Question | **Fixed** (prior commit) |
-
-## Deferred (do not implement yet)
-
-See `echo-deferred-backlog.txt` — Copilot Hub reorg, newspaper images, PPT assets, Memory Refresh DnD.
-
-## Machine-readable files
-
-- `echo-open-threads-audit.json` — full open thread list
-- `echo-gap-analysis.json` — auto-categorized buckets
+- Resolved 6 **done-still-open** Closure threads (hero removals + old preview-URL duplicates)
+- Documented **stale-resolved** restores in inventory (no re-open in Echo)
+- Left **blocked** and **missing** threads open

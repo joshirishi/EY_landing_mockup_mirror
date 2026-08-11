@@ -11,9 +11,9 @@ import { colors, fonts, typeScale } from "@/design-kit";
 
 const W = 1536;
 const H = 490;
-const BANNER_HEIGHT = 44;
+const BANNER_HEIGHT = 76;
 const BANNER_TOP = H - BANNER_HEIGHT;
-const BANNER_FONT_SIZE = typeScale.label.size;
+const BANNER_PHRASE_FONT_SIZE = 11;
 
 const ASSET = {
   cleanBackground: "/ascent/clean-background.png",
@@ -473,13 +473,6 @@ function HeaderTitleBlock() {
           <img alt="" className="block size-full max-w-none" src={ASSET.accentLine} />
         </div>
       </div>
-
-      <p
-        className="min-w-full text-[14px] leading-[20px]"
-        style={{ fontFamily: fonts.regular, color: colors.gray02 }}
-      >
-        Evolving into an AI-enabled tax professional.
-      </p>
     </div>
   );
 }
@@ -686,42 +679,85 @@ function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
   );
 }
 
-const bannerTextStyle = {
-  fontFamily: fonts.bold,
-  fontSize: BANNER_FONT_SIZE,
-  fontWeight: typeScale.label.weight,
-  letterSpacing: typeScale.label.tracking,
-  textTransform: "uppercase" as const,
-};
-
-const BANNER_PHRASES = [
-  "From uncertainty to impact",
-  "From learning to leading",
-  "From user to AI-enabled tax professional",
+const BANNER_MILESTONES = [
+  { phrase: "From uncertainty to impact", revealAt: 2 as ProgressLevel },
+  { phrase: "From learning to leading", revealAt: 4 as ProgressLevel },
+  {
+    phrase: "From user to AI-enabled tax professional",
+    revealAt: 6 as ProgressLevel,
+  },
 ] as const;
 
-const bannerBoxStyle: CSSProperties = {
-  ...bannerTextStyle,
+const milestonePhraseStyle: CSSProperties = {
+  fontFamily: fonts.bold,
+  fontSize: BANNER_PHRASE_FONT_SIZE,
+  fontWeight: typeScale.label.weight,
+  letterSpacing: typeScale.label.tracking,
+  textTransform: "uppercase",
   color: colors.yellow,
-  background: colors.confidentBlack,
-  padding: "10px 16px",
-  borderRadius: "var(--radius-sm)",
+  margin: 0,
+  lineHeight: "14px",
 };
 
-function BottomBanner() {
+function MilestoneBox({
+  phrase,
+  isRevealed,
+  summitPulse,
+}: {
+  phrase: string;
+  isRevealed: boolean;
+  summitPulse: boolean;
+}) {
   return (
     <div
-      className="absolute left-0 flex w-full items-center justify-center"
+      className={`relative flex min-h-[44px] flex-1 flex-col justify-center overflow-hidden ${summitPulse ? "ascent-banner-summit-pulse" : ""}`}
+      style={{
+        minWidth: 0,
+        padding: "10px 16px",
+        background: colors.confidentBlack,
+        borderRadius: "var(--radius-sm)",
+        border: `1px solid ${colors.yellowAlpha12}`,
+      }}
+    >
+      <div
+        className="absolute left-0 top-0 h-[3px] w-full"
+        style={{ background: colors.yellow }}
+        aria-hidden
+      />
+      <p className="line-clamp-2" style={milestonePhraseStyle}>
+        {phrase}
+      </p>
+      <div
+        className="absolute bottom-0 left-0 h-0.5"
+        style={{
+          background: colors.yellow,
+          width: isRevealed ? "100%" : "0%",
+          transition: `width ${PATH_REVEAL_MS}ms ease`,
+        }}
+        aria-hidden
+      />
+    </div>
+  );
+}
+
+function BottomBanner({ activeProgress }: { activeProgress: ProgressLevel }) {
+  return (
+    <div
+      className="absolute left-0 flex w-full items-center px-6"
       style={{
         top: BANNER_TOP,
         height: BANNER_HEIGHT,
       }}
+      data-name="bottom-banner"
     >
-      <div className="flex items-center gap-3">
-        {BANNER_PHRASES.map((phrase) => (
-          <p key={phrase} className="m-0 shrink-0 whitespace-nowrap" style={bannerBoxStyle}>
-            {phrase}
-          </p>
+      <div className="flex w-full items-stretch gap-4">
+        {BANNER_MILESTONES.map((milestone, index) => (
+          <MilestoneBox
+            key={milestone.phrase}
+            phrase={milestone.phrase}
+            isRevealed={activeProgress >= milestone.revealAt}
+            summitPulse={index === 2 && activeProgress >= DEFAULT_PROGRESS}
+          />
         ))}
       </div>
     </div>
@@ -783,6 +819,23 @@ function AscentCanvas({ callouts: calloutsOverride, stageNodes: stageNodesOverri
         .ascent-marker-next-pulse {
           pointer-events: none;
           animation: ascent-marker-next-glow 2s ease-in-out infinite;
+        }
+        @keyframes ascent-banner-summit-pulse {
+          0% {
+            border-color: ${colors.yellowAlpha12};
+            box-shadow: 0 0 0 0 rgba(255, 230, 0, 0);
+          }
+          50% {
+            border-color: ${colors.yellow};
+            box-shadow: 0 0 10px 2px rgba(255, 230, 0, 0.4);
+          }
+          100% {
+            border-color: ${colors.yellowAlpha12};
+            box-shadow: 0 0 0 0 rgba(255, 230, 0, 0);
+          }
+        }
+        .ascent-banner-summit-pulse {
+          animation: ascent-banner-summit-pulse 250ms ease-out;
         }
       `}</style>
       {/* Mountain photograph — hiker + sunset baked into clean-background.png */}
@@ -908,7 +961,7 @@ function AscentCanvas({ callouts: calloutsOverride, stageNodes: stageNodesOverri
         );
       })()}
 
-      <BottomBanner />
+      <BottomBanner activeProgress={activeProgress} />
     </div>
   );
 }

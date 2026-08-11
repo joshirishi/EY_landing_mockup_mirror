@@ -1858,11 +1858,9 @@ function CourseCard({ onOpen, icon, title, description, estimatedTime }: {
   );
 }
 
-// Two-step unlock card:
-//   Click 1 → transitions from locked → active (visual unlock animation)
-//   Click 2 → calls onNavigate() to go to the destination page
-// icon       = gray version shown in locked state
-// activeIcon = dark version shown after unlock (on yellow circle bg)
+// Course card — unlocked and clickable by default (navigates on first click).
+// icon       = gray version shown in locked state (kept for optional re-lock)
+// activeIcon = dark version shown when unlocked (on yellow circle bg)
 function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description, estimatedTime }: {
   onNavigate?: () => void;
   icon: React.ReactNode;
@@ -1871,14 +1869,14 @@ function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description
   description: string;
   estimatedTime?: string;
 }) {
-  const [unlocked, setUnlocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(true);
   const [hovered, setHovered] = useState(false);
 
   const handleClick = () => {
     if (!unlocked) {
-      setUnlocked(true); // Step 1: visually unlock the card
+      setUnlocked(true); // Optional: unlock if ever shown locked
     } else {
-      onNavigate?.();    // Step 2: navigate to the page
+      onNavigate?.();    // Navigate to the page
     }
   };
 
