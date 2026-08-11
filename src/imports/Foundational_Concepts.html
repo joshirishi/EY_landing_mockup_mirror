@@ -2939,8 +2939,9 @@ document.getElementById('hero-video').addEventListener('ended', function() {
 #clip-lightbox-close {
   position: fixed; top: 24px; right: 28px;
   width: 44px; height: 44px; border-radius: 50%;
-  background: var(--ey-surface-on-dark); border: 1px solid var(--ey-border-on-dark);
+  background: var(--ey-surface-on-dark); border: 1px solid var(--ey-yellow);
   color: var(--ey-on-dark);
+  opacity: 1;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
   z-index: 9001;
@@ -3226,7 +3227,6 @@ document.addEventListener('keydown', function(e) {
 <section class="evo-section surface-dark" id="evolution" aria-labelledby="evo-heading">
   <p class="section-anchor-title section-anchor-title--dark">Evolution</p>
   <h2 id="evo-heading" class="evo-title">The Evolution of AI</h2>
-  <p class="evo-sub">Each layer is a subset of the one before it — building on the last</p>
 
   <div id="evo-timeline-view">
     <nav class="evo-breadcrumb evo-breadcrumb--legacy" id="evo-breadcrumb" aria-label="AI evolution eras timeline, current era highlighted"></nav>
@@ -3352,7 +3352,7 @@ document.addEventListener('keydown', function(e) {
 <section class="section sim-section surface-light" id="terminology" style="padding:80px 40px;">
   <p class="sim-label">Gen AI Convo</p>
   <h2 style="font-size:36px; margin-bottom:8px; color:var(--ey-dark);">Inside Every Gen AI Conversation</h2>
-  <p class="section-subtitle" style="color:var(--gray-01);">Follow a prompt and discover what happens behind the scenes—from your question to the final answer.</p>
+  <p class="section-subtitle" style="color:var(--gray-01); white-space:nowrap;">Follow a prompt and discover what happens behind the scenes—from your question to the final answer.</p>
 
   <div style="max-width:1400px; margin:0 auto;">
 
@@ -3363,7 +3363,7 @@ document.addEventListener('keydown', function(e) {
       <div style="display:flex; align-items:center; padding:12px 20px; background:var(--confident-black); border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0;">
         <div style="display:flex; align-items:center; gap:8px; min-width:0;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span id="copilot-status" style="color:var(--white); font-size:14px; font-weight:400; line-height:22.4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Copilot</span>
+          <span id="copilot-status" style="color:var(--white); font-size:14px; font-weight:400; line-height:22.4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></span>
         </div>
         <span style="margin-left:auto; flex-shrink:0; font-size:10px; line-height:16px; color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.08); padding:3px 10px; border-radius:10px;">GPT</span>
       </div>
@@ -4167,7 +4167,7 @@ function resetDemo() {
   var askEx = document.getElementById('ask-explainer'); if (askEx) askEx.innerHTML = '';
   var inp = document.getElementById('copilot-input'); if (inp) { inp.value = ''; inp.style.color = 'var(--text-secondary)'; inp.style.borderColor = 'rgba(255,230,0,0.35)'; }
   var win = document.getElementById('copilot-window'); if (win) win.classList.remove('is-hallucinating');
-  setCopilotStatus('Copilot');
+  setCopilotStatus('');
   currentBeat = -1;
   window._hallPhase = 0;
   resetHallNewsCarousel();
@@ -4415,7 +4415,7 @@ window.advanceNewsCarousel = advanceNewsCarousel;
 
 <!-- ======== CHEAT SHEET — Think Beyond Drafting (CREATE / UNDERSTAND / ORGANIZE / THINK) ======== -->
 <section class="section surface-neutral cheat-section" id="cheatsheet" aria-labelledby="cheat-heading">
-  <p class="section-anchor-title">Cheat Sheet</p>
+  <p class="section-anchor-title">Thinking Partner</p>
   <h2 id="cheat-heading" class="cheat-title">Think Beyond Drafting and Summarisation</h2>
   <p class="cheat-subtitle">Generative AI can be your smart thought partner</p>
 
@@ -5908,7 +5908,7 @@ const EVO_ERAS = [
     parent: 1
   },
   {
-    year: '2017', yearLabel: '2017-22', short: 'Gen', title: 'Generative AI', tag: 'Content Creator',
+    year: '2017', yearLabel: '2017', short: 'Gen', title: 'Generative AI', tag: 'Content Creator',
     desc: 'AI that creates new content such as text, images, audio and code from natural language instructions.',
     analogy: 'Like A Musician Composing a New Song — you ask for a relaxing melody, and it uses learned knowledge to create something new.',
     examples: ['ChatGPT drafting', 'Copilot presentations', 'AI image generation'],
@@ -5919,9 +5919,9 @@ const EVO_ERAS = [
   },
   {
     year: '2024', short: 'Agentic', title: 'Agentic AI', tag: 'Goal-Driven',
-    desc: 'AI systems that can plan, decide and execute multi-step tasks toward a goal with less step-by-step human direction.',
-    analogy: 'Like a Personal Executive Assistant — instead of only answering "When is my flight?", it can book, reserve, calendar, and remind.',
-    examples: ['Travel planners', 'Shopping assistants', 'Meeting prep agents'],
+    desc: 'An AI agent is a GenAI program that can semi-autonomously execute tasks for a user or another program. AI agents learn from their own experience, feedback, or data to adapt their behavior accordingly.',
+    analogy: 'Like a robot vacuum cleaner — you tell it what needs to be cleaned. It navigates, avoids obstacles, adjusts its route, learns the layout over time, and returns to recharge when needed.',
+    examples: ['Travel Booking Assistant', 'Meeting Scheduling Assistant', 'Online Shopping Assistant'],
     preview: 'Acts towards an end goal',
     image: '/evo-agentic.png',
     dot: '#B400FF',

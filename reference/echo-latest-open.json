@@ -1,0 +1,29 @@
+{
+  "fetched_at": "2026-08-11T18:05:00Z",
+  "open_count": 49,
+  "resolved_this_pass": 15,
+  "resolved_ids": [
+    "8365ea8b-6951-4746-89c3-c5942980e7b6",
+    "b49116e5-10be-4846-b6c7-62b40005e6ca",
+    "49774902-7f57-4d3f-a5cd-b615f5a45dd3",
+    "4df10fcc-b445-4cf9-ba71-385e128a7fd8",
+    "c272b37b-216a-46b0-adbb-9b42c3c0ef15",
+    "3b9a5c08-28fc-43f4-83c5-0b99fca47493",
+    "cf596ab5-9352-4591-89b0-1e9723c9a266",
+    "629fe87e-e758-476c-934d-e09be61b055d",
+    "ef8bc00a-f7d6-4ba5-81b9-0548d972bcbe",
+    "6be8f174-a00d-44ae-8851-d33893b3e24f",
+    "9620d571-7f5f-47a3-a125-361e875c41f5",
+    "5e0fd24f-322f-42d3-8e98-a2927975ce8c",
+    "70dc060e-2ff5-4f55-9d4e-4cd297e17bca",
+    "f4514412-f242-4029-a9a5-b8ac579fb701",
+    "5790f9b7-035e-4674-8ecb-209ab9b542d2"
+  ],
+  "blocked_open": [
+    "9079aa2f-8077-4a57-9ce9-1475c0e30918",
+    "774926c9-ae1c-4a6c-9314-c7d9a550f45b",
+    "279cd908-f1d3-4537-af19-8fc19eaf35d7",
+    "28e70c4c-65ce-4cc3-a129-edadd1e80d5c"
+  ],
+  "remaining_open_estimate": 34
+}
