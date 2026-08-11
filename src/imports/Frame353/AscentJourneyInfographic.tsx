@@ -166,6 +166,21 @@ const STAGE_TITLE_LABELS = [
 /** null = hidden; 0 = base camp callout … 5 = summit stage callout. */
 type CalloutIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
+export type AscentCalloutEntry = { left: number; top: number; width: number; quote: string; rounded?: number };
+export type AscentStageNodeEntry = { left: number; top: number; icon: string; alt: string };
+export type AscentStageTitleEntry = { title: string; markerTop: number; markerSize: number; calloutIndex: CalloutIndex };
+
+export type AscentOverrides = {
+  callouts?: readonly AscentCalloutEntry[];
+  stageNodes?: readonly AscentStageNodeEntry[];
+  stageTitleLabels?: readonly AscentStageTitleEntry[];
+  /** Open all callouts by default and show full path glow */
+  defaultAllOpen?: boolean;
+  /** CTA button rendered below the last stage marker */
+  lastNodeCtaLabel?: string;
+  onLastNodeCta?: () => void;
+};
+
 /** Marker at callout index i is reached when activeProgress >= i + 1. */
 function getNextCalloutIndex(activeProgress: ProgressLevel): CalloutIndex | null {
   if (activeProgress >= DEFAULT_PROGRESS) return null;
@@ -273,6 +288,7 @@ function JourneyMarkerButton({
         outlineColor: colors.yellow,
         boxShadow: visual.boxShadow,
         transform: visual.transform,
+        zIndex: 10,
       }}
     >
       {showNextPulse ? (
@@ -350,6 +366,7 @@ function StageTitleLabel({
         width,
         paddingLeft: 4,
         paddingRight: 4,
+        zIndex: 10,
         background: colors.confidentBlack,
         border: `1px solid ${colors.yellow}`,
         borderRadius: 4,
@@ -512,6 +529,8 @@ function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
         top: JOURNEY_PATH_LAYOUT.top,
         width: JOURNEY_PATH_LAYOUT.width,
         height: JOURNEY_PATH_LAYOUT.height,
+        zIndex: 1,
+        isolation: "isolate",
       }}
       data-name="journey-path-container"
       data-node-id="3811:4139"
@@ -709,10 +728,15 @@ function BottomBanner() {
   );
 }
 
-function AscentCanvas() {
+function AscentCanvas({ callouts: calloutsOverride, stageNodes: stageNodesOverride, stageTitleLabels: stageTitleLabelsOverride, defaultAllOpen, lastNodeCtaLabel, onLastNodeCta }: AscentOverrides = {}) {
+  const callouts = calloutsOverride ?? CALLOUTS;
+  const stageNodes = stageNodesOverride ?? STAGE_NODES;
+  const stageTitleLabels = stageTitleLabelsOverride ?? STAGE_TITLE_LABELS;
   /** Every marker the user has opened. Callouts persist until clicked again. */
   const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(
-    () => new Set<CalloutIndex>([0]),
+    () => defaultAllOpen
+      ? new Set<CalloutIndex>([0, 1, 2, 3, 4, 5])
+      : new Set<CalloutIndex>([0]),
   );
 
   const toggleCallout = (calloutIndex: CalloutIndex) => {
@@ -779,12 +803,12 @@ function AscentCanvas() {
       </div>
 
       {/* Thought-bubble callouts — every opened marker stays visible */}
-      {CALLOUTS.map((callout, index) =>
+      {callouts.map((callout, index) =>
         openCallouts.has(index as CalloutIndex) ? (
           <div
             key={callout.quote}
             className="absolute"
-            style={{ left: callout.left, top: callout.top }}
+            style={{ left: callout.left, top: callout.top, zIndex: 10 }}
           >
             <CalloutBox
               quote={callout.quote}
@@ -796,10 +820,10 @@ function AscentCanvas() {
       )}
 
       {/* Stage title labels — shown below markers only while that callout is open */}
-      {STAGE_TITLE_LABELS.map(({ title, markerTop, markerSize, calloutIndex }) => {
+      {stageTitleLabels.map(({ title, markerTop, markerSize, calloutIndex }) => {
         if (!openCallouts.has(calloutIndex)) return null;
 
-        const callout = CALLOUTS[calloutIndex];
+        const callout = callouts[calloutIndex];
         const progressThreshold = (calloutIndex + 1) as ProgressLevel;
 
         return (
@@ -823,7 +847,7 @@ function AscentCanvas() {
       />
 
       {/* Stage icon nodes */}
-      {STAGE_NODES.map((node, index) => {
+      {stageNodes.map((node, index) => {
         const calloutIndex = (index + 1) as CalloutIndex;
 
         return (
@@ -838,12 +862,58 @@ function AscentCanvas() {
         );
       })}
 
+      {/* CTA at last node — shown when lastNodeCtaLabel provided */}
+      {lastNodeCtaLabel && onLastNodeCta && (() => {
+        const lastCallout = callouts[5];
+        const lastTitleLabel = stageTitleLabels[stageTitleLabels.length - 1];
+        const ctaTop = lastTitleLabel.markerTop + lastTitleLabel.markerSize + 8 + 28 + 8;
+        return (
+          <>
+          <style>{`
+            @keyframes ascent-cta-pulse {
+              0%, 100% { box-shadow: 0 0 18px 4px rgba(255,230,0,0.55), 0 2px 12px rgba(0,0,0,0.35); }
+              50%       { box-shadow: 0 0 36px 10px rgba(255,230,0,0.85), 0 2px 12px rgba(0,0,0,0.35); }
+            }
+          `}</style>
+          <button
+            type="button"
+            onClick={onLastNodeCta}
+            style={{
+              position: "absolute",
+              left: lastCallout.left - 40,
+              top: ctaTop,
+              width: 260,
+              fontFamily: fonts.bold,
+              fontSize: 13,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              background: colors.yellow,
+              color: colors.confidentBlack,
+              border: `2px solid ${colors.yellow}`,
+              borderRadius: 32,
+              padding: "12px 24px",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              animation: "ascent-cta-pulse 2s ease-in-out infinite",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+            }}
+          >
+            <span>{lastNodeCtaLabel}</span>
+            <span style={{ fontFamily: fonts.regular, fontSize: 16, lineHeight: 1 }}>→</span>
+          </button>
+          </>
+        );
+      })()}
+
       <BottomBanner />
     </div>
   );
 }
 
-export default function AscentJourneyInfographic() {
+export default function AscentJourneyInfographic(overrides: AscentOverrides = {}) {
   const shellRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -873,7 +943,7 @@ export default function AscentJourneyInfographic() {
           transformOrigin: "top center",
         }}
       >
-        <AscentCanvas />
+        <AscentCanvas {...overrides} />
       </div>
     </div>
   );

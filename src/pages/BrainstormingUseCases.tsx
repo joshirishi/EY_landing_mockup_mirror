@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Lock, PlusCircle } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
-import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
+import AscentJourneyInfographic, { type AscentCalloutEntry, type AscentStageNodeEntry, type AscentStageTitleEntry } from "../imports/Frame353/AscentJourneyInfographic";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-2212662948.jpg";
@@ -19,8 +19,6 @@ const PHASE2_SECTIONS = [
   { id: "problem-first", label: "Problem First", group: "learn" as const },
   { id: "guided-examples", label: "Prompt Examples", group: "learn" as const },
   { id: "agent-examples", label: "Agent Examples", group: "learn" as const },
-  { id: "use-case-map", label: "Activity Choice", group: "apply" as const },
-  { id: "live-brainstorm", label: "Live Brainstorm", group: "apply" as const },
   { id: "deliverables", label: "Outputs", group: "apply" as const },
   { id: "next-steps", label: "What's Next", group: "apply" as const },
 ];
@@ -309,7 +307,29 @@ function MemoryRefreshSection() {
           })}
         </div>
 
-        {/* Show/hide descriptions */}
+        {/* Drag & Drop placeholder */}
+        <div style={{ marginBottom: 40 }}>
+          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 20px" }}>
+            Drag &amp; Drop Exercise
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            {["Column A", "Column B"].map((col) => (
+              <div key={col} style={{
+                border: "1.5px dashed rgba(255,255,255,0.25)",
+                borderRadius: 8,
+                padding: 24,
+                minHeight: 160,
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+              }}>
+                <p style={{ fontFamily: fonts.bold, fontSize: 12, color: colors.white, margin: 0, letterSpacing: "0.04em" }}>{col}</p>
+                <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.onDarkMuted, margin: 0, fontStyle: "italic" }}>Content coming soon</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Transition line — verbatim from PDF */}
         <div style={{
           borderTop: "1px solid rgba(255,255,255,0.1)",
@@ -338,13 +358,13 @@ function MemoryRefreshSection() {
 const PROBLEM_STEPS = [
   {
     n: "01",
-    q: "What work is being performed?",
-    details: ["Tax process and key activities", "Trigger and required output"],
+    q: "Where does effort or friction arise?",
+    details: ["Searching, reviewing, comparing, drafting", "Follow-ups, tracking, evidence and reporting"],
   },
   {
     n: "02",
-    q: "Where does effort or friction arise?",
-    details: ["Searching, reviewing, comparing, drafting", "Follow-ups, tracking, evidence and reporting"],
+    q: "What work is being performed?",
+    details: ["Tax process and key activities", "Trigger and required output"],
   },
   {
     n: "03",
@@ -926,36 +946,6 @@ function GuidedExamplesSection() {
           </div>
         </div>
 
-        {/* Discussion prompt — always visible below */}
-        <div
-          id="discussion-prompt"
-          style={{
-            marginTop: 24,
-            background: colors.yellow,
-            borderRadius: 10,
-            padding: "clamp(24px, 3vw, 36px)",
-            animation: isLast ? "ey-slide-up 300ms cubic-bezier(.22,.68,0,1.05) both" : undefined,
-          }}
-        >
-          <p style={{
-            fontFamily: fonts.bold, fontSize: 10,
-            letterSpacing: "0.1em", textTransform: "uppercase",
-            color: colors.confidentBlack, margin: "0 0 12px", opacity: 0.6,
-          }}>
-            Discussion Prompt
-          </p>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: colors.confidentBlack,
-            margin: 0,
-            lineHeight: 1.45,
-            letterSpacing: "-0.01em",
-          }}>
-            Which recurring tax activity would benefit from stronger extraction, comparison, analysis,
-            explanation, validation or a first draft?
-          </p>
-        </div>
 
       </div>
     </section>
@@ -1208,590 +1198,38 @@ function AgentExamplesSection() {
   );
 }
 
-// ── Activity-Level Choice section (Slide 7) ─────────────────────────────────
-const ACTIVITY_ROWS = [
-  { activity: "Request projected financials from business units", pain: "Multiple follow-ups", type: "agent" as const, response: "M365 Agent" },
-  { activity: "Collect qualitative tax inputs", pain: "Inputs buried in email and Teams", type: "agent" as const, response: "M365 Agent" },
-  { activity: "Summarise business changes affecting forecast", pain: "Manual review of communications and forecasts", type: "prompt" as const, response: "Prompt" },
-  { activity: "Compare current and prior-quarter assumptions", pain: "Time spent reviewing historical workings", type: "prompt" as const, response: "Prompt" },
-  { activity: "Prepare variance narrative", pain: "Manual drafting", type: "prompt" as const, response: "Prompt" },
-  { activity: "Consolidate business-unit comments", pain: "Inputs received through different channels", type: "agent" as const, response: "M365 Agent" },
-  { activity: "Draft communication to Treasury or business", pain: "Recurring communication within a broader workflow", type: "both" as const, response: "Prompt and/or Agent — subject to workflow design" },
-  { activity: "Archive challans, approvals and supporting files", pain: "Manual document organisation", type: "agent" as const, response: "M365 Agent" },
-];
-
-const LEGEND_CARDS = [
-  {
-    key: "prompt" as const,
-    title: "Consider a Prompt",
-    accentColor: "#0076A8",
-    bullets: [
-      "User-initiated task",
-      "Defined input",
-      "Interpretation, review or drafting",
-      "Output varies with facts",
-      "Professional closely involved",
-    ],
-  },
-  {
-    key: "agent" as const,
-    title: "Consider an Agent",
-    accentColor: "#B400FF",
-    bullets: [
-      "Activity repeats",
-      "Multiple people or repositories",
-      "Collection, retrieval or tracking",
-      "Workflow can be instructed",
-      "Outputs and escalation can be defined",
-    ],
-  },
-  {
-    key: "both" as const,
-    title: "Consider both",
-    accentColor: "#168736",
-    bullets: [
-      "Agent coordinates or retrieves",
-      "Prompt interprets, analyses or drafts",
-    ],
-  },
-];
-
-const BADGE_CONFIG = {
-  prompt: { bg: "rgba(0,118,168,0.10)", color: "#0076A8" },
-  agent:  { bg: "rgba(180,0,255,0.06)", color: "#B400FF" },
-  both:   { bg: "rgba(22,135,54,0.10)",  color: "#168736" },
-};
-
-function ActivityLevelChoiceSection() {
-  const [activeFilter, setActiveFilter] = useState<"prompt" | "agent" | "both" | null>(null);
-
-  const toggleFilter = (key: "prompt" | "agent" | "both") => {
-    setActiveFilter((prev) => (prev === key ? null : key));
-  };
-
-  const rowVisible = (type: "prompt" | "agent" | "both") =>
-    activeFilter === null || activeFilter === type;
-
-  return (
-    <section
-      id="use-case-map"
-      style={{
-        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.offWhite,
-        padding: `${spacing.sectionPaddingY} 0`,
-        width: "100%",
-      }}
-    >
-      <style>{`
-        @keyframes ey-row-step-back {
-          from { opacity: 1; transform: translateX(0); }
-          to   { opacity: 0.45; transform: translateX(-4px); }
-        }
-        @keyframes ey-row-step-forward {
-          from { opacity: 0.45; transform: translateX(-4px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-      `}</style>
-
-      <div style={{ ...contentRailStyle }}>
-
-        {/* Eyebrow + heading */}
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <p style={{
-            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-          }}>
-            Activity-Level Choice
-          </p>
-          <h2 style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(22px, 3.5vw, 36px)",
-            color: colors.offBlack,
-            margin: "0 0 8px",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.1,
-          }}>
-            One Process. Different Activities. Different Solutions.
-          </h2>
-          <p style={{
-            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-            color: colors.gray01, margin: 0, lineHeight: 1.5,
-          }}>
-            Illustrative advance-tax mapping from the workbook: classify each activity separately.
-          </p>
-        </div>
-
-        {/* Legend cards */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 12,
-          marginBottom: 20,
-        }}>
-          {LEGEND_CARDS.map((card) => {
-            const isActive = activeFilter === card.key;
-            return (
-              <button
-                key={card.key}
-                onClick={() => toggleFilter(card.key)}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                  textAlign: "left",
-                  padding: 0,
-                  background: colors.white,
-                  border: `1px solid ${isActive ? card.accentColor : colors.gray02}`,
-                  borderTop: isActive ? `1px solid ${card.accentColor}` : `3px solid ${card.accentColor}`,
-                  borderRadius: 6,
-                  cursor: "pointer",
-                  transition: "border-color 180ms",
-                  userSelect: "none",
-                  overflow: "hidden",
-                  boxShadow: isActive ? `0 2px 12px ${card.accentColor}28` : "none",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) (e.currentTarget as HTMLElement).style.background = `${card.accentColor}08`;
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) (e.currentTarget as HTMLElement).style.background = colors.white;
-                }}
-              >
-                {/* Header band — only when active */}
-                {isActive && (
-                  <div style={{
-                    background: card.accentColor,
-                    padding: "10px 18px",
-                    borderRadius: "5px 5px 0 0",
-                  }}>
-                    <p style={{
-                      fontFamily: fonts.bold, fontSize: 13,
-                      color: colors.white, margin: 0,
-                      letterSpacing: "-0.01em",
-                    }}>
-                      {card.title}
-                    </p>
-                  </div>
-                )}
-
-                {/* Body */}
-                <div style={{ padding: isActive ? "14px 18px" : "16px 18px" }}>
-                  {!isActive && (
-                    <p style={{
-                      fontFamily: fonts.bold, fontSize: 13,
-                      color: card.accentColor, margin: "0 0 10px",
-                      letterSpacing: "-0.01em",
-                    }}>
-                      {card.title}
-                    </p>
-                  )}
-                  <ul style={{ margin: 0, padding: "0 0 0 14px", listStyle: "disc" }}>
-                    {card.bullets.map((b) => (
-                      <li key={b} style={{
-                        fontFamily: fonts.regular, fontSize: 12,
-                        color: colors.offBlack, lineHeight: 1.55,
-                        marginBottom: 3,
-                      }}>
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Table */}
-        <div style={{
-          border: `1px solid ${colors.gray02}`,
-          borderRadius: 8,
-          overflow: "hidden",
-          background: colors.white,
-          marginBottom: 16,
-        }}>
-          {/* Header row */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 2fr 1.2fr",
-            background: colors.offBlack,
-            padding: "10px 20px",
-          }}>
-            {["Activity", "Current Pain Point", "Possible Response"].map((h) => (
-              <p key={h} style={{
-                fontFamily: fonts.bold, fontSize: 11,
-                color: colors.yellow, margin: 0,
-                letterSpacing: "0.06em", textTransform: "uppercase",
-              }}>
-                {h}
-              </p>
-            ))}
-          </div>
-
-          {/* Data rows */}
-          {ACTIVITY_ROWS.map((row, i) => {
-            const visible = rowVisible(row.type);
-            const isLast = i === ACTIVITY_ROWS.length - 1;
-            const badge = BADGE_CONFIG[row.type];
-            return (
-              <div
-                key={row.activity}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "2fr 2fr 1.2fr",
-                  padding: "12px 20px",
-                  borderBottom: isLast ? "none" : `1px solid ${colors.gray02}`,
-                  borderLeft: activeFilter !== null && visible ? `3px solid ${badge.color}` : "3px solid transparent",
-                  alignItems: "center",
-                  background: activeFilter !== null && visible ? badge.bg : "transparent",
-                  animation: activeFilter !== null
-                    ? visible
-                      ? "ey-row-step-forward 160ms ease-out forwards"
-                      : "ey-row-step-back 160ms ease-out forwards"
-                    : "none",
-                  opacity: activeFilter !== null && !visible ? 0.45 : 1,
-                  transition: "opacity 160ms, background 160ms, border-left-color 160ms",
-                }}
-              >
-                <p style={{
-                  fontFamily: fonts.regular, fontSize: 13,
-                  color: colors.offBlack, margin: 0, lineHeight: 1.5,
-                  paddingRight: 16,
-                }}>
-                  {row.activity}
-                </p>
-                <p style={{
-                  fontFamily: fonts.regular, fontSize: 13,
-                  color: colors.gray01, margin: 0, lineHeight: 1.5,
-                  paddingRight: 16,
-                }}>
-                  {row.pain}
-                </p>
-                <span style={{
-                  display: "inline-block",
-                  justifySelf: "start",
-                  fontFamily: fonts.bold, fontSize: 12,
-                  color: badge.color,
-                  background: badge.bg,
-                  borderRadius: 20,
-                  padding: "4px 10px",
-                  lineHeight: 1.4,
-                }}>
-                  {row.response}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Key message bar */}
-        <div style={{
-          background: colors.yellow,
-          borderRadius: 6,
-          padding: "14px 20px",
-        }}>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(13px, 1.4vw, 15px)",
-            color: colors.offBlack,
-            margin: 0,
-            lineHeight: 1.5,
-          }}>
-            Do not classify an entire tax process as "Prompt" or "Agent." Assess each activity separately.
-          </p>
-        </div>
-
-      </div>
-    </section>
-  );
-}
 
 // ── Live Brainstorm Section ──────────────────────────────────────────────────
-
-const BRAINSTORM_ITEMS = [
-  {
-    key: "A",
-    title: "PROCESS",
-    accent: "#0076A8",
-    bullets: [
-      "Process selected",
-      "Business objective",
-      "Trigger and final output",
-      "Frequency",
-    ],
-  },
-  {
-    key: "B",
-    title: "CURRENT ACTIVITIES",
-    accent: "#2DB5A0",
-    bullets: [
-      "Key steps and owners",
-      "Documents and data",
-      "Systems and repositories",
-    ],
-  },
-  {
-    key: "C",
-    title: "FRICTION",
-    accent: "#FF6D22",
-    bullets: [
-      "Time and follow-ups",
-      "Repeated searching",
-      "Errors, inconsistencies or delays",
-      "Professional judgment points",
-    ],
-  },
-  {
-    key: "D",
-    title: "OPPORTUNITY",
-    accent: "#B400FF",
-    bullets: [
-      "Prompt",
-      "M365 Agent",
-      "Prompt + Agent",
-      "Process improvement",
-      "Human-led activity",
-    ],
-  },
-  {
-    key: "E",
-    title: "CONTROL QUESTIONS",
-    accent: "#E8506B",
-    bullets: [
-      "Permitted information and sources",
-      "Qualified reviewer",
-      "Stop or escalation points",
-      "What remains human-led",
-    ],
-  },
-  {
-    key: "F",
-    title: "INITIAL PRIORITY",
-    accent: "#168736",
-    bullets: [
-      "Relevance and friction",
-      "Repeatability",
-      "Inputs and sources",
-      "Human review",
-      "Practicality",
-    ],
-  },
-] as const;
-
-function LiveBrainstormSection() {
-  const [activeKey, setActiveKey] = useState<string>("A");
-  const activeItem = BRAINSTORM_ITEMS.find((i) => i.key === activeKey)!;
-  const activeIdx = BRAINSTORM_ITEMS.findIndex((i) => i.key === activeKey);
-
-  return (
-    <section
-      id="live-brainstorm"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.confidentBlack,
-        padding: "80px 0",
-      }}
-    >
-      <div style={{ ...contentRailStyle }}>
-        {/* Eyebrow + heading + subhead — centered per section pattern */}
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <p style={{
-          color: colors.yellow,
-          fontFamily: fonts.bold,
-          fontSize: typeScale.label.size,
-          letterSpacing: typeScale.label.tracking,
-          textTransform: "uppercase",
-          margin: "0 0 14px",
-        }}>
-          Live Brainstorm
-        </p>
-        <h2 style={{
-          color: colors.white,
-          fontFamily: fonts.bold,
-          fontSize: "clamp(26px, 3.2vw, 40px)",
-          margin: "0 0 14px",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.1,
-        }}>
-          Your Tax Process. Your Pain Points. Your Opportunities.
-        </h2>
-        </div>
-
-        {/* Subhead */}
-        <p style={{
-          color: "rgba(255,255,255,0.72)",
-          fontFamily: fonts.regular,
-          fontSize: "clamp(13px, 1.4vw, 15px)",
-          margin: "0 0 32px",
-          lineHeight: 1.6,
-          maxWidth: 640,
-          marginLeft: "auto",
-          marginRight: "auto",
-          textAlign: "center",
-        }}>
-          EY's guided samples open the conversation. The client's validated process and pain points determine the opportunity.
-        </p>
-
-        {/* Main panel */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "220px 1fr",
-          border: "1px solid rgba(255,255,255,0.1)",
-          borderRadius: 10,
-          overflow: "hidden",
-          minHeight: 340,
-        }}>
-          {/* Left nav */}
-          <nav
-            aria-label="Brainstorm framework"
-            style={{
-              borderRight: "1px solid rgba(255,255,255,0.1)",
-              display: "flex",
-              flexDirection: "column",
-              padding: "8px 0",
-            }}
-          >
-            {BRAINSTORM_ITEMS.map((item) => {
-              const isActive = activeKey === item.key;
-              return (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => setActiveKey(item.key)}
-                  aria-current={isActive ? "true" : undefined}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    padding: "12px 16px",
-                    background: isActive ? "rgba(255,255,255,0.07)" : "transparent",
-                    border: "none",
-                    borderLeft: isActive
-                      ? `3px solid ${colors.yellow}`
-                      : "3px solid transparent",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    transition: "background 150ms",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent";
-                  }}
-                >
-                  {/* Letter badge */}
-                  <span style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: "50%",
-                    flexShrink: 0,
-                    background: isActive ? item.accent : `${item.accent}38`,
-                    border: isActive ? "none" : `1px solid ${item.accent}70`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: fonts.bold,
-                    fontSize: 12,
-                    color: colors.white,
-                    transition: "background 150ms",
-                  }}>
-                    {item.key}
-                  </span>
-                  {/* Title */}
-                  <span style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 10,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    color: isActive ? colors.white : "rgba(255,255,255,0.5)",
-                    lineHeight: 1.4,
-                    transition: "color 150ms",
-                  }}>
-                    {item.title}
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right detail pane */}
-          <div
-            key={activeKey}
-            style={{
-              padding: "32px 40px",
-              display: "flex",
-              flexDirection: "column",
-              animation: "ey-slide-up 200ms cubic-bezier(.22,.68,0,1.05) both",
-            }}
-          >
-            {/* Title only — letter lives in the nav */}
-            <h3 style={{
-              fontFamily: fonts.bold,
-              fontSize: 18,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              color: colors.white,
-              margin: "0 0 20px",
-            }}>
-              {activeItem.title}
-            </h3>
-
-            {/* Accent rule */}
-            <div style={{
-              height: 3,
-              width: 36,
-              borderRadius: 2,
-              background: activeItem.accent,
-              marginBottom: 22,
-            }} />
-
-            {/* Bullet list */}
-            <ul style={{ margin: 0, padding: "0 0 0 18px", listStyle: "disc" }}>
-              {activeItem.bullets.map((b) => (
-                <li
-                  key={b}
-                  style={{
-                    fontFamily: fonts.regular,
-                    fontSize: 15,
-                    color: "rgba(255,255,255,0.85)",
-                    lineHeight: 1.75,
-                    marginBottom: 4,
-                  }}
-                >
-                  {b}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Key message bar */}
-        <div style={{
-          marginTop: 20,
-          background: colors.yellow,
-          borderRadius: 6,
-          padding: "14px 20px",
-        }}>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: 14,
-            color: colors.offBlack,
-            margin: 0,
-            lineHeight: 1.55,
-          }}>
-            Select one tax process. Map the activities. Name the friction. Then choose the response—Prompt, Agent, both, process change or human-led.
-          </p>
-        </div>
-
-      </div>
-    </section>
-  );
-}
 
 // ── Deliverables Section ─────────────────────────────────────────────────────
 
 const D1_ACCENT = "#0076A8";
 const D2_ACCENT = "#7B5EA7";
+
+// Phase 2 section data for the journey infographic in What's Next
+const P2_CALLOUTS: readonly AscentCalloutEntry[] = [
+  { left: 140, top: 250, width: 149, quote: "I know exactly where AI fits in my tax work." },
+  { left: 290, top: 195, width: 187, quote: "I memorised which AI lever to use for every task." },
+  { left: 502, top: 123, width: 167, quote: "I feel confident mapping AI to my daily activities." },
+  { left: 722, top: 106, width: 150, quote: "I learned to lead with the problem, not the tool." },
+  { left: 953, top: 114, width: 170, quote: "I can now build prompts that get real results." },
+  { left: 1247, top: 8, width: 180, quote: "I feel ready to automate what once seemed impossible.", rounded: 4 },
+];
+const P2_STAGE_NODES: readonly AscentStageNodeEntry[] = [
+  { left: 359, top: 295, icon: "/ascent/icon-book-open.svg", alt: "Quick Recall" },
+  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "Memory Refresh" },
+  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "Problem First" },
+  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "Prompt Examples" },
+  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Agent Examples" },
+];
+const P2_STAGE_TITLE_LABELS: readonly AscentStageTitleEntry[] = [
+  { title: "Phase 2 Start", markerTop: 366, markerSize: 46, calloutIndex: 0 },
+  { title: "Quick Recall", markerTop: 295, markerSize: 40, calloutIndex: 1 },
+  { title: "Memory Refresh", markerTop: 260, markerSize: 40, calloutIndex: 2 },
+  { title: "Problem First", markerTop: 240, markerSize: 40, calloutIndex: 3 },
+  { title: "Prompt Examples", markerTop: 227, markerSize: 40, calloutIndex: 4 },
+  { title: "Agent Examples", markerTop: 94, markerSize: 40, calloutIndex: 5 },
+];
 
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
@@ -2008,20 +1446,32 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
         </div>
       </section>
 
-      {/* What's Next CTA */}
-      <EYWhatsNext
+      {/* What's Next — Journey Map */}
+      <section
         id="next-steps"
-        style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN }}
-        title={
-          <>
-            Phase 2 complete.{" "}
-            <br />
-            Time to <EYWhatsNextHighlight>design the solution.</EYWhatsNextHighlight>
-          </>
-        }
-        ctaLabel="Return to Learning Journey"
-        onContinue={() => onNavigate("/phased")}
-      />
+        style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.confidentBlack, width: "100%" }}
+      >
+        {/* Header */}
+        <div style={{ ...contentRailStyle, paddingTop: spacing.sectionPaddingY, paddingBottom: 32, textAlign: "center" }}>
+          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px" }}>
+            What's Next
+          </p>
+          <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.white, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+            Continue Your Learning Journey
+          </h2>
+        </div>
+
+        {/* Journey map infographic */}
+        <AscentJourneyInfographic
+          callouts={P2_CALLOUTS}
+          stageNodes={P2_STAGE_NODES}
+          stageTitleLabels={P2_STAGE_TITLE_LABELS}
+          defaultAllOpen
+          lastNodeCtaLabel="Building Solutions"
+          onLastNodeCta={() => onNavigate("/guidance-implementation")}
+        />
+
+      </section>
     </>
   );
 }
@@ -2630,10 +2080,6 @@ export default function BrainstormingUseCases({
         <GuidedExamplesSection />
 
         <AgentExamplesSection />
-
-        <ActivityLevelChoiceSection />
-
-        <LiveBrainstormSection />
 
         <DeliverablesSection onNavigate={onNavigate} />
 
