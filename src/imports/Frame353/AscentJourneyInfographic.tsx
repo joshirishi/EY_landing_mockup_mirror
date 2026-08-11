@@ -2,7 +2,7 @@
  * EY Tax Labs — The Ascent journey infographic (full artboard)
  * Figma node 3743:16946 — header copy, journey path, callouts, stages, banner.
  *
- * Fixed 1536×450 artboard, scales to container width via ResizeObserver.
+ * Fixed 1536×522 artboard (desktop banner), scales to container width via ResizeObserver.
  */
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
@@ -10,10 +10,20 @@ import { CirclePlay } from "lucide-react";
 import { colors, fonts, typeScale } from "@/design-kit";
 
 const W = 1536;
-const H = 490;
-const BANNER_HEIGHT = 44;
-const BANNER_TOP = H - BANNER_HEIGHT;
-const BANNER_FONT_SIZE = typeScale.label.size;
+const H = 522;
+const BANNER_HEIGHT_DESKTOP = 76;
+const BANNER_HEIGHT_MOBILE = 204;
+const MOBILE_BREAKPOINT = 900;
+
+function getBannerHeight(isMobile: boolean) {
+  return isMobile ? BANNER_HEIGHT_MOBILE : BANNER_HEIGHT_DESKTOP;
+}
+
+function getArtboardHeight(isMobile: boolean) {
+  return H + (getBannerHeight(isMobile) - BANNER_HEIGHT_DESKTOP);
+}
+
+const BANNER_PHRASE_FONT_SIZE = 11;
 
 const ASSET = {
   cleanBackground: "/ascent/clean-background.png",
@@ -23,8 +33,6 @@ const ASSET = {
   iconCpu: "/ascent/icon-cpu.svg",
   iconTrendingUp: "/ascent/icon-trending-up.svg",
   iconShield: "/ascent/icon-shield.svg",
-  bannerDot: "/ascent/banner-dot.svg",
-  bannerLine: "/ascent/banner-line.svg",
   accentLine: "/ascent/accent-line.svg",
 } as const;
 
@@ -665,44 +673,115 @@ function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
   );
 }
 
-const bannerTextStyle = {
-  fontFamily: fonts.bold,
-  fontSize: BANNER_FONT_SIZE,
-  fontWeight: typeScale.label.weight,
-  letterSpacing: typeScale.label.tracking,
-  textTransform: "uppercase" as const,
-};
-
-const BANNER_PHRASES = [
-  "From uncertainty to impact",
-  "From learning to leading",
-  "From user to AI-enabled tax professional",
+const BANNER_MILESTONES = [
+  { phrase: "From uncertainty to impact", revealAt: 2 as ProgressLevel },
+  { phrase: "From learning to leading", revealAt: 4 as ProgressLevel },
+  {
+    phrase: "From user to AI-enabled tax professional",
+    revealAt: 6 as ProgressLevel,
+  },
 ] as const;
 
-const bannerBoxStyle: CSSProperties = {
-  ...bannerTextStyle,
+const milestonePhraseStyle: CSSProperties = {
+  fontFamily: fonts.bold,
+  fontSize: BANNER_PHRASE_FONT_SIZE,
+  fontWeight: typeScale.label.weight,
+  letterSpacing: typeScale.label.tracking,
+  textTransform: "uppercase",
   color: colors.yellow,
-  background: colors.confidentBlack,
-  padding: "10px 16px",
-  borderRadius: "var(--radius-sm)",
+  margin: 0,
+  lineHeight: "14px",
 };
 
-function BottomBanner() {
+function MilestoneBox({
+  phrase,
+  isRevealed,
+  summitPulse,
+  fullWidth,
+}: {
+  phrase: string;
+  isRevealed: boolean;
+  summitPulse: boolean;
+  fullWidth?: boolean;
+}) {
   return (
     <div
-      className="absolute left-0 flex w-full items-center justify-center"
+      className={`relative flex min-h-[44px] flex-col justify-center overflow-hidden ${summitPulse ? "ascent-banner-summit-pulse" : ""}`}
       style={{
-        top: BANNER_TOP,
-        height: BANNER_HEIGHT,
+        width: fullWidth ? "100%" : undefined,
+        flex: fullWidth ? "1 1 auto" : "1 1 0",
+        minWidth: fullWidth ? undefined : 0,
+        padding: "10px 16px",
+        background: colors.confidentBlack,
+        borderRadius: "var(--radius-sm)",
+        border: `1px solid ${colors.yellowAlpha12}`,
       }}
     >
-      <div className="flex items-center gap-3">
-        {BANNER_PHRASES.map((phrase) => (
-          <p key={phrase} className="m-0 shrink-0 whitespace-nowrap" style={bannerBoxStyle}>
-            {phrase}
-          </p>
-        ))}
-      </div>
+      <div
+        className="absolute left-0 top-0 h-[3px] w-full"
+        style={{ background: colors.yellow }}
+        aria-hidden
+      />
+      <p className="line-clamp-2" style={milestonePhraseStyle}>
+        {phrase}
+      </p>
+      <div
+        className="absolute bottom-0 left-0 h-0.5"
+        style={{
+          background: colors.yellow,
+          width: isRevealed ? "100%" : "0%",
+          transition: `width ${PATH_REVEAL_MS}ms ease`,
+        }}
+        aria-hidden
+      />
+    </div>
+  );
+}
+
+function BottomBanner({
+  activeProgress,
+  isMobile,
+  bannerTop,
+  bannerHeight,
+}: {
+  activeProgress: ProgressLevel;
+  isMobile: boolean;
+  bannerTop: number;
+  bannerHeight: number;
+}) {
+  return (
+    <div
+      className="absolute left-0 flex w-full items-center px-6"
+      style={{
+        top: bannerTop,
+        height: bannerHeight,
+      }}
+      data-name="bottom-banner"
+    >
+      {isMobile ? (
+        <div className="flex w-full flex-col items-stretch gap-2">
+          {BANNER_MILESTONES.map((milestone, index) => (
+            <MilestoneBox
+              key={milestone.phrase}
+              phrase={milestone.phrase}
+              isRevealed={activeProgress >= milestone.revealAt}
+              summitPulse={index === 2 && activeProgress >= DEFAULT_PROGRESS}
+              fullWidth
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex w-full items-stretch gap-4">
+          {BANNER_MILESTONES.map((milestone, index) => (
+            <MilestoneBox
+              key={milestone.phrase}
+              phrase={milestone.phrase}
+              isRevealed={activeProgress >= milestone.revealAt}
+              summitPulse={index === 2 && activeProgress >= DEFAULT_PROGRESS}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -710,9 +789,11 @@ function BottomBanner() {
 function AscentCanvas({
   completedStage,
   defaultOpenCallout,
+  isMobile,
 }: {
   completedStage?: AscentJourneyInfographicProps["completedStage"];
   defaultOpenCallout?: AscentJourneyInfographicProps["defaultOpenCallout"];
+  isMobile: boolean;
 }) {
   /** Every marker the user has opened. Callouts persist until clicked again. */
   const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(() => {
@@ -744,6 +825,9 @@ function AscentCanvas({
       : derivedProgress;
 
   const nextCalloutIndex = getNextCalloutIndex(activeProgress);
+  const bannerHeight = getBannerHeight(isMobile);
+  const artboardHeight = getArtboardHeight(isMobile);
+  const bannerTop = artboardHeight - bannerHeight;
 
   return (
     <div
@@ -772,9 +856,26 @@ function AscentCanvas({
           pointer-events: none;
           animation: ascent-marker-next-glow 2s ease-in-out infinite;
         }
+        @keyframes ascent-banner-summit-pulse {
+          0% {
+            border-color: ${colors.yellowAlpha12};
+            box-shadow: 0 0 0 0 rgba(255, 230, 0, 0);
+          }
+          50% {
+            border-color: ${colors.yellow};
+            box-shadow: 0 0 10px 2px rgba(255, 230, 0, 0.4);
+          }
+          100% {
+            border-color: ${colors.yellowAlpha12};
+            box-shadow: 0 0 0 0 rgba(255, 230, 0, 0);
+          }
+        }
+        .ascent-banner-summit-pulse {
+          animation: ascent-banner-summit-pulse 250ms ease-out;
+        }
       `}</style>
       {/* Mountain photograph — hiker + sunset baked into clean-background.png */}
-      <div className="absolute left-0 top-0 w-full" style={{ height: BANNER_TOP }}>
+      <div className="absolute left-0 top-0 w-full" style={{ height: bannerTop }}>
         <img
           alt=""
           className="pointer-events-none absolute inset-0 size-full max-w-none object-cover object-center"
@@ -850,7 +951,12 @@ function AscentCanvas({
         );
       })}
 
-      <BottomBanner />
+      <BottomBanner
+        activeProgress={activeProgress}
+        isMobile={isMobile}
+        bannerTop={bannerTop}
+        bannerHeight={bannerHeight}
+      />
     </div>
   );
 }
@@ -861,29 +967,35 @@ export default function AscentJourneyInfographic({
 }: AscentJourneyInfographicProps = {}) {
   const shellRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const el = shellRef.current;
     if (!el) return;
-    const update = () => setScale(el.clientWidth / W);
+    const update = () => {
+      setScale(el.clientWidth / W);
+      setIsMobile(el.clientWidth < MOBILE_BREAKPOINT);
+    };
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
+  const artboardHeight = getArtboardHeight(isMobile);
+
   return (
     <div
       ref={shellRef}
       className="relative w-full overflow-hidden"
-      style={{ height: H * scale, background: colors.confidentBlack }}
+      style={{ height: artboardHeight * scale, background: colors.confidentBlack }}
       data-name="ascent-journey-infographic-viewport"
     >
       <div
         className="absolute left-1/2 top-0"
         style={{
           width: W,
-          height: H,
+          height: artboardHeight,
           transform: `translateX(-50%) scale(${scale})`,
           transformOrigin: "top center",
         }}
@@ -891,6 +1003,7 @@ export default function AscentJourneyInfographic({
         <AscentCanvas
           completedStage={completedStage}
           defaultOpenCallout={defaultOpenCallout}
+          isMobile={isMobile}
         />
       </div>
     </div>

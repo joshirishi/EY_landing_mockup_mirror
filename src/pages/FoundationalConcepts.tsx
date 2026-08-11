@@ -105,9 +105,6 @@ const TOKEN_BRIDGE = `
   border-color: var(--ey-card-deep);
   border-top-width: 4px;
 }
-#module-content .rise-card-top--img::after {
-  background: linear-gradient(0deg, var(--ey-card-deep) 0%, transparent 100%);
-}
 #module-content .rise-card-meta .source {
   color: ${colors.yellow};
 }

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
@@ -157,19 +157,13 @@ function NewsLightbox({
 
 function ResponsibleUseNewsCard({
   article,
-  index,
   onOpen,
 }: {
   article: (typeof RESPONSIBLE_USE_NEWS)[number];
-  index: number;
   onOpen: () => void;
 }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ delay: index * 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+    <article
       role="button"
       tabIndex={0}
       onClick={onOpen}
@@ -186,6 +180,7 @@ function ResponsibleUseNewsCard({
         textAlign: "left",
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         transition: "transform 0.18s ease, box-shadow 0.18s ease",
+        width: "100%",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-4px)";
@@ -222,7 +217,135 @@ function ResponsibleUseNewsCard({
           </span>
         </div>
       </div>
-    </motion.article>
+    </article>
+  );
+}
+
+const NEWS_CARD_GAP = 20;
+const NEWS_VISIBLE_COUNT = 3;
+
+function ResponsibleUseNewsCarousel({
+  onOpen,
+}: {
+  onOpen: (article: (typeof RESPONSIBLE_USE_NEWS)[number]) => void;
+}) {
+  const count = RESPONSIBLE_USE_NEWS.length;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const visibleArticles = useMemo(
+    () =>
+      Array.from({ length: Math.min(NEWS_VISIBLE_COUNT, count) }, (_, i) => ({
+        article: RESPONSIBLE_USE_NEWS[(activeIndex + i) % count],
+        key: `${activeIndex}-${i}-${RESPONSIBLE_USE_NEWS[(activeIndex + i) % count].src}`,
+      })),
+    [activeIndex, count],
+  );
+
+  const go = (delta: number) => {
+    setDirection(delta);
+    setActiveIndex((i) => (i + delta + count) % count);
+  };
+
+  const navBtnStyle = (primary = false): CSSProperties => ({
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "10px 16px",
+    minHeight: 44,
+    borderRadius: 8,
+    border: primary ? "none" : `1px solid ${colors.gray02}`,
+    background: primary ? colors.yellow : colors.white,
+    cursor: "pointer",
+    fontFamily: fonts.regular,
+    fontSize: 13,
+    fontWeight: 700,
+    color: colors.offBlack,
+  });
+
+  return (
+    <div>
+      <div
+        role="list"
+        aria-label="Real-world AI governance headlines"
+        aria-live="polite"
+        style={{ overflow: "hidden", marginBottom: 20 }}
+      >
+        <motion.div
+          key={activeIndex}
+          initial={{ opacity: 0.72, x: direction * 56 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${Math.min(NEWS_VISIBLE_COUNT, count)}, minmax(0, 1fr))`,
+            gap: NEWS_CARD_GAP,
+            alignItems: "stretch",
+          }}
+        >
+          {visibleArticles.map(({ article, key }) => (
+            <div key={key} role="listitem" style={{ minWidth: 0 }}>
+              <ResponsibleUseNewsCard article={article} onOpen={() => onOpen(article)} />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+          flexWrap: "wrap",
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => go(-1)}
+          aria-label="Previous headline"
+          style={navBtnStyle()}
+        >
+          <ChevronLeft size={16} strokeWidth={1.75} aria-hidden />
+          Previous
+        </button>
+
+        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+          {RESPONSIBLE_USE_NEWS.map((article, i) => (
+            <button
+              key={article.src}
+              type="button"
+              aria-label={`Go to headline ${i + 1}: ${article.tag}`}
+              aria-current={i === activeIndex ? "true" : undefined}
+              onClick={() => {
+                setDirection(i === activeIndex ? 0 : i > activeIndex ? 1 : -1);
+                setActiveIndex(i);
+              }}
+              style={{
+                width: i === activeIndex ? 22 : 8,
+                height: 8,
+                borderRadius: 999,
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                background: i === activeIndex ? colors.yellow : colors.gray02,
+                transition: "width 0.2s, background 0.2s",
+              }}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => go(1)}
+          aria-label="Next headline"
+          style={navBtnStyle(true)}
+        >
+          Next
+          <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -254,26 +377,8 @@ function RecogniseTheRisk() {
           Real-world headlines on AI governance risks
         </p>
 
-        {/* Newspaper article cards — same rise-card / wrong-card pattern as Module 1.1 */}
-        <div
-          role="list"
-          aria-label="Real-world AI governance headlines"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 20,
-            alignItems: "stretch",
-          }}
-        >
-          {RESPONSIBLE_USE_NEWS.map((article, i) => (
-            <ResponsibleUseNewsCard
-              key={article.src}
-              article={article}
-              index={i}
-              onOpen={() => setLightbox(article)}
-            />
-          ))}
-        </div>
+        {/* Newspaper article cards — horizontal scroll + prev/next cycle */}
+        <ResponsibleUseNewsCarousel onOpen={setLightbox} />
 
         {lightbox && (
           <NewsLightbox
