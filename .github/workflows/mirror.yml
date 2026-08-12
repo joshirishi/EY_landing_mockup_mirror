@@ -23,7 +23,7 @@ jobs:
           MIRROR_DEPLOY_KEY: ${{ secrets.MIRROR_DEPLOY_KEY }}
         run: |
           mkdir -p ~/.ssh
-          printf '%s\n' "$MIRROR_DEPLOY_KEY" > ~/.ssh/mirror_deploy
+          echo "$MIRROR_DEPLOY_KEY" | base64 -d > ~/.ssh/mirror_deploy
           chmod 600 ~/.ssh/mirror_deploy
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           printf 'Host mirror-github\n  HostName github.com\n  User git\n  IdentityFile ~/.ssh/mirror_deploy\n  StrictHostKeyChecking yes\n' > ~/.ssh/config
