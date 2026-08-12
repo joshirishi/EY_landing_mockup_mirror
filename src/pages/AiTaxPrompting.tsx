@@ -4,8 +4,8 @@ import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, Cpu, Eye
 import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { EYWhatsNext } from "../design-kit/EYWhatsNext";
 import { SectionAnchorTitle } from "../design-kit/EYTypography";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import heroImg from "../assets/images/AdobeStock-621943361.jpeg";
 import { PROMPTING_TECHNIQUES, TECHNIQUE_FACETS, type TechniqueFacetKey } from "../data/prompt-techniques";
 
@@ -931,6 +931,9 @@ const BRIEF_CTA_STYLE: CSSProperties = {
   cursor: "pointer",
 };
 
+/** Outcome row: 14px pad + 28px header + 6px gap + ~20px body + 14px pad */
+const BRIEF_OUTCOME_MIN_HEIGHT = 83;
+
 const MISSING_TAG_STAGGER_MS = 320;
 const MISSING_TAG_ANIM_MS = 320;
 const MISSING_TAGS_COMPLETE_MS = (4 - 1) * MISSING_TAG_STAGGER_MS + MISSING_TAG_ANIM_MS;
@@ -1055,19 +1058,6 @@ function TeamBriefingSection() {
                 </div>
               )}
 
-              {ctaOnLeft && (
-                <div style={{ padding: 10 }}>
-                  <button
-                    type="button"
-                    onClick={() => setBeat((b) => (b === 0 ? 1 : 2))}
-                    style={BRIEF_CTA_STYLE}
-                  >
-                    {leftCtaLabel}
-                    <ArrowRight size={16} strokeWidth={2} aria-hidden />
-                  </button>
-                </div>
-              )}
-
               <div
                 style={{
                   width: "100%",
@@ -1076,19 +1066,22 @@ function TeamBriefingSection() {
                   border: `1px dashed ${showGeneric ? C.destructive + "33" : C.gray02}`,
                   borderRadius: 8,
                   padding: 14,
+                  ...(showStrong ? { minHeight: BRIEF_OUTCOME_MIN_HEIGHT } : {}),
                 }}
               >
-                <div
-                  style={{
-                    color: showGeneric ? C.destructive : C.gray01,
-                    fontSize: 10,
-                    fontWeight: 700,
-                    letterSpacing: "1px",
-                    marginBottom: 6,
-                    fontFamily: F.bold,
-                  }}
-                >
-                  OUTCOME
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                  <div
+                    style={{
+                      color: showGeneric ? C.destructive : C.gray01,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      letterSpacing: "1px",
+                      fontFamily: F.bold,
+                    }}
+                  >
+                    OUTCOME
+                  </div>
+                  {showStrong && <div style={{ width: 28, height: 28, flexShrink: 0 }} aria-hidden />}
                 </div>
                 <p
                   style={{
@@ -1102,6 +1095,18 @@ function TeamBriefingSection() {
                 >
                   {showGeneric ? "Generic response" : "..."}
                 </p>
+                {ctaOnLeft && (
+                  <div style={{ paddingTop: 12 }}>
+                    <button
+                      type="button"
+                      onClick={() => setBeat((b) => (b === 0 ? 1 : 2))}
+                      style={BRIEF_CTA_STYLE}
+                    >
+                      {leftCtaLabel}
+                      <ArrowRight size={16} strokeWidth={2} aria-hidden />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1144,7 +1149,7 @@ function TeamBriefingSection() {
                   onClick={() => setBeat(3)}
                   style={BRIEF_CTA_STYLE}
                 >
-                  Reveal the Outcome
+                  Reveal Strong Brief
                   <ArrowRight size={16} strokeWidth={2} aria-hidden />
                 </button>
               ) : (
@@ -1245,11 +1250,13 @@ function TeamBriefingSection() {
 
                 <div
                   style={{
+                    width: "100%",
                     marginTop: "auto",
                     background: C.success + "0a",
                     border: `1px dashed ${C.success}33`,
                     borderRadius: 8,
                     padding: 14,
+                    minHeight: BRIEF_OUTCOME_MIN_HEIGHT,
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
@@ -1497,13 +1504,14 @@ function RecapInNutshellSection() {
   );
 }
 
-function WhatsNextSection({ onContinue }: { onContinue: () => void }) {
+/**
+ * End-of-module ascent — continue via next trek-step CTA (no footer).
+ */
+function JourneyProgressSection({ onContinue }: { onContinue: () => void }) {
   return (
-    <EYWhatsNext
-      title="Prompting skills — unlocked."
-      ctaLabel="Continue to Part 3: M365 Copilot Deep Dive →"
-      onContinue={onContinue}
-      meta="Part 3 covers: Copilot in Word, Excel, Outlook, Teams, and real tax workflows"
+    <AscentModuleProgressSection
+      moduleKey="m1_2"
+      onNextStepCta={onContinue}
     />
   );
 }
@@ -3356,7 +3364,7 @@ export default function AiTaxPrompting({
   useModuleSectionHashScroll();
 
   return (
-    <div style={{ position: "fixed", inset: 0, overflowY: "auto", background: C.white }}>
+    <div style={{ width: "100%", minHeight: "100vh", background: C.white }}>
 
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#module-content" />
       <ModuleHeader currentModuleId="ai-tax-prompting" onNavigate={onNavigate} onBack={onBack} />
@@ -3694,8 +3702,8 @@ export default function AiTaxPrompting({
       {/* ── 10. RECAP IN A NUTSHELL — temporarily hidden per request ── */}
       {/* <RecapInNutshellSection /> */}
 
-      {/* ── 11. WHAT'S NEXT — continue to M365 Copilot ── */}
-      <WhatsNextSection onContinue={() => onNavigate("/copilot-hub")} />
+      {/* ── Journey progress — continue via next trek-step CTA ── */}
+      <JourneyProgressSection onContinue={() => onNavigate("/copilot-hub")} />
 
     </div>
   );

@@ -2402,14 +2402,11 @@ export function Phase1View({
   const go = onNavigate ?? ((path: string) => navigate(path));
 
   return (
-    <div className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden" data-name="EY.ai Tax Labs - Phase 1">
+    <div className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0" data-name="EY.ai Tax Labs - Phase 1">
       <BackgroundMotif />
-      {/* Learning chrome — full viewport width; content below may still scroll horizontally on very small screens */}
-      <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]" data-name="Top Navigation">
-        <SiteHeader variant="learning" onNavigate={go} skipLinkTarget="#phase1-content" />
-        <ModuleHeader mode="phase-overview" hideModuleDropdown onNavigate={go} onBack={() => go("/")} />
-      </div>
-      <div id="phase1-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0 overflow-x-hidden">
+      <SiteHeader variant="learning" onNavigate={go} skipLinkTarget="#phase1-content" />
+      <ModuleHeader mode="phase-overview" hideModuleDropdown onNavigate={go} onBack={() => go("/")} />
+      <div id="phase1-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
         <ContentArea1 onOpenFoundational={onNavigateToFoundational} onOpenAiTaxPrompting={onNavigateToAiTaxPrompting} onOpenCopilotHub={onNavigateToCopilotHub} />
       </div>
       <div className="bg-white relative shrink-0 w-full overflow-hidden" data-name="Footer Final">

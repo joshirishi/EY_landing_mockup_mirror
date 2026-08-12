@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle, X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
-import AscentJourneyInfographic, { type AscentCalloutEntry, type AscentStageNodeEntry, type AscentStageTitleEntry } from "../imports/Frame353/AscentJourneyInfographic";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-2212662948.jpg";
@@ -16,8 +16,9 @@ import heroImg from "../assets/images/GettyImages-2212662948.jpg";
 const PHASE2_SECTIONS = [
   { id: "quick-recall", label: "Quick Recall", group: "learn" as const },
   { id: "problem-first", label: "Problem First", group: "learn" as const },
+  { id: "your-use-cases", label: "Your Use Cases", group: "learn" as const },
   { id: "guided-examples", label: "Prompt Examples", group: "learn" as const },
-  { id: "agent-examples", label: "Agent Examples", group: "learn" as const },
+  { id: "workshop-library", label: "Library", group: "learn" as const },
   { id: "deliverables", label: "Outputs", group: "apply" as const },
   { id: "next-steps", label: "What's Next", group: "apply" as const },
 ];
@@ -57,6 +58,54 @@ const AGENT_ROLE = [
   "Follows workflows and restrictions",
   "Produces outputs for human review",
 ];
+
+type UseCaseBucketId = "prompt" | "agent" | "procode";
+
+const USE_CASE_BUCKETS: {
+  id: UseCaseBucketId;
+  label: string;
+  accent: string;
+  chipText: string;
+  hint: string;
+  placeholder: string;
+}[] = [
+  {
+    id: "prompt",
+    label: "Prompt",
+    accent: colors.yellow,
+    chipText: colors.confidentBlack,
+    hint: "One-off tasks where a user drives the interaction",
+    placeholder: "e.g. Summarise a Supreme Court tax judgment for a client memo",
+  },
+  {
+    id: "agent",
+    label: "M365 Agent",
+    accent: colors.framePurple,
+    chipText: colors.white,
+    hint: "Repeatable workflows across people, systems and repositories",
+    placeholder: "e.g. Collect transfer pricing documentation from stakeholders each quarter",
+  },
+  {
+    id: "procode",
+    label: "Pro Code",
+    accent: colors.frameBlue,
+    chipText: colors.white,
+    hint: "Custom automation or pro-code builds for structured tax processes",
+    placeholder: "e.g. Automate GST reconciliation between ERP and filing portal",
+  },
+];
+
+const EMPTY_USE_CASES: Record<UseCaseBucketId, string[]> = {
+  prompt: [],
+  agent: [],
+  procode: [],
+};
+
+const EMPTY_USE_CASE_DRAFTS: Record<UseCaseBucketId, string> = {
+  prompt: "",
+  agent: "",
+  procode: "",
+};
 
 // ── Animation keyframes injected once ────────────────────────────────────────
 const HERO_STYLES = `
@@ -436,6 +485,281 @@ const GUIDED_EXAMPLES = [
   },
 ];
 
+// ── Your Use Cases — workshop buckets (Prompt / Agent / Pro Code) ─────────────
+function UseCaseBucketsSection() {
+  const [entries, setEntries] = useState<Record<UseCaseBucketId, string[]>>(EMPTY_USE_CASES);
+  const [drafts, setDrafts] = useState<Record<UseCaseBucketId, string>>(EMPTY_USE_CASE_DRAFTS);
+  const focusRing = `2px solid ${colors.yellow}`;
+
+  const addEntry = (bucketId: UseCaseBucketId) => {
+    const text = drafts[bucketId].trim();
+    if (!text) return;
+    setEntries((prev) => ({ ...prev, [bucketId]: [...prev[bucketId], text] }));
+    setDrafts((prev) => ({ ...prev, [bucketId]: "" }));
+  };
+
+  const removeEntry = (bucketId: UseCaseBucketId, index: number) => {
+    setEntries((prev) => ({
+      ...prev,
+      [bucketId]: prev[bucketId].filter((_, i) => i !== index),
+    }));
+  };
+
+  const cardBase: React.CSSProperties = {
+    background: colors.eyBgCard,
+    border: `1px solid ${colors.borderOnDark}`,
+    borderRadius: 10,
+    padding: "clamp(20px, 2.5vw, 28px)",
+    flex: 1,
+    minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 320,
+  };
+
+  return (
+    <section
+      id="your-use-cases"
+      style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.confidentBlack,
+        padding: `${spacing.sectionPaddingY} 0`,
+        width: "100%",
+      }}
+    >
+      <style>{`
+        #your-use-cases input::placeholder {
+          color: rgba(255, 255, 255, 0.45);
+        }
+      `}</style>
+      <div style={{ ...contentRailStyle }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <p style={{
+            fontFamily: fonts.bold,
+            fontSize: typeScale.label.size,
+            letterSpacing: typeScale.label.tracking,
+            textTransform: "uppercase",
+            color: colors.yellow,
+            margin: "0 0 12px",
+          }}>
+            Your Use Cases
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.onDark,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            Sort Each Idea into the Right Box
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular,
+            fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.onDarkMuted,
+            margin: 0,
+            lineHeight: 1.5,
+            maxWidth: 680,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}>
+            Use the same Prompt, M365 Agent and Pro Code buckets from Quick Recall.
+            Add tax activities from your workshop discussion — one box per lever.
+          </p>
+        </div>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
+          gap: "clamp(16px, 2vw, 24px)",
+          alignItems: "stretch",
+        }}>
+          {USE_CASE_BUCKETS.map((bucket) => {
+            const bucketEntries = entries[bucket.id];
+            const isEmpty = bucketEntries.length === 0;
+
+            return (
+              <div
+                key={bucket.id}
+                style={{
+                  ...cardBase,
+                  borderTop: `3px solid ${bucket.accent}`,
+                }}
+              >
+                <div style={{ marginBottom: 8 }}>
+                  <span style={{
+                    fontFamily: fonts.bold,
+                    fontSize: 11,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: bucket.chipText,
+                    background: bucket.accent,
+                    borderRadius: 4,
+                    padding: "3px 10px",
+                  }}>
+                    {bucket.label}
+                  </span>
+                </div>
+                <p style={{
+                  fontFamily: fonts.regular,
+                  fontSize: 13,
+                  color: colors.onDarkMuted,
+                  margin: "0 0 16px",
+                  lineHeight: 1.45,
+                }}>
+                  {bucket.hint}
+                </p>
+
+                <div style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                  border: `1.5px dashed ${isEmpty ? colors.borderOnDark : bucket.accent + "88"}`,
+                  borderRadius: 8,
+                  padding: 14,
+                  background: isEmpty ? colors.surfaceOnDark : "rgba(255,255,255,0.04)",
+                  minHeight: 180,
+                }}>
+                  {isEmpty ? (
+                    <p style={{
+                      fontFamily: fonts.regular,
+                      fontSize: 12,
+                      color: colors.onDarkSubtle,
+                      margin: 0,
+                      lineHeight: 1.5,
+                      fontStyle: "italic",
+                    }}>
+                      No use cases yet — add your first idea below.
+                    </p>
+                  ) : (
+                    <ul style={{
+                      listStyle: "none",
+                      margin: 0,
+                      padding: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                      flex: 1,
+                      overflowY: "auto",
+                    }}>
+                      {bucketEntries.map((entry, index) => (
+                        <li
+                          key={`${bucket.id}-${index}-${entry}`}
+                          style={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: 8,
+                            padding: "10px 12px",
+                            borderRadius: 6,
+                            background: colors.surfaceOnDark,
+                            border: `1px solid ${colors.borderOnDark}`,
+                          }}
+                        >
+                          <span style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            background: bucket.accent,
+                            flexShrink: 0,
+                            marginTop: 6,
+                          }} />
+                          <span style={{
+                            flex: 1,
+                            fontFamily: fonts.regular,
+                            fontSize: 13,
+                            color: colors.onDark,
+                            lineHeight: 1.45,
+                          }}>
+                            {entry}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => removeEntry(bucket.id, index)}
+                            aria-label={`Remove use case from ${bucket.label}`}
+                            style={{
+                              border: "none",
+                              background: "transparent",
+                              cursor: "pointer",
+                              padding: 2,
+                              color: colors.onDarkMuted,
+                              flexShrink: 0,
+                            }}
+                            onFocus={(e) => { e.currentTarget.style.outline = focusRing; }}
+                            onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
+                          >
+                            <X size={14} strokeWidth={1.75} aria-hidden />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div style={{ display: "flex", gap: 8, marginTop: 14, alignItems: "stretch" }}>
+                  <input
+                    type="text"
+                    value={drafts[bucket.id]}
+                    onChange={(e) => setDrafts((prev) => ({ ...prev, [bucket.id]: e.target.value }))}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        addEntry(bucket.id);
+                      }
+                    }}
+                    placeholder={bucket.placeholder}
+                    aria-label={`Add ${bucket.label} use case`}
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      fontFamily: fonts.regular,
+                      fontSize: 13,
+                      color: colors.onDark,
+                      background: colors.surfaceOnDark,
+                      border: `1px solid ${colors.borderOnDark}`,
+                      borderRadius: 6,
+                      padding: "10px 12px",
+                      lineHeight: 1.4,
+                    }}
+                    onFocus={(e) => { e.currentTarget.style.outline = focusRing; }}
+                    onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => addEntry(bucket.id)}
+                    disabled={!drafts[bucket.id].trim()}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      fontFamily: fonts.bold,
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: drafts[bucket.id].trim() ? colors.confidentBlack : colors.onDarkSubtle,
+                      background: drafts[bucket.id].trim() ? colors.yellow : colors.surfaceOnDark,
+                      border: `1px solid ${drafts[bucket.id].trim() ? colors.yellow : colors.borderOnDark}`,
+                      borderRadius: 6,
+                      padding: "10px 14px",
+                      cursor: drafts[bucket.id].trim() ? "pointer" : "not-allowed",
+                      whiteSpace: "nowrap",
+                    }}
+                    onFocus={(e) => { if (drafts[bucket.id].trim()) e.currentTarget.style.outline = focusRing; }}
+                    onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
+                  >
+                    <PlusCircle size={14} strokeWidth={1.75} aria-hidden />
+                    Add
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Guided Examples section ──────────────────────────────────────────────────
 function GuidedExamplesSection() {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -707,88 +1031,32 @@ function GuidedExamplesSection() {
   );
 }
 
-// ── M365 Agent Examples data — verbatim from PDF slide 6 ───────────────────
-const AGENT_EXAMPLES = [
-  {
-    name: "Tax Knowledge Retrieval Agent",
-    purpose: "Acts as a centralized knowledge assistant for locating historical tax positions, precedents and supporting materials.",
-    actions: "Searches approved repositories containing tax opinions, notices, submissions, laws, policies and knowledge documents.",
-    outcome: "Enables faster research, improves consistency in tax positions and reduces time spent searching for information.",
-  },
-  {
-    name: "Transfer Pricing Documentation Agent",
-    purpose: "Supports preparation and maintenance of transfer pricing documentation and supporting evidence.",
-    actions: "Reviews related-party schedules, TP reports, benchmarking studies, GL records and supporting documentation.",
-    outcome: "Identifies transactions, summarizes supporting information, highlights exceptions and improves audit readiness.",
-  },
-  {
-    name: "Advance Tax Reviewer Agent",
-    purpose: "Assists tax teams in reviewing advance tax computations and identifying key movements between reporting periods.",
-    actions: "Compares current and prior quarter computations, validates changes in assumptions and workings, and analyses variances across tax forecasts and calculations.",
-    outcome: "Produces variance analysis narratives, management summary notes and review observations that support faster validation, stakeholder reporting and decision-making.",
-  },
-  {
-    name: "Tax Information Request Agent",
-    purpose: "Streamlines the collection and management of information required from stakeholders during tax projects.",
-    actions: "Drafts information requests, reviews responses, summarizes stakeholder inputs and identifies missing information.",
-    outcome: "Reduces follow-up effort and improves the completeness and quality of information received.",
-  },
-  {
-    name: "Assessment Evidence Agent",
-    purpose: "Assists tax teams in gathering and organizing supporting evidence for audits, assessments and disputes.",
-    actions: "Searches SharePoint, Teams, Outlook and supporting repositories for relevant documentation and correspondence.",
-    outcome: "Creates issue-wise evidence packs, highlights missing support and strengthens audit preparedness.",
-  },
-  {
-    name: "Tax Leadership Reporting Agent",
-    purpose: "Provides leadership with periodic consolidated visibility over tax activities, developments and risks.",
-    actions: "Collects status updates, auditor comments, legislative changes and regional tax developments for analysis.",
-    outcome: "Produces executive dashboards, management reports and briefing materials to support decision-making.",
-  },
-  {
-    name: "Personalized Tracker Agent (including Compliance Tracker)",
-    purpose: "Acts as a centralized monitoring tool for tax compliance activities, deadlines and action items.",
-    actions: "Maintains compliance calendars, trackers, filing records and related correspondence.",
-    outcome: "Identifies upcoming, due and overdue obligations, highlights risks and supports timely compliance management.",
-  },
-  {
-    name: "Repetitive Tax Correspondence Agent",
-    purpose: "Standardizes recurring tax communications across stakeholders, management and employees.",
-    actions: "Generates communication templates, drafts correspondence, refines messaging and applies approved communication standards.",
-    outcome: "Improves consistency, reduces drafting effort and accelerates turnaround of routine communications.",
-  },
-  {
-    name: "Second Brain Agent",
-    purpose: "Acts as a personalized tax knowledge companion that helps professionals quickly access information, insights and prior work products accumulated over time.",
-    actions: "Searches across emails, meeting notes, presentations, research materials, working papers, tax opinions and enterprise repositories to build contextual understanding.",
-    outcome: "Enables users to retrieve historical knowledge, identify relevant precedents, surface action items and obtain context-aware guidance without manually searching through multiple sources.",
-  },
-];
-
-// ── M365 Agent Examples section ──────────────────────────────────────────────
-function AgentExamplesSection() {
-  const [activeIdx, setActiveIdx] = useState<number>(0);
-
-  const agent = AGENT_EXAMPLES[activeIdx];
-
+// ── Workshop Library — placeholder until Gmail-shared assets are integrated ───
+// Expected: browsable library of Prompt and No-code Agent templates (distinct
+// organisation from the guided example tiles above). Mirror Phase 3 Reference
+// Library patterns (sidebar categories, preview/download) once content arrives.
+function WorkshopLibrarySection() {
   return (
     <section
-      id="agent-examples"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.white,
+      id="workshop-library"
+      style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
     >
       <div style={{ ...contentRailStyle }}>
-
-        {/* Eyebrow + heading + intro */}
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+            fontFamily: fonts.bold,
+            fontSize: typeScale.label.size,
+            letterSpacing: typeScale.label.tracking,
+            textTransform: "uppercase",
+            color: colors.eyebrowGold,
+            margin: "0 0 12px",
           }}>
-            Guided Examples
+            Workshop Library
           </p>
           <h2 style={{
             fontFamily: fonts.bold,
@@ -798,154 +1066,56 @@ function AgentExamplesSection() {
             letterSpacing: "-0.02em",
             lineHeight: 1.1,
           }}>
-            EY-Guided M365 Agent Examples
+            Prompt &amp; Agent Template Library
           </h2>
           <p style={{
-            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-            color: colors.gray01, margin: 0, lineHeight: 1.5,
+            fontFamily: fonts.regular,
+            fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01,
+            margin: 0,
+            lineHeight: 1.5,
+            maxWidth: 640,
+            marginLeft: "auto",
+            marginRight: "auto",
           }}>
-            Purpose, actions and outcome as summarised in Sheet1 of Sample use cases.xlsx.
-            Agents are reusable assistants for clearly defined business scenarios.
+            Full library content is coming next — sourced from the Gmail-shared workshop pack
+            (Sample use cases.xlsx and template screenshots).
           </p>
         </div>
 
-        {/* Tile rows — detail panel injects after the row containing the active tile */}
-        {[0, 1, 2].map((rowIdx) => {
-          const rowStart = rowIdx * 3;
-          const rowAgents = AGENT_EXAMPLES.slice(rowStart, rowStart + 3);
-          const activeRow = Math.floor(activeIdx / 3);
-          const showPanel = activeRow === rowIdx;
-
-          return (
-            <div key={rowIdx} style={{ marginBottom: 10 }}>
-              {/* Tile row */}
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 10,
-              }}>
-                {rowAgents.map((a, i) => {
-                  const idx = rowStart + i;
-                  const isActive = activeIdx === idx;
-                  return (
-                    <button
-                      key={a.name}
-                      onClick={() => setActiveIdx(idx)}
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 10,
-                        padding: "14px 16px",
-                        background: isActive ? "rgba(134,48,255,0.08)" : colors.white,
-                        border: `1px solid ${isActive ? colors.framePurple : colors.gray02}`,
-                        borderBottom: isActive ? `3px solid ${colors.framePurple}` : `1px solid ${colors.gray02}`,
-                        borderRadius: 6,
-                        cursor: "pointer",
-                        textAlign: "left",
-                        transition: "background 180ms, border-color 180ms",
-                        userSelect: "none",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(134,48,255,0.03)";
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) (e.currentTarget as HTMLElement).style.background = colors.white;
-                      }}
-                    >
-                      <span style={{
-                        fontFamily: fonts.bold, fontSize: 11,
-                        color: isActive ? colors.framePurple : colors.gray01,
-                        lineHeight: 1.4, flexShrink: 0, marginTop: 1,
-                      }}>
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span style={{
-                        fontFamily: fonts.bold, fontSize: 12,
-                        color: isActive ? colors.framePurple : colors.offBlack,
-                        lineHeight: 1.35, letterSpacing: "-0.01em",
-                        transition: "color 180ms",
-                      }}>
-                        {a.name}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Detail panel — only for the active row */}
-              {showPanel && (
-                <div
-                  key={activeIdx}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: "clamp(16px, 2vw, 28px)",
-                    background: colors.white,
-                    borderTop: `1px solid ${colors.gray02}`,
-                    borderRight: `1px solid ${colors.gray02}`,
-                    borderBottom: `1px solid ${colors.gray02}`,
-                    borderLeft: `3px solid ${colors.framePurple}`,
-                    borderRadius: 8,
-                    padding: "clamp(16px, 2vw, 24px) clamp(20px, 2.5vw, 28px)",
-                    minHeight: 140,
-                    animation: "ey-slide-up 180ms cubic-bezier(.22,.68,0,1.05) both",
-                    marginTop: 8,
-                    marginBottom: 10,
-                  }}
-                >
-                  {[
-                    { label: "Purpose", body: agent.purpose },
-                    { label: "Actions", body: agent.actions },
-                    { label: "Outcome", body: agent.outcome },
-                  ].map(({ label, body }) => (
-                    <div key={label}>
-                      <p style={{
-                        fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.1em",
-                        textTransform: "uppercase", color: colors.eyebrowGold,
-                        margin: "0 0 8px",
-                      }}>
-                        {label}
-                      </p>
-                      <p style={{
-                        fontFamily: fonts.regular, fontSize: 13,
-                        color: colors.offBlack, margin: 0, lineHeight: 1.6,
-                      }}>
-                        {body}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        {/* Discussion prompt */}
         <div style={{
-          marginTop: 6,
-          background: "rgba(134,48,255,0.07)",
-          border: `1px solid rgba(134,48,255,0.18)`,
-          borderLeft: `3px solid ${colors.framePurple}`,
+          border: "1.5px dashed rgba(46,46,56,0.18)",
           borderRadius: 10,
-          padding: "clamp(20px, 2.5vw, 28px)",
+          background: colors.white,
+          padding: "clamp(32px, 4vw, 48px)",
+          textAlign: "center",
+          minHeight: 240,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
         }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: 10,
-            letterSpacing: "0.1em", textTransform: "uppercase",
-            color: colors.framePurple, margin: "0 0 12px",
+            fontFamily: fonts.bold,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: colors.eyebrowGoldDark,
+            margin: 0,
           }}>
-            Discussion Prompt
+            Library placeholder
           </p>
           <p style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: colors.offBlack,
+            fontFamily: fonts.regular,
+            fontSize: 14,
+            color: colors.gray01,
             margin: 0,
-            lineHeight: 1.45,
-            letterSpacing: "-0.01em",
+            lineHeight: 1.6,
+            maxWidth: 480,
+            fontStyle: "italic",
           }}>
-            Which recurring tax workflow repeatedly requires people to search, collect,
-            coordinate, track or report?
+            Browse, preview and download templates will appear here once the shared library assets are integrated.
           </p>
         </div>
       </div>
@@ -960,31 +1130,6 @@ function AgentExamplesSection() {
 
 const D1_ACCENT = "#0076A8";
 const D2_ACCENT = "#7B5EA7";
-
-// Phase 2 section data for the journey infographic in What's Next
-const P2_CALLOUTS: readonly AscentCalloutEntry[] = [
-  { left: 140, top: 250, width: 149, quote: "I know exactly where AI fits in my tax work." },
-  { left: 290, top: 195, width: 187, quote: "I memorised which AI lever to use for every task." },
-  { left: 502, top: 123, width: 167, quote: "I feel confident mapping AI to my daily activities." },
-  { left: 722, top: 106, width: 150, quote: "I learned to lead with the problem, not the tool." },
-  { left: 953, top: 114, width: 170, quote: "I can now build prompts that get real results." },
-  { left: 1247, top: 8, width: 180, quote: "I feel ready to automate what once seemed impossible.", rounded: 4 },
-];
-const P2_STAGE_NODES: readonly AscentStageNodeEntry[] = [
-  { left: 359, top: 295, icon: "/ascent/icon-book-open.svg", alt: "Quick Recall" },
-  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "Problem First" },
-  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "Prompt Examples" },
-  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "Agent Examples" },
-  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Outputs" },
-];
-const P2_STAGE_TITLE_LABELS: readonly AscentStageTitleEntry[] = [
-  { title: "Phase 2 Start", markerTop: 366, markerSize: 46, calloutIndex: 0 },
-  { title: "Quick Recall", markerTop: 295, markerSize: 40, calloutIndex: 1 },
-  { title: "Problem First", markerTop: 260, markerSize: 40, calloutIndex: 2 },
-  { title: "Prompt Examples", markerTop: 240, markerSize: 40, calloutIndex: 3 },
-  { title: "Agent Examples", markerTop: 227, markerSize: 40, calloutIndex: 4 },
-  { title: "Outputs", markerTop: 94, markerSize: 40, calloutIndex: 5 },
-];
 
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
@@ -1202,31 +1347,11 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
       </section>
 
       {/* What's Next — Journey Map */}
-      <section
+      <AscentModuleProgressSection
+        moduleKey="m2"
         id="next-steps"
-        style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.confidentBlack, width: "100%" }}
-      >
-        {/* Header */}
-        <div style={{ ...contentRailStyle, paddingTop: spacing.sectionPaddingY, paddingBottom: 32, textAlign: "center" }}>
-          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px" }}>
-            What's Next
-          </p>
-          <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.white, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-            Continue Your Learning Journey
-          </h2>
-        </div>
-
-        {/* Journey map infographic */}
-        <AscentJourneyInfographic
-          callouts={P2_CALLOUTS}
-          stageNodes={P2_STAGE_NODES}
-          stageTitleLabels={P2_STAGE_TITLE_LABELS}
-          defaultAllOpen
-          lastNodeCtaLabel="Building Solutions"
-          onLastNodeCta={() => onNavigate("/guidance-implementation")}
-        />
-
-      </section>
+        onNextStepCta={() => onNavigate("/guidance-implementation")}
+      />
     </>
   );
 }
@@ -1530,6 +1655,48 @@ function QuickRecallSection() {
               </ul>
             </div>
           )}
+
+          {/* ── Pro Code card — content TBD ── */}
+          <div
+            className="ey-recall-procode"
+            style={{
+              ...cardBase,
+              borderTop: `3px solid ${colors.frameBlue}`,
+              borderStyle: "dashed",
+              borderTopStyle: "solid",
+              background: colors.offWhite,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minHeight: 200,
+              animation: "ey-slide-up 420ms cubic-bezier(.22,.68,0,1.05) 120ms both",
+            }}
+          >
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span style={{
+                fontFamily: fonts.bold,
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: colors.white,
+                background: colors.frameBlue,
+                borderRadius: 4,
+                padding: "3px 10px",
+              }}>
+                Pro Code
+              </span>
+            </div>
+            <p style={{
+              fontFamily: fonts.regular,
+              fontSize: 13,
+              color: colors.gray01,
+              margin: 0,
+              lineHeight: 1.5,
+              fontStyle: "italic",
+            }}>
+              Content coming soon.
+            </p>
+          </div>
         </div>
 
         {/* Post-reveal summary — verbatim from PDF slide 2 */}
@@ -1798,26 +1965,20 @@ export default function BrainstormingUseCases({
 
   return (
     <div
-      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden"
+      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0"
       data-name="EY.ai Tax Labs - Phase 2"
     >
-      {/* ── Sticky chrome ── */}
-      <div
-        className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]"
-        data-name="Top Navigation"
-      >
-        <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
-        <ModuleHeader
-          mode="phase-overview"
-          hideModuleDropdown
-          phaseLabel={PHASE2_LABEL}
-          phaseNumber={PHASE2_NUMBER}
-          subPhaseLabel="2.1"
-          sections={PHASE2_SECTIONS}
-          onNavigate={onNavigate}
-          onBack={onBack}
-        />
-      </div>
+      <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
+      <ModuleHeader
+        mode="phase-overview"
+        hideModuleDropdown
+        phaseLabel={PHASE2_LABEL}
+        phaseNumber={PHASE2_NUMBER}
+        subPhaseLabel="2.1"
+        sections={PHASE2_SECTIONS}
+        onNavigate={onNavigate}
+        onBack={onBack}
+      />
 
       {/* ── Main content ── */}
       <main id="phase2-content">
@@ -1830,9 +1991,11 @@ export default function BrainstormingUseCases({
 
         <ProblemFirstSection />
 
+        <UseCaseBucketsSection />
+
         <GuidedExamplesSection />
 
-        <AgentExamplesSection />
+        <WorkshopLibrarySection />
 
         <DeliverablesSection onNavigate={onNavigate} />
 

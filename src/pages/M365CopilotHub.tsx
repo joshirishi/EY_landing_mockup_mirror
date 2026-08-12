@@ -4,13 +4,13 @@ import {
   AlertTriangle, ArrowRight, BarChart3, Calculator, Check, CheckCircle, ChevronDown, ChevronRight,
   ClipboardList, Compass, Copy, ExternalLink, FileText,
   FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
-  ChevronLeft, PenLine, Pin, Rocket, Search, Sparkles, Target, Timer, X, XCircle,
+  ChevronLeft, Mic, PenLine, Pin, Rocket, Search, Sparkles, Target, Timer, X, XCircle,
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { EYWhatsNext } from "../design-kit/EYWhatsNext";
 import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, typeScale } from "../design-kit/tokens";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 
 // Canonical token alias — keeps existing C.dark / C.dark2 references working
 const C = {
@@ -188,7 +188,7 @@ const SECTION_DATA: Record<TabId, {
     altBg: false,
   },
   m365: {
-    eyebrow: "COLATE INFORMATION ACROSS M365",
+    eyebrow: "COLLATE INFORMATION ACROSS M365",
     eyebrowColor: C.teamsViolet,
     h2: "Copilot in M365 Chat",
     subtitle: "Use Copilot in M365 Chat to ask questions, get summaries, and generate content across your Microsoft 365 data. Chat brings together information from documents, emails, meetings, and contacts to give you AI-powered answers grounded in your work data.",
@@ -2763,6 +2763,183 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
   );
 }
 
+// ── M365 Chat feature tour (Priya PPT: M365 Copilot chat features) ───────────
+const M365_CHAT_FEATURES = [
+  {
+    title: "Start a new chat",
+    body: "Finds information quickly across files, emails, meetings and people — like an AI-powered search engine when you know what you’re looking for.",
+    icon: MessagesSquare,
+  },
+  {
+    title: "Pages hub",
+    body: "Your central hub for Copilot-generated content — Pages, images, infographics and items shared with you.",
+    icon: FileText,
+  },
+  {
+    title: "Researcher",
+    body: "Deep, multi-step research across your work data and the web with a structured, source-cited report.",
+    icon: Search,
+  },
+  {
+    title: "Analyst",
+    body: "Turns raw data into insights, forecasts and visualisations — from spreadsheet to answer in minutes.",
+    icon: BarChart3,
+  },
+  {
+    title: "Create an agent",
+    body: "Build your own AI expert for a specific business need — the difference between generic AI and AI that knows your work.",
+    icon: Sparkles,
+  },
+  {
+    title: "Prompt with context",
+    body: "Clear goal, context and references get the best results. Attach files, meetings and emails for a focused response.",
+    icon: Pin,
+  },
+  {
+    title: "Voice & temporary chat",
+    body: "Start dictating with voice chat, or open a temporary chat when you don’t want the thread saved.",
+    icon: Mic,
+  },
+  {
+    title: "Apps, agents & create",
+    body: "Gateway to apps and tools that help Copilot get work done — plus create images, videos, surveys and branded pages.",
+    icon: Rocket,
+  },
+] as const;
+
+function M365ChatFeaturesTour() {
+  return (
+    <div style={{ marginTop: 48 }}>
+      <header style={{ textAlign: "center", marginBottom: 28 }}>
+        <p
+          style={{
+            fontFamily: F.bold,
+            fontSize: 11,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: C.teamsViolet,
+            margin: "0 0 10px",
+          }}
+        >
+          Chat features
+        </p>
+        <h3
+          style={{
+            fontFamily: F.bold,
+            fontSize: "clamp(20px, 2.5vw, 28px)",
+            color: C.dark2,
+            margin: "0 0 10px",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          What you can do in M365 Copilot Chat
+        </h3>
+        <p
+          style={{
+            fontFamily: F.regular,
+            fontSize: typeScale.body.size,
+            color: C.gray01,
+            margin: "0 auto",
+            maxWidth: 640,
+            lineHeight: 1.55,
+          }}
+        >
+          Annotated walkthrough of Copilot Chat — from search and research to agents, voice and create.
+        </p>
+      </header>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+          gap: 14,
+          marginBottom: 32,
+        }}
+      >
+        {M365_CHAT_FEATURES.map((f) => {
+          const Icon = f.icon;
+          return (
+            <div
+              key={f.title}
+              style={{
+                background: C.white,
+                border: `1px solid ${C.gray02}`,
+                borderRadius: 12,
+                padding: 18,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: C.yellow,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: C.dark2,
+                }}
+              >
+                <Icon size={18} strokeWidth={1.75} aria-hidden />
+              </div>
+              <p
+                style={{
+                  fontFamily: F.bold,
+                  fontSize: 14,
+                  color: C.dark2,
+                  margin: 0,
+                  lineHeight: 1.3,
+                }}
+              >
+                {f.title}
+              </p>
+              <p
+                style={{
+                  fontFamily: F.regular,
+                  fontSize: 13,
+                  color: C.gray01,
+                  margin: 0,
+                  lineHeight: 1.5,
+                }}
+              >
+                {f.body}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      <figure style={{ margin: 0, textAlign: "center" }}>
+        <img
+          src="/reference-images/copilot-beyond-chat.gif"
+          alt="Copilot Beyond Chat — mailer animation showing Copilot capabilities beyond chat"
+          style={{
+            width: "100%",
+            maxWidth: 720,
+            height: "auto",
+            borderRadius: 12,
+            border: `1px solid ${C.gray02}`,
+            background: C.white,
+          }}
+        />
+        <figcaption
+          style={{
+            fontFamily: F.regular,
+            fontSize: 13,
+            color: C.gray01,
+            marginTop: 10,
+          }}
+        >
+          Copilot Beyond Chat
+        </figcaption>
+      </figure>
+    </div>
+  );
+}
+
 // ── Full tab section ──────────────────────────────────────────────────────────
 function TabSection({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
@@ -2786,6 +2963,8 @@ function TabSection({ tabId }: { tabId: TabId }) {
       ) : (
         <CopilotScene tabId={tabId} />
       )}
+
+      {tabId === "m365" && <M365ChatFeaturesTour />}
       </div>
     </div>
   );
@@ -3207,12 +3386,9 @@ export default function M365CopilotHub({
         />
       )}
 
-      {/* Shared dark CTA — Phase 1 complete */}
-      <EYWhatsNext
-        title="You've completed Phase 1"
-        ctaLabel="Back to overview"
-        onContinue={() => onNavigate?.("/phase1")}
-        meta="Phase 1 covered: AI foundations, tax prompting, and M365 Copilot"
+      <AscentModuleProgressSection
+        moduleKey="m1_3"
+        onNextStepCta={() => onNavigate?.("/phase2")}
       />
 
     </div>

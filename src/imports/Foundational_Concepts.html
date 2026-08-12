@@ -1598,9 +1598,10 @@ body {
 }
 .evo-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .evo-chip {
-  border: 1px solid var(--ey-dark); background: var(--ey-dark);
-  color: var(--ey-on-dark); font-size: 12px; font-weight: 600;
-  padding: 8px 12px; border-radius: 999px;
+  font-size: 13px; font-weight: 400;
+  padding: 8px 14px; border-radius: 999px;
+  line-height: 1.35;
+  border: 1px solid transparent;
 }
 /* Two-column layout: nested layers (left) + featured detail card (right) */
 .evo-layout {
@@ -6054,6 +6055,19 @@ const EVO_ERAS = [
 ];
 let evoActive = 0;
 
+/** Colored pill for everyday examples — first chip matches era accent; others cycle EY spectrum. */
+function evoExampleChipHtml(label, accent, index) {
+  const spectrum = [accent, '#00C864', '#FF7D1E', '#B400FF', '#32FFFF'];
+  const color = spectrum[index % spectrum.length];
+  return (
+    '<span class="evo-chip" style="' +
+    'border-color:' + color + '66;' +
+    'background:' + color + '22;' +
+    'color:#FFFFFF;' +
+    '">' + label + '</span>'
+  );
+}
+
 function renderEvoNest(i) {
   const nest = document.getElementById('evo-nest');
   if (!nest) return;
@@ -6117,8 +6131,8 @@ function selectEra(i) {
   document.getElementById('evo-feat-tag').textContent = era.tag;
   document.getElementById('evo-feat-desc').textContent = era.desc;
   document.getElementById('evo-feat-analogy').textContent = era.analogy;
-  document.getElementById('evo-feat-chips').innerHTML = era.examples.map(e =>
-    `<span class="evo-chip">${e}</span>`
+  document.getElementById('evo-feat-chips').innerHTML = era.examples.map((e, idx) =>
+    evoExampleChipHtml(e, era.dot, idx)
   ).join('');
 
   const headerDot = document.getElementById('evo-feat-header-dot');

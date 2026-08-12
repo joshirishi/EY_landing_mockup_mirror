@@ -3,8 +3,8 @@ import { motion } from "motion/react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
-import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import heroImg from "../assets/images/GettyImages-1399150019.jpg";
 import { StepBadge } from "../design-kit/EYCard";
 import { EYQuote } from "../design-kit/EYTypography";
@@ -17,7 +17,7 @@ const PHASE4_SECTIONS = [
   { id: "p4-checks",     label: "The Checks",     group: "learn" as const },
   { id: "p4-checklist",  label: "Your Checklist", group: "apply" as const },
   { id: "p4-org",        label: "For Organisations", group: "apply" as const },
-  { id: "whats-next",   label: "What's Next",       group: "apply" as const },
+  { id: "journey-progress", label: "Ascent",  group: "apply" as const },
 ];
 
 const RESPONSIBLE_USE_NEWS = [
@@ -1110,7 +1110,7 @@ export default function ClosureAiReinforcement({
 
   return (
     <div
-      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-clip"
+      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0"
       data-name="EY.ai Tax Labs - Phase 4"
     >
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase4-content" />
@@ -1416,15 +1416,11 @@ export default function ClosureAiReinforcement({
         </section>
       </main>
 
-      {/* ── EYWhatsNext ─────────────────────────────────────────────────── */}
-      <EYWhatsNext
-        id="whats-next"
-        eyebrow="Knowledge Check"
-        title={<>Responsible AI <EYWhatsNextHighlight>Control Room</EYWhatsNextHighlight></>}
-        description="Act as the AI Review Committee. Work through 10 real-world scenarios — identify the risk, make the decision and choose the missing control. Put everything from this module to the test."
-        ctaLabel="Enter the Control Room"
-        onContinue={() => window.open("/control-room.html", "_blank", "noopener")}
-        meta="Interactive assessment  ·  10 scenarios  ·  40 points"
+      {/* Journey progress — continue via Control Room trek CTA */}
+      <AscentModuleProgressSection
+        moduleKey="m4"
+        id="journey-progress"
+        onNextStepCta={() => window.open("/control-room.html", "_blank", "noopener")}
       />
     </div>
   );

@@ -1,12 +1,13 @@
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowRight, ChevronLeft, ChevronRight, Download, Eye } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, Download, Eye, RotateCcw, X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
-import { EYWhatsNext, EYWhatsNextHighlight } from "../design-kit/EYWhatsNext";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { PromptStackBuilderCompact } from "../components/PromptStackBuilderCompact";
 import { TemplatePreviewModal } from "../components/TemplatePreviewModal";
+import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
 import { BRAINSTORM_ITEMS } from "../data/phase2-brainstorm-buckets";
 import { PROMPTING_TECHNIQUES, TECHNIQUE_FACETS } from "../data/prompt-techniques";
 import {
@@ -29,11 +30,12 @@ export const PHASE3_NUMBER = 3;
 
 const PHASE3_SECTIONS = [
   { id: "p3-workshop", label: "Workshop", group: "learn" as const },
+  { id: "p3-bingo", label: "AI Bingo", group: "learn" as const },
   { id: "p3-prompts", label: "Tax Prompts", group: "learn" as const },
   { id: "p3-agents", label: "M365 Agents", group: "learn" as const },
   { id: "p3-hitl", label: "Human-in-Loop", group: "learn" as const },
   { id: "p5-templates", label: "Reference Library", group: "apply" as const },
-  { id: "p3-closing", label: "Deployment", group: "apply" as const },
+  { id: "journey-progress", label: "Ascent", group: "apply" as const },
 ];
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
@@ -220,6 +222,265 @@ function Panel1() {
           ))}
         </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Panel 1b — AI Fluency Bingo (before Prompt Engineering Refresher) ─────────
+// Echo: Priya (9079aa2f) + placement note (cd7c4b34) — after workshop, before p3-prompts
+
+type BingoTile = {
+  id: string;
+  statement: string;
+  isTrue: boolean;
+};
+
+const BINGO_TILES: BingoTile[] = [
+  {
+    id: "b1",
+    statement: "A clear objective and rich context often matter more than making a prompt longer.",
+    isTrue: true,
+  },
+  {
+    id: "b2",
+    statement: "Copilot can access every file in your organization.",
+    isTrue: false,
+  },
+  {
+    id: "b3",
+    statement: "Chain-of-Thought prompting always improves accuracy and should be used in every scenario.",
+    isTrue: false,
+  },
+  {
+    id: "b4",
+    statement: "Few-Shot Prompting works by giving examples of the type of response you want.",
+    isTrue: true,
+  },
+  {
+    id: "b5",
+    statement: "An AI agent can use tools to act toward a goal.",
+    isTrue: true,
+  },
+  {
+    id: "b6",
+    statement: "An agent primarily responds to prompts and questions.",
+    isTrue: false,
+  },
+  {
+    id: "b7",
+    statement: "A Copilot Agent is primarily designed to automate or assist with a specific task or workflow.",
+    isTrue: true,
+  },
+  {
+    id: "b8",
+    statement: "Any confidential data is safe in any AI tool.",
+    isTrue: false,
+  },
+  {
+    id: "b9",
+    statement: "Giving AI an expert role can influence the style and perspective of its response.",
+    isTrue: true,
+  },
+];
+
+function PanelBingo() {
+  // Track which tiles the learner has revealed (click once to show True/False)
+  const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+
+  const revealedCount = Object.keys(revealed).filter((k) => revealed[k]).length;
+
+  const revealTile = (id: string) => {
+    setRevealed((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+  };
+
+  const resetBingo = () => setRevealed({});
+
+  return (
+    <section
+      id="p3-bingo"
+      style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: C.white,
+        padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
+      }}
+    >
+      <div style={{ ...contentRailStyle }}>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.eyebrowGoldDark)}>AI Fluency Bingo</p>
+          <h2 style={{ ...h2Style, color: C.offBlack, marginBottom: 8 }}>Fact or Fiction?</h2>
+          <p
+            style={{
+              fontFamily: F.light,
+              fontSize: typeScale.body.size,
+              color: C.gray01,
+              margin: "0 auto",
+              maxWidth: 880,
+              lineHeight: 1.5,
+            }}
+          >
+            A quick challenge to assess your understanding of prompts, Copilot, and AI agents.
+          </p>
+          {/* Hint text on one end; refresh pill on the other */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              flexWrap: "wrap",
+              marginTop: 16,
+              textAlign: "left",
+            }}
+          >
+            <button
+              type="button"
+              onClick={resetBingo}
+              disabled={revealedCount === 0}
+              aria-label="Refresh bingo — hide all answers"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 14px",
+                borderRadius: 999,
+                border: `1px solid ${C.gray02}`,
+                background: C.offWhite,
+                color: C.offBlack,
+                fontFamily: F.bold,
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                cursor: revealedCount === 0 ? "not-allowed" : "pointer",
+                opacity: revealedCount === 0 ? 0.45 : 1,
+              }}
+            >
+              <RotateCcw size={14} strokeWidth={2} aria-hidden />
+              Refresh
+            </button>
+            <p
+              style={{
+                fontFamily: F.regular,
+                fontSize: typeScale.caption.size,
+                color: C.gray01,
+                margin: 0,
+                textAlign: "right",
+              }}
+            >
+              Tap a tile to reveal whether it is True or False.
+              {revealedCount > 0 ? ` · ${revealedCount} of ${BINGO_TILES.length} revealed` : ""}
+            </p>
+          </div>
+        </div>
+
+        <div
+          role="list"
+          aria-label="AI Fluency Bingo — nine True or False statements"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: 16,
+          }}
+        >
+          {BINGO_TILES.map((tile, index) => {
+            const isOpen = Boolean(revealed[tile.id]);
+            const tone = isOpen ? (tile.isTrue ? "true" : "false") : "idle";
+
+            const borderColor =
+              tone === "true" ? C.success : tone === "false" ? C.error : C.gray02;
+            // Revealed tiles fill green/red per Priya's Echo note; idle stays neutral
+            const bg =
+              tone === "true" ? C.success : tone === "false" ? C.error : C.offWhite;
+            const textColor = tone === "idle" ? C.offBlack : C.white;
+            const labelColor = tone === "idle" ? C.eyebrowGoldDark : C.white;
+
+            return (
+              <button
+                key={tile.id}
+                type="button"
+                role="listitem"
+                aria-pressed={isOpen}
+                aria-label={
+                  isOpen
+                    ? `${tile.statement} — ${tile.isTrue ? "True" : "False"}`
+                    : `Statement ${index + 1}: ${tile.statement}. Activate to reveal answer.`
+                }
+                onClick={() => revealTile(tile.id)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: 12,
+                  minHeight: 168,
+                  padding: "20px 18px",
+                  textAlign: "left",
+                  cursor: isOpen ? "default" : "pointer",
+                  borderRadius: 4,
+                  border: `2px solid ${borderColor}`,
+                  background: bg,
+                  boxShadow: "0 2px 8px rgba(26,26,36,0.06)",
+                  transition: "background 160ms ease, border-color 160ms ease, box-shadow 160ms ease",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontFamily: F.bold,
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: labelColor,
+                  }}
+                >
+                  {isOpen ? (
+                    tile.isTrue ? (
+                      <>
+                        <Check size={14} strokeWidth={2} aria-hidden />
+                        True
+                      </>
+                    ) : (
+                      <>
+                        <X size={14} strokeWidth={2} aria-hidden />
+                        False
+                      </>
+                    )
+                  ) : (
+                    <>{String(index + 1).padStart(2, "0")} · Fact or fiction?</>
+                  )}
+                </span>
+                <span
+                  style={{
+                    fontFamily: F.regular,
+                    fontSize: 14,
+                    fontWeight: 400,
+                    lineHeight: 1.45,
+                    color: textColor,
+                    flex: 1,
+                  }}
+                >
+                  {tile.statement}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <style>{`
+          @media (max-width: 900px) {
+            #p3-bingo [role="list"] {
+              grid-template-columns: 1fr !important;
+            }
+          }
+          @media (min-width: 901px) and (max-width: 1100px) {
+            #p3-bingo [role="list"] {
+              grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+          }
+        `}</style>
       </div>
     </section>
   );
@@ -1520,12 +1781,6 @@ type GuidedExample = {
   templateAsset?: TemplateAsset;
 };
 
-const EXAMPLE_CATEGORIES: { id: ExampleCategory; label: string }[] = [
-  { id: "research", label: "Research & Analysis" },
-  { id: "generative", label: "Generative Tasks" },
-  { id: "use-cases", label: "Use Case Builds" },
-];
-
 // 15 guided examples — same content as #guided-examples (BrainstormingUseCases)
 const GUIDED_EXAMPLES: GuidedExample[] = [
   {
@@ -1713,54 +1968,39 @@ function GuidedExamplesAlternateUI() {
           </div>
 
           <div style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
-            {EXAMPLE_CATEGORIES.map((cat) => {
-              const items = GUIDED_EXAMPLES
-                .map((ex, idx) => ({ ex, idx }))
-                .filter(({ ex }) => ex.category === cat.id);
-              if (items.length === 0) return null;
+            {/* Flat list — matches Priya's reference HTML pin (no category headers) */}
+            {GUIDED_EXAMPLES.map((ex, idx) => {
+              const isActive = idx === activeIdx;
               return (
-                <div key={cat.id} style={{ marginBottom: 8 }}>
-                  <p style={{
-                    fontFamily: F.bold, fontSize: 9, letterSpacing: "0.08em",
-                    textTransform: "uppercase", color: C.onDarkSubtle,
-                    padding: "8px 16px 6px", margin: 0,
+                <button
+                  key={ex.name}
+                  type="button"
+                  onClick={() => select(idx)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    border: "none",
+                    background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                    borderLeft: isActive ? `3px solid ${C.yellow}` : "3px solid transparent",
+                    padding: "10px 16px 10px 14px",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "background 150ms",
+                  }}
+                  onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)"; }}
+                  onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                >
+                  <span style={{
+                    fontFamily: isActive ? F.bold : F.regular,
+                    fontSize: isActive ? 13 : 12,
+                    color: isActive ? C.onDark : C.onDarkMuted,
+                    lineHeight: 1.35,
+                    letterSpacing: isActive ? "-0.01em" : "0.01em",
                   }}>
-                    {cat.label}
-                  </p>
-                  {items.map(({ ex, idx }) => {
-                    const isActive = idx === activeIdx;
-                    return (
-                      <button
-                        key={ex.name}
-                        onClick={() => select(idx)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          width: "100%",
-                          border: "none",
-                          background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
-                          borderLeft: isActive ? `3px solid ${C.yellow}` : "3px solid transparent",
-                          padding: "10px 16px 10px 14px",
-                          cursor: "pointer",
-                          textAlign: "left",
-                          transition: "background 150ms",
-                        }}
-                        onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)"; }}
-                        onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
-                      >
-                        <span style={{
-                          fontFamily: isActive ? F.bold : F.regular,
-                          fontSize: isActive ? 13 : 12,
-                          color: isActive ? C.onDark : C.onDarkMuted,
-                          lineHeight: 1.35,
-                          letterSpacing: isActive ? "-0.01em" : "0.01em",
-                        }}>
-                          {ex.name}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
+                    {ex.name}
+                  </span>
+                </button>
               );
             })}
           </div>
@@ -1850,6 +2090,44 @@ function GuidedExamplesAlternateUI() {
           </div>
         </div>
       </div>
+
+      {/* Discussion prompt — Priya reference HTML pin under the template library */}
+      <div
+        style={{
+          marginTop: 24,
+          background: C.yellow,
+          borderRadius: 8,
+          padding: "18px 24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: F.bold,
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: C.confidentBlack,
+            margin: 0,
+          }}
+        >
+          Discussion prompt
+        </p>
+        <p
+          style={{
+            fontFamily: F.regular,
+            fontSize: 15,
+            color: C.offBlack,
+            margin: 0,
+            lineHeight: 1.5,
+          }}
+        >
+          Which recurring tax activity would benefit from stronger extraction, comparison, analysis, explanation, validation or a first draft?
+        </p>
+      </div>
     </div>
   );
 }
@@ -1869,12 +2147,11 @@ function Panel5() {
           <p style={eyebrow(C.confidentBlack)}>Sample Prompt Templates</p>
           <h2 style={{ ...h2Style, color: C.confidentBlack }}>Workshop Reference Library</h2>
           <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, marginBottom: 0 }}>
-            Use the programme handouts for detailed templates; use this slide as the build menu.
+            Select a book from the shelf to explore its guided prompt template.
           </p>
         </div>
 
-        {/* Alternate UI: search + expandable card grid (same content as #guided-examples) */}
-        <GuidedExamplesAlternateUI />
+        <PromptBookshelfLibrary />
       </div>
     </section>
   );
@@ -2119,27 +2396,6 @@ function Panel6() {
   );
 }
 
-// ── Panel 7 — What's Next / Closing (Slide 8) ────────────────────────────────
-
-function Panel7({ onBack }: { onBack: () => void }) {
-  return (
-    <EYWhatsNext
-      id="p3-closing"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN }}
-      eyebrow="What's next?"
-      title={
-        <>
-          Hands-on Build{" "}
-          <EYWhatsNextHighlight>Workshop</EYWhatsNextHighlight>
-        </>
-      }
-      description="Controlled deployment, user adoption and continuous refinement of the Tax AI operating model."
-      ctaLabel="Looking ahead – Phase 3"
-      onContinue={onBack}
-    />
-  );
-}
-
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function GuidanceImplementation({ onBack, onNavigate }: Props) {
@@ -2171,12 +2427,17 @@ export default function GuidanceImplementation({ onBack, onNavigate }: Props) {
 
       <main id="phase3-content" style={{ position: "relative" }}>
         <Panel1 />
+        <PanelBingo />
         <Panel2 />
         <Panel3 />
         <Panel4 />
         <Panel5 />
         <Panel6 />
-        <Panel7 onBack={onBack} />
+        <AscentModuleProgressSection
+          moduleKey="m3"
+          id="journey-progress"
+          onNextStepCta={() => onNavigate("/closure-ai-reinforcement")}
+        />
       </main>
     </div>
   );

@@ -10,45 +10,10 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
-import AscentJourneyInfographic, {
-  type AscentCalloutEntry,
-  type AscentStageNodeEntry,
-  type AscentStageTitleEntry,
-} from "../imports/Frame353/AscentJourneyInfographic";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { EYWhatsNext } from "../design-kit/EYWhatsNext";
 import { colors, contentRailStyle, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
-
-/**
- * Phase 1 workshop steps on the Ascent map (end of Foundational Concepts).
- * Progress opens Base Camp + Foundational Concepts; next marker is Prompting.
- */
-const P1_CALLOUTS: readonly AscentCalloutEntry[] = [
-  { left: 140, top: 250, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
-  { left: 290, top: 195, width: 187, quote: "AI feels a lot less intimidating now. I finally understand how Gen AI, Agents and prompting fit together." },
-  { left: 502, top: 123, width: 167, quote: "Next up: write clearer tax prompts that get reliable, reviewable answers." },
-  { left: 722, top: 106, width: 150, quote: "Then put prompts to work inside Microsoft 365 Copilot across my day-to-day tools." },
-  { left: 953, top: 114, width: 170, quote: "Governance will keep every AI use case safe, approved and accountable." },
-  { left: 1247, top: 8, width: 180, quote: "I am an AI-enabled tax professional — ready for advanced workflows with confidence.", rounded: 4 },
-];
-
-const P1_STAGE_NODES: readonly AscentStageNodeEntry[] = [
-  { left: 359, top: 295, icon: "/ascent/icon-book-open.svg", alt: "Foundational Concepts" },
-  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "AI Tax Prompting" },
-  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "M365 Copilot Hub" },
-  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "AI Governance" },
-  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Advanced Workflows" },
-];
-
-const P1_STAGE_TITLE_LABELS: readonly AscentStageTitleEntry[] = [
-  { title: "Base Camp", markerTop: 366, markerSize: 46, calloutIndex: 0 },
-  { title: "Foundational Concepts", markerTop: 295, markerSize: 40, calloutIndex: 1 },
-  { title: "AI Tax Prompting", markerTop: 260, markerSize: 40, calloutIndex: 2 },
-  { title: "M365 Copilot Hub", markerTop: 240, markerSize: 40, calloutIndex: 3 },
-  { title: "AI Governance", markerTop: 227, markerSize: 40, calloutIndex: 4 },
-  { title: "Advanced Workflows", markerTop: 94, markerSize: 40, calloutIndex: 5 },
-];
 
 /**
  * Token bridge — maps the lesson HTML's CSS custom properties onto the
@@ -576,7 +541,7 @@ export default function FoundationalConcepts({
   }, [scripts]);
 
   return (
-    <div style={{ position: "fixed", inset: 0, overflowY: "auto", background: colors.white }}>
+    <div style={{ width: "100%", minHeight: "100vh", background: colors.white }}>
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#module-content" />
       <ModuleHeader currentModuleId="foundational" onNavigate={onNavigate} onBack={onBack} />
 
@@ -585,65 +550,10 @@ export default function FoundationalConcepts({
         <div dangerouslySetInnerHTML={{ __html: body }} />
       </div>
 
-      {/* Journey progress — shared Ascent component, Phase 1 steps, path lit through Module 1 */}
-      <section
-        id="journey-progress"
-        aria-labelledby="journey-progress-heading"
-        style={{
-          background: colors.confidentBlack,
-          width: "100%",
-          scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        }}
-      >
-        <div
-          style={{
-            ...contentRailStyle,
-            paddingTop: spacing.sectionPaddingY,
-            paddingBottom: 32,
-            textAlign: "center",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: typeScale.label.size,
-              letterSpacing: typeScale.label.tracking,
-              textTransform: "uppercase",
-              color: colors.yellow,
-              margin: "0 0 12px",
-            }}
-          >
-            Your Progress
-          </p>
-          <h2
-            id="journey-progress-heading"
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: "clamp(22px, 3vw, 36px)",
-              color: colors.white,
-              margin: 0,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-            }}
-          >
-            Foundational Concepts complete — keep climbing
-          </h2>
-        </div>
-
-        <AscentJourneyInfographic
-          callouts={P1_CALLOUTS}
-          stageNodes={P1_STAGE_NODES}
-          stageTitleLabels={P1_STAGE_TITLE_LABELS}
-          defaultOpenCallouts={[0, 1] as const}
-        />
-      </section>
-
-      {/* Shared dark CTA — Figma 3455:18320 palette */}
-      <EYWhatsNext
-        title="Fundamentals are clear."
-        ctaLabel="Continue to Part 2: Basics of Prompting in Tax"
-        onContinue={() => onNavigate("/ai-tax-prompting")}
-        meta="Part 2 covers: prompt structure, role-setting, context framing, output formatting, and real tax prompt templates"
+      {/* Journey progress — continue via next trek-step CTA */}
+      <AscentModuleProgressSection
+        moduleKey="m1_1"
+        onNextStepCta={() => onNavigate("/ai-tax-prompting")}
       />
     </div>
   );

@@ -197,7 +197,11 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   }, [pickerOpen]);
 
   return (
-    <div ref={stickyRef} style={{ position: "sticky", top: 0, zIndex: 200 }}>
+    <div
+      ref={stickyRef}
+      className="ey-module-header-sticky"
+      style={{ position: "sticky", top: 0, zIndex: 300, width: "100%" }}
+    >
       {/* ── Level 2: breadcrumb + progress — fluid padding, collapses on narrow screens ── */}
       <div
         className="flex flex-wrap items-center justify-between gap-3 md:gap-4 px-4 sm:px-6 md:px-10 py-3"

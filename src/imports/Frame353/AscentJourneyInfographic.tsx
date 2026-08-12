@@ -7,14 +7,14 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { CirclePlay } from "lucide-react";
-import { colors, fonts, typeScale } from "@/design-kit";
+import { colors, fonts } from "@/design-kit";
 
 const W = 1536;
 /** Tall enough for base-camp title label (≈446px) to clear the bottom milestone banner. */
 const H = 530;
 const BANNER_HEIGHT = 76;
 const BANNER_TOP = H - BANNER_HEIGHT;
-const BANNER_PHRASE_FONT_SIZE = 12;
+const BANNER_PHRASE_FONT_SIZE = 15;
 
 const ASSET = {
   cleanBackground: "/ascent/clean-background.png",
@@ -133,9 +133,9 @@ function distAt(path: SVGPathElement, len: number, tx: number, ty: number) {
 
 const CALLOUTS = [
   { left: 140, top: 250, width: 149, quote: "Everyone is talking about AI, but I don't know where to start." },
-  { left: 290, top: 195, width: 187, quote: "AI feels a lot less intimidating now. I finally understand how prompts and Microsoft 365 Copilot work." },
-  { left: 502, top: 123, width: 167, quote: "I can clearly see where AI fits across our tax processes. Some use cases need prompts. Others need Agents." },
-  { left: 722, top: 106, width: 150, quote: "I never thought I could build an Agent without coding. I'm starting to solve tax problems differently." },
+  { left: 290, top: 195, width: 187, quote: "I understand AI concepts which can help me work towards atleast 20%++ efficiency gains." },
+  { left: 502, top: 123, width: 167, quote: "I have reimagined atleast 5-7 tax use cases via prompts and/or M365 Agents." },
+  { left: 722, top: 106, width: 150, quote: "I have built 10 no-code agents assisting me in my day-to-day Tax work" },
   { left: 953, top: 114, width: 170, quote: "AI has become part of how I work. I rely on it to research, analyze and get work done faster." },
   { left: 1247, top: 8, width: 180, quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.", rounded: 4 },
 ] as const;
@@ -185,6 +185,19 @@ export type AscentOverrides = {
   /** CTA button rendered below the last stage marker */
   lastNodeCtaLabel?: string;
   onLastNodeCta?: () => void;
+  /**
+   * Primary continue CTA on the *next* trek step (first unopened stage).
+   * When the path is complete, sits under the summit instead.
+   * Prefer this over the old footer WhatsNext pattern.
+   */
+  nextStepCtaLabel?: string;
+  onNextStepCta?: () => void;
+  /**
+   * When set, Base Camp (play) also advances the learner — same job as module
+   * footer WhatsNext buttons (e.g. continue to 1.2 / 1.3).
+   * Prefer `onNextStepCta` on the next trek marker instead.
+   */
+  onBaseCampCta?: () => void;
 };
 
 /** Marker at callout index i is reached when activeProgress >= i + 1. */
@@ -402,11 +415,13 @@ function BaseCampStartMarker({
   isReached,
   isNext,
   onClick,
+  advancesJourney,
 }: {
   isActive: boolean;
   isReached: boolean;
   isNext: boolean;
   onClick: () => void;
+  advancesJourney?: boolean;
 }) {
   return (
     <JourneyMarkerButton
@@ -416,7 +431,11 @@ function BaseCampStartMarker({
       isReached={isReached}
       isNext={isNext}
       onClick={onClick}
-      ariaLabel="Base Camp — start of journey"
+      ariaLabel={
+        advancesJourney
+          ? "Base Camp — continue to the next module"
+          : "Base Camp — start of journey"
+      }
     >
       <CirclePlay size={22} strokeWidth={1.75} color={colors.yellow} aria-hidden />
     </JourneyMarkerButton>
@@ -695,12 +714,12 @@ const BANNER_MILESTONES = [
 ] as const;
 
 const milestonePhraseStyle: CSSProperties = {
-  fontFamily: fonts.bold,
+  fontFamily: fonts.regular,
   fontSize: BANNER_PHRASE_FONT_SIZE,
-  fontWeight: typeScale.label.weight,
-  letterSpacing: "0.02em",
+  fontWeight: 400,
+  letterSpacing: "0.01em",
   textTransform: "none",
-  color: colors.yellow,
+  color: colors.onDark,
   margin: 0,
   lineHeight: 1.45,
   transition: `color ${PATH_REVEAL_MS}ms ease`,
@@ -717,23 +736,32 @@ function MilestoneBox({
 }) {
   return (
     <div
-      className={`relative flex min-h-[48px] flex-1 flex-col justify-center ${summitPulse ? "ascent-banner-summit-pulse" : ""}`}
+      className={`relative flex min-h-[52px] flex-1 flex-col justify-center ${summitPulse ? "ascent-banner-summit-pulse" : ""}`}
       style={{
         minWidth: 0,
-        padding: "12px 18px",
-        background: colors.confidentBlack,
+        padding: "14px 20px",
+        background: colors.eyBgCard,
         borderRadius: "var(--radius-sm)",
-        border: `1px solid ${isRevealed ? colors.yellowAlpha12 : "rgba(255,255,255,0.08)"}`,
-        opacity: isRevealed ? 1 : 0.82,
-        transition: `border-color ${PATH_REVEAL_MS}ms ease, opacity ${PATH_REVEAL_MS}ms ease`,
+        border: `1px solid ${isRevealed ? "rgba(255,230,0,0.45)" : "rgba(255,255,255,0.18)"}`,
+        boxShadow: isRevealed
+          ? "0 6px 20px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.06)"
+          : "0 4px 14px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.05)",
+        transition: `border-color ${PATH_REVEAL_MS}ms ease, box-shadow ${PATH_REVEAL_MS}ms ease`,
       }}
     >
       <div
         className="absolute left-0 top-0 h-[3px] w-full"
-        style={{ background: isRevealed ? colors.yellow : colors.gray01 }}
+        style={{ background: isRevealed ? colors.yellow : "rgba(255,255,255,0.22)" }}
         aria-hidden
       />
-      <p style={milestonePhraseStyle}>{phrase}</p>
+      <p
+        style={{
+          ...milestonePhraseStyle,
+          color: isRevealed ? colors.yellow : colors.onDark,
+        }}
+      >
+        {phrase}
+      </p>
       <div
         className="absolute bottom-0 left-0 h-0.5"
         style={{
@@ -779,6 +807,9 @@ function AscentCanvas({
   defaultOpenCallouts,
   lastNodeCtaLabel,
   onLastNodeCta,
+  nextStepCtaLabel,
+  onNextStepCta,
+  onBaseCampCta,
 }: AscentOverrides = {}) {
   const callouts = calloutsOverride ?? CALLOUTS;
   const stageNodes = stageNodesOverride ?? STAGE_NODES;
@@ -915,7 +946,12 @@ function AscentCanvas({
         isActive={openCallouts.has(0)}
         isReached={activeProgress >= 1}
         isNext={nextCalloutIndex === 0}
-        onClick={() => toggleCallout(0)}
+        advancesJourney={Boolean(onBaseCampCta)}
+        onClick={() => {
+          // Reveal base-camp callout, then (when wired) advance like a footer CTA
+          toggleCallout(0);
+          onBaseCampCta?.();
+        }}
       />
 
       {/* Stage icon nodes */}
@@ -934,48 +970,64 @@ function AscentCanvas({
         );
       })}
 
-      {/* CTA at last node — shown when lastNodeCtaLabel provided */}
-      {lastNodeCtaLabel && onLastNodeCta && (() => {
-        const lastCallout = callouts[5];
-        const lastTitleLabel = stageTitleLabels[stageTitleLabels.length - 1];
-        const ctaTop = lastTitleLabel.markerTop + lastTitleLabel.markerSize + 8 + 28 + 8;
+      {/* Continue CTA on the next trek step (or summit when path is complete) */}
+      {(() => {
+        const ctaLabel = nextStepCtaLabel ?? lastNodeCtaLabel;
+        const ctaHandler = onNextStepCta ?? onLastNodeCta;
+        if (!ctaLabel || !ctaHandler) return null;
+
+        // Prefer the next unopened stage; fall back to summit when fully complete
+        const targetIndex: CalloutIndex =
+          nextCalloutIndex !== null ? nextCalloutIndex : 5;
+        const targetCallout = callouts[targetIndex];
+        const targetTitle = stageTitleLabels[targetIndex];
+        if (!targetCallout || !targetTitle) return null;
+
+        const ctaTop = targetTitle.markerTop + targetTitle.markerSize + TITLE_LABEL_GAP + 28 + 8;
+        const ctaWidth = Math.max(targetCallout.width + 40, 200);
+
         return (
           <>
-          <style>{`
-            @keyframes ascent-cta-pulse {
-              0%, 100% { box-shadow: 0 0 18px 4px rgba(255,230,0,0.55), 0 2px 12px rgba(0,0,0,0.35); }
-              50%       { box-shadow: 0 0 36px 10px rgba(255,230,0,0.85), 0 2px 12px rgba(0,0,0,0.35); }
-            }
-          `}</style>
-          <button
-            type="button"
-            onClick={onLastNodeCta}
-            style={{
-              position: "absolute",
-              left: lastCallout.left - 40,
-              top: ctaTop,
-              width: 260,
-              fontFamily: fonts.bold,
-              fontSize: 13,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              background: colors.yellow,
-              color: colors.confidentBlack,
-              border: `2px solid ${colors.yellow}`,
-              borderRadius: 32,
-              padding: "12px 24px",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-              animation: "ascent-cta-pulse 2s ease-in-out infinite",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
-          >
-            <span>{lastNodeCtaLabel}</span>
-            <span style={{ fontFamily: fonts.regular, fontSize: 16, lineHeight: 1 }}>→</span>
-          </button>
+            <style>{`
+              @keyframes ascent-cta-pulse {
+                0%, 100% { box-shadow: 0 0 18px 4px rgba(255,230,0,0.55), 0 2px 12px rgba(0,0,0,0.35); }
+                50%       { box-shadow: 0 0 36px 10px rgba(255,230,0,0.85), 0 2px 12px rgba(0,0,0,0.35); }
+              }
+            `}</style>
+            <button
+              type="button"
+              onClick={ctaHandler}
+              aria-label={ctaLabel}
+              style={{
+                position: "absolute",
+                left: Math.max(8, targetCallout.left - 20),
+                top: ctaTop,
+                width: ctaWidth,
+                zIndex: 20,
+                fontFamily: fonts.bold,
+                fontSize: 12,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                background: colors.yellow,
+                color: colors.confidentBlack,
+                border: `2px solid ${colors.yellow}`,
+                borderRadius: 32,
+                padding: "12px 18px",
+                cursor: "pointer",
+                animation: "ascent-cta-pulse 2s ease-in-out infinite",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                lineHeight: 1.25,
+                textAlign: "center",
+              }}
+            >
+              <span>{ctaLabel}</span>
+              <span style={{ fontFamily: fonts.regular, fontSize: 16, lineHeight: 1 }} aria-hidden>
+                →
+              </span>
+            </button>
           </>
         );
       })()}
