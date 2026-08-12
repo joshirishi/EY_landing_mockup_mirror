@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, X, XCircle, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Lock, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, X, XCircle, Zap } from "lucide-react";
 import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
@@ -905,10 +905,57 @@ function PromptStackBuilder() {
   );
 }
 
+/**
+ * Progressive disclosure — Figma 3978:2179 (side-by-side unlock).
+ * 0 See Outcome → 1 Show missing → 2 Reveal Strong (CTA moves right) → 3 Strong unlocked
+ */
+type BriefBeat = 0 | 1 | 2 | 3;
+
+const BRIEF_CTA_STYLE: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 10,
+  height: 45,
+  padding: "12px 26px",
+  background: C.yellow,
+  color: C.confidentBlack,
+  border: "none",
+  borderRadius: 8,
+  fontSize: 14,
+  fontWeight: 700,
+  fontFamily: F.bold,
+  cursor: "pointer",
+};
+
+const MISSING_TAG_STAGGER_MS = 320;
+const MISSING_TAG_ANIM_MS = 320;
+const MISSING_TAGS_COMPLETE_MS = (4 - 1) * MISSING_TAG_STAGGER_MS + MISSING_TAG_ANIM_MS;
+
 function TeamBriefingSection() {
   const missingItems = ["What issue?", "Which jurisdiction?", "What output?", "By when?"];
+  const [beat, setBeat] = useState<BriefBeat>(0);
+  const [tagsReady, setTagsReady] = useState(false);
+
+  useEffect(() => {
+    if (beat !== 2) {
+      setTagsReady(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setTagsReady(true), MISSING_TAGS_COMPLETE_MS);
+    return () => window.clearTimeout(timer);
+  }, [beat]);
+
+  const showGeneric = beat >= 1;
+  const showMissing = beat >= 2;
+  const showStrong = beat >= 3;
+  const ctaOnLeft = beat === 0 || beat === 1;
+  const ctaOnRight = beat === 2 && tagsReady;
+
+  const leftCtaLabel = beat === 0 ? "See the Outcome" : "Show what's missing";
+
   return (
-    <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
+    <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }} data-node-id="3978:2179">
       <div style={{ ...contentRailStyle }}>
         <SectionAnchorTitle align="center">Team Briefing</SectionAnchorTitle>
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
@@ -918,78 +965,365 @@ function TeamBriefingSection() {
           The more context you provide, the better the outcome.
         </p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 60px 1fr", gap: 0, alignItems: "stretch" }}>
-          <div style={{ border: `1px solid ${C.destructive}33`, borderRadius: 12, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%", background: C.white }}>
-            <div style={{ background: C.destructive + "0d", padding: "14px 22px", borderBottom: `1px solid ${C.destructive}1f`, display: "flex", alignItems: "center", gap: 10, minHeight: 48 }}>
-              <span style={{ color: C.destructive, fontSize: 11, fontWeight: 700, letterSpacing: "1px", fontFamily: F.bold }}>WEAK BRIEF</span>
+        <div
+          data-brief-grid
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 50,
+            alignItems: "stretch",
+          }}
+        >
+          {/* ── Weak Brief (always visible; discloses outcome + missing) ── */}
+          <div
+            style={{
+              border: `1px solid ${C.destructive}33`,
+              borderRadius: 12,
+              overflow: "hidden",
+              background: C.white,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 403,
+            }}
+          >
+            <div
+              style={{
+                background: C.destructive + "0d",
+                borderBottom: `1px solid ${C.destructive}1f`,
+                padding: "14px 22px",
+                minHeight: 48,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+              }}
+            >
+              <span style={{ color: C.destructive, fontSize: 11, fontWeight: 700, letterSpacing: "1px", fontFamily: F.bold }}>
+                WEAK BRIEF
+              </span>
+              {showMissing && (
+                <span style={{ color: C.gray01, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: F.bold }}>
+                  Better brief
+                </span>
+              )}
             </div>
-            <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
-              <div style={{ background: C.offWhite, borderRadius: 8, padding: "16px 18px", borderLeft: `3px solid ${C.destructive}` }}>
+
+            <div
+              style={{
+                flex: 1,
+                padding: 22,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 18,
+                minHeight: 280,
+              }}
+            >
+              <div style={{ width: "100%", background: C.offWhite, borderRadius: 8, padding: "16px 18px", borderLeft: `3px solid ${C.destructive}` }}>
                 <p style={{ color: C.offBlack, fontSize: 15, fontStyle: "italic", lineHeight: 1.65, fontFamily: F.light, margin: 0 }}>
                   &ldquo;Research this matter and get back to me.&rdquo;
                 </p>
               </div>
-              <div>
-                <div style={{ color: C.destructive, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 9, fontFamily: F.bold }}>Missing:</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                  {missingItems.map(item => (
-                    <div key={item} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 12px", background: C.destructive + "0d", borderRadius: 6 }}>
-                      <span style={{ color: C.destructive, fontSize: 11, fontWeight: 600, fontFamily: F.bold }}>{item}</span>
+
+              {showMissing && (
+                <div style={{ width: "100%" }}>
+                  <div style={{ color: C.destructive, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 9, fontFamily: F.bold }}>
+                    Missing:
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    {missingItems.map((item, idx) => (
+                      <div
+                        key={item}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          padding: "7px 12px",
+                          background: C.destructive + "0d",
+                          borderRadius: 6,
+                          animation: `briefFieldIn 0.32s ease ${idx * 0.32}s both`,
+                        }}
+                      >
+                        <span style={{ color: C.destructive, fontSize: 11, fontWeight: 700, fontFamily: F.bold }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {ctaOnLeft && (
+                <div style={{ padding: 10 }}>
+                  <button
+                    type="button"
+                    onClick={() => setBeat((b) => (b === 0 ? 1 : 2))}
+                    style={BRIEF_CTA_STYLE}
+                  >
+                    {leftCtaLabel}
+                    <ArrowRight size={16} strokeWidth={2} aria-hidden />
+                  </button>
+                </div>
+              )}
+
+              <div
+                style={{
+                  width: "100%",
+                  marginTop: "auto",
+                  background: showGeneric ? C.destructive + "0a" : C.offWhite,
+                  border: `1px dashed ${showGeneric ? C.destructive + "33" : C.gray02}`,
+                  borderRadius: 8,
+                  padding: 14,
+                }}
+              >
+                <div
+                  style={{
+                    color: showGeneric ? C.destructive : C.gray01,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    letterSpacing: "1px",
+                    marginBottom: 6,
+                    fontFamily: F.bold,
+                  }}
+                >
+                  OUTCOME
+                </div>
+                <p
+                  style={{
+                    color: showGeneric ? C.destructive : C.gray01,
+                    fontSize: 12,
+                    lineHeight: 1.6,
+                    fontFamily: F.regular,
+                    margin: 0,
+                    fontWeight: showGeneric ? 700 : 400,
+                  }}
+                >
+                  {showGeneric ? "Generic response" : "..."}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Strong Brief (locked → revealed) ── */}
+          {!showStrong ? (
+            <div
+              style={{
+                background: C.offWhite,
+                border: `1px dashed ${C.gray02}`,
+                borderTop: `3px solid ${C.gray02}`,
+                borderRadius: 10,
+                minHeight: 403,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 16,
+                padding: 32,
+              }}
+            >
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 22,
+                  background: C.white,
+                  border: `1px solid ${C.gray02}`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Lock size={20} strokeWidth={1.75} color={C.gray01} aria-hidden />
+              </div>
+
+              {ctaOnRight ? (
+                <button
+                  type="button"
+                  onClick={() => setBeat(3)}
+                  style={BRIEF_CTA_STYLE}
+                >
+                  Reveal the Outcome
+                  <ArrowRight size={16} strokeWidth={2} aria-hidden />
+                </button>
+              ) : (
+                <>
+                  <span
+                    style={{
+                      background: C.gray02,
+                      color: C.gray01,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: "1.1px",
+                      textTransform: "uppercase",
+                      fontFamily: F.bold,
+                      padding: "3px 10px",
+                      borderRadius: 4,
+                    }}
+                  >
+                    Strong Brief
+                  </span>
+                  <p
+                    style={{
+                      margin: 0,
+                      maxWidth: 317,
+                      textAlign: "center",
+                      fontSize: 12,
+                      lineHeight: "18px",
+                      color: C.gray01,
+                      fontFamily: F.regular,
+                    }}
+                  >
+                    A well-defined prompt that powers a repeatable AI Agent tailored to a specific tax workflow
+                  </p>
+                </>
+              )}
+            </div>
+          ) : (
+            <div
+              style={{
+                border: `1px solid ${C.success}33`,
+                borderRadius: 12,
+                overflow: "hidden",
+                background: C.white,
+                display: "flex",
+                flexDirection: "column",
+                minHeight: 403,
+              }}
+            >
+              <div
+                style={{
+                  background: C.success + "0d",
+                  borderBottom: `1px solid ${C.success}1f`,
+                  padding: "14px 22px",
+                  minHeight: 48,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <span style={{ color: C.success, fontSize: 11, fontWeight: 700, letterSpacing: "1px", fontFamily: F.bold }}>
+                  STRONG BRIEF
+                </span>
+                <span style={{ color: C.gray01, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: F.bold }}>
+                  Better brief
+                </span>
+              </div>
+
+              <div
+                style={{
+                  flex: 1,
+                  padding: 22,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 18,
+                  minHeight: 280,
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {STRONG_BRIEF_FIELDS.map((field, idx) => (
+                    <div
+                      key={field.label}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        padding: "7px 12px",
+                        background: C.success + "0d",
+                        borderRadius: 6,
+                        animation: `briefFieldIn 0.28s ease ${idx * 0.05}s both`,
+                      }}
+                    >
+                      <span style={{ color: C.gray01, fontSize: 11, fontWeight: 700, minWidth: 82, flexShrink: 0, fontFamily: F.bold }}>{field.label}</span>
+                      <span style={{ color: C.offBlack, fontSize: 12, fontWeight: 400, flex: 1, fontFamily: F.regular }}>{field.value}</span>
+                      <Check size={14} strokeWidth={2.5} color={C.success} aria-hidden />
                     </div>
                   ))}
                 </div>
-              </div>
-              <div style={{ background: C.destructive + "0a", border: `1px dashed ${C.destructive}33`, borderRadius: 8, padding: 14, marginTop: "auto" }}>
-                <div style={{ color: C.destructive, fontSize: 10, fontWeight: 700, letterSpacing: "1px", marginBottom: 6, fontFamily: F.bold }}>↓ OUTCOME</div>
-                <p style={{ color: C.gray01, fontSize: 12, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
-                  <strong style={{ color: C.destructive }}>Generic response</strong>
-                </p>
-              </div>
-            </div>
-          </div>
 
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ width: 2, flex: 1, background: `linear-gradient(180deg, ${C.destructive}4d, ${C.yellow}99, ${C.success}4d)` }} />
-            <div style={{ background: C.white, border: `2px solid ${C.yellow}`, color: C.offBlack, fontSize: 10, fontWeight: 800, padding: "6px 8px", borderRadius: "50%", width: 38, height: 38, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.bold }}>VS</div>
-            <div style={{ width: 2, flex: 1, background: `linear-gradient(180deg, ${C.success}4d, ${C.yellow}99, ${C.destructive}4d)` }} />
-          </div>
-
-          <div style={{ border: `1px solid ${C.success}33`, borderRadius: 12, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%", background: C.white }}>
-            <div style={{ background: C.success + "0d", padding: "14px 22px", borderBottom: `1px solid ${C.success}1f`, display: "flex", alignItems: "center", gap: 10, minHeight: 48 }}>
-              <span style={{ color: C.success, fontSize: 11, fontWeight: 700, letterSpacing: "1px", fontFamily: F.bold }}>STRONG BRIEF</span>
-            </div>
-            <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {STRONG_BRIEF_FIELDS.map(field => (
-                  <div key={field.label} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 12px", background: C.success + "0d", borderRadius: 6 }}>
-                    <span style={{ color: C.gray01, fontSize: 11, fontWeight: 600, minWidth: 82, flexShrink: 0, fontFamily: F.bold }}>{field.label}</span>
-                    <span style={{ color: C.offBlack, fontSize: 12, fontWeight: 500, flex: 1, fontFamily: F.regular }}>{field.value}</span>
-                    <span style={{ color: C.success, fontSize: 12, fontWeight: 700 }}>✓</span>
+                <div
+                  style={{
+                    marginTop: "auto",
+                    background: C.success + "0a",
+                    border: `1px dashed ${C.success}33`,
+                    borderRadius: 8,
+                    padding: 14,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                    <div style={{ color: C.success, fontSize: 10, fontWeight: 700, letterSpacing: "1px", fontFamily: F.bold }}>
+                      OUTCOME
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setBeat(0)}
+                      aria-label="Start over"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 28,
+                        height: 28,
+                        padding: 0,
+                        background: C.white,
+                        border: `1px solid ${C.success}33`,
+                        borderRadius: 6,
+                        color: C.success,
+                        cursor: "pointer",
+                      }}
+                    >
+                      <RotateCcw size={14} strokeWidth={2} aria-hidden />
+                    </button>
                   </div>
-                ))}
-              </div>
-              <div style={{ background: C.success + "0a", border: `1px dashed ${C.success}33`, borderRadius: 8, padding: 14, marginTop: "auto" }}>
-                <div style={{ color: C.success, fontSize: 10, fontWeight: 700, letterSpacing: "1px", marginBottom: 6, fontFamily: F.bold }}>↓ OUTCOME</div>
-                <p style={{ color: C.gray01, fontSize: 12, lineHeight: 1.6, fontFamily: F.regular, margin: 0 }}>
-                  <strong style={{ color: C.success }}>Focused response</strong>
-                </p>
+                  <p style={{ color: C.success, fontSize: 12, lineHeight: 1.6, fontFamily: F.regular, margin: 0, fontWeight: 700 }}>
+                    Focused response
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
-        <div style={{ textAlign: "center", marginTop: 36 }}>
-          {/* "A Good Brief = A Good Prompt" pill temporarily hidden per request */}
-          {/*
-          <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 14, flexWrap: "wrap", padding: "16px 28px", background: C.white, border: "1px solid rgba(46,46,56,0.10)", borderRadius: 12 }}>
-            <div style={{ background: C.yellowAlpha10, border: `1px solid ${C.yellow}44`, padding: "10px 20px", borderRadius: 8, color: C.eyebrowGold, fontSize: 14, fontWeight: 600, fontFamily: F.bold }}>A Good Brief</div>
-            <span style={{ color: C.confidentBlack, fontSize: 24, fontWeight: 700, fontFamily: F.bold }}>=</span>
-            <div style={{ background: C.info + "14", border: `1px solid ${C.info}33`, padding: "10px 20px", borderRadius: 8, color: C.info, fontSize: 14, fontWeight: 600, fontFamily: F.bold }}>A Good Prompt</div>
-          </div>
-          */}
-        </div>
+        <style>{`
+          @keyframes briefFieldIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          @media (max-width: 900px) {
+            #team-briefing [data-brief-grid] {
+              grid-template-columns: 1fr !important;
+              gap: 24px !important;
+            }
+          }
+        `}</style>
       </div>
     </section>
+  );
+}
+
+/** Inline pill tag for highlighted prompt phrases on dark quote blocks. */
+function PromptInlineTag({ children, accent }: { children: React.ReactNode; accent: string }) {
+  const isYellow = accent === C.yellow;
+  return (
+    <span
+      style={{
+        display: "inline",
+        fontStyle: "normal",
+        fontWeight: typeScale.label.weight,
+        fontFamily: F.bold,
+        fontSize: typeScale.caption.size,
+        letterSpacing: typeScale.label.tracking,
+        lineHeight: 1.4,
+        padding: "2px 8px",
+        borderRadius: 100,
+        margin: "0 2px",
+        verticalAlign: "baseline",
+        background: isYellow ? C.yellow : `${accent}1a`,
+        border: `1px solid ${accent}66`,
+        color: isYellow ? C.offBlack : accent,
+      }}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -1044,7 +1378,7 @@ function AiLazyProSection() {
             <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column", gap: 18 }}>
               <div style={{ background: C.surfaceOnDark, borderRadius: 8, padding: "12px 16px", borderLeft: `3px solid ${C.success}`, minHeight: 72, display: "flex", alignItems: "flex-start" }}>
                 <p style={{ color: s.heading, fontSize: 14, fontStyle: "italic", lineHeight: 1.65, fontFamily: F.light, margin: 0 }}>
-                  &ldquo;You are a <strong style={{ color: C.yellow, fontStyle: "normal" }}>tax advisor</strong>. Summarise the key <strong style={{ color: C.frameBlue, fontStyle: "normal" }}>transfer pricing changes</strong> in this circular for a <strong style={{ color: C.frameOrange, fontStyle: "normal" }}>client memo</strong>. Use <strong style={{ color: C.framePurple, fontStyle: "normal" }}>bullet points</strong>. Keep it under <strong style={{ color: C.success, fontStyle: "normal" }}>200 words</strong>.&rdquo;
+                  &ldquo;You are a <PromptInlineTag accent={C.yellow}>tax advisor</PromptInlineTag>. Summarise the key <PromptInlineTag accent={C.frameBlue}>transfer pricing changes</PromptInlineTag> in this circular for a <PromptInlineTag accent={C.frameOrange}>client memo</PromptInlineTag>. Use <PromptInlineTag accent={C.framePurple}>bullet points</PromptInlineTag>. Keep it under <PromptInlineTag accent={C.success}>200 words</PromptInlineTag>.&rdquo;
                 </p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, minHeight: 76 }}>
@@ -1731,7 +2065,7 @@ const ELEM_FACETS: { key: ElemPanelKey; label: string; color: string }[] = [
 ];
 
 function EightElementsWizard() {
-  const s = SURFACE.neutral;
+  const s = SURFACE.light;
   const [selectedId, setSelectedId] = useState(ELEMENTS[0].id);
   const elem = ELEMENTS.find(e => e.id === selectedId) ?? ELEMENTS[0];
   const focusRing = `2px solid ${C.yellow}`;

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import svgPaths from "./svg-p7dq2iziwz";
 import { SiteHeader } from "../../design-kit/SiteHeader";
 import { ModuleHeader } from "../../design-kit/LearningNav";
+import { colors, fonts } from "../../design-kit/tokens";
 import cardSvg from "../ContentArea/svg-1dplfat9j5";
 import imgBackgroundMotif from "./f5e2e2f2ea31280810b6cbd46b1af92fee8b344c.png";
 import { imgGroup, imgBackground, imgBackground1, imgBackground2, imgBackground3 } from "./svg-cx48y";
@@ -1947,14 +1948,10 @@ function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description
       onKeyDown={e => (e.key === "Enter" || e.key === " ") && handleClick()}
       aria-label={`Begin ${title}`}
     >
-      {/* Yellow left accent + unlock badge */}
-      <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: hovered ? 6 : 4, background: "#ffe600", borderRadius: "8px 0 0 8px", transition: "width 0.1s" }} />
-      {/* "Unlocked" toast badge top-right */}
-      <div style={{ position: "absolute", top: 12, right: 12, background: "#ffe600", color: "#1a1a24", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 20, fontFamily: "'EYInterstate:Bold',sans-serif", letterSpacing: "0.05em" }}>
-        ✓ UNLOCKED
-      </div>
+      {/* Yellow left accent */}
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: hovered ? 6 : 4, background: colors.yellow, borderRadius: "8px 0 0 8px", transition: "width 0.1s" }} />
       <div className="content-stretch flex flex-col gap-[20px] items-start p-[32px] relative size-full">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 48, height: 48, borderRadius: 24, background: "#ffe600", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 48, height: 48, borderRadius: 24, background: colors.yellow, flexShrink: 0 }}>
           {/* Use activeIcon (dark stroke) if provided, else fall back to icon */}
           {activeIcon ?? icon}
         </div>
@@ -1962,12 +1959,13 @@ function UnlockableCourseCard({ onNavigate, icon, activeIcon, title, description
           <p className="font-['EYInterstate:Bold',sans-serif] font-bold text-[#2e2e38] text-[22px]" style={{ lineHeight: "1.2", margin: 0 }}>{title}</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%" }}>
+          {/* Default: black Begin; hover: EY yellow (card hover drives state) */}
           <div style={{
             marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6,
-            background: hovered ? "#2e2e38" : "#ffe600",
-            color: hovered ? "#ffffff" : "#1A1A24",
+            background: hovered ? colors.yellow : colors.offBlack,
+            color: hovered ? colors.confidentBlack : colors.white,
             padding: "8px 16px", borderRadius: 4,
-            fontFamily: "'EYInterstate:Bold',sans-serif", fontWeight: 700, fontSize: 13,
+            fontFamily: fonts.bold, fontWeight: 700, fontSize: 13,
             transition: "background 0.15s ease-out, color 0.15s ease-out",
           }}>
             Begin →
@@ -2003,8 +2001,8 @@ function CourseGrid({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub
       />
       <UnlockableCourseCard
         onNavigate={onOpenCopilotHub}
-        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>}
-        activeIcon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>}
+        icon={<img src="/pipeline/copilot-icon.svg" alt="" aria-hidden width={22} height={22} style={{ objectFit: "contain", opacity: 0.6 }} />}
+        activeIcon={<img src="/pipeline/copilot-icon.svg" alt="" aria-hidden width={22} height={22} style={{ objectFit: "contain" }} />}
         title="M365 Copilot Hub"
         description="Hands-on exploration of Microsoft 365 Copilot capabilities across tax use cases."
         estimatedTime="~60 min"

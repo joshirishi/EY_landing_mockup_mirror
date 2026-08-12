@@ -2,7 +2,7 @@
  * EY Tax Labs — The Ascent journey infographic (full artboard)
  * Figma node 3743:16946 — header copy, journey path, callouts, stages, banner.
  *
- * Fixed 1536×450 artboard, scales to container width via ResizeObserver.
+ * Fixed 1536×530 artboard, scales to container width via ResizeObserver.
  */
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
@@ -10,10 +10,11 @@ import { CirclePlay } from "lucide-react";
 import { colors, fonts, typeScale } from "@/design-kit";
 
 const W = 1536;
-const H = 490;
+/** Tall enough for base-camp title label (≈446px) to clear the bottom milestone banner. */
+const H = 530;
 const BANNER_HEIGHT = 76;
 const BANNER_TOP = H - BANNER_HEIGHT;
-const BANNER_PHRASE_FONT_SIZE = 11;
+const BANNER_PHRASE_FONT_SIZE = 12;
 
 const ASSET = {
   cleanBackground: "/ascent/clean-background.png",
@@ -176,6 +177,11 @@ export type AscentOverrides = {
   stageTitleLabels?: readonly AscentStageTitleEntry[];
   /** Open all callouts by default and show full path glow */
   defaultAllOpen?: boolean;
+  /**
+   * Callout indices open on first render (0 = base camp … 5 = summit).
+   * Drives path progress + banner milestones. Ignored when `defaultAllOpen`.
+   */
+  defaultOpenCallouts?: readonly CalloutIndex[];
   /** CTA button rendered below the last stage marker */
   lastNodeCtaLabel?: string;
   onLastNodeCta?: () => void;
@@ -692,11 +698,12 @@ const milestonePhraseStyle: CSSProperties = {
   fontFamily: fonts.bold,
   fontSize: BANNER_PHRASE_FONT_SIZE,
   fontWeight: typeScale.label.weight,
-  letterSpacing: typeScale.label.tracking,
-  textTransform: "uppercase",
+  letterSpacing: "0.02em",
+  textTransform: "none",
   color: colors.yellow,
   margin: 0,
-  lineHeight: "14px",
+  lineHeight: 1.45,
+  transition: `color ${PATH_REVEAL_MS}ms ease`,
 };
 
 function MilestoneBox({
@@ -710,23 +717,23 @@ function MilestoneBox({
 }) {
   return (
     <div
-      className={`relative flex min-h-[44px] flex-1 flex-col justify-center overflow-hidden ${summitPulse ? "ascent-banner-summit-pulse" : ""}`}
+      className={`relative flex min-h-[48px] flex-1 flex-col justify-center ${summitPulse ? "ascent-banner-summit-pulse" : ""}`}
       style={{
         minWidth: 0,
-        padding: "10px 16px",
+        padding: "12px 18px",
         background: colors.confidentBlack,
         borderRadius: "var(--radius-sm)",
-        border: `1px solid ${colors.yellowAlpha12}`,
+        border: `1px solid ${isRevealed ? colors.yellowAlpha12 : "rgba(255,255,255,0.08)"}`,
+        opacity: isRevealed ? 1 : 0.82,
+        transition: `border-color ${PATH_REVEAL_MS}ms ease, opacity ${PATH_REVEAL_MS}ms ease`,
       }}
     >
       <div
         className="absolute left-0 top-0 h-[3px] w-full"
-        style={{ background: colors.yellow }}
+        style={{ background: isRevealed ? colors.yellow : colors.gray01 }}
         aria-hidden
       />
-      <p className="line-clamp-2" style={milestonePhraseStyle}>
-        {phrase}
-      </p>
+      <p style={milestonePhraseStyle}>{phrase}</p>
       <div
         className="absolute bottom-0 left-0 h-0.5"
         style={{
@@ -750,7 +757,7 @@ function BottomBanner({ activeProgress }: { activeProgress: ProgressLevel }) {
       }}
       data-name="bottom-banner"
     >
-      <div className="flex w-full items-stretch gap-4">
+      <div className="flex w-full items-stretch gap-5">
         {BANNER_MILESTONES.map((milestone, index) => (
           <MilestoneBox
             key={milestone.phrase}
@@ -764,15 +771,27 @@ function BottomBanner({ activeProgress }: { activeProgress: ProgressLevel }) {
   );
 }
 
-function AscentCanvas({ callouts: calloutsOverride, stageNodes: stageNodesOverride, stageTitleLabels: stageTitleLabelsOverride, defaultAllOpen, lastNodeCtaLabel, onLastNodeCta }: AscentOverrides = {}) {
+function AscentCanvas({
+  callouts: calloutsOverride,
+  stageNodes: stageNodesOverride,
+  stageTitleLabels: stageTitleLabelsOverride,
+  defaultAllOpen,
+  defaultOpenCallouts,
+  lastNodeCtaLabel,
+  onLastNodeCta,
+}: AscentOverrides = {}) {
   const callouts = calloutsOverride ?? CALLOUTS;
   const stageNodes = stageNodesOverride ?? STAGE_NODES;
   const stageTitleLabels = stageTitleLabelsOverride ?? STAGE_TITLE_LABELS;
   /** Every marker the user has opened. Callouts persist until clicked again. */
   const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(
-    () => defaultAllOpen
-      ? new Set<CalloutIndex>([0, 1, 2, 3, 4, 5])
-      : new Set<CalloutIndex>([0]),
+    () => {
+      if (defaultAllOpen) return new Set<CalloutIndex>([0, 1, 2, 3, 4, 5]);
+      if (defaultOpenCallouts && defaultOpenCallouts.length > 0) {
+        return new Set<CalloutIndex>(defaultOpenCallouts);
+      }
+      return new Set<CalloutIndex>([0]);
+    },
   );
 
   const toggleCallout = (calloutIndex: CalloutIndex) => {

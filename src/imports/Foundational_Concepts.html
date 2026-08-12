@@ -816,7 +816,10 @@ body {
   align-self: stretch;
 }
 .gva-band-cells > .gva-cell > .gva-cell-body {
-  flex: 1;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 .gva-band-mantras .gva-band-cells {
   padding: 0;
@@ -869,8 +872,8 @@ body {
   text-transform: uppercase;
   color: inherit;
 }
-.gva-cell-summary .gva-cell-label { color: var(--gva-label); }
-/* Band cell body copy — white on dark cards (titles stay grey in summary) */
+.gva-cell-summary .gva-cell-label { color: var(--gva-text); }
+/* Band cell body copy — white on dark cards */
 .gva-band-cells .gva-cell-body,
 .gva-band-cells .gva-body,
 .gva-band-cells .gva-check-list li,
@@ -930,6 +933,11 @@ body {
   background: var(--gva-yellow-soft);
   border-radius: 6px;
   padding: 12px 14px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 .gva-analogy .gva-cell-label { color: var(--gva-yellow); margin-bottom: 4px; }
 .gva-analogy .gva-body { color: var(--gva-text); font-weight: 400; }
@@ -939,6 +947,25 @@ body {
   border: 1px solid var(--gva-border);
   border-radius: var(--gva-radius);
   padding: 14px 16px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+.gva-band-cells > .gva-cell > .gva-cell-body > .gva-check-list,
+.gva-band-cells > .gva-cell > .gva-cell-body > .gva-bullets,
+.gva-band-cells > .gva-cell > .gva-cell-body > .gva-body:only-child {
+  flex: 1 1 auto;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+.gva-band-cells > .gva-cell > .gva-cell-body > .gva-cap-pill:only-child {
+  flex: 1 1 auto;
+  align-self: stretch;
+  justify-content: center;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 .gva-example .gva-cell-label { margin-bottom: 8px; }
 .gva-quote {
@@ -1166,6 +1193,14 @@ body {
   margin: 0;
   text-align: center;
 }
+.paths-section .paths-sub {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--gray-01);
+  text-align: center;
+}
 .paths-title-formula {
   display: inline-flex;
   flex-wrap: wrap;
@@ -1208,7 +1243,13 @@ body {
   flex-direction: column;
   gap: 4px;
 }
-.paths-card.bad .paths-card-head { background: #F6F6FA; }
+.paths-card.bad {
+  background: var(--off-white);
+  border-color: var(--gray-02);
+}
+.paths-card.bad .paths-card-head { background: var(--off-white); }
+.paths-card.bad .paths-item { background: var(--off-white); }
+.paths-card.bad .paths-outcome { background: var(--off-white); }
 .paths-card.good .paths-card-head {
   background: #FFFFFF;
   border-top: 3px solid var(--ey-yellow);
@@ -1219,8 +1260,15 @@ body {
   margin: 0;
   line-height: 1.3;
 }
+.paths-card-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--gray-01);
+}
 .paths-card.bad .paths-card-title { color: #FF4136; }
-.paths-card.good .paths-card-title { color: #2e2e38; }
+.paths-card.good .paths-card-title { color: var(--accent-green); }
 .paths-items { display: flex; flex-direction: column; }
 .paths-item {
   display: flex;
@@ -1230,7 +1278,6 @@ body {
   padding: 16px;
   background: var(--white);
 }
-.paths-item:nth-child(even) { background: #F6F6FA; }
 .paths-item img {
   width: 16px;
   height: 16px;
@@ -1254,15 +1301,16 @@ body {
 .paths-outcome {
   padding: 16px;
   margin: 0;
+  margin-top: auto;
   font-size: 13px; font-weight: 700;
   line-height: 1.35;
+  background: var(--white);
 }
 .paths-card.bad .paths-outcome {
-  background: #F6F6FA;
   color: #FF4136;
 }
 .paths-card.good .paths-outcome {
-  background: #F6F6FA;
+  border-top: 1px solid #F6F6FA;
   color: #00C864;
 }
 .paths-divider {
@@ -1391,140 +1439,6 @@ body {
   padding: 0; margin: -1px; overflow: hidden;
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
-/* Era step indicators — visible breadcrumb timeline */
-.evo-breadcrumb {
-  display: flex;
-}
-/* ===== BREADCRUMB → TIMELINE BAR (rectangular pills + connector) ===== */
-.evo-breadcrumb--legacy {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  position: relative;
-  margin: 0 0 24px;
-  padding: 0 0 30px; /* room for connector line + era-count label */
-  gap: 6px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--ey-border-on-dark) transparent;
-}
-/* Thin horizontal connector running beneath the pill row */
-.evo-breadcrumb::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 18px;
-  height: 1px;
-  background: var(--ey-border-on-dark);
-  z-index: 0;
-}
-/* Static era-count label below the track */
-.evo-breadcrumb::after {
-  content: '5 eras · 1943–2024';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ey-on-dark-72);
-  letter-spacing: 0.01em;
-  font-family: inherit;
-}
-/* Hide › separators — the connecting line is the visual connector */
-.evo-breadcrumb-sep {
-  display: none;
-}
-/* Horizontal rectangular era pills — full labels inside */
-.evo-breadcrumb-item {
-  flex: 1 1 0;
-  min-width: 0;
-  height: auto;
-  min-height: 36px;
-  border-radius: 2px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-  white-space: nowrap;
-  text-align: center;
-  background: var(--confident-black);
-  border: 1px solid var(--ey-border-on-dark);
-  color: var(--ey-on-dark-55);
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  padding: 8px 10px;
-  margin-bottom: 10px; /* gap above connector; active tab fills this space */
-  transition: var(--transition);
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-.evo-breadcrumb-item:hover {
-  border-color: var(--gray-02);
-  color: var(--ey-on-dark-72);
-  background: var(--ey-surface-on-dark);
-}
-.evo-breadcrumb-item:focus-visible { outline: 2px solid var(--ey-yellow); outline-offset: 2px; }
-/* Visited (already navigated through) */
-.evo-breadcrumb-item.is-visited {
-  color: var(--gray-02);
-  border-color: var(--ey-border-on-dark);
-}
-/* Active / current era — yellow fill + downward tab to connector */
-.evo-breadcrumb-item.is-current {
-  background: var(--ey-yellow);
-  border-color: var(--ey-yellow);
-  color: var(--ey-dark);
-  cursor: default;
-}
-.evo-breadcrumb-item.is-current::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: -10px;
-  transform: translateX(-50%);
-  width: 3px;
-  height: 10px;
-  background: var(--ey-yellow);
-  z-index: 2;
-}
-/* Narrow: horizontal scroll keeps connector + tab visible */
-@media (max-width: 900px) {
-  .evo-breadcrumb {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 8px;
-    padding-bottom: 34px;
-  }
-  .evo-breadcrumb-item {
-    flex: 0 0 auto;
-    min-width: 108px;
-    font-size: 10px;
-    padding: 7px 8px;
-  }
-}
-@media (max-width: 560px) {
-  .evo-breadcrumb {
-    flex-wrap: wrap;
-    align-items: stretch;
-    row-gap: 10px;
-    overflow-x: visible;
-  }
-  .evo-breadcrumb::before { display: none; }
-  .evo-breadcrumb-item {
-    flex: 1 1 calc(50% - 4px);
-    min-width: calc(50% - 4px);
-    margin-bottom: 0;
-    white-space: normal;
-  }
-  .evo-breadcrumb-item.is-current::after { display: none; }
-}
 .evo-concentric {
   margin: 0 0 24px;
   width: 100%;
@@ -1532,7 +1446,7 @@ body {
 .evo-nest-layer {
   width: 100%;
   box-sizing: border-box;
-  border: 1.5px solid #2E2E38;
+  border: 1.5px solid rgba(255, 255, 255, 0.24);
   border-radius: 16px;
   padding: 10px;
   background: rgba(255,255,255,0.015);
@@ -1569,7 +1483,7 @@ body {
   flex-shrink: 0;
 }
 .evo-nest-layer.is-ancestor {
-  border-color: #2E2E38;
+  border-color: rgba(255, 255, 255, 0.24);
 }
 .evo-nest-layer.is-current {
   border-color: var(--ey-yellow);
@@ -3156,12 +3070,14 @@ document.addEventListener('keydown', function(e) {
         <span>Missed Opportunities</span>
       </span>
     </h2>
+    <p class="paths-sub">Two paths every tax function faces — wing it, or build foundations first</p>
   </div>
 
   <div class="paths-row">
-    <article class="paths-card bad">
+    <article class="paths-card bad" data-echo-thread="49f5ce32">
       <div class="paths-card-head">
         <h3 class="paths-card-title">The "Just Wing It" Path</h3>
+        <p class="paths-card-sub">Treating complex enterprise AI like a simple search engine toy.</p>
       </div>
       <div class="paths-items">
         <div class="paths-item">
@@ -3188,9 +3104,10 @@ document.addEventListener('keydown', function(e) {
       <span class="paths-divider-diamond">VS</span>
     </div>
 
-    <article class="paths-card good">
+    <article class="paths-card good" data-echo-thread="12a87aca">
       <div class="paths-card-head">
         <h3 class="paths-card-title">The "Foundations First" Path</h3>
+        <p class="paths-card-sub">Structuring AI with programmatic governance and deep tax context.</p>
       </div>
       <div class="paths-items">
         <div class="paths-item">
@@ -3229,8 +3146,6 @@ document.addEventListener('keydown', function(e) {
   <h2 id="evo-heading" class="evo-title">The Evolution of AI</h2>
 
   <div id="evo-timeline-view">
-    <nav class="evo-breadcrumb evo-breadcrumb--legacy" id="evo-breadcrumb" aria-label="AI evolution eras timeline, current era highlighted"></nav>
-
     <div class="evo-layout">
       <!-- Left: nested technology layers (Figma left panel) -->
       <div class="evo-nest" id="evo-nest" role="img" aria-label="Technology nesting from parent to child"></div>
@@ -3485,6 +3400,19 @@ document.addEventListener('keydown', function(e) {
 .inside-tab-next { margin-top:10px; padding-top:8px; border-top:1px solid var(--card-border); }
 .inside-tab-next-btn { display:inline-flex; align-items:center; gap:4px; padding:0; background:none; border:none; font-family:inherit; font-size:12px; font-weight:700; color:var(--ey-dark); cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
 .inside-tab-next-btn:hover { color:var(--confident-black); }
+.inside-tab-solution { margin-top: 14px; text-align: center; }
+.inside-tab-solution-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--ey-yellow); color: var(--ey-dark);
+  border: none; border-radius: 8px; padding: 9px 18px;
+  font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.inside-tab-solution-btn:hover,
+.inside-tab-solution-btn:focus-visible {
+  transform: translateY(-1px); box-shadow: 0 6px 16px rgba(255,230,0,0.28); outline: none;
+}
+.llm-stream-line { font-family: monospace; font-size: 12px; line-height: 1.55; color: var(--ey-dark); white-space: nowrap; overflow: hidden; }
 .inside-tab-stat { color:var(--text-secondary); font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:4px; }
 .inside-tab-stat-row { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ey-dark); }
 /* Chat padding lives in CSS so inside-beat can override without fighting inline styles */
@@ -3568,8 +3496,10 @@ document.addEventListener('keydown', function(e) {
   transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,230,0,0.35); outline:none;
 }
 #sent-prompt-cta button p { margin:0; color:var(--ey-dark); font-size:14px; line-height:1.7; font-weight:400; }
-/* Output beat: inline yellow CTA on white screen (replaces footer What could go wrong?) */
-#output-prompt-cta { margin:16px 0 8px; text-align:center; animation:fadeInMsg 0.45s ease-out forwards; opacity:0; }
+/* Output beat: false-claim line + CTA reveal together inside the AI bubble */
+#output-trust-block { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(46,46,56,0.08); opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.45s ease, max-height 0.45s ease; }
+#output-trust-block.is-revealed { opacity: 1; max-height: 120px; }
+#output-prompt-cta { margin: 0; text-align: left; animation: none; opacity: 1; }
 #output-prompt-cta button {
   display:inline-flex; align-items:center; gap:8px; background:var(--ey-yellow); color:var(--ey-dark);
   border:none; padding:11px 26px; border-radius:8px; font-size:13px; font-weight:700;
@@ -3665,6 +3595,85 @@ document.addEventListener('keydown', function(e) {
   font-family:var(--font-family, 'EYInterstate', Arial, sans-serif);
   font-size:11px; font-weight:700; color:var(--text-secondary);
   letter-spacing:0.3px;
+}
+/* Embedded carousel inside hallucination reasoning card */
+.hall-news-embed {
+  margin-bottom:16px;
+  padding:12px;
+  background:var(--off-white);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+}
+.hall-news-embed-label {
+  margin:0 0 8px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--text-secondary);
+  text-align:center;
+}
+.hall-news-viewport--embed { min-height:140px; max-height:160px; }
+.hall-news-slide--embed { padding:2px 4px; }
+.hall-news-clip--clickable {
+  cursor:pointer;
+  border-radius:6px;
+  transition:box-shadow 0.2s, transform 0.2s;
+}
+.hall-news-clip--clickable:hover,
+.hall-news-clip--clickable:focus-visible {
+  outline:2px solid var(--ey-yellow);
+  outline-offset:2px;
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(46,46,56,0.12);
+}
+.hall-news-viewport--embed .hall-news-clip-img { max-height:140px; }
+.hall-news-footer--embed {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding-top:8px;
+}
+.hall-news-nav-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  padding:0;
+  border:1px solid var(--card-border);
+  border-radius:6px;
+  background:var(--white);
+  color:var(--ey-dark);
+  cursor:pointer;
+  font-family:inherit;
+  transition:background 0.2s, border-color 0.2s;
+}
+.hall-news-nav-btn:hover,
+.hall-news-nav-btn:focus-visible {
+  background:var(--ey-yellow-alpha-10);
+  border-color:var(--ey-yellow);
+  outline:none;
+}
+.hallucination-beat-card {
+  padding:16px 18px;
+  background:rgba(255,65,54,0.04);
+  border:1px solid rgba(255,65,54,0.12);
+  border-radius:12px;
+}
+.hallucination-beat-head {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+.hallucination-beat-head span {
+  color:var(--accent-red);
+  font-size:14px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:1px;
 }
 /* Slide-up transition for copilot-chat */
 #copilot-chat.slide-exit {
@@ -3948,10 +3957,67 @@ const HALL_NEWS_CLIPS = [
   }
 ];
 
-function buildHallNewsSlideHtml(clip) {
-  return '<figure class="hall-news-clip">' +
+function buildHallNewsSlideHtml(clip, i) {
+  return '<figure class="hall-news-clip hall-news-clip--clickable" role="button" tabindex="0" aria-label="View headline ' + (i + 1) + ' — tap to browse articles" onclick="onHallNewsClipClick(' + i + ')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();onHallNewsClipClick(' + i + ');}">' +
     '<img class="hall-news-clip-img" src="' + clip.src + '" alt="' + clip.alt + '" loading="lazy" decoding="async" />' +
     '</figure>';
+}
+
+function openHallNewsLightbox(idx) {
+  var clip = HALL_NEWS_CLIPS[idx];
+  if (clip && typeof openLightbox === 'function') openLightbox(clip.src, clip.alt);
+}
+
+function goToHallNewsSlide(targetIdx, direction) {
+  if (window._hallNewsAnimating) return false;
+  var idx = window._hallNewsIndex || 0;
+  if (targetIdx < 0 || targetIdx >= HALL_NEWS_CLIPS.length || targetIdx === idx) return false;
+
+  var viewport = document.getElementById('hall-news-viewport');
+  if (!viewport) return false;
+
+  var current = viewport.querySelector('.hall-news-slide.is-active');
+  var next = viewport.querySelector('.hall-news-slide[data-idx="' + targetIdx + '"]');
+  if (!current || !next) return false;
+
+  var fromRight = direction != null ? direction > 0 : targetIdx > idx;
+  window._hallNewsAnimating = true;
+  var exitClass = fromRight ? 'hall-slide-exit-left' : 'hall-slide-exit-right';
+  var enterClass = fromRight ? 'hall-slide-enter-from-right' : 'hall-slide-enter-from-left';
+
+  next.classList.add('is-transitioning', enterClass);
+  next.setAttribute('aria-hidden', 'false');
+  current.classList.add(exitClass);
+  void next.offsetWidth;
+  next.classList.add('is-active');
+
+  setTimeout(function () {
+    current.classList.remove('is-active', exitClass);
+    current.setAttribute('aria-hidden', 'true');
+    next.classList.remove('is-transitioning', enterClass);
+    window._hallNewsIndex = targetIdx;
+    window._hallNewsAnimating = false;
+    updateHallNewsCounter();
+  }, 700);
+
+  return true;
+}
+
+function onHallNewsClipClick(idx) {
+  var current = window._hallNewsIndex || 0;
+  openHallNewsLightbox(idx);
+  if (idx === current) {
+    var nextIdx = (current + 1) % HALL_NEWS_CLIPS.length;
+    goToHallNewsSlide(nextIdx, 1);
+  } else {
+    goToHallNewsSlide(idx, idx > current ? 1 : -1);
+  }
+}
+
+function retreatNewsCarousel() {
+  var idx = window._hallNewsIndex || 0;
+  var prevIdx = idx <= 0 ? HALL_NEWS_CLIPS.length - 1 : idx - 1;
+  goToHallNewsSlide(prevIdx, -1);
 }
 
 function updateHallNewsCounter() {
@@ -3964,14 +4030,7 @@ function updateHallNewsCounter() {
 }
 
 function updateHallNewsContinueLabel() {
-  var idx = window._hallNewsIndex || 0;
-  var total = HALL_NEWS_CLIPS.length;
-  var onLast = idx >= total - 1;
-  var cont = document.getElementById('demo-continue-btn');
-  if (cont) {
-    cont.setAttribute('aria-label', onLast ? 'Continue to why hallucinations happen' : 'Next news article, ' + (idx + 2) + ' of ' + total);
-  }
-  appendBeatNext(onLast ? 'Next' : 'Next article');
+  updateHallNewsCounter();
 }
 
 function resetHallNewsCarousel() {
@@ -3980,59 +4039,73 @@ function resetHallNewsCarousel() {
 }
 
 function advanceNewsCarousel() {
-  if (window._hallNewsAnimating) return false;
   var idx = window._hallNewsIndex || 0;
-  if (idx >= HALL_NEWS_CLIPS.length - 1) return false;
-
-  var viewport = document.getElementById('hall-news-viewport');
-  if (!viewport) return false;
-
-  var current = viewport.querySelector('.hall-news-slide.is-active');
-  var nextIdx = idx + 1;
-  var next = viewport.querySelector('.hall-news-slide[data-idx="' + nextIdx + '"]');
-  if (!current || !next) return false;
-
-  window._hallNewsAnimating = true;
-  var fromRight = nextIdx % 2 === 1;
-  var exitClass = fromRight ? 'hall-slide-exit-left' : 'hall-slide-exit-right';
-  var enterClass = fromRight ? 'hall-slide-enter-from-right' : 'hall-slide-enter-from-left';
-
-  next.classList.add('is-transitioning', enterClass);
-  next.setAttribute('aria-hidden', 'false');
-  current.classList.add(exitClass);
-
-  void next.offsetWidth;
-  next.classList.add('is-active');
-
-  setTimeout(function () {
-    current.classList.remove('is-active', exitClass);
-    current.setAttribute('aria-hidden', 'true');
-    next.classList.remove('is-transitioning', enterClass);
-    window._hallNewsIndex = nextIdx;
-    window._hallNewsAnimating = false;
-    updateHallNewsCounter();
-    updateHallNewsContinueLabel();
-  }, 700);
-
-  return true;
+  if (idx >= HALL_NEWS_CLIPS.length - 1) return goToHallNewsSlide(0, 1);
+  return goToHallNewsSlide(idx + 1, 1);
 }
 
-function buildNewsWall() {
+function buildEmbeddedHallNews() {
   resetHallNewsCarousel();
   var slides = HALL_NEWS_CLIPS.map(function (clip, i) {
     var active = i === 0;
-    return '<article class="hall-news-slide' + (active ? ' is-active' : '') + '" data-idx="' + i + '" aria-hidden="' + (active ? 'false' : 'true') + '" aria-roledescription="slide">' + buildHallNewsSlideHtml(clip) + '</article>';
+    return '<article class="hall-news-slide hall-news-slide--embed' + (active ? ' is-active' : '') + '" data-idx="' + i + '" aria-hidden="' + (active ? 'false' : 'true') + '" aria-roledescription="slide">' + buildHallNewsSlideHtml(clip, i) + '</article>';
   }).join('');
-  return '<div class="hall-news-wall" role="region" aria-label="Real-world AI hallucination headlines">' +
-    '<div class="hall-news-viewport" id="hall-news-viewport">' + slides + '</div>' +
-    '<div class="hall-news-footer">' +
+  return '<div class="hall-news-embed" role="region" aria-label="Real-world AI hallucination headlines">' +
+    '<p class="hall-news-embed-label">Real-world headlines — tap an article to browse</p>' +
+    '<div class="hall-news-viewport hall-news-viewport--embed" id="hall-news-viewport">' + slides + '</div>' +
+    '<div class="hall-news-footer hall-news-footer--embed">' +
+      '<button type="button" class="hall-news-nav-btn" onclick="retreatNewsCarousel()" aria-label="Previous article"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>' +
       '<span class="hall-news-counter" id="hall-news-counter" aria-live="polite" aria-label="News article 1 of ' + HALL_NEWS_CLIPS.length + '">1 of ' + HALL_NEWS_CLIPS.length + '</span>' +
+      '<button type="button" class="hall-news-nav-btn" onclick="advanceNewsCarousel()" aria-label="Next article"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>' +
     '</div>' +
   '</div>';
 }
 
+function buildNewsWall() {
+  return buildEmbeddedHallNews();
+}
+
+function buildHallucinationBeat() {
+  return '<div class="hallucination-beat-card">' +
+    buildEmbeddedHallNews() +
+    '<div class="hallucination-beat-head">' +
+      '<svg class="hallucination-warn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="1.5" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+      '<span>Why does this happen?</span>' +
+    '</div>' +
+    '<div class="hallucination-fabricated-block hallucination-quote-pulse">' +
+      '<div class="hallucination-fabricated-quote"><p>The AI slipped in a false claim: every online seller is required to register for GST in every Indian state where customers are located.</p></div>' +
+      '<div class="hallucination-fabricated-caption">' +
+        '<p>This sounds professional.</p>' +
+        '<p>It sounds confident.</p>' +
+        '<p class="hallucination-fabricated-kicker">But it is not accurate.</p>' +
+      '</div>' +
+    '</div>' +
+    '<p style="color:var(--text-secondary);font-size:13px;line-height:1.6;margin:0 0 12px;">The AI filled gaps with something that sounded plausible — a confident answer that is wrong.</p>' +
+    '<div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-left:3px solid var(--accent-red);border-radius:8px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">' +
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '<span style="color:var(--ey-dark);font-size:14px;font-weight:700;line-height:1.5;">Hallucination = A confident answer that may be wrong</span>' +
+    '</div>' +
+    '<div class="copilot-everyday-analogy">' +
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+      '<p class="copilot-everyday-analogy__text">Like a student who doesn&rsquo;t know the answer but writes something that sounds convincing.</p>' +
+    '</div>' +
+  '</div>';
+}
+
+function mountHallucinationBeat(chatEl2) {
+  resetHallNewsCarousel();
+  chatEl2.innerHTML = '<div class="ai-msg" style="animation:fadeInMsg 0.4s ease;">' + buildHallucinationBeat() + '</div>';
+  chatEl2.style.overflowY = 'auto';
+  chatEl2.style.padding = '';
+  chatEl2.style.overflow = '';
+  var winEl2 = document.getElementById('copilot-window');
+  if (winEl2) winEl2.classList.add('is-hallucinating');
+  appendBeatNext('Next');
+  requestAnimationFrame(function () { chatEl2.scrollTop = 0; });
+}
+
 function buildHallucinationReasoning() {
-  return `<div style="padding:16px 18px;background:rgba(255,65,54,0.04);border:1px solid rgba(255,65,54,0.12);border-radius:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span style="color:var(--accent-red);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Why does this happen?</span></div><div style="background:rgba(255,65,54,0.06);border:1px solid rgba(255,65,54,0.15);border-radius:8px;padding:10px 14px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:14px;font-weight:600;margin:0;">The AI slipped in a false claim:</p></div><p style="color:var(--text-secondary);font-size:14px;line-height:1.7;margin:0 0 12px;">One line in the response stated that every online seller must register for GST in every state where customers are located.</p><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">This sounds professional.</p><p style="color:var(--text-secondary);font-size:13px;margin-bottom:2px;">It sounds confident.</p><p style="color:var(--text-dim);font-size:13px;margin-bottom:14px;">But it is not accurate.</p><div style="border-top:1px solid rgba(46,46,56,0.06);padding-top:12px;margin-bottom:12px;"><p style="color:var(--ey-dark);font-size:13px;font-weight:600;margin-bottom:4px;">What happened?</p><p style="color:var(--text-secondary);font-size:13px;margin:0;">The AI filled gaps with something that sounded plausible — a confident answer that is wrong.</p></div><div style="background:rgba(255,65,54,0.08);border:1px solid rgba(255,65,54,0.2);border-left:3px solid var(--accent-red);border-radius:8px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="color:var(--ey-dark);font-size:14px;font-weight:700;line-height:1.5;">Hallucination = A confident answer that may be wrong</span></div><div style="padding:10px 14px;background:rgba(255,230,0,0.04);border:1px solid rgba(255,230,0,0.12);border-left:3px solid rgba(255,230,0,0.35);border-radius:8px;display:flex;align-items:flex-start;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--eyebrow-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="color:var(--eyebrow-gold);font-size:11px;line-height:1.5;">Like a student who doesn&rsquo;t know the answer but writes something that sounds convincing.</span></div></div>`;
+  return buildHallucinationBeat();
 }
 
 var JOURNEY_STAGES = [
@@ -4083,39 +4156,9 @@ function continueBeat() {
   if (currentBeat >= BEATS.length - 1) return;
   var leavingBeat = BEATS[currentBeat];
 
-  // Hallucination beat has two sub-phases: news carousel (phase 1) then reasoning boxes (phase 2)
-  if (leavingBeat === 'hallucination' && window._hallPhase === 1) {
-    if (advanceNewsCarousel()) return;
-    window._hallPhase = 2;
-    var chatEl2 = document.getElementById('copilot-chat');
-    var contBtn2 = document.getElementById('demo-continue-btn');
-    if (contBtn2) contBtn2.style.display = 'none';
-    // Slide news wall up, slide reasoning boxes in
-    if (chatEl2) chatEl2.classList.add('slide-exit');
-    setTimeout(function() {
-      if (chatEl2) {
-        chatEl2.classList.remove('slide-exit');
-        chatEl2.style.overflow = '';
-        chatEl2.style.overflowY = 'auto';
-        chatEl2.style.padding = '';
-        chatEl2.classList.add('slide-enter-from');
-        chatEl2.innerHTML = '<div class="ai-msg" style="animation:fadeInMsg 0.4s ease;">' + buildHallucinationReasoning() + '</div>';
-        chatEl2.offsetHeight;
-        chatEl2.classList.remove('slide-enter-from');
-        chatEl2.classList.add('slide-enter');
-      }
-      setTimeout(function() {
-        if (chatEl2) chatEl2.classList.remove('slide-enter');
-        appendBeatNext('Next');
-      }, 950);
-    }, 850);
-    return;
-  }
-
   currentBeat++;
   if (leavingBeat === 'output') {
-    // Slide-up cinematic transition into hallucination newspaper wall
-    window._hallPhase = 0;
+    // Slide-up into unified hallucination panel (headlines carousel + reasoning)
     var chatEl2 = document.getElementById('copilot-chat');
     var contBtn2 = document.getElementById('demo-continue-btn');
     if (contBtn2) contBtn2.style.display = 'none';
@@ -4123,27 +4166,20 @@ function continueBeat() {
     setTimeout(function() {
       if (chatEl2) {
         chatEl2.classList.remove('slide-exit');
-        chatEl2.innerHTML = '';
-        chatEl2.style.overflow = 'hidden';
-        chatEl2.style.padding = '0';
         chatEl2.classList.add('slide-enter-from');
-        chatEl2.innerHTML = buildNewsWall();
+        mountHallucinationBeat(chatEl2);
         chatEl2.offsetHeight;
         chatEl2.classList.remove('slide-enter-from');
         chatEl2.classList.add('slide-enter');
       }
       setTimeout(function() {
         if (chatEl2) chatEl2.classList.remove('slide-enter');
-        window._hallPhase = 1;
-        var winEl2 = document.getElementById('copilot-window');
-        if (winEl2) winEl2.classList.add('is-hallucinating');
         var bar = document.getElementById('demo-actions');
         if (bar) bar.style.display = 'flex';
         var backBtn = document.getElementById('demo-back-btn');
         if (backBtn) { backBtn.disabled = false; backBtn.style.opacity = '1'; }
         var restartBtn = document.getElementById('demo-restart-btn');
         if (restartBtn) restartBtn.style.display = 'inline-flex';
-        updateHallNewsContinueLabel();
       }, 950);
     }, 850);
     return;
@@ -4169,7 +4205,6 @@ function resetDemo() {
   var win = document.getElementById('copilot-window'); if (win) win.classList.remove('is-hallucinating');
   setCopilotStatus('');
   currentBeat = -1;
-  window._hallPhase = 0;
   resetHallNewsCarousel();
   chatEl.classList.remove('is-inside-beat');
   var bi = document.getElementById('beat-indicator'); if (bi) bi.style.display = 'none';
@@ -4177,9 +4212,9 @@ function resetDemo() {
 
 const INSIDE_TOKENS_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg><span class="inside-tab-headline">Tokenization</span></div><p class="inside-tab-lead">Before anything else, AI breaks your GST prompt into small chunks called <strong>tokens</strong> — roughly three-quarters of a word each.</p><div class="inside-tab-inner"><div class="inside-tab-stat">Your prompt &rarr; tokenized</div><div class="inside-tab-stat-row" style="margin-bottom:8px;"><span style="color:var(--text-secondary);">16 words</span><span style="color:var(--text-secondary);">&rarr;</span><span style="font-weight:700;">~21 tokens</span></div><div class="inside-tab-prompt">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="display:flex;gap:4px;flex-wrap:wrap;"><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.1s both;"><span class="inside-token-chip">Summar</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.2s both;"><span class="inside-token-chip">ize</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.35s both;"><span class="inside-token-chip">the</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.5s both;"><span class="inside-token-chip">G</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.65s both;"><span class="inside-token-chip">ST</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.8s both;"><span class="inside-token-chip">impl</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 0.95s both;"><span class="inside-token-chip">ications</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.1s both;"><span class="inside-token-chip">online</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.25s both;"><span class="inside-token-chip">sell</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.4s both;"><span class="inside-token-chip">er</span></span><span style="display:inline-block;animation:tokenPop 0.4s ease-out 1.55s both;align-self:center;"><span style="color:var(--text-secondary);font-size:14px;letter-spacing:2px;">&middot;&middot;&middot;</span></span></div></div><p class="inside-tab-body">Token count affects cost and context limits. Tax terms like &ldquo;GST&rdquo; and &ldquo;ITC&rdquo; may split across multiple tokens.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like cutting a pizza into slices &mdash; the AI reads bite-sized chunks, not whole words at once.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('llm')">Next: LLM <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
 
-const INSIDE_LLM_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span class="inside-tab-headline">LLM &mdash; The Brain Predicts One Word at a Time</span></div><p class="inside-tab-lead">Tokens enter a <strong>Large Language Model</strong> trained on enormous amounts of text. It <em>predicts</em> the next word, one at a time, to build your GST summary.</p><div class="inside-tab-inner"><div class="inside-tab-prompt">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div style="font-family:monospace;font-size:12px;line-height:1.55;color:var(--ey-dark);"><span style="font-weight:700;">GST</span> <span style="color:var(--text-secondary);animation:blink 1s infinite;">&#9612;</span><br><span style="font-weight:700;">GST</span> <span>implications for an online seller include registration across multiple states, ITC claims&hellip;</span></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>LLM = the brain behind the conversation</span></div><p class="inside-tab-body">The model generates fluent language but does not inherently know your firm&rsquo;s latest GST guidance &mdash; that comes next.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like autocomplete at scale &mdash; your phone suggests the next word; an LLM does that for entire tax answers.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('knowledge')">Next: Knowledge Layer <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
+const INSIDE_LLM_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span class="inside-tab-headline">LLM &mdash; The Brain Predicts One Word at a Time</span></div><p class="inside-tab-lead">Tokens enter a <strong>Large Language Model</strong> trained on enormous amounts of text. It <em>predicts</em> the next word, one at a time, to build your GST summary.</p><div class="inside-tab-inner"><div class="inside-tab-prompt">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div class="llm-stream-line"><span style="font-weight:700;">GST</span> <span id="llm-stream-text"></span><span id="llm-stream-cursor" style="color:var(--text-secondary);animation:blink 1s infinite;">&#9612;</span></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>LLM = the brain behind the conversation</span></div><p class="inside-tab-body">The model generates fluent language but does not inherently know your firm&rsquo;s latest GST guidance &mdash; that comes next.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like autocomplete at scale &mdash; your phone suggests the next word; an LLM does that for entire tax answers.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('knowledge')">Next: Knowledge Layer <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
 
-const INSIDE_KNOWLEDGE_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg><span class="inside-tab-headline">Knowledge Layer &mdash; Where AI Finds Trusted Information</span></div><p class="inside-tab-lead">The model understands your question. <strong>Now it needs trusted, organization-specific information</strong> &mdash; not just general internet knowledge.</p><div class="inside-tab-inner"><div class="inside-tab-kicker">The knowledge layer contains</div><div class="inside-knowledge-list"><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Company documents</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Tax guidance &amp; GST circulars</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Policies &amp; SOPs</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span>Knowledge repositories</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Research material</span></div></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Knowledge Layer = the library AI can consult</span></div><p class="inside-tab-body">Without this layer, Copilot may sound confident but cite outdated or generic tax guidance.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like a tax library &mdash; curated shelves of guidance the AI can pull from before drafting advice.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('rag')">Next: RAG <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
+const INSIDE_KNOWLEDGE_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg><span class="inside-tab-headline">Knowledge Layer &mdash; Where AI Finds Trusted Information</span></div><p class="inside-tab-lead">The model understands your question. <strong>Now it needs trusted, organization-specific information</strong> &mdash; not just general internet knowledge.</p><div class="inside-tab-inner"><div class="inside-tab-kicker">The knowledge layer contains</div><div class="inside-knowledge-list"><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Company documents</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Tax guidance &amp; GST circulars</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Policies &amp; SOPs</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span>Knowledge repositories</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Research material</span></div></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Knowledge Layer = the library AI can consult</span></div><p class="inside-tab-body">Without this layer, Copilot may sound confident but cite outdated or generic tax guidance.</p><div class="inside-tab-solution"><button type="button" class="inside-tab-solution-btn" onclick="goToInsideTab('rag')" aria-label="See the RAG solution">Solution?</button></div><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like a tax library &mdash; curated shelves of guidance the AI can pull from before drafting advice.</p></div><div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('rag')">Next: RAG <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div></div>`;
 
 const INSIDE_RAG_HTML = `<div class="inside-tab-card"><div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="inside-tab-headline">RAG &mdash; Retrieval Augmented Generation</span></div><p class="inside-tab-lead"><strong>Retrieval Augmented Generation</strong> searches your knowledge layer first, then writes a GST answer grounded in what it found.</p><div class="inside-tab-inner"><div class="inside-tab-kicker" style="text-align:center;">How RAG works</div><div class="rag-flow-row"><span class="rag-node">Question</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Search Knowledge Layer</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Retrieve Relevant Information</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Generate Response</span></div></div><div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>RAG = AI looking up information before responding</span></div><p class="inside-tab-body">For tax work, RAG helps Copilot cite current GST circulars and firm policies instead of guessing from training data alone.</p><div class="inside-tab-analogy"><div class="inside-tab-analogy-eyebrow-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span class="inside-tab-analogy-eyebrow">Everyday analogy</span></div><p class="inside-tab-analogy-text">Like an open-book exam &mdash; the AI looks up trusted sources before answering, not from memory alone.</p></div></div>`;
 
@@ -4211,11 +4246,36 @@ function resetInsideBeatScroll() {
   if (panel) panel.scrollTop = 0;
 }
 
+function initLlmTypewriter() {
+  var el = document.getElementById('llm-stream-text');
+  if (!el) return;
+  if (window._llmTyper) clearInterval(window._llmTyper);
+  var words = 'implications for an online seller include registration across multiple states, ITC claims…'.split(' ');
+  var wi = 0;
+  el.textContent = '';
+  var cursor = document.getElementById('llm-stream-cursor');
+  if (cursor) cursor.style.display = 'inline';
+  window._llmTyper = setInterval(function () {
+    if (wi >= words.length) {
+      clearInterval(window._llmTyper);
+      window._llmTyper = null;
+      if (cursor) cursor.style.display = 'none';
+      return;
+    }
+    el.textContent += (wi ? ' ' : '') + words[wi];
+    wi++;
+  }, 165);
+}
+
 function selectInsideTab(id, el) {
   var panel = document.getElementById('inside-tab-panel');
   var tab = INSIDE_TABS.find(function (t) { return t.id === id; });
   if (!panel || !tab) return;
+  if (window._llmTyper) { clearInterval(window._llmTyper); window._llmTyper = null; }
   panel.innerHTML = tab.html;
+  if (id === 'llm') {
+    requestAnimationFrame(function () { initLlmTypewriter(); });
+  }
   var strip = el ? el.parentElement : null;
   if (strip) {
     Array.prototype.forEach.call(strip.querySelectorAll('.inside-tab-btn'), function (btn) {
@@ -4345,6 +4405,7 @@ function renderBeat(flipIn) {
     acc.style.cssText = 'animation:' + (flipIn ? 'flipInY 0.4s ease-out forwards' : 'fadeInMsg 0.5s ease-out forwards') + ';opacity:0;';
     acc.innerHTML = buildInsideAccordion();
     chatEl.appendChild(acc);
+    requestAnimationFrame(function () { initLlmTypewriter(); });
     appendBeatNext('Next');
     requestAnimationFrame(function () {
       resetInsideBeatScroll();
@@ -4358,30 +4419,22 @@ function renderBeat(flipIn) {
     inputEl.style.color = 'var(--ey-dark)';
     inputEl.style.borderColor = 'rgba(255,230,0,0.35)';
     addChatBubble('You', promptTxt);
-    addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. <span id="output-red-highlight">Every online seller is required to register for GST in every Indian state where customers are located.</span> Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.');
+    addChatBubble('AI', 'GST registration may be required in multiple states depending on the business model. <span id="output-red-highlight">Every online seller is required to register for GST in every Indian state where customers are located.</span> Interstate supplies generally attract IGST. E-commerce operators may have additional compliance requirements including collection and reporting obligations. Businesses should evaluate registration, invoicing, return filing and place-of-supply considerations.<div id="output-trust-block"><div id="output-prompt-cta"><button type="button" onclick="continueBeat()" aria-label="Continue — But can you trust the output?">But can you trust the output?</button></div></div>');
     var contBtnOut = document.getElementById('demo-continue-btn');
     if (contBtnOut) contBtnOut.style.display = 'none';
     window._outputRevealTimer = setTimeout(function () {
       if (currentBeat < 0 || BEATS[currentBeat] !== 'output') return;
-      if (document.getElementById('output-prompt-cta')) return;
       var highlight = document.getElementById('output-red-highlight');
       if (highlight) highlight.classList.add('is-revealed');
-      var ctaOut = document.createElement('div');
-      ctaOut.id = 'output-prompt-cta';
-      ctaOut.innerHTML = '<button type="button" onclick="continueBeat()" aria-label="Continue — But can you trust the output?">But can you trust the output?</button>';
-      chatEl.appendChild(ctaOut);
+      var trustBlock = document.getElementById('output-trust-block');
+      if (trustBlock) trustBlock.classList.add('is-revealed');
       chatEl.scrollTop = chatEl.scrollHeight;
     }, 1000);
 
   } else if (beat === 'hallucination') {
-    // Rendered via continueBeat slide intercept; this path only runs on backBeat
     barEl.style.display = 'none';
     if (winEl) winEl.classList.add('is-hallucinating');
-    chatEl.innerHTML = buildNewsWall();
-    chatEl.style.overflowY = 'hidden';
-    chatEl.style.padding = '0';
-    window._hallPhase = 1;
-    updateHallNewsContinueLabel();
+    mountHallucinationBeat(chatEl);
 
   } else if (beat === 'you') {
     barEl.style.display = 'none';
@@ -4407,6 +4460,9 @@ window.selectInsideTab = selectInsideTab;
 window.goToInsideTab = goToInsideTab;
 window.toggleAcc = toggleAcc;
 window.advanceNewsCarousel = advanceNewsCarousel;
+window.retreatNewsCarousel = retreatNewsCarousel;
+window.onHallNewsClipClick = onHallNewsClipClick;
+window.openHallNewsLightbox = openHallNewsLightbox;
 </script>
 
 
@@ -4414,14 +4470,14 @@ window.advanceNewsCarousel = advanceNewsCarousel;
 
 
 <!-- ======== CHEAT SHEET — Think Beyond Drafting (CREATE / UNDERSTAND / ORGANIZE / THINK) ======== -->
-<section class="section surface-neutral cheat-section" id="cheatsheet" aria-labelledby="cheat-heading">
+<section class="section surface-neutral cheat-section" id="cheatsheet" aria-labelledby="cheat-heading" data-node-id="3642:4240">
   <p class="section-anchor-title">Thinking Partner</p>
   <h2 id="cheat-heading" class="cheat-title">Think Beyond Drafting and Summarisation</h2>
-  <p class="cheat-subtitle">Generative AI can be your smart thought partner</p>
+  <p class="cheat-subtitle">Tap a capability to see it in action.</p>
 
   <div class="cheat-columns" aria-label="GenAI capability cheat sheet">
     <!-- CREATE -->
-    <details class="cheat-col" data-tone="create">
+    <details class="cheat-col" data-tone="create" open>
       <summary class="cheat-col-head">
         <span class="cheat-col-label">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
@@ -4912,10 +4968,13 @@ window.advanceNewsCarousel = advanceNewsCarousel;
   var cols = Array.prototype.slice.call(root.querySelectorAll('.cheat-col'));
   var mq = window.matchMedia('(max-width: 900px)');
 
-  // Default: all columns closed (desktop + mobile), enforced defensively in
-  // case any `open` attribute slips into the markup.
+  // Desktop: Create row open by default (Figma 3642:4241). Mobile: all closed.
   function syncMode() {
     cols.forEach(function (col) { col.open = false; });
+    if (!mq.matches) {
+      var createCol = root.querySelector('.cheat-col[data-tone="create"]');
+      if (createCol) createCol.open = true;
+    }
   }
   syncMode();
 
@@ -5274,18 +5333,83 @@ window.advanceNewsCarousel = advanceNewsCarousel;
   if (!root || root.dataset.gvaAccReady === '1') return;
   root.dataset.gvaAccReady = '1';
   var bands = Array.prototype.slice.call(root.querySelectorAll('details.gva-band'));
+  var mq = window.matchMedia('(max-width: 1000px)');
+  var eqSelectors = ['.gva-example', '.gva-analogy', '.gva-check-list', '.gva-bullets'];
+
+  function equalizeGvaBandRows() {
+    var rows = root.querySelectorAll('.gva-band-cells');
+    rows.forEach(function (row) {
+      eqSelectors.forEach(function (sel) {
+        var allBlocks = Array.prototype.slice.call(row.querySelectorAll(':scope > .gva-cell .gva-cell-body ' + sel));
+        allBlocks.forEach(function (el) { el.style.minHeight = ''; });
+        var blocks = allBlocks.filter(function (el) {
+          return el.closest('.gva-cell') && el.closest('.gva-cell').open;
+        });
+        if (mq.matches || blocks.length < 2) return;
+        var tallest = 0;
+        blocks.forEach(function (el) { tallest = Math.max(tallest, el.offsetHeight); });
+        blocks.forEach(function (el) { el.style.minHeight = tallest + 'px'; });
+      });
+
+      var allBodies = Array.prototype.slice.call(row.querySelectorAll(':scope > .gva-cell .gva-cell-body'));
+      var loneBodies = allBodies
+        .filter(function (body) {
+          return body.children.length === 1 && body.children[0].classList.contains('gva-body');
+        })
+        .map(function (body) { return body.children[0]; });
+      loneBodies.forEach(function (el) { el.style.minHeight = ''; });
+      var openLoneBodies = loneBodies.filter(function (el) {
+        return el.closest('.gva-cell') && el.closest('.gva-cell').open;
+      });
+      if (!mq.matches && openLoneBodies.length >= 2) {
+        var maxBody = Math.max.apply(null, openLoneBodies.map(function (el) { return el.offsetHeight; }));
+        openLoneBodies.forEach(function (el) { el.style.minHeight = maxBody + 'px'; });
+      }
+
+      var allPills = Array.prototype.slice.call(row.querySelectorAll(':scope > .gva-cell .gva-cell-body > .gva-cap-pill:only-child'));
+      allPills.forEach(function (el) { el.style.minHeight = ''; });
+      var pills = allPills.filter(function (el) {
+        return el.closest('.gva-cell') && el.closest('.gva-cell').open;
+      });
+      if (!mq.matches && pills.length >= 2) {
+        var maxPill = Math.max.apply(null, pills.map(function (el) { return el.offsetHeight; }));
+        pills.forEach(function (el) { el.style.minHeight = maxPill + 'px'; });
+      }
+    });
+  }
+
+  var eqTimer;
+  function scheduleEqualize() {
+    clearTimeout(eqTimer);
+    eqTimer = setTimeout(equalizeGvaBandRows, 50);
+  }
 
   // Bands open independently; auto-open child cells when a band opens
   // (except the Capabilities band — its cells stay closed until individually clicked)
   bands.forEach(function (band) {
     band.addEventListener('toggle', function () {
-      if (!band.open) return;
+      if (!band.open) {
+        scheduleEqualize();
+        return;
+      }
       var isCapBand = band.querySelector('#gva-band-cap') !== null;
       if (!isCapBand) {
         band.querySelectorAll('details.gva-cell').forEach(function (cell) { cell.open = true; });
       }
+      scheduleEqualize();
     });
   });
+
+  root.querySelectorAll('details.gva-cell').forEach(function (cell) {
+    cell.addEventListener('toggle', scheduleEqualize);
+  });
+
+  equalizeGvaBandRows();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeGvaBandRows);
+  window.addEventListener('load', equalizeGvaBandRows);
+  window.addEventListener('resize', scheduleEqualize);
+  if (mq.addEventListener) mq.addEventListener('change', equalizeGvaBandRows);
+  else if (mq.addListener) mq.addListener(equalizeGvaBandRows);
 })();
 </script>
 
@@ -5918,36 +6042,21 @@ const EVO_ERAS = [
     parent: 2
   },
   {
-    year: '2024', short: 'Agentic', title: 'Agentic AI', tag: 'Goal-Driven',
+    year: '2024', short: 'Agent', title: 'AI Agent', tag: 'Goal-Driven',
     desc: 'An AI agent is a GenAI program that can semi-autonomously execute tasks for a user or another program. AI agents learn from their own experience, feedback, or data to adapt their behavior accordingly.',
     analogy: 'Like a robot vacuum cleaner — you tell it what needs to be cleaned. It navigates, avoids obstacles, adjusts its route, learns the layout over time, and returns to recharge when needed.',
     examples: ['Travel Booking Assistant', 'Meeting Scheduling Assistant', 'Online Shopping Assistant'],
     preview: 'Acts towards an end goal',
-    image: '/evo-agentic.png',
+    image: '/agentic.png',
     dot: '#B400FF',
     parent: 3
   }
 ];
 let evoActive = 0;
 
-function renderEvoBreadcrumb(i) {
-  const el = document.getElementById('evo-breadcrumb');
-  if (!el) return;
-  // Full era names inside rectangular pills (not AI/ML/DL short forms)
-  el.innerHTML = EVO_ERAS.map((e, idx) => {
-    const state = idx === i ? 'is-current' : idx < i ? 'is-visited' : '';
-    const sep = idx > 0 ? '<span class="evo-breadcrumb-sep" aria-hidden="true">›</span>' : '';
-    const current = idx === i ? ' aria-current="true"' : '';
-    const label = e.title; // Artificial Intelligence, Machine Learning, …
-    return `${sep}<button type="button" class="evo-breadcrumb-item ${state}" onclick="selectEra(${idx})"${current} title="${label}" aria-label="${label}">${label}</button>`;
-  }).join('');
-}
-
 function renderEvoNest(i) {
   const nest = document.getElementById('evo-nest');
   if (!nest) return;
-
-  renderEvoBreadcrumb(i);
 
   // Build concentric rings on the left — all layers always visible
   let outer = null;
