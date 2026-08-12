@@ -1300,26 +1300,29 @@ function TeamBriefingSection() {
   );
 }
 
-/** Inline pill tag for highlighted prompt phrases on dark quote blocks. */
+/** Inline label tag for highlighted prompt phrases on dark quote blocks. */
 function PromptInlineTag({ children, accent }: { children: React.ReactNode; accent: string }) {
   const isYellow = accent === C.yellow;
+  const borderColor = isYellow ? C.yellow : accent;
   return (
     <span
       style={{
         display: "inline",
         fontStyle: "normal",
-        fontWeight: typeScale.label.weight,
-        fontFamily: F.bold,
+        fontWeight: typeScale.caption.weight,
+        fontFamily: F.light,
         fontSize: typeScale.caption.size,
         letterSpacing: typeScale.label.tracking,
-        lineHeight: 1.4,
-        padding: "2px 8px",
-        borderRadius: 100,
+        textTransform: "uppercase",
+        lineHeight: 1.35,
+        padding: "2px 6px",
+        borderRadius: 3,
         margin: "0 2px",
         verticalAlign: "baseline",
-        background: isYellow ? C.yellow : `${accent}1a`,
-        border: `1px solid ${accent}66`,
-        color: isYellow ? C.offBlack : accent,
+        background: isYellow ? C.yellow : `${accent}33`,
+        border: `1.5px solid ${borderColor}`,
+        borderLeft: `3px solid ${borderColor}`,
+        color: isYellow ? C.offBlack : C.onDark,
       }}
     >
       {children}
