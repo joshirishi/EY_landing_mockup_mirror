@@ -16,7 +16,7 @@
  *
  * Usage (Phase 1 overview):
  *   <SiteHeader variant="learning" onNavigate={navigate} />
- *   <ModuleHeader mode="phase-overview" onNavigate={navigate} onBack={() => navigate("/phased")} />
+ *   <ModuleHeader mode="phase-overview" onNavigate={navigate} onBack={() => navigate("/")} />
  *
  * Usage (module page):
  *   <ModuleHeader currentModuleId="ai-tax-prompting" onNavigate={navigate} onBack={onBack} />

@@ -95,7 +95,7 @@ function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }
       }}
     >
       <button
-        onClick={() => onNavigate("/phased")}
+        onClick={() => onNavigate("/")}
         className="flex items-center gap-3 md:gap-4 min-w-0"
         style={{
           background: "none",

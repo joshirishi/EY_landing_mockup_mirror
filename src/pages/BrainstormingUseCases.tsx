@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Lock, PlusCircle } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import AscentJourneyInfographic, { type AscentCalloutEntry, type AscentStageNodeEntry, type AscentStageTitleEntry } from "../imports/Frame353/AscentJourneyInfographic";
@@ -15,7 +15,6 @@ import heroImg from "../assets/images/GettyImages-2212662948.jpg";
  */
 const PHASE2_SECTIONS = [
   { id: "quick-recall", label: "Quick Recall", group: "learn" as const },
-  { id: "memory-refresh", label: "Memory Refresh", group: "learn" as const },
   { id: "problem-first", label: "Problem First", group: "learn" as const },
   { id: "guided-examples", label: "Prompt Examples", group: "learn" as const },
   { id: "agent-examples", label: "Agent Examples", group: "learn" as const },
@@ -109,250 +108,6 @@ const TO_ITEMS = [
   "Identifying recurring workflows for Agents",
   "Discovering your own priority opportunities",
 ];
-
-// ── Memory Refresh data — verbatim from PDF slide 3 ─────────────────────────
-const PROMPT_ELEMENTS = [
-  { n: 1, kw: "Persona",       sub: "Perspective" },
-  { n: 2, kw: "Context",       sub: "Relevant facts" },
-  { n: 3, kw: "Objective",     sub: "What AI should do" },
-  { n: 4, kw: "Instructions",  sub: "Steps and criteria" },
-  { n: 5, kw: "Sources",       sub: "Material to use" },
-  { n: 6, kw: "Output",        sub: "Format and detail" },
-  { n: 7, kw: "Constraints",   sub: "What not to assume or do" },
-  { n: 8, kw: "Review",        sub: "What the user must verify" },
-];
-
-const AGENT_ELEMENTS = [
-  { n: 1, kw: "Purpose",               sub: "Goal to accomplish" },
-  { n: 2, kw: "General guidance",      sub: "Directions, tone, restrictions" },
-  { n: 3, kw: "Skills",                sub: "Support expected" },
-  { n: 4, kw: "Workflow",              sub: "Steps to follow" },
-  { n: 5, kw: "Knowledge",             sub: "Approved information" },
-  { n: 6, kw: "Errors & limitations",  sub: "When to stop or clarify" },
-  { n: 7, kw: "Examples",              sub: "Appropriate interaction" },
-  { n: 8, kw: "Follow-up & closing",   sub: "How to complete the exchange" },
-];
-
-// ── Memory Refresh section ───────────────────────────────────────────────────
-function MemoryRefreshSection() {
-  const [activeTab, setActiveTab] = useState<"prompt" | "agent">("prompt");
-  const [subsVisible, setSubsVisible] = useState(false);
-  const [hoveredTile, setHoveredTile] = useState<number | null>(null);
-
-  const isPrompt = activeTab === "prompt";
-  const elements = isPrompt ? PROMPT_ELEMENTS : AGENT_ELEMENTS;
-  const accentColor = isPrompt ? colors.yellow : colors.framePurple;
-  const accentText = isPrompt ? colors.confidentBlack : colors.white;
-
-  const switchTab = (tab: "prompt" | "agent") => {
-    setActiveTab(tab);
-    setSubsVisible(false);
-  };
-
-  return (
-    <section
-      id="memory-refresh"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.confidentBlack,
-        padding: `${spacing.sectionPaddingY} 0`,
-        width: "100%",
-      }}
-    >
-      <div style={{ ...contentRailStyle }}>
-
-        {/* Eyebrow + heading */}
-        <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <p style={{
-            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
-          }}>
-            Memory Refresh
-          </p>
-          <h2 style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(22px, 3.5vw, 36px)",
-            color: colors.white,
-            margin: "0 0 8px",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.1,
-          }}>
-            Good Outcomes Begin with Clear Instructions
-          </h2>
-          <p style={{
-            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
-            color: colors.onDarkMuted, margin: 0, lineHeight: 1.5,
-          }}>
-            Recall the building blocks — without repeating the full Phase 1 training.
-          </p>
-        </div>
-
-        {/* Tab toggle + show descriptions row */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 28,
-          gap: 12,
-        }}>
-        <div style={{
-          display: "inline-flex",
-          background: "rgba(255,255,255,0.06)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          borderRadius: 8,
-          padding: 4,
-          gap: 4,
-        }}>
-          {(["prompt", "agent"] as const).map((tab) => {
-            const active = activeTab === tab;
-            const tabAccent = tab === "prompt" ? colors.yellow : colors.framePurple;
-            const tabText = tab === "prompt" ? colors.confidentBlack : colors.white;
-            const label = tab === "prompt" ? "Effective Prompt" : "Effective M365 Agent instructions";
-            return (
-              <button
-                key={tab}
-                onClick={() => switchTab(tab)}
-                style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 13,
-                  letterSpacing: "-0.01em",
-                  color: active ? tabText : colors.gray01,
-                  background: active ? tabAccent : "transparent",
-                  border: "none",
-                  borderRadius: 6,
-                  padding: "8px 18px",
-                  cursor: "pointer",
-                  transition: "background 200ms, color 200ms",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-
-          {/* Show/hide descriptions — right-aligned, inline with tabs */}
-          <button
-            onClick={() => setSubsVisible((v) => !v)}
-            style={{
-              fontFamily: fonts.bold, fontSize: 12,
-              color: accentColor,
-              background: "transparent",
-              border: `1px solid ${accentColor}`,
-              borderRadius: 20, padding: "6px 16px",
-              cursor: "pointer", letterSpacing: "-0.01em",
-              display: "inline-flex", alignItems: "center", gap: 6,
-              opacity: 0.85,
-              whiteSpace: "nowrap",
-              flexShrink: 0,
-            }}
-          >
-            {subsVisible ? "Hide descriptions" : "Show descriptions"}
-            {subsVisible ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          </button>
-        </div>
-
-        {/* 2×4 tile grid */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "clamp(8px, 1.2vw, 14px)",
-          marginBottom: 20,
-        }}>
-          {elements.map((el) => {
-            const showSub = subsVisible || hoveredTile === el.n;
-            const isHovered = hoveredTile === el.n;
-            return (
-              <div
-                key={`${activeTab}-${el.n}`}
-                onMouseEnter={() => setHoveredTile(el.n)}
-                onMouseLeave={() => setHoveredTile(null)}
-                style={{
-                  background: isHovered ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)",
-                  border: `1px solid ${isHovered ? accentColor : "rgba(255,255,255,0.1)"}`,
-                  borderRadius: 8,
-                  padding: "clamp(14px, 1.5vw, 20px)",
-                  animation: "ey-slide-up 260ms cubic-bezier(.22,.68,0,1.05) both",
-                  animationDelay: `${el.n * 30}ms`,
-                  cursor: "default",
-                  transition: "background 180ms, border-color 180ms",
-                }}
-              >
-                <span style={{
-                  fontFamily: fonts.bold, fontSize: 11,
-                  color: accentColor, display: "block", marginBottom: 6,
-                }}>
-                  {el.n}
-                </span>
-                <span style={{
-                  fontFamily: fonts.bold, fontSize: 13,
-                  color: colors.white, lineHeight: 1.3, display: "block",
-                }}>
-                  {el.kw}
-                </span>
-                {showSub && (
-                  <span style={{
-                    fontFamily: fonts.regular, fontSize: 12,
-                    color: colors.onDarkMuted, lineHeight: 1.4,
-                    display: "block", marginTop: 6,
-                    borderTop: "1px solid rgba(255,255,255,0.08)",
-                    paddingTop: 6,
-                    animation: "ey-hero-fade-up 200ms cubic-bezier(.22,.68,0,1.05) both",
-                  }}>
-                    {el.sub}
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Drag & Drop placeholder */}
-        <div style={{ marginBottom: 40 }}>
-          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 20px" }}>
-            Drag &amp; Drop Exercise
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            {["Column A", "Column B"].map((col) => (
-              <div key={col} style={{
-                border: "1.5px dashed rgba(255,255,255,0.25)",
-                borderRadius: 8,
-                padding: 24,
-                minHeight: 160,
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-              }}>
-                <p style={{ fontFamily: fonts.bold, fontSize: 12, color: colors.white, margin: 0, letterSpacing: "0.04em" }}>{col}</p>
-                <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.onDarkMuted, margin: 0, fontStyle: "italic" }}>Content coming soon</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Transition line — verbatim from PDF */}
-        <div style={{
-          borderTop: "1px solid rgba(255,255,255,0.1)",
-          paddingTop: 28,
-          textAlign: "center",
-        }}>
-          <p style={{
-            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 17px)",
-            color: colors.onDarkMuted, margin: "0 0 4px",
-          }}>
-            Now that we know how to instruct AI,
-          </p>
-          <p style={{
-            fontFamily: fonts.bold, fontSize: "clamp(15px, 1.6vw, 18px)",
-            color: colors.yellow, margin: 0, letterSpacing: "-0.01em",
-          }}>
-            which tax activities are worth redesigning?
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ── Problem First data — verbatim from PDF slide 4 ──────────────────────────
 const PROBLEM_STEPS = [
@@ -1217,18 +972,18 @@ const P2_CALLOUTS: readonly AscentCalloutEntry[] = [
 ];
 const P2_STAGE_NODES: readonly AscentStageNodeEntry[] = [
   { left: 359, top: 295, icon: "/ascent/icon-book-open.svg", alt: "Quick Recall" },
-  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "Memory Refresh" },
-  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "Problem First" },
-  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "Prompt Examples" },
-  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Agent Examples" },
+  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "Problem First" },
+  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "Prompt Examples" },
+  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "Agent Examples" },
+  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Outputs" },
 ];
 const P2_STAGE_TITLE_LABELS: readonly AscentStageTitleEntry[] = [
   { title: "Phase 2 Start", markerTop: 366, markerSize: 46, calloutIndex: 0 },
   { title: "Quick Recall", markerTop: 295, markerSize: 40, calloutIndex: 1 },
-  { title: "Memory Refresh", markerTop: 260, markerSize: 40, calloutIndex: 2 },
-  { title: "Problem First", markerTop: 240, markerSize: 40, calloutIndex: 3 },
-  { title: "Prompt Examples", markerTop: 227, markerSize: 40, calloutIndex: 4 },
-  { title: "Agent Examples", markerTop: 94, markerSize: 40, calloutIndex: 5 },
+  { title: "Problem First", markerTop: 260, markerSize: 40, calloutIndex: 2 },
+  { title: "Prompt Examples", markerTop: 240, markerSize: 40, calloutIndex: 3 },
+  { title: "Agent Examples", markerTop: 227, markerSize: 40, calloutIndex: 4 },
+  { title: "Outputs", markerTop: 94, markerSize: 40, calloutIndex: 5 },
 ];
 
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
@@ -2072,8 +1827,6 @@ export default function BrainstormingUseCases({
         <HeroContextSection />
 
         <QuickRecallSection />
-
-        <MemoryRefreshSection />
 
         <ProblemFirstSection />
 

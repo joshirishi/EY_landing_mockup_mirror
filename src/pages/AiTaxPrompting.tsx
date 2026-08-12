@@ -299,6 +299,9 @@ const ADVANCED_BUCKETS: AdvancedBucket[] = [
   },
 ];
 
+const ADVANCED_USE_CASE =
+  "Analyzing withholding tax on software royalty payments to a US parent company";
+
 /** Chain of Thought — 4 filter-chip groups shown inside the CoT detail pane. */
 type COTGroupId = "initiation" | "structuring" | "adaptation" | "uncertainty";
 type COTTechnique = { name: string; purpose: string; explain: string };
@@ -2500,6 +2503,50 @@ function PromptingTechniquesWizard() {
   );
 }
 
+function AdvancedUseCaseBanner() {
+  return (
+    <div
+      aria-label="Advanced techniques use case"
+      style={{
+        marginBottom: 0,
+        padding: "14px 20px",
+        background: C.white,
+        borderRadius: 10,
+        border: `1px solid rgba(255,230,0,0.45)`,
+        boxShadow: `inset 4px 0 0 ${C.yellow}`,
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        flexWrap: "wrap",
+      }}
+    >
+      <span style={{
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        color: C.confidentBlack,
+        fontFamily: F.bold,
+        background: C.yellow,
+        padding: "4px 10px",
+        borderRadius: 4,
+        flexShrink: 0,
+      }}>
+        Use case
+      </span>
+      <span style={{
+        fontSize: 14,
+        fontWeight: 700,
+        color: C.confidentBlack,
+        fontFamily: F.bold,
+        lineHeight: 1.5,
+      }}>
+        {ADVANCED_USE_CASE}
+      </span>
+    </div>
+  );
+}
+
 function AdvancedBucketToggle({ bucketId, onChange, onDark = false }: { bucketId: AdvancedBucketId; onChange: (id: AdvancedBucketId) => void; onDark?: boolean }) {
   const focusRing = `2px solid ${C.yellow}`;
   return (
@@ -3088,7 +3135,8 @@ function AdvancedTechniquesSection({ onDark = false }: { onDark?: boolean }) {
 
       {activeTab === "advanced" && (
         <div role="tabpanel" aria-label="Advanced Prompting Techniques">
-          <div style={{ marginBottom: 20 }}>
+          <div style={{ marginBottom: 20, display: "flex", flexDirection: "column", gap: 16 }}>
+            <AdvancedUseCaseBanner />
             <AdvancedBucketToggle bucketId={bucketId} onChange={selectBucket} onDark={onDark} />
           </div>
           <AdvancedFrameworkShell bucket={bucket} stageId={stageId} onSelectStage={setStageId} />

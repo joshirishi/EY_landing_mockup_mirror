@@ -2407,7 +2407,7 @@ export function Phase1View({
       {/* Learning chrome — full viewport width; content below may still scroll horizontally on very small screens */}
       <div className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]" data-name="Top Navigation">
         <SiteHeader variant="learning" onNavigate={go} skipLinkTarget="#phase1-content" />
-        <ModuleHeader mode="phase-overview" hideModuleDropdown onNavigate={go} onBack={() => go("/phased")} />
+        <ModuleHeader mode="phase-overview" hideModuleDropdown onNavigate={go} onBack={() => go("/")} />
       </div>
       <div id="phase1-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0 overflow-x-hidden">
         <ContentArea1 onOpenFoundational={onNavigateToFoundational} onOpenAiTaxPrompting={onNavigateToAiTaxPrompting} onOpenCopilotHub={onNavigateToCopilotHub} />
