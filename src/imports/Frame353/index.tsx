@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import svgPaths from "./svg-p7dq2iziwz";
 import { SiteHeader } from "../../design-kit/SiteHeader";
 import { ModuleHeader } from "../../design-kit/LearningNav";
-import { colors, fonts } from "../../design-kit/tokens";
+import { colors, contentRailStyle, fonts, typeScale } from "../../design-kit/tokens";
 import cardSvg from "../ContentArea/svg-1dplfat9j5";
 import imgBackgroundMotif from "./f5e2e2f2ea31280810b6cbd46b1af92fee8b344c.png";
 import { imgGroup, imgBackground, imgBackground1, imgBackground2, imgBackground3 } from "./svg-cx48y";
@@ -805,18 +805,51 @@ function AiMs365Schematic({ ascentOverrides }: { ascentOverrides?: Parameters<ty
 
 function Frame2() {
   return (
-    <div className="[word-break:break-word] content-stretch flex flex-col gap-[8px] items-start not-italic relative shrink-0 text-[#2e2e38] w-full" data-name="Frame">
-      <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-[24px] sm:text-[28px] md:text-[32px] md:leading-[40px]">Step by Step Approach</p>
-      <p className="font-['EYInterstate:Regular',sans-serif] leading-[24px] relative shrink-0 text-[15px] md:text-[16px] w-full">{`A progressive journey from understanding to application.`}</p>
+    <div
+      className="flex min-w-0 flex-1 flex-col items-start gap-2 w-full"
+      data-name="Frame"
+      style={{ color: colors.offBlack, fontFamily: fonts.regular }}
+    >
+      <p
+        className="min-w-0 w-full leading-[1.2] text-[24px] sm:text-[28px] lg:text-[32px] lg:leading-[40px]"
+        style={{ fontFamily: fonts.bold, fontWeight: typeScale.h2.weight }}
+      >
+        Step by Step Approach
+      </p>
+      <p
+        className="min-w-0 w-full text-[15px] lg:text-[16px]"
+        style={{ fontFamily: fonts.regular, fontWeight: typeScale.body.weight, lineHeight: `${typeScale.body.size + 8}px` }}
+      >
+        A progressive journey from understanding to application.
+      </p>
     </div>
   );
 }
 
 function Frame3() {
   return (
-    <div className="bg-[#F6F6FA] content-stretch flex items-start px-[16px] sm:px-[20px] py-[12px] relative rounded-[4px] shrink-0 max-w-full" data-name="Frame">
-      <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[4px]" />
-      <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] font-bold leading-[20px] not-italic relative shrink-0 text-[#2e2e38] text-[13px] sm:text-[14px]">5-6 Weeks | ~10 Participants | M365 Copilot Licensed</p>
+    <div
+      className="relative flex w-full min-w-0 self-stretch rounded px-4 py-3 sm:px-5 lg:w-auto lg:max-w-[min(100%,28rem)] lg:self-center"
+      data-name="Frame"
+      style={{ background: colors.offWhite }}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded border border-solid"
+        style={{ borderColor: colors.gray02 }}
+      />
+      <p
+        className="min-w-0 w-full text-[13px] sm:text-[14px]"
+        style={{
+          color: colors.offBlack,
+          fontFamily: fonts.bold,
+          fontWeight: typeScale.label.weight,
+          lineHeight: "20px",
+          wordBreak: "break-word",
+        }}
+      >
+        5-6 Weeks | ~10 Participants | M365 Copilot Licensed
+      </p>
     </div>
   );
 }
@@ -832,8 +865,11 @@ function Frame1() {
 
 function Frame39() {
   return (
-    <div className="bg-[#c4c4cd] relative shrink-0 w-full">
-      <div className="content-stretch flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-4 sm:px-8 md:px-[64px] py-[24px] relative size-full">
+    <div className="relative w-full min-w-0 shrink-0" style={{ background: colors.gray02 }}>
+      <div
+        className="flex w-full min-w-0 flex-col gap-4 py-6 lg:flex-row lg:items-center lg:justify-between"
+        style={contentRailStyle}
+      >
         <Frame2 />
         <Frame3 />
       </div>

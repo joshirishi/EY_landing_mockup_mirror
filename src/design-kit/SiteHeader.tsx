@@ -84,9 +84,14 @@ export function SiteHeader({
   );
 }
 
-const brandBarStyle: React.CSSProperties = {
+const learningBrandBarStyle: React.CSSProperties = {
   background: colors.offBlack,
   borderBottom: `1px solid ${colors.confidentBlack}`,
+};
+
+const hubBrandBarStyle: React.CSSProperties = {
+  background: colors.confidentBlack,
+  borderBottom: `1px solid ${colors.borderOnDark}`,
 };
 
 function BrandBarHomeButton({
@@ -154,14 +159,14 @@ function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }
   return (
     <div
       className="flex items-center gap-3 w-full px-4 sm:px-6 md:px-10 py-3 md:py-4"
-      style={brandBarStyle}
+      style={learningBrandBarStyle}
     >
       <BrandBarHomeButton onNavigate={onNavigate} ariaLabel={`${BRAND_LABEL} — back to overview`} />
     </div>
   );
 }
 
-/** Hub chrome for Home + Phased Engagement — same brand bar as learning. */
+/** Hub chrome for Home + Phased Engagement — deeper black bar than learning pages. */
 function HubBrandBar({
   onNavigate,
   rightSlot,
@@ -173,7 +178,7 @@ function HubBrandBar({
   return (
     <div
       className="flex items-center justify-between gap-3 w-full px-4 sm:px-6 md:px-10 py-3 md:py-4"
-      style={brandBarStyle}
+      style={hubBrandBarStyle}
     >
       <BrandBarHomeButton onNavigate={onNavigate} ariaLabel={`${BRAND_LABEL} — go to home`} />
       {rightSlot}
