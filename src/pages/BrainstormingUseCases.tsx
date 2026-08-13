@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle, X } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle } from "lucide-react";
+import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
+import {
+  EMPTY_USE_CASE_DRAFTS,
+  readStoredUseCaseEntries,
+  type UseCaseBucketId,
+  writeStoredUseCaseEntries,
+} from "../data/use-case-buckets";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
@@ -58,54 +65,6 @@ const AGENT_ROLE = [
   "Follows workflows and restrictions",
   "Produces outputs for human review",
 ];
-
-type UseCaseBucketId = "prompt" | "agent" | "procode";
-
-const USE_CASE_BUCKETS: {
-  id: UseCaseBucketId;
-  label: string;
-  accent: string;
-  chipText: string;
-  hint: string;
-  placeholder: string;
-}[] = [
-  {
-    id: "prompt",
-    label: "Prompt",
-    accent: colors.yellow,
-    chipText: colors.confidentBlack,
-    hint: "One-off tasks where a user drives the interaction",
-    placeholder: "e.g. Summarise a Supreme Court tax judgment for a client memo",
-  },
-  {
-    id: "agent",
-    label: "M365 Agent",
-    accent: colors.framePurple,
-    chipText: colors.white,
-    hint: "Repeatable workflows across people, systems and repositories",
-    placeholder: "e.g. Collect transfer pricing documentation from stakeholders each quarter",
-  },
-  {
-    id: "procode",
-    label: "Pro Code",
-    accent: colors.frameBlue,
-    chipText: colors.white,
-    hint: "Custom automation or pro-code builds for structured tax processes",
-    placeholder: "e.g. Automate GST reconciliation between ERP and filing portal",
-  },
-];
-
-const EMPTY_USE_CASES: Record<UseCaseBucketId, string[]> = {
-  prompt: [],
-  agent: [],
-  procode: [],
-};
-
-const EMPTY_USE_CASE_DRAFTS: Record<UseCaseBucketId, string> = {
-  prompt: "",
-  agent: "",
-  procode: "",
-};
 
 // ── Animation keyframes injected once ────────────────────────────────────────
 const HERO_STYLES = `
@@ -487,9 +446,12 @@ const GUIDED_EXAMPLES = [
 
 // ── Your Use Cases — workshop buckets (Prompt / Agent / Pro Code) ─────────────
 function UseCaseBucketsSection() {
-  const [entries, setEntries] = useState<Record<UseCaseBucketId, string[]>>(EMPTY_USE_CASES);
+  const [entries, setEntries] = useState<Record<UseCaseBucketId, string[]>>(() => readStoredUseCaseEntries());
   const [drafts, setDrafts] = useState<Record<UseCaseBucketId, string>>(EMPTY_USE_CASE_DRAFTS);
-  const focusRing = `2px solid ${colors.yellow}`;
+
+  useEffect(() => {
+    writeStoredUseCaseEntries(entries);
+  }, [entries]);
 
   const addEntry = (bucketId: UseCaseBucketId) => {
     const text = drafts[bucketId].trim();
@@ -505,18 +467,6 @@ function UseCaseBucketsSection() {
     }));
   };
 
-  const cardBase: React.CSSProperties = {
-    background: colors.eyBgCard,
-    border: `1px solid ${colors.borderOnDark}`,
-    borderRadius: 10,
-    padding: "clamp(20px, 2.5vw, 28px)",
-    flex: 1,
-    minWidth: 0,
-    display: "flex",
-    flexDirection: "column",
-    minHeight: 320,
-  };
-
   return (
     <section
       id="your-use-cases"
@@ -527,11 +477,6 @@ function UseCaseBucketsSection() {
         width: "100%",
       }}
     >
-      <style>{`
-        #your-use-cases input::placeholder {
-          color: rgba(255, 255, 255, 0.45);
-        }
-      `}</style>
       <div style={{ ...contentRailStyle }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <p style={{
@@ -569,192 +514,15 @@ function UseCaseBucketsSection() {
           </p>
         </div>
 
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-          gap: "clamp(16px, 2vw, 24px)",
-          alignItems: "stretch",
-        }}>
-          {USE_CASE_BUCKETS.map((bucket) => {
-            const bucketEntries = entries[bucket.id];
-            const isEmpty = bucketEntries.length === 0;
-
-            return (
-              <div
-                key={bucket.id}
-                style={{
-                  ...cardBase,
-                  borderTop: `3px solid ${bucket.accent}`,
-                }}
-              >
-                <div style={{ marginBottom: 8 }}>
-                  <span style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 11,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: bucket.chipText,
-                    background: bucket.accent,
-                    borderRadius: 4,
-                    padding: "3px 10px",
-                  }}>
-                    {bucket.label}
-                  </span>
-                </div>
-                <p style={{
-                  fontFamily: fonts.regular,
-                  fontSize: 13,
-                  color: colors.onDarkMuted,
-                  margin: "0 0 16px",
-                  lineHeight: 1.45,
-                }}>
-                  {bucket.hint}
-                </p>
-
-                <div style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                  border: `1.5px dashed ${isEmpty ? colors.borderOnDark : bucket.accent + "88"}`,
-                  borderRadius: 8,
-                  padding: 14,
-                  background: isEmpty ? colors.surfaceOnDark : "rgba(255,255,255,0.04)",
-                  minHeight: 180,
-                }}>
-                  {isEmpty ? (
-                    <p style={{
-                      fontFamily: fonts.regular,
-                      fontSize: 12,
-                      color: colors.onDarkSubtle,
-                      margin: 0,
-                      lineHeight: 1.5,
-                      fontStyle: "italic",
-                    }}>
-                      No use cases yet — add your first idea below.
-                    </p>
-                  ) : (
-                    <ul style={{
-                      listStyle: "none",
-                      margin: 0,
-                      padding: 0,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 8,
-                      flex: 1,
-                      overflowY: "auto",
-                    }}>
-                      {bucketEntries.map((entry, index) => (
-                        <li
-                          key={`${bucket.id}-${index}-${entry}`}
-                          style={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: 8,
-                            padding: "10px 12px",
-                            borderRadius: 6,
-                            background: colors.surfaceOnDark,
-                            border: `1px solid ${colors.borderOnDark}`,
-                          }}
-                        >
-                          <span style={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: "50%",
-                            background: bucket.accent,
-                            flexShrink: 0,
-                            marginTop: 6,
-                          }} />
-                          <span style={{
-                            flex: 1,
-                            fontFamily: fonts.regular,
-                            fontSize: 13,
-                            color: colors.onDark,
-                            lineHeight: 1.45,
-                          }}>
-                            {entry}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => removeEntry(bucket.id, index)}
-                            aria-label={`Remove use case from ${bucket.label}`}
-                            style={{
-                              border: "none",
-                              background: "transparent",
-                              cursor: "pointer",
-                              padding: 2,
-                              color: colors.onDarkMuted,
-                              flexShrink: 0,
-                            }}
-                            onFocus={(e) => { e.currentTarget.style.outline = focusRing; }}
-                            onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
-                          >
-                            <X size={14} strokeWidth={1.75} aria-hidden />
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-
-                <div style={{ display: "flex", gap: 8, marginTop: 14, alignItems: "stretch" }}>
-                  <input
-                    type="text"
-                    value={drafts[bucket.id]}
-                    onChange={(e) => setDrafts((prev) => ({ ...prev, [bucket.id]: e.target.value }))}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addEntry(bucket.id);
-                      }
-                    }}
-                    placeholder={bucket.placeholder}
-                    aria-label={`Add ${bucket.label} use case`}
-                    style={{
-                      flex: 1,
-                      minWidth: 0,
-                      fontFamily: fonts.regular,
-                      fontSize: 13,
-                      color: colors.onDark,
-                      background: colors.surfaceOnDark,
-                      border: `1px solid ${colors.borderOnDark}`,
-                      borderRadius: 6,
-                      padding: "10px 12px",
-                      lineHeight: 1.4,
-                    }}
-                    onFocus={(e) => { e.currentTarget.style.outline = focusRing; }}
-                    onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => addEntry(bucket.id)}
-                    disabled={!drafts[bucket.id].trim()}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 6,
-                      fontFamily: fonts.bold,
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: drafts[bucket.id].trim() ? colors.confidentBlack : colors.onDarkSubtle,
-                      background: drafts[bucket.id].trim() ? colors.yellow : colors.surfaceOnDark,
-                      border: `1px solid ${drafts[bucket.id].trim() ? colors.yellow : colors.borderOnDark}`,
-                      borderRadius: 6,
-                      padding: "10px 14px",
-                      cursor: drafts[bucket.id].trim() ? "pointer" : "not-allowed",
-                      whiteSpace: "nowrap",
-                    }}
-                    onFocus={(e) => { if (drafts[bucket.id].trim()) e.currentTarget.style.outline = focusRing; }}
-                    onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
-                  >
-                    <PlusCircle size={14} strokeWidth={1.75} aria-hidden />
-                    Add
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <UseCaseBucketCards
+          sectionId="your-use-cases"
+          entries={entries}
+          editable
+          drafts={drafts}
+          onDraftChange={(bucketId, value) => setDrafts((prev) => ({ ...prev, [bucketId]: value }))}
+          onAdd={addEntry}
+          onRemove={removeEntry}
+        />
       </div>
     </section>
   );

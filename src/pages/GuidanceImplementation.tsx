@@ -1,14 +1,15 @@
 import type { CSSProperties } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Check, ChevronLeft, ChevronRight, Download, Eye, RotateCcw, X } from "lucide-react";
+import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
+import { countUseCaseEntries, readStoredUseCaseEntries } from "../data/use-case-buckets";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { PromptStackBuilderCompact } from "../components/PromptStackBuilderCompact";
 import { TemplatePreviewModal } from "../components/TemplatePreviewModal";
 import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
-import { BRAINSTORM_ITEMS } from "../data/phase2-brainstorm-buckets";
 import { PROMPTING_TECHNIQUES, TECHNIQUE_FACETS } from "../data/prompt-techniques";
 import {
   colors as C,
@@ -32,11 +33,15 @@ const PHASE3_SECTIONS = [
   { id: "p3-workshop", label: "Workshop", group: "learn" as const },
   { id: "p3-bingo", label: "AI Bingo", group: "learn" as const },
   { id: "p3-prompts", label: "Tax Prompts", group: "learn" as const },
+  { id: "p3-your-use-cases", label: "Your Use Cases", group: "learn" as const },
   { id: "p3-agents", label: "M365 Agents", group: "learn" as const },
   { id: "p3-hitl", label: "Human-in-Loop", group: "learn" as const },
   { id: "p5-templates", label: "Reference Library", group: "apply" as const },
   { id: "journey-progress", label: "Ascent", group: "apply" as const },
 ];
+
+/** Set true to restore Sample M365 Agent Templates (Panel6 / #p3-agent-templates) */
+const SHOW_P3_AGENT_TEMPLATES = false;
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
@@ -1025,6 +1030,92 @@ function Panel2() {
   );
 }
 
+function Panel2UseCases({ onNavigate }: { onNavigate: (path: string) => void }) {
+  const [entries, setEntries] = useState(() => readStoredUseCaseEntries());
+  const hasEntries = countUseCaseEntries(entries) > 0;
+  const focusRing = `2px solid ${C.yellow}`;
+
+  useEffect(() => {
+    setEntries(readStoredUseCaseEntries());
+  }, []);
+
+  return (
+    <section
+      id="p3-your-use-cases"
+      style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: C.confidentBlack,
+        padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
+      }}
+    >
+      <div style={{ ...contentRailStyle }}>
+        <div style={sectionHeader}>
+          <p style={eyebrow(C.yellow)}>Your Use Cases</p>
+          <h2 style={{ ...h2Style, color: C.onDark }}>Workshop Bucket Results</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
+            Ideas you sorted in Phase 2 — Prompt, M365 Agent, and Pro Code — carried forward for implementation planning.
+          </p>
+        </div>
+
+        {hasEntries ? (
+          <UseCaseBucketCards sectionId="p3-your-use-cases" entries={entries} />
+        ) : (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "clamp(32px, 5vw, 48px)",
+              borderRadius: 10,
+              border: `1px dashed ${C.borderOnDark}`,
+              background: C.eyBgCard,
+              maxWidth: 560,
+              margin: "0 auto",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: F.regular,
+                fontSize: typeScale.body.size,
+                color: C.onDarkMuted,
+                margin: "0 0 20px",
+                lineHeight: 1.6,
+              }}
+            >
+              Complete the Phase 2 workshop to see your use cases here.
+            </p>
+            <button
+              type="button"
+              onClick={() => onNavigate("/phase2#your-use-cases")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                fontFamily: F.bold,
+                fontSize: 13,
+                fontWeight: 700,
+                color: C.confidentBlack,
+                background: C.yellow,
+                border: "none",
+                borderRadius: 6,
+                padding: "10px 18px",
+                cursor: "pointer",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = focusRing;
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = "none";
+              }}
+            >
+              Go to Phase 2 workshop
+              <ArrowRight size={16} strokeWidth={1.75} aria-hidden />
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 // ── Panel 3 — Instruction Components / M365 Agent (Slide 4) ──────────────────
 
 const AGENT_COMPONENTS = [
@@ -1215,79 +1306,6 @@ function InstructionPatternsPanel() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function BrainstormBridge() {
-  const [activeBucket, setActiveBucket] = useState(0);
-  const bucket = BRAINSTORM_ITEMS[activeBucket];
-
-  return (
-    <div style={{ marginTop: 24 }}>
-      <p style={{ ...eyebrow(C.eyebrowGold), marginBottom: 16 }}>From Your Phase 2 Workshop</p>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 8,
-        marginBottom: 16,
-      }}>
-        {BRAINSTORM_ITEMS.map((item, i) => {
-          const active = activeBucket === i;
-          return (
-            <button
-              key={item.key}
-              type="button"
-              onClick={() => setActiveBucket(i)}
-              style={{
-                padding: "12px 14px",
-                borderRadius: 6,
-                border: active ? `2px solid ${item.accent}` : `1px solid rgba(46,46,56,0.10)`,
-                background: active ? item.accent + "12" : C.white,
-                cursor: "pointer",
-                textAlign: "left",
-              }}
-            >
-              <span style={{
-                fontFamily: F.bold, fontSize: 10, fontWeight: 700,
-                letterSpacing: "0.06em", color: item.accent,
-              }}>
-                {item.key}
-              </span>
-              <span style={{
-                display: "block", fontFamily: F.bold, fontSize: 12, fontWeight: 700,
-                color: C.confidentBlack, marginTop: 4, lineHeight: 1.3,
-              }}>
-                {item.title}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={bucket.key}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.2 }}
-          style={{
-            background: C.offWhite,
-            borderRadius: 8,
-            padding: "20px 24px",
-            borderLeft: `4px solid ${bucket.accent}`,
-          }}
-        >
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-            {bucket.bullets.map((bullet) => (
-              <li key={bullet} style={{ fontFamily: F.regular, fontSize: 14, color: C.gray01, lineHeight: 1.5, display: "flex", gap: 8 }}>
-                <span style={{ color: bucket.accent, flexShrink: 0 }}>·</span>
-                {bullet}
-              </li>
-            ))}
-          </ul>
-        </motion.div>
-      </AnimatePresence>
     </div>
   );
 }
@@ -1546,8 +1564,6 @@ function Panel3() {
             Assist tax teams in gathering and organising transfer pricing documentation.
           </p>
         </div>
-
-        <BrainstormBridge />
       </div>
     </section>
   );
@@ -2429,10 +2445,11 @@ export default function GuidanceImplementation({ onBack, onNavigate }: Props) {
         <Panel1 />
         <PanelBingo />
         <Panel2 />
+        <Panel2UseCases onNavigate={onNavigate} />
         <Panel3 />
         <Panel4 />
         <Panel5 />
-        <Panel6 />
+        {SHOW_P3_AGENT_TEMPLATES && <Panel6 />}
         <AscentModuleProgressSection
           moduleKey="m3"
           id="journey-progress"
