@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout full history
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -23,20 +23,45 @@ jobs:
         env:
           ECHO_SDK_TOKEN: ${{ secrets.ECHO_SDK_TOKEN }}
         run: |
-          sed -i "s/data-sdk-token=\"echo_sdk_[^\"]*\"/data-sdk-token=\"${ECHO_SDK_TOKEN}\"/" index.html
+          set -euo pipefail
+          if [ -n "${ECHO_SDK_TOKEN}" ] && [ -f index.html ]; then
+            sed -i "s/data-sdk-token=\"echo_sdk_[^\"]*\"/data-sdk-token=\"${ECHO_SDK_TOKEN}\"/" index.html
+          fi
           git config user.email "mirror-bot@github.com"
           git config user.name "Mirror Bot"
-          if ! git diff --quiet index.html; then
+          if [ -f index.html ] && ! git diff --quiet index.html; then
             git add index.html
             git commit --amend --no-edit
           fi
 
       - name: Push all branches and tags to mirror
+        env:
+          SOURCE_REF: ${{ github.ref }}
+          SOURCE_REF_NAME: ${{ github.ref_name }}
         run: |
+          set -euo pipefail
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          git remote add mirror git@github.com:joshirishi/EY_landing_mockup_mirror.git || \
+          git remote add mirror git@github.com:joshirishi/EY_landing_mockup_mirror.git 2>/dev/null || \
             git remote set-url mirror git@github.com:joshirishi/EY_landing_mockup_mirror.git
-          git fetch origin '+refs/heads/*:refs/heads/*'
-          git fetch origin '+refs/tags/*:refs/tags/*'
+
+          # Detach so we can fetch/update local branch refs (Git refuses fetch into checked-out branch).
+          AMENDED_SHA="$(git rev-parse HEAD)"
+          git checkout --detach
+
+          if [ "${SOURCE_REF}" = "refs/heads/${SOURCE_REF_NAME}" ]; then
+            while read -r _sha ref; do
+              branch="${ref#refs/heads/}"
+              if [ "$branch" = "$SOURCE_REF_NAME" ]; then
+                git update-ref "refs/heads/${branch}" "$AMENDED_SHA"
+              else
+                git fetch origin "refs/heads/${branch}:refs/heads/${branch}" --force
+              fi
+            done < <(git ls-remote --heads origin)
+          else
+            git fetch origin '+refs/heads/*:refs/heads/*' --force
+          fi
+
+          git fetch origin '+refs/tags/*:refs/tags/*' --force
+
           git push mirror --all --force
           git push mirror --tags --force
