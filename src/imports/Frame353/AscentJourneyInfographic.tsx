@@ -258,14 +258,114 @@ function resolveCalloutBox(desired: BoxRect, obstacles: BoxRect[]): BoxRect {
   return box;
 }
 
-/** Resolve non-overlapping boxes for every open callout (labels are fixed obstacles). */
+/** Base-camp marker geometry, mirroring ModuleStartMarker's own position/size. */
+const BASE_MARKER_BOX: BoxRect = { left: 156, top: 366, width: 46, height: 46 };
+/** StageNode renders at `size-10`. */
+const STAGE_MARKER_SIZE = 40;
+
+/**
+ * Hit-box of the marker a callout belongs to. Callouts have to treat every
+ * marker as an obstacle — otherwise a box lands on top of the very circle it
+ * is describing, which is both a visual collision and makes the callout's
+ * owning step ambiguous.
+ */
+function getMarkerBox(
+  index: CalloutIndex,
+  stageNodes: readonly AscentStageNodeEntry[],
+): BoxRect | null {
+  if (index === 0) return BASE_MARKER_BOX;
+  const node = stageNodes[index - 1];
+  if (!node) return null;
+  return {
+    left: node.left,
+    top: node.top,
+    width: STAGE_MARKER_SIZE,
+    height: STAGE_MARKER_SIZE,
+  };
+}
+
+/** Total area by which a box intrudes on the obstacles it hits. */
+function overlapArea(box: BoxRect, obstacles: BoxRect[]): number {
+  return obstacles.reduce((sum, o) => {
+    const ox = Math.min(box.left + box.width, o.left + o.width) - Math.max(box.left, o.left);
+    const oy = Math.min(box.top + box.height, o.top + o.height) - Math.max(box.top, o.top);
+    return ox > 0 && oy > 0 ? sum + ox * oy : sum;
+  }, 0);
+}
+
+/**
+ * Place a callout in a ring of candidate slots around its own marker, taking
+ * the first that clears every obstacle.
+ *
+ * The previous approach nudged a hand-tuned start position 12px at a time and
+ * gave up after 64 tries, which for the taller callouts meant returning a box
+ * still sitting on a marker. Searching discrete slots around the marker instead
+ * both guarantees the callout reads as belonging to that marker and copes with
+ * quote text of any length. Falls back to the least-overlapping candidate so a
+ * genuinely impossible case degrades gracefully rather than landing on a circle.
+ */
+function placeCalloutNearMarker(
+  desired: BoxRect,
+  marker: BoxRect,
+  obstacles: BoxRect[],
+): BoxRect {
+  const GAP = 22;
+  const mx = marker.left + marker.width / 2;
+  const my = marker.top + marker.height / 2;
+  const w = desired.width;
+  const h = desired.height;
+  const above = marker.top - h - GAP;
+  const below = marker.top + marker.height + GAP;
+  const leftOf = marker.left - w - GAP;
+  const rightOf = marker.left + marker.width + GAP;
+  const centreX = mx - w / 2;
+  const centreY = my - h / 2;
+
+  const candidates: BoxRect[] = [
+    { left: centreX, top: above, width: w, height: h },
+    { left: leftOf, top: above, width: w, height: h },
+    { left: rightOf, top: above, width: w, height: h },
+    { left: leftOf, top: centreY, width: w, height: h },
+    { left: rightOf, top: centreY, width: w, height: h },
+    { left: centreX, top: below, width: w, height: h },
+    { left: leftOf, top: below, width: w, height: h },
+    { left: rightOf, top: below, width: w, height: h },
+    { left: leftOf, top: ARTBOARD_SAFE.top, width: w, height: h },
+    { left: rightOf, top: ARTBOARD_SAFE.top, width: w, height: h },
+  ].map(clampBox);
+
+  for (const candidate of candidates) {
+    if (!obstacles.some((o) => boxesOverlap(candidate, o))) return candidate;
+  }
+
+  let best = candidates[0];
+  let bestArea = Number.POSITIVE_INFINITY;
+  for (const candidate of candidates) {
+    const area = overlapArea(candidate, obstacles);
+    if (area < bestArea) {
+      bestArea = area;
+      best = candidate;
+    }
+  }
+  return best;
+}
+
+/** Resolve non-overlapping boxes for every open callout (labels and markers are fixed obstacles). */
 function resolveOpenCalloutLayout(
   callouts: readonly AscentCalloutEntry[],
   stageTitleLabels: readonly AscentStageTitleEntry[],
   openCallouts: ReadonlySet<CalloutIndex>,
+  stageNodes: readonly AscentStageNodeEntry[],
 ): Map<CalloutIndex, BoxRect> {
   const layout = new Map<CalloutIndex, BoxRect>();
   const obstacles: BoxRect[] = [];
+
+  // Every marker is an obstacle, not just the open ones — a callout must never
+  // cover any circle on the path.
+  for (let i = 0 as CalloutIndex; i <= 6; i = (i + 1) as CalloutIndex) {
+    const markerBox = getMarkerBox(i, stageNodes);
+    if (markerBox) obstacles.push(markerBox);
+  }
 
   openCallouts.forEach((index) => {
     const label = stageTitleLabels[index];
@@ -279,15 +379,16 @@ function resolveOpenCalloutLayout(
     const callout = callouts[index];
     if (!callout) return;
 
-    const resolved = resolveCalloutBox(
-      {
-        left: callout.left,
-        top: callout.top,
-        width: callout.width,
-        height: estimateCalloutHeight(callout.quote, callout.width),
-      },
-      obstacles,
-    );
+    const desired: BoxRect = {
+      left: callout.left,
+      top: callout.top,
+      width: callout.width,
+      height: estimateCalloutHeight(callout.quote, callout.width),
+    };
+    const marker = getMarkerBox(index, stageNodes);
+    const resolved = marker
+      ? placeCalloutNearMarker(desired, marker, obstacles)
+      : resolveCalloutBox(desired, obstacles);
 
     layout.set(index, resolved);
     obstacles.push(resolved);
@@ -345,7 +446,7 @@ const STAGE_TITLE_LABELS = [
   { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
   { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1020, labelTop: 215, labelWidth: 105 },
+  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1168, labelTop: 209, labelWidth: 105 },
   { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
 ] as const;
 
@@ -1136,13 +1237,18 @@ function AscentCanvas({
     },
   );
 
+  /**
+   * Accordion: opening a marker closes the others. With all seven open the
+   * callouts crowded each other and it stopped being clear which box belonged
+   * to which step, so only one stays open at a time. Clicking the open marker
+   * again collapses it.
+   */
   const toggleCallout = (calloutIndex: CalloutIndex) => {
-    setOpenCallouts((prev) => {
-      const next = new Set(prev);
-      if (next.has(calloutIndex)) next.delete(calloutIndex);
-      else next.add(calloutIndex);
-      return next;
-    });
+    setOpenCallouts((prev) =>
+      prev.has(calloutIndex) && prev.size === 1
+        ? new Set<CalloutIndex>()
+        : new Set<CalloutIndex>([calloutIndex]),
+    );
   };
 
   // The glow reaches as far as the furthest marker still open, so closing the
@@ -1161,9 +1267,41 @@ function AscentCanvas({
     progressThrough !== undefined ? moduleNextCalloutIndex : nextCalloutIndex;
 
   const openCalloutLayout = useMemo(
-    () => resolveOpenCalloutLayout(callouts, stageTitleLabels, openCallouts),
-    [callouts, stageTitleLabels, openCallouts],
+    () => resolveOpenCalloutLayout(callouts, stageTitleLabels, openCallouts, stageNodes),
+    [callouts, stageTitleLabels, openCallouts, stageNodes],
   );
+
+  /**
+   * Leader lines: an elbow from each open callout to its own marker, so the
+   * pairing is explicit rather than inferred from proximity.
+   */
+  const leaderLines = useMemo(() => {
+    const lines: {
+      index: CalloutIndex;
+      path: string;
+      endX: number;
+      endY: number;
+    }[] = [];
+    openCalloutLayout.forEach((box, index) => {
+      const marker = getMarkerBox(index, stageNodes);
+      if (!marker) return;
+      const mx = marker.left + marker.width / 2;
+      const my = marker.top + marker.height / 2;
+      const boxCx = box.left + box.width / 2;
+      // Leave from whichever edge faces the marker, so the line never crosses
+      // back over the callout it came from.
+      const startX = mx < box.left ? box.left : mx > box.left + box.width ? box.left + box.width : boxCx;
+      const startY = my < box.top ? box.top : my > box.top + box.height ? box.top + box.height : box.top + box.height;
+      const midY = startY + (my - startY) / 2;
+      lines.push({
+        index,
+        path: `M ${startX} ${startY} L ${startX} ${midY} L ${mx} ${midY} L ${mx} ${my}`,
+        endX: mx,
+        endY: my,
+      });
+    });
+    return lines;
+  }, [openCalloutLayout, stageNodes]);
 
   const baseCampState = getMarkerProgressState(
     0,
@@ -1241,7 +1379,9 @@ function AscentCanvas({
 
         const resolved = openCalloutLayout.get(index as CalloutIndex);
         const left = resolved?.left ?? clampBoxLeft(callout.left, callout.width);
-        const top = resolved?.top ?? clampBoxTop(callout.top, estimateCalloutHeight(callout.quote, callout.width));
+        const top =
+          resolved?.top ??
+          clampBoxTop(callout.top, estimateCalloutHeight(callout.quote, callout.width));
 
         return (
           <div
@@ -1283,6 +1423,32 @@ function AscentCanvas({
           />
         );
       })}
+
+      {/* Leader lines — drawn beneath the markers so the circles stay crisp */}
+      {leaderLines.length > 0 && (
+        <svg
+          className="pointer-events-none absolute left-0 top-0"
+          width={W}
+          height={H}
+          viewBox={`0 0 ${W} ${H}`}
+          aria-hidden
+        >
+          {leaderLines.map((line) => (
+            <g key={`leader-${line.index}`}>
+              <path
+                d={line.path}
+                fill="none"
+                stroke="rgba(255,230,0,0.55)"
+                strokeWidth={1.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="4 4"
+              />
+              <circle cx={line.endX} cy={line.endY} r={2.5} fill="rgba(255,230,0,0.85)" />
+            </g>
+          ))}
+        </svg>
+      )}
 
       <ModuleStartMarker
         isActive={baseCampState.isActive}
