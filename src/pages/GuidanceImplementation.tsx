@@ -93,7 +93,7 @@ function NumberedRow({ n, label, question, color, light = false }: { n: string; 
 
 const BTR = [
   { n: "01", label: "Build", color: C.frameBlue },
-  { n: "02", label: "Test", color: C.frameOrange },
+  { n: "02", label: "Review", color: C.frameOrange },
   { n: "03", label: "Refine", color: C.frameGreen },
 ];
 
@@ -173,7 +173,7 @@ function Panel1() {
         }}
       >
         <div style={{ ...contentRailStyle }}>
-        {/* Build / Test / Refine — yellow-tinted cards on light surface; top bars form a shared yellow line */}
+        {/* Build / Review / Refine — yellow-tinted cards on light surface; top bars form a shared yellow line */}
         <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 16 }}>
           {BTR.map((step, i) => (
             <motion.div
@@ -2105,44 +2105,6 @@ function GuidedExamplesAlternateUI() {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Discussion prompt — Priya reference HTML pin under the template library */}
-      <div
-        style={{
-          marginTop: 24,
-          background: C.yellow,
-          borderRadius: 8,
-          padding: "18px 24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 6,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: F.bold,
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: C.confidentBlack,
-            margin: 0,
-          }}
-        >
-          Discussion prompt
-        </p>
-        <p
-          style={{
-            fontFamily: F.regular,
-            fontSize: 15,
-            color: C.offBlack,
-            margin: 0,
-            lineHeight: 1.5,
-          }}
-        >
-          Which recurring tax activity would benefit from stronger extraction, comparison, analysis, explanation, validation or a first draft?
-        </p>
       </div>
     </div>
   );

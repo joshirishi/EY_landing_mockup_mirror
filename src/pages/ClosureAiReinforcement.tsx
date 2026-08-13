@@ -361,6 +361,7 @@ function RecogniseTheRisk() {
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
         background: colors.white,
+        borderTop: `1px solid ${colors.gray02}`,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
@@ -560,11 +561,9 @@ function HeroSection() {
   );
 }
 
-// ── Hero context — accountability card (Echo: remove left card, chips, flow row) ─
+// ── Hero context — three differentiated accountability cards (Echo 44d60a89) ─
 function HeroContextSection() {
-  const cardStyle: React.CSSProperties = {
-    background: colors.white,
-    border: `1px solid ${colors.gray02}`,
+  const cardBase: React.CSSProperties = {
     borderRadius: 10,
     padding: "28px 28px 32px",
   };
@@ -579,6 +578,9 @@ function HeroContextSection() {
     position: "relative",
   };
 
+  const bulletsLeft = DOES_NOT_BULLETS.slice(0, 3);
+  const bulletsRight = DOES_NOT_BULLETS.slice(3);
+
   return (
     <section
       style={{
@@ -588,35 +590,50 @@ function HeroContextSection() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 32 }}>
-          <div style={{ ...cardStyle, borderTop: `3px solid ${colors.frameBlue}` }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20, marginBottom: 24 }}>
+          <div style={{ ...cardBase, background: colors.white, border: `1px solid ${colors.gray02}`, borderTop: `3px solid ${colors.frameBlue}` }}>
             <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.8vw, 18px)", color: colors.offBlack, margin: "0 0 20px", lineHeight: 1.3 }}>
               AI Does Not Take Responsibility For
             </h2>
             <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-              {DOES_NOT_BULLETS.map((b) => (
+              {bulletsLeft.map((b) => (
                 <li key={b} style={bulletStyle}>
-                  <span aria-hidden="true" style={{ position: "absolute", left: 0, color: colors.yellow }}>›</span>
+                  <span aria-hidden="true" style={{ position: "absolute", left: 0, color: colors.frameBlue }}>›</span>
                   {b}
                 </li>
               ))}
             </ul>
           </div>
-        </div>
 
-        <div style={{ ...cardStyle, borderTop: `3px solid ${colors.yellow}`, marginTop: 4 }}>
-          <p
-            style={{
-              fontFamily: fonts.bold,
-              fontSize: "clamp(15px, 1.8vw, 18px)",
-              color: colors.offBlack,
-              margin: 0,
-              lineHeight: 1.45,
-              textAlign: "center",
-            }}
-          >
-            How do you use AI capabilities without compromising accuracy, confidentiality, professional judgement or trust?
-          </p>
+          <div style={{ ...cardBase, background: colors.white, border: `1px solid ${colors.gray02}`, borderTop: `3px solid ${colors.frameOrange}` }}>
+            <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(15px, 1.8vw, 18px)", color: colors.offBlack, margin: "0 0 20px", lineHeight: 1.3 }}>
+              You Remain Accountable For
+            </h2>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+              {bulletsRight.map((b) => (
+                <li key={b} style={bulletStyle}>
+                  <span aria-hidden="true" style={{ position: "absolute", left: 0, color: colors.frameOrange }}>›</span>
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div style={{ ...cardBase, background: colors.confidentBlack, border: `1px solid ${colors.gray02}`, borderTop: `3px solid ${colors.yellow}`, display: "flex", alignItems: "center" }}>
+            <p
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: "clamp(15px, 1.8vw, 18px)",
+                color: colors.white,
+                margin: 0,
+                lineHeight: 1.45,
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              How do you use AI capabilities without compromising accuracy, confidentiality, professional judgement or trust?
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -1006,7 +1023,7 @@ function TheChecks() {
     <section
       id="p4-checks"
       aria-labelledby="checks-heading"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.offWhite, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
+      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.offWhite, borderTop: `1px solid ${colors.gray02}`, padding: `${spacing.sectionPaddingY} 0`, width: "100%" }}
     >
       <div style={{ ...contentRailStyle }}>
         <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px", textAlign: "center" }}>

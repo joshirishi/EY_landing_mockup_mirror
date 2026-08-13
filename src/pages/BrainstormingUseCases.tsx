@@ -66,6 +66,20 @@ const AGENT_ROLE = [
   "Produces outputs for human review",
 ];
 
+const PROCODE_TASKS = [
+  "Complex multi-step automation",
+  "Custom integrations with enterprise systems",
+  "Advanced data transformation pipelines",
+  "Scalable workflow orchestration",
+];
+
+const PROCODE_ROLE = [
+  "Built by developers or technical teams",
+  "Requires coding and API access",
+  "Suited for organisation-wide deployment",
+  "Maintained with version control and testing",
+];
+
 // ── Animation keyframes injected once ────────────────────────────────────────
 const HERO_STYLES = `
 @keyframes ey-hero-fade-up {
@@ -1424,19 +1438,12 @@ function QuickRecallSection() {
             </div>
           )}
 
-          {/* ── Pro Code card — content TBD ── */}
+          {/* ── Pro Code card — third Quick Recall pillar (Echo 46140b32) ── */}
           <div
             className="ey-recall-procode"
             style={{
               ...cardBase,
               borderTop: `3px solid ${colors.frameBlue}`,
-              borderStyle: "dashed",
-              borderTopStyle: "solid",
-              background: colors.offWhite,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              minHeight: 200,
               animation: "ey-slide-up 420ms cubic-bezier(.22,.68,0,1.05) 120ms both",
             }}
           >
@@ -1454,16 +1461,41 @@ function QuickRecallSection() {
                 Pro Code
               </span>
             </div>
-            <p style={{
-              fontFamily: fonts.regular,
-              fontSize: 13,
-              color: colors.gray01,
-              margin: 0,
-              lineHeight: 1.5,
-              fontStyle: "italic",
-            }}>
-              Content coming soon.
+            <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: "0 0 20px", lineHeight: 1.4 }}>
+              Developer-built solutions for complex, scalable tax workflows
             </p>
+
+            <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 10px" }}>
+              Typically useful when work requires:
+            </p>
+            <ul style={{ margin: "0 0 20px", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 7 }}>
+              {PROCODE_TASKS.map((task) => (
+                <li key={task} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: "50%",
+                    background: colors.frameBlue, flexShrink: 0, marginTop: 6,
+                  }} />
+                  <span style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack, lineHeight: 1.4 }}>{task}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div style={{ height: 1, background: colors.gray02, margin: "0 0 16px" }} />
+
+            <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 10px" }}>
+              The solution
+            </p>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 7 }}>
+              {PROCODE_ROLE.map((role) => (
+                <li key={role} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: "50%",
+                    background: colors.frameBlue, flexShrink: 0, marginTop: 6,
+                  }} />
+                  <span style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack, lineHeight: 1.4 }}>{role}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 

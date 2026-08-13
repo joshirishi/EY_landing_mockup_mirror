@@ -942,6 +942,7 @@ function TeamBriefingSection() {
   const missingItems = ["What issue?", "Which jurisdiction?", "What output?", "By when?"];
   const [beat, setBeat] = useState<BriefBeat>(0);
   const [tagsReady, setTagsReady] = useState(false);
+  const [presenting, setPresenting] = useState(false);
 
   useEffect(() => {
     if (beat !== 2) {
@@ -952,6 +953,17 @@ function TeamBriefingSection() {
     return () => window.clearTimeout(timer);
   }, [beat]);
 
+  useEffect(() => {
+    if (!presenting) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPresenting(false);
+      if (e.key === "ArrowRight" && beat < 3) setBeat((b) => (b + 1) as BriefBeat);
+      if (e.key === "ArrowLeft" && beat > 0) setBeat((b) => (b - 1) as BriefBeat);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [presenting, beat]);
+
   const showGeneric = beat >= 1;
   const showMissing = beat >= 2;
   const showStrong = beat >= 3;
@@ -960,6 +972,18 @@ function TeamBriefingSection() {
 
   const leftCtaLabel = beat === 0 ? "See the Outcome" : "Show what's missing";
 
+  const startPresentation = () => {
+    setBeat(0);
+    setPresenting(true);
+  };
+
+  const presentationSlides = [
+    { title: "Weak Brief", body: "Research this matter and get back to me.", accent: C.destructive },
+    { title: "Generic Outcome", body: "Without context, AI produces a generic response that lacks jurisdiction, scope, and deadline.", accent: C.destructive },
+    { title: "What's Missing", body: missingItems.join(" · "), accent: C.destructive },
+    { title: "Strong Brief", body: "Issue, jurisdiction, output format, and deadline — all defined.", accent: C.success },
+  ];
+
   return (
     <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }} data-node-id="3978:2179">
       <div style={{ ...contentRailStyle }}>
@@ -967,9 +991,102 @@ function TeamBriefingSection() {
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Brief AI Like You Brief Your Team
         </h2>
-        <p style={{ fontSize: 16, color: C.gray01, textAlign: "center", lineHeight: 1.7, marginBottom: 52, fontFamily: F.light }}>
+        <p style={{ fontSize: 16, color: C.gray01, textAlign: "center", lineHeight: 1.7, marginBottom: 24, fontFamily: F.light }}>
           The more context you provide, the better the outcome.
         </p>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
+          <button
+            type="button"
+            onClick={startPresentation}
+            style={{
+              ...BRIEF_CTA_STYLE,
+              height: 40,
+              padding: "10px 22px",
+              fontSize: 13,
+            }}
+          >
+            <Play size={16} strokeWidth={2} aria-hidden />
+            Present briefing
+          </button>
+        </div>
+
+        {presenting && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Team briefing presentation"
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 500,
+              background: C.confidentBlack,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 32,
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setPresenting(false)}
+              aria-label="Close presentation"
+              style={{
+                position: "absolute",
+                top: 24,
+                right: 24,
+                background: "transparent",
+                border: `1px solid ${C.borderOnDark}`,
+                borderRadius: 6,
+                color: C.onDark,
+                cursor: "pointer",
+                padding: 8,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <X size={20} strokeWidth={1.75} aria-hidden />
+            </button>
+            <p style={{ fontFamily: F.bold, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow, margin: "0 0 16px" }}>
+              Slide {beat + 1} of {presentationSlides.length}
+            </p>
+            <div style={{
+              maxWidth: 720,
+              width: "100%",
+              background: C.white,
+              borderRadius: 12,
+              borderTop: `4px solid ${presentationSlides[beat].accent}`,
+              padding: "40px 48px",
+              textAlign: "center",
+            }}>
+              <p style={{ fontFamily: F.bold, fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase", color: presentationSlides[beat].accent, margin: "0 0 20px" }}>
+                {presentationSlides[beat].title}
+              </p>
+              <p style={{ fontFamily: F.regular, fontSize: "clamp(18px, 2.5vw, 24px)", color: C.offBlack, margin: 0, lineHeight: 1.5 }}>
+                {presentationSlides[beat].body}
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
+              <button
+                type="button"
+                disabled={beat === 0}
+                onClick={() => setBeat((b) => (b - 1) as BriefBeat)}
+                style={{ ...BRIEF_CTA_STYLE, opacity: beat === 0 ? 0.4 : 1, cursor: beat === 0 ? "not-allowed" : "pointer" }}
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                onClick={() => (beat < 3 ? setBeat((b) => (b + 1) as BriefBeat) : setPresenting(false))}
+                style={BRIEF_CTA_STYLE}
+              >
+                {beat < 3 ? "Next" : "End presentation"}
+                <ArrowRight size={16} strokeWidth={2} aria-hidden />
+              </button>
+            </div>
+          </div>
+        )}
 
         <div
           data-brief-grid
@@ -982,6 +1099,11 @@ function TeamBriefingSection() {
         >
           {/* ── Weak Brief (always visible; discloses outcome + missing) ── */}
           <div
+            role="button"
+            tabIndex={0}
+            onClick={startPresentation}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); startPresentation(); } }}
+            aria-label="Open team briefing presentation"
             style={{
               border: `1px solid ${C.destructive}33`,
               borderRadius: 12,
@@ -990,6 +1112,7 @@ function TeamBriefingSection() {
               display: "flex",
               flexDirection: "column",
               minHeight: 403,
+              cursor: "pointer",
             }}
           >
             <div
@@ -1099,7 +1222,7 @@ function TeamBriefingSection() {
                   <div style={{ paddingTop: 12 }}>
                     <button
                       type="button"
-                      onClick={() => setBeat((b) => (b === 0 ? 1 : 2))}
+                      onClick={(e) => { e.stopPropagation(); setBeat((b) => (b === 0 ? 1 : 2)); }}
                       style={BRIEF_CTA_STYLE}
                     >
                       {leftCtaLabel}
@@ -1146,7 +1269,7 @@ function TeamBriefingSection() {
               {ctaOnRight ? (
                 <button
                   type="button"
-                  onClick={() => setBeat(3)}
+                  onClick={(e) => { e.stopPropagation(); setBeat(3); }}
                   style={BRIEF_CTA_STYLE}
                 >
                   Reveal Strong Brief

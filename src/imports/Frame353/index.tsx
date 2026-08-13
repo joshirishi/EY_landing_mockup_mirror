@@ -9,6 +9,7 @@ import imgBackgroundMotif from "./f5e2e2f2ea31280810b6cbd46b1af92fee8b344c.png";
 import { imgGroup, imgBackground, imgBackground1, imgBackground2, imgBackground3 } from "./svg-cx48y";
 import TimelineCard from "../TimelineCard/index";
 import AscentJourneyInfographic from "./AscentJourneyInfographic";
+import { buildHubLandingProps } from "./ascentCurriculum";
 
 function Div() {
   return <div className="bg-[#ffe600] h-[3px] relative shrink-0 w-full" data-name="div" />;
@@ -790,14 +791,14 @@ function Frame38() {
   );
 }
 
-function AiMs365Schematic() {
+function AiMs365Schematic({ ascentOverrides }: { ascentOverrides?: Parameters<typeof AscentJourneyInfographic>[0] }) {
   return (
     <div
       className="relative shrink-0 w-full overflow-clip"
       style={{ background: "var(--ey-bg-body)" }}
       data-name="ai-ms365-schematic"
     >
-      <AscentJourneyInfographic />
+      <AscentJourneyInfographic {...ascentOverrides} />
     </div>
   );
 }
@@ -1279,7 +1280,7 @@ function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS
         <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Coverage</p>
         <div className="content-stretch flex flex-col gap-[6px] items-start relative w-full">
           {phase.coverage.map((item) => (
-            <div key={item} className="content-stretch flex gap-[8px] items-start relative w-full">
+            <div key={item} className="content-stretch flex gap-[8px] items-center relative w-full">
               <BulletCircle />
               <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
             </div>
@@ -1291,7 +1292,7 @@ function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS
         <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Deliverables</p>
         <div className="content-stretch flex flex-col gap-[6px] items-start relative w-full">
           {phase.deliverables.map((item) => (
-            <div key={item} className="content-stretch flex gap-[8px] items-start relative w-full">
+            <div key={item} className="content-stretch flex gap-[8px] items-center relative w-full">
               <BulletCircle />
               <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[normal] not-italic relative min-w-0 text-[#2e2e38] text-[14px]">{item}</p>
             </div>
@@ -2368,6 +2369,8 @@ function InteractiveContentArea({ onProceed, onNavigateToBrainstorming, onNaviga
 
 export function PhasedEngagementView({ onNavigateToPhase1, onNavigateToBrainstorming, onNavigateToImplementation, onNavigateToClosure }: { onNavigateToPhase1?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void; onNavigateToClosure?: () => void } = {}) {
   const navigate = useNavigate();
+  const goPhase1 = onNavigateToPhase1 ?? (() => navigate("/phase1"));
+  const hubAscentProps = buildHubLandingProps(goPhase1);
 
   return (
     <div className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden" data-name="EY.ai Tax Labs - Phased Engagement">
@@ -2375,7 +2378,7 @@ export function PhasedEngagementView({ onNavigateToPhase1, onNavigateToBrainstor
         <SiteHeader variant="hub" activeSection="tax-labs" onNavigate={navigate} skipLinkTarget="#phased-content" />
       </div>
       <div id="phased-content" className="content-stretch flex flex-col items-stretch relative shrink-0 w-full min-w-0">
-        <AiMs365Schematic />
+        <AiMs365Schematic ascentOverrides={hubAscentProps} />
         <InteractiveContentArea onProceed={onNavigateToPhase1} onNavigateToBrainstorming={onNavigateToBrainstorming} onNavigateToImplementation={onNavigateToImplementation} onNavigateToClosure={onNavigateToClosure} />
       </div>
       <div className="bg-white content-stretch flex flex-col items-stretch justify-center px-4 sm:px-8 md:px-[64px] py-10 md:py-14 relative shrink-0 w-full overflow-hidden" data-name="Footer Final">

@@ -103,6 +103,18 @@ const DEFAULT_NEXT_STEP: Record<AscentModuleKey, string> = {
   m4: "Control Room",
 };
 
+/** Hub landing (/phased) — base camp open, continue into Phase 1. */
+export function buildHubLandingProps(onNavigateToPhase1: () => void): AscentOverrides {
+  return {
+    callouts: buildCallouts("m1_1"),
+    stageNodes: CURRICULUM_STAGE_NODES,
+    stageTitleLabels: CURRICULUM_STAGE_TITLES,
+    defaultOpenCallouts: [0],
+    nextStepCtaLabel: "Foundational Concepts",
+    onNextStepCta: onNavigateToPhase1,
+  };
+}
+
 /** Props for AscentJourneyInfographic for a completed module. */
 export function buildModuleProgressProps(
   moduleKey: AscentModuleKey,

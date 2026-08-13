@@ -1,16 +1,21 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-  AlertTriangle, ArrowRight, BarChart3, Calculator, Check, CheckCircle, ChevronDown, ChevronRight,
-  ClipboardList, Compass, Copy, ExternalLink, FileText,
-  FolderOpen, Globe, LineChart, Link2, Mail, Megaphone, MessagesSquare,
-  ChevronLeft, Mic, PenLine, Pin, Rocket, Search, Sparkles, Target, Timer, X, XCircle,
+  AlertTriangle, AlignCenter, AlignLeft, AlignRight, Archive, ArrowRight,
+  BarChart3, Bold, Calculator, Check, CheckCircle, ChevronDown, ChevronLeft,
+  ChevronRight, CirclePlus, ClipboardList, Code2, Columns2, Compass, Copy,
+  CornerUpLeft, CornerUpRight, DollarSign, ExternalLink, FileText, FolderOpen,
+  Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, LineChart, Link2,
+  List, ListOrdered, Mail, Megaphone, MessagesSquare, Mic, Minus, PenLine,
+  Percent, Pin, Play, Plus, PlusSquare, Rocket, Search, Sparkles, Strikethrough,
+  Target, Timer, Trash2, Type, Underline, X, XCircle, ZoomIn, ZoomOut,
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, typeScale } from "../design-kit/tokens";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
+import { M365ChatSlideTour } from "../components/M365ChatSlideTour";
 
 // Canonical token alias — keeps existing C.dark / C.dark2 references working
 const C = {
@@ -953,22 +958,21 @@ type AgentInstructionNavItem = {
   subtitle?: string;
 };
 
-// ── Pattern 2c: Use-case cards — left column (Figma 3640:4312). Bare stacked
-// cards on the section background; no titled panel wrapper.
+// ── Pattern 2c: Use-case chips — horizontal row at top of Copilot scene
 function CopilotUseCasePanel({ useCases }: {
   useCases: { icon: LucideIcon; title: string; body: string }[];
 }) {
   return (
-    <div style={{ flex: "0 0 292px", minWidth: 0, maxHeight: 800, minHeight: 0, padding: 22, display: "flex", flexDirection: "column", gap: 10, overflowY: "auto" }}>
+    <div style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "nowrap", alignItems: "center", gap: 10, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
       {useCases.map(uc => {
         const Icon = uc.icon;
         return (
-          <div key={uc.title} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "12.75px", borderRadius: 14, background: C.white, border: `0.75px solid ${C.gray02}` }}>
+          <div key={uc.title} style={{ display: "flex", gap: 12, alignItems: "center", padding: spacing.cardPadding, borderRadius: 14, background: C.white, border: `0.75px solid ${C.gray02}`, flexShrink: 0 }}>
             <div style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
               <Icon size={18} strokeWidth={1.75} aria-hidden />
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 13, color: C.dark2, margin: 0, lineHeight: 1.3 }}>{uc.title}</p>
+            <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center" }}>
+              <p style={{ fontFamily: F.regular, fontWeight: typeScale.label.weight, fontSize: typeScale.label.size, color: C.dark2, margin: 0, lineHeight: 1.3 }}>{uc.title}</p>
             </div>
           </div>
         );
@@ -1004,34 +1008,447 @@ function useTypingPrompt() {
   return { activeIndex, typedText, select };
 }
 
-// ── Pattern 2a: App window mock — dark chrome, gradient canvas, tall white
-// document with Copilot panel anchored at top (Figma 3640:4190) ─────────────
-function CopilotAppMock({ appLabel, accent, typedText }: { appLabel: string; accent: string; typedText: string }) {
+// ── Pattern 2a: Light app-editor mock (Figma 4034:4538) ────────────────────
+// Word / Excel / PowerPoint / Outlook chrome with a Copilot overlay at the
+// bottom. Prompt text still types into that overlay when a card is clicked.
+const MOCK_SKEL = "rgba(46, 46, 56, 0.10)";
+const MOCK_TOOL_ON = "rgba(26, 26, 36, 0.08)";
+
+function MockTool({ icon: Icon, active }: { icon: LucideIcon; active?: boolean }) {
   return (
-    <div style={{ flex: "1 1 392px", minWidth: 0, maxHeight: 800, minHeight: 598, background: `linear-gradient(180deg, ${C.dark2}, ${C.dark})`, borderRadius: 22, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.28)", border: "0.75px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column" }}>
-      <div style={{ height: 42, background: C.dark, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", borderBottom: "0.75px solid rgba(255,255,255,0.08)", gap: 12, flexShrink: 0 }}>
-        <div style={{ display: "flex", gap: 7, flexShrink: 0 }}>
-          {[1, 0.6, 0.32].map((o, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: 5, background: accent, opacity: o }} />)}
-        </div>
-        <span style={{ fontFamily: F.regular, fontSize: 12, fontWeight: 700, color: C.white, flex: 1, textAlign: "center" }}>{appLabel} — blank workspace</span>
-        <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.4px", textTransform: "uppercase", color: C.gray02, border: "0.75px solid rgba(255,255,255,0.16)", borderRadius: 999, padding: "4.75px 10.75px", flexShrink: 0, whiteSpace: "nowrap" }}>Copilot-enabled</span>
+    <span
+      aria-hidden
+      style={{
+        width: 32, height: 32, borderRadius: 6, flexShrink: 0,
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        background: active ? MOCK_TOOL_ON : "transparent", color: C.offBlack,
+      }}
+    >
+      <Icon size={16} strokeWidth={1.75} />
+    </span>
+  );
+}
+
+function MockToolDivider() {
+  return <span aria-hidden style={{ width: 1, height: 16, background: C.gray02, flexShrink: 0, margin: "0 2px" }} />;
+}
+
+function MockZoom() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <ZoomOut size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+      <span aria-hidden style={{ position: "relative", width: 100, height: 4, borderRadius: 2, background: C.gray02 }}>
+        <span style={{ position: "absolute", left: 0, top: 0, width: 65, height: 4, borderRadius: 2, background: C.offBlack }} />
+        <span style={{ position: "absolute", left: 60, top: -3, width: 10, height: 10, borderRadius: 5, background: C.offBlack }} />
+      </span>
+      <ZoomIn size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+      <span style={{ fontFamily: F.bold, fontSize: 12, color: C.offBlack, width: 32, textAlign: "right" }}>100%</span>
+    </div>
+  );
+}
+
+function CopilotOverlay({ typedText }: { typedText: string }) {
+  return (
+    <div
+      style={{
+        position: "absolute", left: 16, right: 16, bottom: 10, height: 148,
+        background: C.white, border: `1px solid ${C.gray02}`, borderRadius: 16,
+        padding: 16, boxShadow: "0 8px 24px -6px rgba(26, 26, 36, 0.08)",
+        display: "flex", flexDirection: "column", gap: 10, zIndex: 2, overflow: "hidden",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{
+          width: 24, height: 24, borderRadius: 12, background: C.framePurple, flexShrink: 0,
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <Sparkles size={14} strokeWidth={1.75} color={C.white} aria-hidden />
+        </span>
+        {typedText
+          ? <span style={{ fontFamily: F.bold, fontSize: 12, color: C.offBlack }}>Copilot</span>
+          : <span aria-hidden style={{ width: 80, height: 14, borderRadius: 7, background: MOCK_SKEL }} />}
       </div>
-      <div style={{ flex: 1, padding: 24, display: "flex", alignItems: "stretch", justifyContent: "center", background: `linear-gradient(125deg, ${accent}, ${C.dark})`, minHeight: 0, overflow: "auto" }}>
-        <div style={{ width: "100%", maxWidth: 342, minHeight: 506, background: C.white, borderRadius: 16, padding: 24, boxShadow: "0 18px 22px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
-          <div style={{ marginTop: 12, background: C.offWhite, border: `0.75px solid ${C.yellow}`, borderRadius: 12, padding: "14.75px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <CopilotIcon size={16} />
-              <span style={{ fontFamily: F.regular, fontSize: 10, fontWeight: 700, letterSpacing: "0.6px", textTransform: "uppercase", color: C.dark2 }}>Copilot</span>
+      {typedText ? (
+        <p style={{
+          margin: 0, flex: 1, overflow: "auto", fontFamily: F.regular, fontSize: 13,
+          color: C.offBlack, lineHeight: 1.55,
+        }}>{typedText}</p>
+      ) : (
+        <>
+          <span aria-hidden style={{ width: 180, maxWidth: "70%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
+            <span aria-hidden style={{ width: "72%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
+            <span aria-hidden style={{ width: "86%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
+            <span aria-hidden style={{ width: "52%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+const DOC_TITLES: Partial<Record<TabId, string>> = {
+  word: "EY_AI_Governance_Framework_2026.docx",
+  excel: "EY_AI_Ops_Budget_FY26.xlsx",
+  ppt: "EY_AI_Strategy_Deck_2026.pptx",
+  agent: "EY_AI_Governance_Framework_2026.docx",
+};
+
+function MockEditorTopBar({ tabId }: { tabId: TabId }) {
+  const isMail = tabId === "outlook";
+  const tools: LucideIcon[] =
+    tabId === "ppt" ? [PlusSquare, LayoutTemplate, Type, Hexagon, Image, Play]
+    : tabId === "excel" ? [Bold, Italic, Grid3x3, Columns2, DollarSign, Percent, CirclePlus]
+    : [Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, List, ListOrdered, Code2];
+  const activeAt = tabId === "ppt" ? [0, 5] : tabId === "excel" ? [0] : [0, 4];
+  const splitAfter = tabId === "ppt" ? [1, 4] : tabId === "excel" ? [2, 5] : [3, 6];
+
+  return (
+    <div style={{
+      background: C.white, borderBottom: `1px solid ${C.gray02}`,
+      display: "flex", alignItems: "center", justifyContent: "space-between",
+      gap: 12, padding: isMail ? "12px 20px" : "12px 20px", flexShrink: 0, minHeight: isMail ? 56 : 64,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+        <span aria-hidden style={{ width: 16, height: 16, borderRadius: 4, background: C.yellow, flexShrink: 0 }} />
+        {isMail ? (
+          <span style={{ fontFamily: F.bold, fontSize: 14, color: C.offBlack }}>Mail</span>
+        ) : (
+          <div style={{ display: "flex", alignItems: "baseline", gap: 6, minWidth: 0 }}>
+            <span style={{
+              fontFamily: F.bold, fontSize: 14, color: C.offBlack, whiteSpace: "nowrap",
+              overflow: "hidden", textOverflow: "ellipsis",
+            }}>{DOC_TITLES[tabId]}</span>
+            <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, whiteSpace: "nowrap", flexShrink: 0 }}>
+              • Saved to Cloud
+            </span>
+          </div>
+        )}
+      </div>
+      {isMail ? (
+        <div style={{
+          flex: 1, maxWidth: 420, height: 32, borderRadius: 8, background: C.offWhite,
+          display: "flex", alignItems: "center", gap: 8, padding: "0 12px",
+        }}>
+          <Search size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+          <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>Search emails, events, and contacts</span>
+        </div>
+      ) : (
+        <div style={{
+          display: "flex", alignItems: "center", gap: 4, background: C.offWhite,
+          borderRadius: 8, padding: "4px 8px", overflow: "hidden",
+        }}>
+          {tools.map((icon, i) => (
+            <span key={i} style={{ display: "contents" }}>
+              <MockTool icon={icon} active={activeAt.includes(i)} />
+              {splitAfter.includes(i) ? <MockToolDivider /> : null}
+            </span>
+          ))}
+        </div>
+      )}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
+        {!isMail && (
+          <span style={{
+            fontFamily: F.bold, fontSize: 14, color: C.offBlack,
+            border: `1.5px solid ${C.offBlack}`, padding: "8px 20px",
+          }}>Share</span>
+        )}
+        <span style={{
+          width: 32, height: 32, borderRadius: 16, background: C.confidentBlack,
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          fontFamily: F.bold, fontSize: 12, color: C.white,
+        }}>EY</span>
+      </div>
+    </div>
+  );
+}
+
+function WordWorkspace() {
+  const bar = (w: string, h: number) => (
+    <span aria-hidden style={{ display: "block", width: w, height: h, borderRadius: 4, background: MOCK_SKEL }} />
+  );
+  return (
+    <div style={{ flex: 1, background: C.offWhite, display: "flex", justifyContent: "center", padding: "28px 48px 80px", minHeight: 0, overflow: "hidden" }}>
+      <div style={{
+        width: "100%", maxWidth: 640, background: C.white, borderRadius: 4,
+        padding: "40px 48px", display: "flex", flexDirection: "column", gap: 20, boxShadow: "0 1px 0 rgba(26, 26, 36, 0.04)",
+      }}>
+        {bar("100%", 18)}
+        {bar("100%", 52)}
+        {bar("42%", 14)}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span aria-hidden style={{ width: 6, height: 6, borderRadius: 3, background: C.yellow, flexShrink: 0 }} />
+          {bar("100%", 14)}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span aria-hidden style={{ width: 6, height: 6, borderRadius: 3, background: C.gray01, flexShrink: 0 }} />
+          {bar("68%", 14)}
+        </div>
+        {bar("38%", 14)}
+        {bar("100%", 36)}
+      </div>
+    </div>
+  );
+}
+
+function PptWorkspace() {
+  return (
+    <div style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden", background: C.offWhite }}>
+      <div style={{ width: 148, flexShrink: 0, padding: 12, display: "flex", flexDirection: "column", gap: 12, borderRight: `1px solid ${C.gray02}`, background: C.white }}>
+        {[1, 2, 3, 4].map(n => (
+          <div key={n} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <span style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, width: 12 }}>{n}</span>
+            <div style={{
+              flex: 1, height: 64, borderRadius: 4, background: C.offWhite,
+              border: n === 1 ? `1.5px solid ${C.yellow}` : `1px solid ${C.gray02}`,
+              padding: 8, display: "flex", flexDirection: "column", gap: 4,
+            }}>
+              <span aria-hidden style={{ height: 5, width: "100%", borderRadius: 2, background: MOCK_SKEL }} />
+              <span aria-hidden style={{ height: 4, width: "36%", borderRadius: 2, background: MOCK_SKEL }} />
+              <span aria-hidden style={{ flex: 1, borderRadius: 2, background: MOCK_SKEL }} />
             </div>
-            <textarea
-              readOnly
-              value={typedText}
-              placeholder="Choose a prompt on the right to see Copilot respond →"
-              style={{ width: "100%", minHeight: 100, border: "none", outline: "none", resize: "none", background: "transparent", fontFamily: F.regular, fontSize: 13, color: typedText ? C.dark2 : "rgba(46,46,56,0.5)", lineHeight: 1.55 }}
-            />
+          </div>
+        ))}
+      </div>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 24px 88px" }}>
+        <div style={{ width: "100%", maxWidth: 520, aspectRatio: "16 / 9", background: C.white, borderRadius: 4, padding: 32, boxShadow: "0 8px 24px -8px rgba(26, 26, 36, 0.12)", display: "flex", flexDirection: "column", gap: 16 }}>
+          <span aria-hidden style={{ width: 64, height: 5, borderRadius: 2, background: C.yellow }} />
+          <p style={{ margin: 0, fontFamily: F.bold, fontSize: 22, color: C.offBlack, lineHeight: 1.2 }}>EY AI Strategy 2026</p>
+          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01, lineHeight: 1.45 }}>
+            Accelerating enterprise growth through trustworthy and compliance-first agentic infrastructure.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 8 }}>
+            {["01 / Trust Governance", "02 / Scalable Models"].map(label => (
+              <div key={label} style={{ background: C.offWhite, borderRadius: 6, padding: 12 }}>
+                <p style={{ margin: "0 0 8px", fontFamily: F.bold, fontSize: 11, color: C.offBlack }}>{label}</p>
+                <span aria-hidden style={{ display: "block", height: 4, width: "100%", borderRadius: 2, background: MOCK_SKEL, marginBottom: 6 }} />
+                <span aria-hidden style={{ display: "block", height: 4, width: "50%", borderRadius: 2, background: MOCK_SKEL }} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+const EXCEL_ROWS: { metric: string; value: string; total?: boolean }[] = [
+  { metric: "Financial Metric", value: "Value (USD)" },
+  { metric: "Enterprise AI Licenses", value: "45,000" },
+  { metric: "Cloud Compute Allocation", value: "128,500" },
+  { metric: "Advisory Governance Fee", value: "32,000" },
+  { metric: "Model Auditing & Compliance", value: "15,000" },
+  { metric: "", value: "" },
+  { metric: "Total Operations Cost", value: "220,500", total: true },
+];
+
+function ExcelWorkspace() {
+  const cols = ["A", "B", "C", "D", "E", "F"];
+  const cell: React.CSSProperties = {
+    borderRight: `1px solid ${C.gray02}`, borderBottom: `1px solid ${C.gray02}`,
+    fontFamily: F.regular, fontSize: 12, color: C.offBlack, padding: "0 8px",
+    display: "flex", alignItems: "center", height: 24, overflow: "hidden",
+  };
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden", background: C.white }}>
+      <div style={{
+        height: 35, borderBottom: `1px solid ${C.gray02}`, display: "flex", alignItems: "center",
+        gap: 10, padding: "0 16px", flexShrink: 0,
+      }}>
+        <span style={{
+          fontFamily: F.bold, fontSize: 12, color: C.offBlack, background: C.offWhite,
+          border: `1px solid ${C.gray02}`, borderRadius: 4, padding: "2px 10px",
+        }}>C7</span>
+        <span aria-hidden style={{ width: 1, height: 16, background: C.gray02 }} />
+        <span style={{ fontFamily: F.bold, fontSize: 13, color: C.gray01, fontStyle: "italic" }}>fx</span>
+        <span style={{ fontFamily: F.regular, fontSize: 13, color: C.offBlack }}>=SUM(C2:C6)</span>
+      </div>
+      <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", paddingBottom: 72 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 2.2fr 1fr 1fr 1fr 1fr", background: C.offWhite }}>
+          <span style={{ ...cell, justifyContent: "center" }} />
+          {cols.map(c => (
+            <span key={c} style={{ ...cell, justifyContent: "center", fontFamily: F.bold, fontSize: 11, color: C.gray01 }}>{c}</span>
+          ))}
+        </div>
+        {EXCEL_ROWS.map((row, i) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "40px 1fr 2.2fr 1fr 1fr 1fr 1fr" }}>
+            <span style={{ ...cell, justifyContent: "center", background: C.offWhite, fontSize: 11, color: C.gray01 }}>{i + 1}</span>
+            <span style={cell} />
+            <span style={{ ...cell, fontFamily: i === 0 || row.total ? F.bold : F.regular }}>{row.metric}</span>
+            <span style={{ ...cell, justifyContent: "flex-end", fontFamily: i === 0 || row.total ? F.bold : F.regular }}>{row.value}</span>
+            <span style={cell} /><span style={cell} /><span style={cell} />
+          </div>
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={`e${i}`} style={{ display: "grid", gridTemplateColumns: "40px 1fr 2.2fr 1fr 1fr 1fr 1fr" }}>
+            <span style={{ ...cell, justifyContent: "center", background: C.offWhite, fontSize: 11, color: C.gray01 }}>{i + 8}</span>
+            {cols.map(c => <span key={c} style={cell} />)}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const OUTLOOK_MAILS = [
+  { from: "EY Compliance Desk", time: "10:24 AM", subject: "AI Audit Status: Action Required", preview: "The regulatory dashboard has detected a slight drift..." },
+  { from: "Sarah Jenkins", time: "9:15 AM", subject: "Re: Governance Framework Update", preview: "Hi Team, please find my comments on Section 3 attached..." },
+  { from: "Microsoft Azure Team", time: "Yesterday", subject: "Azure Compute Quota Increase Approved", preview: "Your subscription request for the governance cluster..." },
+  { from: "Internal Advisory", time: "Yesterday", subject: "Global AI Practice Newsletter - Q1", preview: "Welcome to the quarterly update. Check out the ascent journey..." },
+];
+
+function OutlookWorkspace() {
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+      <div style={{
+        height: 48, background: C.white, borderBottom: `1px solid ${C.gray02}`,
+        display: "flex", alignItems: "center", gap: 8, padding: "0 20px", flexShrink: 0,
+      }}>
+        <span style={{
+          display: "inline-flex", alignItems: "center", gap: 6, height: 32, padding: "0 14px",
+          background: C.confidentBlack, color: C.white, fontFamily: F.bold, fontSize: 13, borderRadius: 4,
+        }}>
+          <Plus size={14} strokeWidth={1.75} aria-hidden /> New Mail
+        </span>
+        <span aria-hidden style={{ width: 1, height: 16, background: C.gray02, margin: "0 6px" }} />
+        <MockTool icon={CornerUpLeft} />
+        <MockTool icon={CornerUpRight} />
+        <span aria-hidden style={{ width: 1, height: 16, background: C.gray02, margin: "0 6px" }} />
+        <MockTool icon={Archive} />
+        <MockTool icon={Trash2} />
+      </div>
+      <div style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
+        <div style={{ width: 140, flexShrink: 0, background: C.white, borderRight: `1px solid ${C.gray02}`, padding: 12 }}>
+          {[
+            { name: "Inbox", badge: "3", on: true },
+            { name: "Sent Items" },
+            { name: "Drafts", badge: "1" },
+            { name: "Archive" },
+            { name: "Deleted Items" },
+          ].map(f => (
+            <div key={f.name} style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              height: 28, padding: "0 8px", borderRadius: 4,
+              background: f.on ? C.offWhite : "transparent",
+            }}>
+              <span style={{ fontFamily: f.on ? F.bold : F.regular, fontSize: 13, color: C.offBlack }}>{f.name}</span>
+              {f.badge && (
+                <span style={{
+                  fontFamily: F.bold, fontSize: 10, color: C.offBlack, background: C.yellow,
+                  borderRadius: 8, padding: "1px 6px",
+                }}>{f.badge}</span>
+              )}
+            </div>
+          ))}
+        </div>
+        <div style={{ width: 220, flexShrink: 0, background: C.white, borderRight: `1px solid ${C.gray02}`, overflow: "hidden" }}>
+          {OUTLOOK_MAILS.map((m, i) => (
+            <div key={m.subject} style={{
+              padding: "12px 14px", borderBottom: `1px solid ${C.gray02}`,
+              background: i === 0 ? C.offWhite : C.white,
+              borderLeft: i === 0 ? `3px solid ${C.yellow}` : "3px solid transparent",
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
+                <span style={{ fontFamily: F.bold, fontSize: 12, color: C.offBlack }}>{m.from}</span>
+                <span style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, flexShrink: 0 }}>{m.time}</span>
+              </div>
+              <p style={{ margin: "0 0 2px", fontFamily: F.regular, fontSize: 12, color: C.offBlack }}>{m.subject}</p>
+              <p style={{ margin: 0, fontFamily: F.light, fontSize: 11, color: C.gray01, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.preview}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ flex: 1, minWidth: 0, background: C.white, padding: "20px 20px 88px", overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{
+                width: 40, height: 40, borderRadius: 20, background: C.confidentBlack,
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                fontFamily: F.bold, fontSize: 13, color: C.white,
+              }}>CD</span>
+              <div>
+                <p style={{ margin: 0, fontFamily: F.bold, fontSize: 14, color: C.offBlack }}>EY Compliance Desk</p>
+                <p style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>To: AI Team Advisory Group</p>
+              </div>
+            </div>
+            <span style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01 }}>Today, 10:24 AM</span>
+          </div>
+          <p style={{ margin: "0 0 12px", fontFamily: F.bold, fontSize: 16, color: C.offBlack }}>AI Audit Status: Action Required</p>
+          <p style={{ margin: "0 0 10px", fontFamily: F.regular, fontSize: 13, color: C.offBlack, lineHeight: 1.5 }}>Dear Team,</p>
+          <p style={{ margin: "0 0 12px", fontFamily: F.regular, fontSize: 13, color: C.offBlack, lineHeight: 1.5 }}>
+            The responsible AI metrics engine has signaled a drift warning within the core underwriting pipeline. All variables must undergo demographic parity testing immediately to maintain alignment with global standards.
+          </p>
+          <div style={{ background: C.offWhite, borderRadius: 8, padding: 12, marginBottom: 12 }}>
+            <p style={{ margin: "0 0 8px", fontFamily: F.bold, fontSize: 12, color: C.offBlack }}>Next Steps for Team Members:</p>
+            <p style={{ margin: "0 0 4px", fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>• Review model logs and trace data lineage metadata</p>
+            <p style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>• Re-run demographic bias mitigation protocols</p>
+          </div>
+          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 13, color: C.offBlack, lineHeight: 1.5 }}>Best regards, EY AI Governance Desk</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MockStatusBar({ tabId }: { tabId: TabId }) {
+  if (tabId === "excel") {
+    return (
+      <div style={{
+        height: 40, background: C.white, borderTop: `1px solid ${C.gray02}`,
+        display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 20px", flexShrink: 0,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {["Sheet1", "Sheet2", "Summary"].map((s, i) => (
+            <span key={s} style={{
+              fontFamily: i === 0 ? F.bold : F.regular, fontSize: 12,
+              color: i === 0 ? C.offBlack : C.gray01,
+              padding: "4px 12px",
+              borderBottom: i === 0 ? `2px solid ${C.yellow}` : "2px solid transparent",
+            }}>{s}</span>
+          ))}
+          <Plus size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        </div>
+        <MockZoom />
+      </div>
+    );
+  }
+  const left =
+    tabId === "ppt" ? ["Slide 3 of 12", "Notes", "Accessibility: Good to go"]
+    : tabId === "outlook" ? ["Items: 142", "All folders up to date"]
+    : ["184 words", "1,124 characters", "English (US)"];
+  return (
+    <div style={{
+      height: 30, background: C.white, borderTop: `1px solid ${C.gray02}`,
+      display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 20px", flexShrink: 0,
+    }}>
+      <div style={{ display: "flex", gap: 16, fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>
+        {left.map(t => <span key={t}>{t}</span>)}
+      </div>
+      {tabId === "outlook"
+        ? <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>Connected to Microsoft Exchange</span>
+        : <MockZoom />}
+    </div>
+  );
+}
+
+function CopilotAppMock({ tabId, typedText }: { tabId: TabId; typedText: string }) {
+  const workspace =
+    tabId === "excel" ? <ExcelWorkspace />
+    : tabId === "ppt" ? <PptWorkspace />
+    : tabId === "outlook" ? <OutlookWorkspace />
+    : <WordWorkspace />;
+
+  return (
+    <div style={{
+      width: "100%", minHeight: 560, background: C.offWhite, borderRadius: 16, overflow: "hidden",
+      border: `1px solid ${C.gray02}`, boxShadow: "0 16px 40px rgba(26, 26, 36, 0.10)",
+      display: "flex", flexDirection: "column",
+    }}>
+      <MockEditorTopBar tabId={tabId} />
+      <div style={{ flex: 1, position: "relative", display: "flex", flexDirection: "column", minHeight: 0 }}>
+        {workspace}
+        <CopilotOverlay typedText={typedText} />
+      </div>
+      <MockStatusBar tabId={tabId} />
     </div>
   );
 }
@@ -1042,7 +1459,7 @@ function CopilotPromptPanel({ appLabel, prompts, activeIndex, onSelect }: {
   activeIndex: number | null; onSelect: (idx: number) => void;
 }) {
   return (
-    <div style={{ flex: "1 1 392px", minWidth: 0, maxHeight: 800, minHeight: 598, background: `linear-gradient(151deg, ${C.dark2} 8.5%, ${C.dark} 91.5%)`, border: "0.75px solid rgba(255,255,255,0.08)", borderRadius: 22, padding: "22.75px", boxShadow: "0 20px 25px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
+    <div style={{ width: "100%", minHeight: 520, background: `linear-gradient(151deg, ${C.dark2} 8.5%, ${C.dark} 91.5%)`, border: "0.75px solid rgba(255,255,255,0.08)", borderRadius: 22, padding: "22.75px", boxShadow: "0 20px 25px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
       <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, marginBottom: 16, display: "flex", alignItems: "center", gap: 8, lineHeight: 1.5 }}>
         <Sparkles size={16} strokeWidth={1.75} color={C.yellow} aria-hidden /> Ask Copilot in {appLabel}
       </p>
@@ -1074,32 +1491,113 @@ function CopilotPromptPanel({ appLabel, prompts, activeIndex, onSelect }: {
   );
 }
 
-// ── Pattern 2: Use cases | app mock | prompt panel — Word/Excel/PPT/Outlook tabs
+// ── Pattern 2: Use cases (top) → prompts + app mock side-by-side — all app tabs
 function CopilotScene({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
-  const tabMeta = TABS.find(t => t.id === tabId)!;
   const appLabel = APP_NAME[tabId];
   const { activeIndex, typedText, select } = useTypingPrompt();
 
   return (
     <>
-      <div
-        className="copilot-scene"
-        style={{ display: "flex", alignItems: "stretch", gap: 20, maxHeight: 800 }}
-      >
-        <CopilotUseCasePanel useCases={d.useCases} />
-        <CopilotAppMock appLabel={appLabel} accent={tabMeta.appColor} typedText={typedText} />
-        <CopilotPromptPanel
-          appLabel={appLabel}
-          prompts={d.prompts}
-          activeIndex={activeIndex}
-          onSelect={idx => select(idx, d.prompts[idx].text)}
-        />
+      <div className="copilot-scene">
+        <div className="copilot-scene-usecases">
+          <CopilotUseCasePanel useCases={d.useCases} />
+        </div>
+        {tabId === "m365" ? (
+          <div className="copilot-scene-main copilot-scene-main--chat-tour">
+            <M365ChatSlideTour />
+          </div>
+        ) : (
+          <div className="copilot-scene-main">
+            <div className="copilot-scene-prompts">
+              <CopilotPromptPanel
+                appLabel={appLabel}
+                prompts={d.prompts}
+                activeIndex={activeIndex}
+                onSelect={idx => select(idx, d.prompts[idx].text)}
+              />
+            </div>
+            <div className="copilot-scene-mock">
+              <CopilotAppMock tabId={tabId} typedText={typedText} />
+            </div>
+          </div>
+        )}
       </div>
       <style>{`
+        .copilot-scene {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          width: 100%;
+        }
+        .copilot-scene-usecases {
+          width: 100%;
+          overflow-x: auto;
+        }
+        .copilot-scene-usecases > * {
+          flex: none !important;
+          max-height: none !important;
+          min-height: 0 !important;
+          width: 100% !important;
+          padding: 0 !important;
+          display: flex !important;
+          flex-direction: row !important;
+          flex-wrap: nowrap !important;
+          align-items: center !important;
+          gap: 10px !important;
+          overflow-x: auto !important;
+          overflow-y: visible !important;
+        }
+        .copilot-scene-usecases > * > * {
+          flex: 0 0 auto !important;
+          min-width: 0;
+          max-width: none !important;
+          align-items: center !important;
+        }
+        .copilot-scene-main {
+          display: flex;
+          flex-direction: row;
+          align-items: stretch;
+          gap: 20px;
+          width: 100%;
+        }
+        .copilot-scene-main--chat-tour {
+          flex-direction: column;
+        }
+        .copilot-scene-prompts {
+          flex: 0 0 360px;
+          width: 360px;
+          min-width: 320px;
+          max-width: 392px;
+          display: flex;
+        }
+        .copilot-scene-prompts > * {
+          flex: 1 1 auto !important;
+          min-height: 560px !important;
+          max-height: none !important;
+          width: 100% !important;
+        }
+        .copilot-scene-mock {
+          flex: 1 1 auto;
+          min-width: 0;
+          display: flex;
+        }
+        .copilot-scene-mock > * {
+          flex: 1 1 auto !important;
+          width: 100% !important;
+          min-height: 560px !important;
+          max-height: none !important;
+        }
         @media (max-width: 900px) {
-          .copilot-scene { flex-direction: column !important; max-height: none !important; }
-          .copilot-scene > * { flex: 1 1 auto !important; max-height: none !important; min-height: 0 !important; }
+          .copilot-scene-main {
+            flex-direction: column;
+          }
+          .copilot-scene-prompts {
+            flex: none;
+            width: 100%;
+            min-width: 0;
+            max-width: none;
+          }
         }
       `}</style>
     </>
@@ -2763,183 +3261,6 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
   );
 }
 
-// ── M365 Chat feature tour (Priya PPT: M365 Copilot chat features) ───────────
-const M365_CHAT_FEATURES = [
-  {
-    title: "Start a new chat",
-    body: "Finds information quickly across files, emails, meetings and people — like an AI-powered search engine when you know what you’re looking for.",
-    icon: MessagesSquare,
-  },
-  {
-    title: "Pages hub",
-    body: "Your central hub for Copilot-generated content — Pages, images, infographics and items shared with you.",
-    icon: FileText,
-  },
-  {
-    title: "Researcher",
-    body: "Deep, multi-step research across your work data and the web with a structured, source-cited report.",
-    icon: Search,
-  },
-  {
-    title: "Analyst",
-    body: "Turns raw data into insights, forecasts and visualisations — from spreadsheet to answer in minutes.",
-    icon: BarChart3,
-  },
-  {
-    title: "Create an agent",
-    body: "Build your own AI expert for a specific business need — the difference between generic AI and AI that knows your work.",
-    icon: Sparkles,
-  },
-  {
-    title: "Prompt with context",
-    body: "Clear goal, context and references get the best results. Attach files, meetings and emails for a focused response.",
-    icon: Pin,
-  },
-  {
-    title: "Voice & temporary chat",
-    body: "Start dictating with voice chat, or open a temporary chat when you don’t want the thread saved.",
-    icon: Mic,
-  },
-  {
-    title: "Apps, agents & create",
-    body: "Gateway to apps and tools that help Copilot get work done — plus create images, videos, surveys and branded pages.",
-    icon: Rocket,
-  },
-] as const;
-
-function M365ChatFeaturesTour() {
-  return (
-    <div style={{ marginTop: 48 }}>
-      <header style={{ textAlign: "center", marginBottom: 28 }}>
-        <p
-          style={{
-            fontFamily: F.bold,
-            fontSize: 11,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: C.teamsViolet,
-            margin: "0 0 10px",
-          }}
-        >
-          Chat features
-        </p>
-        <h3
-          style={{
-            fontFamily: F.bold,
-            fontSize: "clamp(20px, 2.5vw, 28px)",
-            color: C.dark2,
-            margin: "0 0 10px",
-            letterSpacing: "-0.02em",
-          }}
-        >
-          What you can do in M365 Copilot Chat
-        </h3>
-        <p
-          style={{
-            fontFamily: F.regular,
-            fontSize: typeScale.body.size,
-            color: C.gray01,
-            margin: "0 auto",
-            maxWidth: 640,
-            lineHeight: 1.55,
-          }}
-        >
-          Annotated walkthrough of Copilot Chat — from search and research to agents, voice and create.
-        </p>
-      </header>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-          gap: 14,
-          marginBottom: 32,
-        }}
-      >
-        {M365_CHAT_FEATURES.map((f) => {
-          const Icon = f.icon;
-          return (
-            <div
-              key={f.title}
-              style={{
-                background: C.white,
-                border: `1px solid ${C.gray02}`,
-                borderRadius: 12,
-                padding: 18,
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
-                  background: C.yellow,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: C.dark2,
-                }}
-              >
-                <Icon size={18} strokeWidth={1.75} aria-hidden />
-              </div>
-              <p
-                style={{
-                  fontFamily: F.bold,
-                  fontSize: 14,
-                  color: C.dark2,
-                  margin: 0,
-                  lineHeight: 1.3,
-                }}
-              >
-                {f.title}
-              </p>
-              <p
-                style={{
-                  fontFamily: F.regular,
-                  fontSize: 13,
-                  color: C.gray01,
-                  margin: 0,
-                  lineHeight: 1.5,
-                }}
-              >
-                {f.body}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-
-      <figure style={{ margin: 0, textAlign: "center" }}>
-        <img
-          src="/reference-images/copilot-beyond-chat.gif"
-          alt="Copilot Beyond Chat — mailer animation showing Copilot capabilities beyond chat"
-          style={{
-            width: "100%",
-            maxWidth: 720,
-            height: "auto",
-            borderRadius: 12,
-            border: `1px solid ${C.gray02}`,
-            background: C.white,
-          }}
-        />
-        <figcaption
-          style={{
-            fontFamily: F.regular,
-            fontSize: 13,
-            color: C.gray01,
-            marginTop: 10,
-          }}
-        >
-          Copilot Beyond Chat
-        </figcaption>
-      </figure>
-    </div>
-  );
-}
-
 // ── Full tab section ──────────────────────────────────────────────────────────
 function TabSection({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
@@ -2958,13 +3279,13 @@ function TabSection({ tabId }: { tabId: TabId }) {
         <p style={{ fontFamily: F.regular, fontSize: typeScale.body.size, color: C.gray01, lineHeight: 1.6, maxWidth: 720, margin: "0 auto" }}>{d.subtitle}</p>
       </header>
 
-      {tabId === "agent" ? (
-        <AgentHubTabs />
-      ) : (
-        <CopilotScene tabId={tabId} />
-      )}
+      <CopilotScene tabId={tabId} />
 
-      {tabId === "m365" && <M365ChatFeaturesTour />}
+      {tabId === "agent" && (
+        <div style={{ marginTop: 48 }}>
+          <AgentHubTabs />
+        </div>
+      )}
       </div>
     </div>
   );
