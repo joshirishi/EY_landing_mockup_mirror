@@ -27,14 +27,14 @@ const STARTER_QUOTE = "Everyone is talking about AI, but I don't know where to s
 const SUMMIT_DEFAULT =
   "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.";
 
-/** Furthest open callout index (0 = base camp … 5 = summit). */
-const OPEN_THROUGH: Record<AscentModuleKey, 1 | 2 | 3 | 4 | 5> = {
-  m1_1: 1,
-  m1_2: 2,
-  m1_3: 3,
-  m2: 4,
+/** Furthest open callout index (0 = module 1.1 … 6 = summit). */
+const OPEN_THROUGH: Record<AscentModuleKey, 0 | 1 | 2 | 3 | 4 | 5 | 6> = {
+  m1_1: 0,
+  m1_2: 1,
+  m1_3: 2,
+  m2: 3,
   m3: 4,
-  m4: 5,
+  m4: 6,
 };
 
 const CALLOUT_LAYOUT = [
@@ -42,45 +42,45 @@ const CALLOUT_LAYOUT = [
   { left: 290, top: 195, width: 187 },
   { left: 502, top: 123, width: 167 },
   { left: 722, top: 106, width: 150 },
-  { left: 953, top: 114, width: 170 },
-  { left: 1247, top: 8, width: 180, rounded: 4 as const },
+  { left: 882, top: 118, width: 140 },
+  { left: 1032, top: 52, width: 140 },
+  { left: 1182, top: 8, width: 152, rounded: 4 as const },
 ] as const;
 
 const CURRICULUM_STAGE_NODES: readonly AscentStageNodeEntry[] = [
-  { left: 359, top: 295, icon: "/ascent/icon-book-open.svg", alt: "Foundational Concepts" },
-  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "AI Tax Prompting" },
-  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "M365 Copilot Hub" },
-  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "Phase 2 / Governance" },
-  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Summit" },
+  { left: 359, top: 295, icon: "/ascent/icon-search.svg", alt: "AI Tax Prompting" },
+  { left: 554, top: 260, icon: "/ascent/icon-cpu.svg", alt: "M365 Copilot Hub" },
+  { left: 769, top: 240, icon: "/ascent/icon-trending-up.svg", alt: "Brainstorming Use Cases" },
+  { left: 1018, top: 227, icon: "/ascent/icon-search.svg", alt: "Guidance for Implementation" },
+  { left: 1120, top: 161, icon: "/ascent/icon-cpu.svg", alt: "Closure & AI Reinforcement" },
+  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "AI-enabled tax professional" },
 ];
 
 const CURRICULUM_STAGE_TITLES: readonly AscentStageTitleEntry[] = [
-  { title: "Base Camp", markerTop: 366, markerSize: 46, calloutIndex: 0 },
-  { title: "Foundational Concepts", markerTop: 295, markerSize: 40, calloutIndex: 1 },
-  { title: "AI Tax Prompting", markerTop: 260, markerSize: 40, calloutIndex: 2 },
-  { title: "M365 Copilot Hub", markerTop: 240, markerSize: 40, calloutIndex: 3 },
-  { title: "Phase 2 / Governance", markerTop: 227, markerSize: 40, calloutIndex: 4 },
-  { title: "Summit", markerTop: 94, markerSize: 40, calloutIndex: 5 },
+  { title: "Foundational Concepts", markerTop: 366, markerSize: 46, calloutIndex: 0 },
+  { title: "AI Tax Prompting", markerTop: 295, markerSize: 40, calloutIndex: 1 },
+  { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
+  { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
+  { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
+  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1168, labelTop: 168, labelWidth: 118 },
+  { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1268, labelTop: 102, labelWidth: 118 },
 ];
 
-function quoteForIndex(index: number, moduleKey: AscentModuleKey): string {
-  if (index === 0) return STARTER_QUOTE;
-  if (index === 1) return MODULE_COMPLETION_QUOTES.m1_1;
-  if (index === 2) return MODULE_COMPLETION_QUOTES.m1_2;
-  if (index === 3) return MODULE_COMPLETION_QUOTES.m1_3;
-  if (index === 4) {
-    if (moduleKey === "m2") return MODULE_COMPLETION_QUOTES.m2;
-    if (moduleKey === "m3" || moduleKey === "m4") return MODULE_COMPLETION_QUOTES.m3;
-    return MODULE_COMPLETION_QUOTES.m2;
-  }
-  if (moduleKey === "m4") return MODULE_COMPLETION_QUOTES.m4;
+/** Module-end / progress trek — confident completion quotes per marker. */
+function quoteForIndex(index: number): string {
+  if (index === 0) return MODULE_COMPLETION_QUOTES.m1_1;
+  if (index === 1) return MODULE_COMPLETION_QUOTES.m1_2;
+  if (index === 2) return MODULE_COMPLETION_QUOTES.m1_3;
+  if (index === 3) return MODULE_COMPLETION_QUOTES.m2;
+  if (index === 4) return MODULE_COMPLETION_QUOTES.m3;
+  if (index === 5) return MODULE_COMPLETION_QUOTES.m4;
   return SUMMIT_DEFAULT;
 }
 
-function buildCallouts(moduleKey: AscentModuleKey): readonly AscentCalloutEntry[] {
+function buildCallouts(): readonly AscentCalloutEntry[] {
   return CALLOUT_LAYOUT.map((layout, index) => ({
     ...layout,
-    quote: quoteForIndex(index, moduleKey),
+    quote: quoteForIndex(index),
   }));
 }
 
@@ -97,21 +97,20 @@ export type ModuleProgressOptions = {
 const DEFAULT_NEXT_STEP: Record<AscentModuleKey, string> = {
   m1_1: "AI Tax Prompting",
   m1_2: "M365 Copilot Hub",
-  m1_3: "Phase 2",
-  m2: "Phase 3",
-  m3: "Phase 4",
+  m1_3: "Brainstorming Use Cases",
+  m2: "Guidance for Implementation",
+  m3: "Closure & AI Reinforcement",
   m4: "Control Room",
 };
 
-/** Hub landing (/phased) — base camp open, continue into Phase 1. */
-export function buildHubLandingProps(onNavigateToPhase1: () => void): AscentOverrides {
+/** Hub landing (/phased) — base camp open; no next-step pill (module-end treks keep it). */
+export function buildHubLandingProps(): AscentOverrides {
+  const callouts = buildCallouts();
   return {
-    callouts: buildCallouts("m1_1"),
+    callouts: [{ ...callouts[0], quote: STARTER_QUOTE }, ...callouts.slice(1)],
     stageNodes: CURRICULUM_STAGE_NODES,
     stageTitleLabels: CURRICULUM_STAGE_TITLES,
     defaultOpenCallouts: [0],
-    nextStepCtaLabel: "Foundational Concepts",
-    onNextStepCta: onNavigateToPhase1,
   };
 }
 
@@ -129,10 +128,11 @@ export function buildModuleProgressProps(
     options.onNextStepCta ?? options.onLastNodeCta ?? options.onBaseCampCta;
 
   return {
-    callouts: buildCallouts(moduleKey),
+    callouts: buildCallouts(),
     stageNodes: CURRICULUM_STAGE_NODES,
     stageTitleLabels: CURRICULUM_STAGE_TITLES,
     defaultOpenCallouts,
+    progressThrough: through,
     // Base Camp stays a marker only — continue lives on the next trek step
     onBaseCampCta: undefined,
     nextStepCtaLabel: onNextStepCta ? nextStepCtaLabel : undefined,

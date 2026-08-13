@@ -2369,8 +2369,7 @@ function InteractiveContentArea({ onProceed, onNavigateToBrainstorming, onNaviga
 
 export function PhasedEngagementView({ onNavigateToPhase1, onNavigateToBrainstorming, onNavigateToImplementation, onNavigateToClosure }: { onNavigateToPhase1?: () => void; onNavigateToBrainstorming?: () => void; onNavigateToImplementation?: () => void; onNavigateToClosure?: () => void } = {}) {
   const navigate = useNavigate();
-  const goPhase1 = onNavigateToPhase1 ?? (() => navigate("/phase1"));
-  const hubAscentProps = buildHubLandingProps(goPhase1);
+  const hubAscentProps = buildHubLandingProps();
 
   return (
     <div className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden" data-name="EY.ai Tax Labs - Phased Engagement">

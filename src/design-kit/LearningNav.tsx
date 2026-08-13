@@ -206,7 +206,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
       <div
         className="flex flex-wrap items-center justify-between gap-3 md:gap-4 px-4 sm:px-6 md:px-10 py-3"
         style={{
-          background: colors.offBlack,
+          background: colors.confidentBlack,
           borderBottom: `1px solid ${colors.offBlack}`,
         }}
       >

@@ -2,7 +2,7 @@
  * SiteHeader — shared top chrome. Two variants:
  *
  *   variant="hub" (default) — Home + Phased Engagement only.
- *     Yellow strip, EY mark + "AI for Tax Excellence", tagline row below.
+ *     Same brand bar as learning; optional rightSlot for hub actions.
  *
  *   variant="learning" — Phase 1 overview and every module page (Figma 3508:4135).
  *     Brand block "AI for Tax Excellence" + tagline.
@@ -84,73 +84,86 @@ export function SiteHeader({
   );
 }
 
+const brandBarStyle: React.CSSProperties = {
+  background: colors.offBlack,
+  borderBottom: `1px solid ${colors.confidentBlack}`,
+};
+
+function BrandBarHomeButton({
+  onNavigate,
+  ariaLabel,
+}: {
+  onNavigate: (path: string) => void;
+  ariaLabel: string;
+}) {
+  return (
+    <button
+      onClick={() => onNavigate("/")}
+      className="flex items-center gap-3 md:gap-4 min-w-0"
+      style={{
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        padding: 0,
+        borderRadius: 4,
+      }}
+      aria-label={ariaLabel}
+      onFocus={applyFocusRing}
+      onBlur={clearFocusRing}
+    >
+      <div
+        style={{
+          background: colors.offBlack,
+          width: 40,
+          height: 40,
+          borderRadius: 4,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+        }}
+      >
+        <div style={{ transform: "scale(0.68)", transformOrigin: "center" }}>
+          <EYLogo variant="mark-only" theme="dark" />
+        </div>
+      </div>
+      <div className="flex flex-col gap-0.5 items-start min-w-0">
+        <span
+          className="text-[16px] md:text-[20px] truncate"
+          style={{ color: "#FFFFFF", fontFamily: fonts.bold, lineHeight: 1.2 }}
+        >
+          {PRODUCT_TITLE}
+        </span>
+        <span
+          className="text-[11px] md:text-[12px] truncate"
+          style={{
+            color: colors.gray02,
+            fontFamily: fonts.regular,
+            lineHeight: 1.3,
+          }}
+        >
+          {PRODUCT_TAGLINE}
+        </span>
+      </div>
+    </button>
+  );
+}
+
 /** Figma Level 1 — brand bar (Phase 1 + modules). */
 function LearningBrandBar({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
     <div
       className="flex items-center gap-3 w-full px-4 sm:px-6 md:px-10 py-3 md:py-4"
-      style={{
-        background: colors.confidentBlack,
-        borderBottom: "1px solid #2E2E38",
-      }}
+      style={brandBarStyle}
     >
-      <button
-        onClick={() => onNavigate("/")}
-        className="flex items-center gap-3 md:gap-4 min-w-0"
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: 0,
-          borderRadius: 4,
-        }}
-        aria-label={`${BRAND_LABEL} — back to overview`}
-        onFocus={applyFocusRing}
-        onBlur={clearFocusRing}
-      >
-        <div
-          style={{
-            background: colors.offBlack,
-            width: 40,
-            height: 40,
-            borderRadius: 4,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <div style={{ transform: "scale(0.68)", transformOrigin: "center" }}>
-            <EYLogo variant="mark-only" theme="dark" />
-          </div>
-        </div>
-        <div className="flex flex-col gap-0.5 items-start min-w-0">
-          <span
-            className="text-[16px] md:text-[20px] truncate"
-            style={{ color: "#FFFFFF", fontFamily: fonts.bold, lineHeight: 1.2 }}
-          >
-            {PRODUCT_TITLE}
-          </span>
-          <span
-            className="text-[11px] md:text-[12px] truncate"
-            style={{
-              color: colors.gray02,
-              fontFamily: fonts.regular,
-              lineHeight: 1.3,
-            }}
-          >
-            {PRODUCT_TAGLINE}
-          </span>
-        </div>
-      </button>
+      <BrandBarHomeButton onNavigate={onNavigate} ariaLabel={`${BRAND_LABEL} — back to overview`} />
     </div>
   );
 }
 
-/** Hub chrome for Home + Phased Engagement. */
+/** Hub chrome for Home + Phased Engagement — same brand bar as learning. */
 function HubBrandBar({
   onNavigate,
-  activeSection,
   rightSlot,
 }: {
   onNavigate: (path: string) => void;
@@ -158,61 +171,12 @@ function HubBrandBar({
   rightSlot?: React.ReactNode;
 }) {
   return (
-    <>
-      <div style={{ background: colors.yellow, height: 3, width: "100%" }} />
-      <div
-        style={{
-          background: colors.offBlack,
-          height: 64,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 16px",
-        }}
-      >
-        <button
-          onClick={() => onNavigate("/")}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 4, borderRadius: 4, display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}
-          aria-label={`${BRAND_LABEL} — go to home`}
-          onFocus={applyFocusRing}
-          onBlur={clearFocusRing}
-        >
-          <EYLogo variant="mark-only" theme="dark" />
-          <span
-            style={{
-              color: "#FFFFFF",
-              fontFamily: fonts.bold,
-              fontSize: 14,
-              borderLeft: "1px solid rgba(255,255,255,0.3)",
-              paddingLeft: 12,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {PRODUCT_TITLE}
-          </span>
-        </button>
-        {rightSlot}
-      </div>
-
-      <div
-        style={{
-          background: colors.confidentBlack,
-          padding: "10px 16px",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        <p
-          style={{
-            margin: 0,
-            color: colors.gray02,
-            fontFamily: fonts.regular,
-            fontSize: 13,
-            lineHeight: 1.4,
-          }}
-        >
-          {PRODUCT_TAGLINE}
-        </p>
-      </div>
-    </>
+    <div
+      className="flex items-center justify-between gap-3 w-full px-4 sm:px-6 md:px-10 py-3 md:py-4"
+      style={brandBarStyle}
+    >
+      <BrandBarHomeButton onNavigate={onNavigate} ariaLabel={`${BRAND_LABEL} — go to home`} />
+      {rightSlot}
+    </div>
   );
 }
