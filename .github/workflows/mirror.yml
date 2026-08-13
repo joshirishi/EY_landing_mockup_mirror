@@ -14,6 +14,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify mirror deploy key secret
+        env:
+          MIRROR_DEPLOY_KEY: ${{ secrets.MIRROR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MIRROR_DEPLOY_KEY}" ]; then
+            echo "::error::MIRROR_DEPLOY_KEY is missing or empty. In joshirishi/EY_landing_mockup go to Settings → Secrets and variables → Actions → Repository secrets, add MIRROR_DEPLOY_KEY with the full deploy key private key (include -----BEGIN ... PRIVATE KEY----- and -----END ... PRIVATE KEY----- lines, no extra quotes)."
+            exit 1
+          fi
+          if ! printf '%s' "${MIRROR_DEPLOY_KEY}" | grep -qE 'BEGIN (OPENSSH|RSA|EC|DSA) PRIVATE KEY'; then
+            echo "::error::MIRROR_DEPLOY_KEY does not look like a PEM private key. Re-paste the deploy key from GitHub → joshirishi/EY_landing_mockup_mirror → Settings → Deploy keys (generate a new key pair if needed)."
+            exit 1
+          fi
+
       - name: Load SSH deploy key
         uses: webfactory/ssh-agent@v0.9.0
         with:
