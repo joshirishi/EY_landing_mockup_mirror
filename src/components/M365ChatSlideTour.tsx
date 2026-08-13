@@ -26,7 +26,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { colors, fonts as F, spacing, spectrumCss } from "../design-kit/tokens";
+import { colors, fonts as F, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 
 const C = {
   ...colors,
@@ -318,6 +318,341 @@ function CopilotHex({ size }: { size: number }) {
   );
 }
 
+const CHAT_SIDEBAR_W = 194;
+const QUICK_PILLS = ["File Insights", "Inbox Triage", "People Search", "Meeting Prep"] as const;
+
+/** Shared left sidebar — matches PPTX slide 1 essentials and Figma 4035:4539. */
+function ChatSidebar({ icon }: { icon: { size: number; strokeWidth: number; color: string } }) {
+  return (
+    <div
+      style={{
+        width: CHAT_SIDEBAR_W,
+        flexShrink: 0,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 24,
+        padding: "24px 16px",
+        borderRight: `1px solid ${line}`,
+        background: C.offWhite,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+        <span
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 6,
+            background: C.gray02,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Bot size={16} strokeWidth={1.75} color={C.dark2} />
+        </span>
+        <span style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Grid3x3 size={18} strokeWidth={1.75} color={C.dark2} />
+        </span>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%" }}>
+        <NavRow icon={<PenLine {...icon} />} label="New chat" />
+        <NavRow icon={<Search {...icon} />} label="Search" />
+        <NavRow icon={<BookOpen {...icon} />} label="Library" />
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%" }}>
+        <p
+          style={{
+            fontFamily: F.bold,
+            fontSize: 11,
+            fontWeight: 700,
+            color: C.gray01,
+            textTransform: "uppercase",
+            margin: 0,
+          }}
+        >
+          Agents
+        </p>
+        <NavRow icon={<AgentDot color={C.frameGreen} />} label="Researcher" />
+        <NavRow icon={<AgentDot color={C.framePurple} />} label="Analyst" />
+        <NavRow icon={<AgentDot color={C.frameBlue} />} label="Labour Code Analyst" />
+        <NavRow icon={<AgentDot color={C.frameMagenta} />} label="Tax AI Assessment Evaluator" />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "10px 12px",
+            borderRadius: 8,
+            width: "100%",
+            background: `color-mix(in srgb, ${C.gray02} 28%, ${C.offWhite})`,
+          }}
+        >
+          <span
+            style={{
+              width: 18,
+              height: 18,
+              overflow: "hidden",
+              flexShrink: 0,
+              borderRadius: 2,
+              background: spectrumCss(4, "135deg"),
+            }}
+          />
+          <span style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: C.dark2, whiteSpace: "nowrap" }}>
+            New agent
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 8, width: "100%" }}>
+          <ChevronsRight size={14} strokeWidth={1.75} color={C.gray01} />
+          <span style={{ fontFamily: F.regular, fontSize: 14, color: C.gray01, whiteSpace: "nowrap" }}>
+            More agents
+          </span>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 12, width: "100%" }}>
+        <p
+          style={{
+            fontFamily: F.bold,
+            fontSize: 11,
+            fontWeight: 700,
+            color: C.gray01,
+            textTransform: "uppercase",
+            margin: 0,
+          }}
+        >
+          Chats
+        </p>
+        {["Creative AI Readiness Exercises…", "AI for Tax Excellence Trailer…", "Meeting Highlights Extraction"].map(title => (
+          <span
+            key={title}
+            style={{
+              fontFamily: F.regular,
+              fontSize: 10,
+              color: C.gray01,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              padding: "4px 8px",
+            }}
+          >
+            {title}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Slide 1 canvas — main Copilot Chat home (reference image1.png / PPTX essentials).
+ * Sidebar callouts from slide 1 align to this layout.
+ */
+function ChatMainCanvas() {
+  const { ref, scale } = useScaleToWidth(FIGMA_W);
+  const icon = { size: 16, strokeWidth: 1.75, color: C.dark2 } as const;
+
+  return (
+    <div
+      ref={ref}
+      role="img"
+      aria-label="Microsoft 365 Copilot Chat home"
+      style={{
+        width: "100%",
+        aspectRatio: `${FIGMA_W} / ${FIGMA_H}`,
+        position: "relative",
+        overflow: "hidden",
+        background: C.white,
+      }}
+    >
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: FIGMA_W,
+          height: FIGMA_H,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          display: "flex",
+          background: C.white,
+        }}
+      >
+        <ChatSidebar icon={icon} />
+
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            padding: "20px 48px 36px",
+            background: C.white,
+          }}
+        >
+          {/* Top bar — Work IQ, Auto, New design, governance shield */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "5px 12px",
+                  borderRadius: 999,
+                  border: `1px solid ${C.gray02}`,
+                  fontFamily: F.bold,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: C.dark2,
+                }}
+              >
+                <Sparkles size={14} strokeWidth={1.75} color={C.framePurple} aria-hidden />
+                Work IQ
+              </span>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "5px 10px",
+                  borderRadius: 999,
+                  border: `1px solid ${C.gray02}`,
+                }}
+              >
+                <span style={{ fontFamily: F.regular, fontSize: 12, color: C.dark2 }}>Auto</span>
+                <ChevronDown size={12} strokeWidth={1.75} color={C.dark2} />
+              </span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>New design</span>
+              <span
+                style={{
+                  width: 36,
+                  height: 20,
+                  borderRadius: 999,
+                  background: C.frameGreen,
+                  position: "relative",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    right: 2,
+                    top: 2,
+                    width: 16,
+                    height: 16,
+                    borderRadius: 999,
+                    background: C.white,
+                  }}
+                />
+              </span>
+              <span
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 999,
+                  background: `color-mix(in srgb, ${C.success} 18%, ${C.white})`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Check size={16} strokeWidth={1.75} color={C.success} />
+              </span>
+              <MoreHorizontal size={20} strokeWidth={1.75} color={C.dark2} />
+            </div>
+          </div>
+
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 28,
+              width: "100%",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: F.bold,
+                fontSize: 28,
+                fontWeight: 700,
+                lineHeight: 1.25,
+                color: C.dark2,
+                textAlign: "center",
+                margin: 0,
+              }}
+            >
+              Hi, what can I help you with?
+            </p>
+            <div style={{ width: "100%", maxWidth: 560, display: "flex", flexDirection: "column", gap: 14 }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  width: "100%",
+                  padding: "14px 18px",
+                  borderRadius: 30,
+                  border: `1px solid ${C.gray02}`,
+                  background: C.white,
+                  boxShadow: `0 4px 16px color-mix(in srgb, ${C.confidentBlack} 6%, transparent)`,
+                }}
+              >
+                <Plus size={18} strokeWidth={1.75} color={C.dark2} />
+                <span style={{ flex: 1, fontFamily: F.regular, fontSize: 15, color: C.gray01 }}>
+                  Message Copilot
+                </span>
+                <Mic size={18} strokeWidth={1.75} color={C.dark2} />
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                {QUICK_PILLS.map(label => (
+                  <span
+                    key={label}
+                    style={{
+                      padding: "8px 14px",
+                      borderRadius: 999,
+                      border: `1px solid ${C.gray02}`,
+                      background: C.offWhite,
+                      fontFamily: F.regular,
+                      fontSize: 12,
+                      color: C.dark2,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {label}
+                  </span>
+                ))}
+                <span
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 999,
+                    border: `1px solid ${C.gray02}`,
+                    background: C.offWhite,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <MoreHorizontal size={14} strokeWidth={1.75} color={C.gray01} />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function IconBtn({ children, filled }: { children: ReactNode; filled?: boolean }) {
   return (
     <span
@@ -373,110 +708,7 @@ function ChatTourCanvas() {
           background: C.white,
         }}
       >
-        {/* Left sidebar */}
-        <div
-          style={{
-            width: 194,
-            flexShrink: 0,
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-            padding: "24px 16px",
-            borderRight: `1px solid ${line}`,
-            background: C.offWhite,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-            <span
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                background: C.gray02,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Bot size={16} strokeWidth={1.75} color={C.dark2} />
-            </span>
-            <span style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Grid3x3 size={18} strokeWidth={1.75} color={C.dark2} />
-            </span>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%" }}>
-            <NavRow icon={<PenLine {...icon} />} label="New chat" />
-            <NavRow icon={<Search {...icon} />} label="Search" />
-            <NavRow icon={<BookOpen {...icon} />} label="Library" />
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%" }}>
-            <p
-              style={{
-                fontFamily: F.bold,
-                fontSize: 11,
-                fontWeight: 700,
-                color: C.gray01,
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Agents
-            </p>
-            <NavRow icon={<AgentDot color={C.frameGreen} />} label="Researcher" />
-            <NavRow icon={<AgentDot color={C.framePurple} />} label="Analyst" />
-            <NavRow icon={<AgentDot color={C.frameBlue} />} label="Labour Code Analyst" />
-            <NavRow icon={<AgentDot color={C.frameMagenta} />} label="Tax AI Assessment Evaluator" />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: "10px 12px",
-                borderRadius: 8,
-                width: "100%",
-                background: `color-mix(in srgb, ${C.gray02} 28%, ${C.offWhite})`,
-              }}
-            >
-              <span
-                style={{
-                  width: 18,
-                  height: 18,
-                  overflow: "hidden",
-                  flexShrink: 0,
-                  borderRadius: 2,
-                  background: spectrumCss(4, "135deg"),
-                }}
-              />
-              <span style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: C.dark2, whiteSpace: "nowrap" }}>
-                New agent
-              </span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 8, width: "100%" }}>
-              <ChevronsRight size={14} strokeWidth={1.75} color={C.gray01} />
-              <span style={{ fontFamily: F.regular, fontSize: 14, color: C.gray01, whiteSpace: "nowrap" }}>
-                More agents
-              </span>
-            </div>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", paddingTop: 12, width: "100%" }}>
-            <p
-              style={{
-                fontFamily: F.bold,
-                fontSize: 11,
-                fontWeight: 700,
-                color: C.gray01,
-                textTransform: "uppercase",
-                margin: 0,
-              }}
-            >
-              Chats
-            </p>
-          </div>
-        </div>
+        <ChatSidebar icon={icon} />
 
         {/* Centre chat */}
         <div
@@ -943,6 +1175,49 @@ export function M365ChatSlideTour() {
         outline: "none",
       }}
     >
+      {/* Slide header — PPTX slide 1 / 2 labels + progress */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span
+            style={{
+              fontFamily: F.bold,
+              fontSize: typeScale.label.size,
+              fontWeight: 700,
+              letterSpacing: typeScale.label.tracking,
+              textTransform: "uppercase",
+              color: C.dark2,
+            }}
+          >
+            {slide.label}
+          </span>
+          <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>
+            Step {calloutIndex + 1} of {totalCallouts}
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }} aria-hidden>
+          {CHAT_TOUR_SLIDES.map((s, i) => (
+            <span
+              key={s.label}
+              style={{
+                width: i === slideIndex ? 24 : 8,
+                height: 8,
+                borderRadius: 999,
+                background: i === slideIndex ? C.yellow : C.gray02,
+                transition: "width 0.2s ease",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
       <div
         style={{
           position: "relative",
@@ -954,7 +1229,7 @@ export function M365ChatSlideTour() {
           boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
         }}
       >
-        <ChatTourCanvas />
+        {slideIndex === 0 ? <ChatMainCanvas /> : <ChatTourCanvas />}
 
         {slide.callouts.map((c, i) => (
           <CalloutBox
@@ -973,7 +1248,7 @@ export function M365ChatSlideTour() {
           alignItems: "center",
           justifyContent: "space-between",
           gap: 12,
-          padding: `${spacing.sm}px 0 0`,
+          padding: "12px 0 0",
         }}
       >
         <button

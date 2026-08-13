@@ -5,7 +5,7 @@ import {
   BarChart3, Bold, Calculator, Check, CheckCircle, ChevronDown, ChevronLeft,
   ChevronRight, CirclePlus, ClipboardList, Code2, Columns2, Compass, Copy,
   CornerUpLeft, CornerUpRight, DollarSign, ExternalLink, FileText, FolderOpen,
-  Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, LineChart, Link2,
+  Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, LineChart, Link2, BookOpen,
   List, ListOrdered, Mail, Megaphone, MessagesSquare, Mic, Minus, PenLine,
   Percent, Pin, Play, Plus, PlusSquare, Rocket, Search, Sparkles, Strikethrough,
   Target, Timer, Trash2, Type, Underline, X, XCircle, ZoomIn, ZoomOut,
@@ -198,10 +198,11 @@ const SECTION_DATA: Record<TabId, {
     h2: "Copilot in M365 Chat",
     subtitle: "Use Copilot in M365 Chat to ask questions, get summaries, and generate content across your Microsoft 365 data. Chat brings together information from documents, emails, meetings, and contacts to give you AI-powered answers grounded in your work data.",
     useCases: [
-      { icon: Globe,         title: "Search Across Work",      body: "Find tax-related discussions, documents, emails and files across Microsoft 365." },
-      { icon: ClipboardList, title: "Prepare Matter Briefs",   body: "Generate briefing notes before client calls or internal reviews." },
-      { icon: Link2,         title: "Connect Tax Context",     body: "Connect compliance data, research notes, email trails and presentation inputs." },
-      { icon: Rocket,        title: "Accelerate First Drafts", body: "Create starting drafts for emails, memos, decks, trackers and meeting prep." },
+      { icon: MessagesSquare, title: "Start a New Chat",   body: "Opens a fresh conversation whenever you need a new tax question or research task." },
+      { icon: Search,         title: "Search Across Work", body: "Finds files, emails, meetings and people across M365 — like an AI-powered search engine." },
+      { icon: BookOpen,       title: "Pages Hub",          body: "Central hub for Copilot-generated Pages, images, infographics and shared items." },
+      { icon: Search,         title: "Researcher Agent",   body: "Deep, multi-step research across work data and the web with source-cited reports." },
+      { icon: BarChart3,      title: "Analyst Agent",      body: "Analyzes data, identifies patterns and turns raw information into insights and forecasts." },
     ],
     panelSubtitle: "Ask cross-app questions and retrieve tax context across Microsoft 365.",
     prompts: [
@@ -1491,6 +1492,47 @@ function CopilotPromptPanel({ appLabel, prompts, activeIndex, onSelect }: {
   );
 }
 
+// ── Work IQ governance strip — PPTX slide 2 grounding callout for M365 Chat tab
+function CopilotGovernanceStrip() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 14,
+        padding: spacing.cardPadding,
+        borderRadius: 14,
+        background: C.white,
+        border: `0.75px solid ${C.gray02}`,
+      }}
+    >
+      <span
+        style={{
+          width: 36,
+          height: 36,
+          minWidth: 36,
+          borderRadius: 10,
+          background: `color-mix(in srgb, ${C.success} 14%, ${C.white})`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+        }}
+      >
+        <CheckCircle size={18} strokeWidth={1.75} color={C.success} aria-hidden />
+      </span>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ fontFamily: F.bold, fontSize: typeScale.label.size, fontWeight: 700, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: C.dark2, margin: "0 0 6px" }}>
+          Work IQ grounding
+        </p>
+        <p style={{ fontFamily: F.regular, fontSize: typeScale.body.size, fontWeight: typeScale.body.weight, color: C.gray01, margin: 0, lineHeight: 1.55 }}>
+          Work IQ grounds Copilot in your Microsoft 365 data — the difference between generic AI and AI that knows your work context. Responses respect your organisation&apos;s permissions and governance policies.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ── Pattern 2: Use cases (top) → prompts + app mock side-by-side — all app tabs
 function CopilotScene({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
@@ -1506,6 +1548,7 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
         {tabId === "m365" ? (
           <div className="copilot-scene-main copilot-scene-main--chat-tour">
             <M365ChatSlideTour />
+            <CopilotGovernanceStrip />
           </div>
         ) : (
           <div className="copilot-scene-main">
