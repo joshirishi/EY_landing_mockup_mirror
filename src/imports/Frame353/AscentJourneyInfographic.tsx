@@ -5,7 +5,7 @@
  * Fixed 1536×530 artboard, scales to container width via ResizeObserver.
  */
 
-import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { colors, fonts, typeScale } from "@/design-kit";
 
 const W = 1536;
@@ -131,13 +131,13 @@ function distAt(path: SVGPathElement, len: number, tx: number, ty: number) {
 
 const CALLOUTS = [
   { left: 140, top: 250, width: 149, quote: "I am confident in the foundational concepts of AI and ready to reimagine tax with AI-powered ways of working." },
-  { left: 290, top: 195, width: 187, quote: "I understand prompt elements and techniques and can effectively communicate with AI." },
-  { left: 502, top: 123, width: 167, quote: "I understand M365 Copilot Chat and Agents and can use them to work smarter and faster." },
-  { left: 722, top: 106, width: 150, quote: "I can now identify AI opportunities in tax workflows and know when to use prompts or agents." },
-  // Upper-right callouts — diagonal stagger (unique x bands) so all seven can stay open.
-  { left: 882, top: 118, width: 140, quote: "I can confidently design prompts and Agents to solve business and tax challenges." },
-  { left: 1032, top: 52, width: 140, quote: "I can use AI responsibly while ensuring compliance and governance." },
-  { left: 1182, top: 8, width: 152, quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.", rounded: 4 },
+  { left: 305, top: 188, width: 175, quote: "I understand prompt elements and techniques and can effectively communicate with AI." },
+  { left: 498, top: 115, width: 165, quote: "I understand M365 Copilot Chat and Agents and can use them to work smarter and faster." },
+  { left: 685, top: 95, width: 145, quote: "I can now identify AI opportunities in tax workflows and know when to use prompts or agents." },
+  // Upper-right callouts — wider x gaps + diagonal stagger so all seven can stay open.
+  { left: 848, top: 125, width: 125, quote: "I can confidently design prompts and Agents to solve business and tax challenges." },
+  { left: 995, top: 38, width: 110, quote: "I can use AI responsibly while ensuring compliance and governance." },
+  { left: 1125, top: 10, width: 115, quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.", rounded: 4 },
 ] as const;
 
 const STAGE_NODES = [
@@ -184,6 +184,116 @@ function boxesOverlap(a: BoxRect, b: BoxRect, gap = OVERLAY_GAP): boolean {
     a.top < b.top + b.height + gap &&
     a.top + a.height + gap > b.top
   );
+}
+
+/** Estimate wrapped callout height from quote length — used for overlap resolution. */
+function estimateCalloutHeight(quote: string, width: number): number {
+  const innerWidth = Math.max(width - 24, 80);
+  const charsPerLine = Math.max(10, Math.floor(innerWidth / 5.2));
+  const lines = Math.ceil(quote.length / charsPerLine);
+  return 12 + 14 + 4 + lines * 15 + 12 + 16;
+}
+
+/** Nudge a callout until it clears fixed obstacles (other callouts, title pills). */
+function resolveCalloutBox(desired: BoxRect, obstacles: BoxRect[]): BoxRect {
+  let box = clampBox(desired);
+  const preferUp = desired.top < BANNER_TOP / 2;
+  const maxDown = preferUp ? desired.top + 36 : OVERLAY_MAX_BOTTOM;
+
+  for (let attempt = 0; attempt < 64; attempt++) {
+    const blocker = obstacles.find((o) => boxesOverlap(box, o));
+    if (!blocker) return box;
+
+    if (preferUp) {
+      const above = clampBox({ ...box, top: blocker.top - box.height - OVERLAY_GAP });
+      if (!obstacles.some((o) => boxesOverlap(above, o))) {
+        box = above;
+        continue;
+      }
+
+      const upLeft = clampBox({
+        ...box,
+        left: blocker.left - box.width - OVERLAY_GAP,
+      });
+      if (!obstacles.some((o) => boxesOverlap(upLeft, o))) {
+        box = upLeft;
+        continue;
+      }
+    }
+
+    const belowTop = blocker.top + blocker.height + OVERLAY_GAP;
+    if (belowTop <= maxDown) {
+      const below = clampBox({ ...box, top: belowTop });
+      if (!obstacles.some((o) => boxesOverlap(below, o))) {
+        box = below;
+        continue;
+      }
+    }
+
+    const toLeft = clampBox({
+      ...box,
+      left: blocker.left - box.width - OVERLAY_GAP,
+    });
+    if (!obstacles.some((o) => boxesOverlap(toLeft, o))) {
+      box = toLeft;
+      continue;
+    }
+
+    const toRight = clampBox({
+      ...box,
+      left: blocker.left + blocker.width + OVERLAY_GAP,
+    });
+    if (!obstacles.some((o) => boxesOverlap(toRight, o))) {
+      box = toRight;
+      continue;
+    }
+
+    if (box.top + 12 <= maxDown) {
+      box = clampBox({ ...box, top: box.top + 12 });
+    } else {
+      break;
+    }
+  }
+
+  return box;
+}
+
+/** Resolve non-overlapping boxes for every open callout (labels are fixed obstacles). */
+function resolveOpenCalloutLayout(
+  callouts: readonly AscentCalloutEntry[],
+  stageTitleLabels: readonly AscentStageTitleEntry[],
+  openCallouts: ReadonlySet<CalloutIndex>,
+): Map<CalloutIndex, BoxRect> {
+  const layout = new Map<CalloutIndex, BoxRect>();
+  const obstacles: BoxRect[] = [];
+
+  openCallouts.forEach((index) => {
+    const label = stageTitleLabels[index];
+    const callout = callouts[index];
+    if (label && callout) {
+      obstacles.push(getTitleLabelBox(label, callout));
+    }
+  });
+
+  [...openCallouts].sort((a, b) => a - b).forEach((index) => {
+    const callout = callouts[index];
+    if (!callout) return;
+
+    const resolved = resolveCalloutBox(
+      {
+        left: callout.left,
+        top: callout.top,
+        width: callout.width,
+        height: estimateCalloutHeight(callout.quote, callout.width),
+      },
+      obstacles,
+    );
+
+    layout.set(index, resolved);
+    obstacles.push(resolved);
+  });
+
+  return layout;
 }
 
 /** Rough title-pill height — wraps on long stage names (e.g. Closure & AI Reinforcement). */
@@ -235,8 +345,8 @@ const STAGE_TITLE_LABELS = [
   { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
   { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1168, labelTop: 168, labelWidth: 118 },
-  { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1268, labelTop: 102, labelWidth: 118 },
+  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1020, labelTop: 215, labelWidth: 105 },
+  { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
 ] as const;
 
 /** null = hidden; 0 = module 1.1 callout … 6 = summit callout. */
@@ -271,6 +381,7 @@ function buildOpenOverlayObstacles(
   callouts: readonly AscentCalloutEntry[],
   stageTitleLabels: readonly AscentStageTitleEntry[],
   openCallouts: ReadonlySet<CalloutIndex>,
+  calloutLayout?: Map<CalloutIndex, BoxRect>,
 ): BoxRect[] {
   const obstacles: BoxRect[] = [];
 
@@ -278,13 +389,15 @@ function buildOpenOverlayObstacles(
     const callout = callouts[index];
     if (!callout) return;
 
+    const resolved = calloutLayout?.get(index);
     obstacles.push(
-      clampBox({
-        left: callout.left,
-        top: callout.top,
-        width: callout.width,
-        height: CALLOUT_EST_HEIGHT,
-      }),
+      resolved ??
+        clampBox({
+          left: callout.left,
+          top: callout.top,
+          width: callout.width,
+          height: estimateCalloutHeight(callout.quote, callout.width),
+        }),
     );
 
     const label = stageTitleLabels[index];
@@ -1047,6 +1160,11 @@ function AscentCanvas({
   const ctaTargetCalloutIndex =
     progressThrough !== undefined ? moduleNextCalloutIndex : nextCalloutIndex;
 
+  const openCalloutLayout = useMemo(
+    () => resolveOpenCalloutLayout(callouts, stageTitleLabels, openCallouts),
+    [callouts, stageTitleLabels, openCallouts],
+  );
+
   const baseCampState = getMarkerProgressState(
     0,
     progressThrough,
@@ -1118,15 +1236,21 @@ function AscentCanvas({
       </div>
 
       {/* Thought-bubble callouts — every opened marker stays visible */}
-      {callouts.map((callout, index) =>
-        openCallouts.has(index as CalloutIndex) ? (
+      {callouts.map((callout, index) => {
+        if (!openCallouts.has(index as CalloutIndex)) return null;
+
+        const resolved = openCalloutLayout.get(index as CalloutIndex);
+        const left = resolved?.left ?? clampBoxLeft(callout.left, callout.width);
+        const top = resolved?.top ?? clampBoxTop(callout.top, estimateCalloutHeight(callout.quote, callout.width));
+
+        return (
           <div
             key={callout.quote}
             className="absolute"
             style={{
-              left: clampBoxLeft(callout.left, callout.width),
-              top: clampBoxTop(callout.top, CALLOUT_EST_HEIGHT),
-              zIndex: 10,
+              left,
+              top,
+              zIndex: 10 + index,
             }}
           >
             <CalloutBox
@@ -1135,8 +1259,8 @@ function AscentCanvas({
               rounded={"rounded" in callout ? callout.rounded : 12}
             />
           </div>
-        ) : null,
-      )}
+        );
+      })}
 
       {/* Stage title labels — shown below markers only while that callout is open */}
       {stageTitleLabels.map((label) => {
@@ -1211,7 +1335,12 @@ function AscentCanvas({
 
         const titleBox = getTitleLabelBox(targetTitle, targetCallout);
         const ctaWidth = Math.max(titleBox.width + 40, 200);
-        const obstacles = buildOpenOverlayObstacles(callouts, stageTitleLabels, openCallouts);
+        const obstacles = buildOpenOverlayObstacles(
+          callouts,
+          stageTitleLabels,
+          openCallouts,
+          openCalloutLayout,
+        );
         const ctaBox = resolveCtaBox(
           {
             left: titleBox.left - 20,

@@ -964,11 +964,11 @@ function CopilotUseCasePanel({ useCases }: {
   useCases: { icon: LucideIcon; title: string; body: string }[];
 }) {
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "nowrap", alignItems: "center", gap: 10, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+    <div style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "stretch", justifyContent: "center", gap: 10 }}>
       {useCases.map(uc => {
         const Icon = uc.icon;
         return (
-          <div key={uc.title} style={{ display: "flex", gap: 12, alignItems: "center", padding: spacing.cardPadding, borderRadius: 14, background: C.white, border: `0.75px solid ${C.gray02}`, flexShrink: 0 }}>
+          <div key={uc.title} style={{ display: "flex", gap: 12, alignItems: "center", padding: spacing.cardPadding, borderRadius: 14, background: C.white, border: `0.75px solid ${C.gray02}`, flex: "1 1 140px", minWidth: 0 }}>
             <div style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
               <Icon size={18} strokeWidth={1.75} aria-hidden />
             </div>
@@ -1575,7 +1575,6 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
         }
         .copilot-scene-usecases {
           width: 100%;
-          overflow-x: auto;
         }
         .copilot-scene-usecases > * {
           flex: none !important;
@@ -1585,17 +1584,22 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
           padding: 0 !important;
           display: flex !important;
           flex-direction: row !important;
-          flex-wrap: nowrap !important;
-          align-items: center !important;
+          flex-wrap: wrap !important;
+          align-items: stretch !important;
+          justify-content: center !important;
           gap: 10px !important;
-          overflow-x: auto !important;
-          overflow-y: visible !important;
+          overflow: visible !important;
         }
         .copilot-scene-usecases > * > * {
-          flex: 0 0 auto !important;
+          flex: 1 1 140px !important;
           min-width: 0;
           max-width: none !important;
           align-items: center !important;
+        }
+        @media (max-width: 480px) {
+          .copilot-scene-usecases > * > * {
+            flex: 1 1 100% !important;
+          }
         }
         .copilot-scene-main {
           display: flex;

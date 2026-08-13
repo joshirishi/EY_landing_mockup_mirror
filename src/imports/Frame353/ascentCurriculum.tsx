@@ -24,6 +24,15 @@ export const MODULE_COMPLETION_QUOTES: Record<AscentModuleKey, string> = {
 };
 
 const STARTER_QUOTE = "Everyone is talking about AI, but I don't know where to start.";
+
+/** Hub landing (#phased-content) — Priya trek-stage quotes (boxes 1–4); boxes 5+ use completion quotes. */
+const HUB_TREK_CALLOUTS: readonly string[] = [
+  STARTER_QUOTE,
+  "I understand AI concepts which can help me work towards atleast 20%++ efficiency gains.",
+  "I have reimagined atleast 5-7 tax use cases via prompts and/or M365 Agents.",
+  "I have built 10 no-code agents assisting me in my day-to-day Tax workshops",
+];
+
 const SUMMIT_DEFAULT =
   "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.";
 
@@ -39,12 +48,12 @@ const OPEN_THROUGH: Record<AscentModuleKey, 0 | 1 | 2 | 3 | 4 | 5 | 6> = {
 
 const CALLOUT_LAYOUT = [
   { left: 140, top: 250, width: 149 },
-  { left: 290, top: 195, width: 187 },
-  { left: 502, top: 123, width: 167 },
-  { left: 722, top: 106, width: 150 },
-  { left: 882, top: 118, width: 140 },
-  { left: 1032, top: 52, width: 140 },
-  { left: 1182, top: 8, width: 152, rounded: 4 as const },
+  { left: 305, top: 188, width: 175 },
+  { left: 498, top: 115, width: 165 },
+  { left: 685, top: 95, width: 145 },
+  { left: 848, top: 125, width: 125 },
+  { left: 995, top: 38, width: 110 },
+  { left: 1125, top: 10, width: 115, rounded: 4 as const },
 ] as const;
 
 const CURRICULUM_STAGE_NODES: readonly AscentStageNodeEntry[] = [
@@ -62,8 +71,8 @@ const CURRICULUM_STAGE_TITLES: readonly AscentStageTitleEntry[] = [
   { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
   { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1168, labelTop: 168, labelWidth: 118 },
-  { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1268, labelTop: 102, labelWidth: 118 },
+  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1020, labelTop: 215, labelWidth: 105 },
+  { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
 ];
 
 /** Module-end / progress trek — confident completion quotes per marker. */
@@ -107,7 +116,11 @@ const DEFAULT_NEXT_STEP: Record<AscentModuleKey, string> = {
 export function buildHubLandingProps(): AscentOverrides {
   const callouts = buildCallouts();
   return {
-    callouts: [{ ...callouts[0], quote: STARTER_QUOTE }, ...callouts.slice(1)],
+    callouts: callouts.map((callout, index) => ({
+      ...callout,
+      quote:
+        index < HUB_TREK_CALLOUTS.length ? HUB_TREK_CALLOUTS[index]! : callout.quote,
+    })),
     stageNodes: CURRICULUM_STAGE_NODES,
     stageTitleLabels: CURRICULUM_STAGE_TITLES,
     defaultOpenCallouts: [0],
