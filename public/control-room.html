@@ -536,6 +536,24 @@ body{
   max-width:780px;
 }
 
+/* ── print styles ── */
+@media print{
+  /* force color rendering in print */
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* hide non-summary UI */
+  .topline,.header,#intro,#main,.confetti{display:none!important}
+  /* show summary even if JS hasn't added .active */
+  #screens,#summary{position:static!important;display:block!important;overflow:visible!important}
+  body,html{height:auto;overflow:visible}
+  /* summary card: dark bg so yellow text stays readable */
+  .summary-card{background:#1A1A24!important;color:#fff!important;border:none;border-radius:0;padding:32px}
+  .btn-ghost{background:#2E2E38!important;color:#FFE600!important;border:1px solid rgba(255,230,0,.4)!important}
+  .btn-primary{background:#FFE600!important;color:#1A1A24!important}
+  .summary-btns{margin-top:16px}
+  /* hide the retake button — not useful on paper */
+  .btn-primary{display:none!important}
+}
+
 /* ── confetti ── */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:200}
 .piece{position:absolute;top:-20px;width:8px;height:15px;animation:fall 1.8s linear forwards}
