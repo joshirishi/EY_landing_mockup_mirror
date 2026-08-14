@@ -541,7 +541,7 @@ export default function FoundationalConcepts({
   }, [scripts]);
 
   return (
-    <div style={{ width: "100%", minHeight: "100vh", background: colors.white }}>
+    <div style={{ width: "100%", background: colors.white }}>
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#module-content" />
       <ModuleHeader currentModuleId="foundational" onNavigate={onNavigate} onBack={onBack} />
 

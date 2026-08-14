@@ -20,8 +20,6 @@ import {
 } from "@/data/prompt-library";
 import { colors, fonts, spacing, typeScale } from "@/design-kit";
 
-const BOOKS_PER_SHELF = 8;
-
 const CATEGORY_SPINE: Record<PromptLibraryCategory, string> = {
   Research: colors.frameBlue,
   Compliance: colors.frameGreen,
@@ -33,8 +31,8 @@ const SPINE_HEIGHTS = [176, 192, 208, 224] as const;
 
 type FilterId = "all" | PromptLibraryCategory;
 
-function spineHeight(entry: PromptLibraryEntry, shelfIndex: number) {
-  return SPINE_HEIGHTS[(entry.id + shelfIndex) % SPINE_HEIGHTS.length];
+function spineHeight(entry: PromptLibraryEntry) {
+  return SPINE_HEIGHTS[entry.id % SPINE_HEIGHTS.length];
 }
 
 function shelfBoardStyle(): CSSProperties {
@@ -81,14 +79,6 @@ export function PromptBookshelfLibrary() {
     () => filtered.find((b) => b.id === selectedId) ?? null,
     [filtered, selectedId],
   );
-
-  const shelves = useMemo(() => {
-    const rows: PromptLibraryEntry[][] = [];
-    for (let i = 0; i < filtered.length; i += BOOKS_PER_SHELF) {
-      rows.push(filtered.slice(i, i + BOOKS_PER_SHELF));
-    }
-    return rows;
-  }, [filtered]);
 
   const selectBook = useCallback((entry: PromptLibraryEntry) => {
     setSelectedId((prev) => (prev === entry.id ? null : entry.id));
@@ -206,7 +196,7 @@ export function PromptBookshelfLibrary() {
                   margin: 0,
                 }}
               >
-                Reference shelves
+                Reference shelf
               </p>
               <p
                 style={{
@@ -297,7 +287,7 @@ export function PromptBookshelfLibrary() {
           })}
         </div>
 
-        {/* Shelves */}
+        {/* Single shelf — all books in one row, scroll on narrow viewports */}
         {filtered.length === 0 ? (
           <p
             style={{
@@ -311,175 +301,156 @@ export function PromptBookshelfLibrary() {
             No templates in this section
           </p>
         ) : (
-          shelves.map((books, shelfIdx) => (
+          <div style={{ marginBottom: 8 }}>
             <div
-              key={shelfIdx}
               style={{
-                marginBottom: shelfIdx < shelves.length - 1 ? 28 : 8,
+                position: "relative",
+                overflowX: "auto",
+                overflowY: "visible",
+                WebkitOverflowScrolling: "touch",
+                paddingBottom: 4,
               }}
             >
-              {filter === "all" && (
-                <p
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 10,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: colors.onDarkSubtle,
-                    margin: "0 0 10px 4px",
-                  }}
-                >
-                  Shelf {shelfIdx + 1}
-                </p>
-              )}
               <div
+                role="group"
+                aria-label="Prompt template books"
                 style={{
-                  position: "relative",
-                  overflowX: "auto",
-                  overflowY: "visible",
-                  WebkitOverflowScrolling: "touch",
-                  paddingBottom: 4,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "flex-start",
+                  gap: 0,
+                  minWidth: "min-content",
+                  padding: "20px 8px 0",
                 }}
               >
-                <div
-                  role="group"
-                  aria-label={`Shelf ${shelfIdx + 1}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-end",
-                    justifyContent: "flex-start",
-                    gap: 0,
-                    minWidth: "min-content",
-                    padding: "20px 8px 0",
-                  }}
-                >
-                  {books.map((book) => {
-                    const isSelected = selectedId === book.id;
-                    const height = spineHeight(book, shelfIdx);
-                    const spineColor = CATEGORY_SPINE[book.category];
-                    return (
-                      <button
-                        key={book.id}
-                        type="button"
-                        aria-pressed={isSelected}
-                        aria-label={`${book.name}, ${book.category}, book ${book.id}`}
-                        onClick={() => selectBook(book)}
+                {filtered.map((book) => {
+                  const isSelected = selectedId === book.id;
+                  const height = spineHeight(book);
+                  const spineColor = CATEGORY_SPINE[book.category];
+                  return (
+                    <button
+                      key={book.id}
+                      type="button"
+                      aria-pressed={isSelected}
+                      aria-label={`${book.name}, ${book.category}, book ${book.id}`}
+                      onClick={() => selectBook(book)}
+                      style={{
+                        width: 62,
+                        flexShrink: 0,
+                        margin: "0 2px",
+                        padding: 0,
+                        border: "none",
+                        background: "transparent",
+                        cursor: "pointer",
+                        transformOrigin: "bottom center",
+                        transform: isSelected
+                          ? "translateY(-18px) scale(1.05)"
+                          : undefined,
+                        transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
+                        zIndex: isSelected ? 12 : 1,
+                        outline: "none",
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.outline = `2px solid ${colors.yellow}`;
+                        e.currentTarget.style.outlineOffset = "2px";
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.outline = "none";
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.transform = "translateY(-10px) scale(1.03)";
+                          e.currentTarget.style.zIndex = "8";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSelected) {
+                          e.currentTarget.style.transform = "none";
+                          e.currentTarget.style.zIndex = "1";
+                        }
+                      }}
+                    >
+                      <div
                         style={{
-                          width: 56,
-                          flexShrink: 0,
-                          margin: "0 2px",
-                          padding: 0,
-                          border: "none",
-                          background: "transparent",
-                          cursor: "pointer",
-                          transformOrigin: "bottom center",
-                          transform: isSelected
-                            ? "translateY(-18px) scale(1.05)"
-                            : undefined,
-                          transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
-                          zIndex: isSelected ? 12 : 1,
-                          outline: "none",
-                        }}
-                        onFocus={(e) => {
-                          e.currentTarget.style.outline = `2px solid ${colors.yellow}`;
-                          e.currentTarget.style.outlineOffset = "2px";
-                        }}
-                        onBlur={(e) => {
-                          e.currentTarget.style.outline = "none";
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isSelected) {
-                            e.currentTarget.style.transform = "translateY(-10px) scale(1.03)";
-                            e.currentTarget.style.zIndex = "8";
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isSelected) {
-                            e.currentTarget.style.transform = "none";
-                            e.currentTarget.style.zIndex = "1";
-                          }
+                          height,
+                          borderRadius: "3px 6px 6px 3px",
+                          background: `linear-gradient(90deg, ${colors.confidentBlack} 0%, ${spineColor} 12%, ${spineColor} 100%)`,
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "10px 4px",
+                          boxShadow: isSelected
+                            ? `0 8px 20px ${colors.onDarkSubtle}, 0 0 0 2px ${colors.yellow}`
+                            : `2px 4px 10px ${colors.onDarkSubtle}`,
+                          position: "relative",
+                          overflow: "hidden",
                         }}
                       >
-                        <div
+                        {/* Spine edge highlight */}
+                        <span
+                          aria-hidden
                           style={{
-                            height,
-                            borderRadius: "3px 6px 6px 3px",
-                            background: `linear-gradient(90deg, ${colors.confidentBlack} 0%, ${spineColor} 12%, ${spineColor} 100%)`,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            padding: "10px 4px",
-                            boxShadow: isSelected
-                              ? `0 8px 20px ${colors.onDarkSubtle}, 0 0 0 2px ${colors.yellow}`
-                              : `2px 4px 10px ${colors.onDarkSubtle}`,
-                            position: "relative",
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            bottom: 0,
+                            width: 4,
+                            background: colors.confidentBlack,
+                            opacity: 0.45,
+                          }}
+                        />
+                        <span
+                          style={{
+                            writingMode: "vertical-rl",
+                            textOrientation: "mixed",
+                            fontFamily: fonts.bold,
+                            fontSize: typeScale.label.size,
+                            fontWeight: typeScale.label.weight,
+                            letterSpacing: typeScale.label.tracking,
+                            color: colors.white,
+                            maxHeight: height - 52,
                             overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
                           }}
                         >
-                          {/* Spine edge highlight */}
-                          <span
-                            aria-hidden
-                            style={{
-                              position: "absolute",
-                              left: 0,
-                              top: 0,
-                              bottom: 0,
-                              width: 4,
-                              background: colors.confidentBlack,
-                              opacity: 0.45,
-                            }}
-                          />
-                          <span
-                            style={{
-                              writingMode: "vertical-rl",
-                              textOrientation: "mixed",
-                              fontFamily: fonts.bold,
-                              fontSize: 10,
-                              color: colors.white,
-                              letterSpacing: "0.04em",
-                              maxHeight: height - 48,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {book.name}
-                          </span>
-                          <span
-                            style={{
-                              writingMode: "vertical-rl",
-                              fontFamily: fonts.regular,
-                              fontSize: 9,
-                              color: colors.onDarkMuted,
-                              marginTop: 8,
-                            }}
-                          >
-                            #{book.id}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                          {book.name}
+                        </span>
+                        <span
+                          style={{
+                            writingMode: "vertical-rl",
+                            fontFamily: fonts.regular,
+                            fontSize: typeScale.caption.size,
+                            fontWeight: typeScale.caption.weight,
+                            color: colors.onDarkMuted,
+                            marginTop: 8,
+                          }}
+                        >
+                          #{book.id}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
-              {/* Shelf board */}
-              <div aria-hidden style={shelfBoardStyle()}>
-                <div style={shelfLipStyle()} />
-              </div>
-              <div
-                aria-hidden
-                style={{
-                  height: 10,
-                  margin: "0 24px",
-                  background: colors.onDarkSubtle,
-                  filter: "blur(8px)",
-                  borderRadius: "50%",
-                  opacity: 0.5,
-                }}
-              />
             </div>
-          ))
+            {/* Shelf board */}
+            <div aria-hidden style={shelfBoardStyle()}>
+              <div style={shelfLipStyle()} />
+            </div>
+            <div
+              aria-hidden
+              style={{
+                height: 10,
+                margin: "0 24px",
+                background: colors.onDarkSubtle,
+                filter: "blur(8px)",
+                borderRadius: "50%",
+                opacity: 0.5,
+              }}
+            />
+          </div>
         )}
       </div>
 

@@ -88,7 +88,7 @@ function AiTaxPromptingRoute() {
 function FoundationalRoute() {
   const navigate = useNavigate();
   return (
-    <div className="size-full">
+    <div className="w-full min-h-0">
       <FoundationalConcepts onBack={() => navigate("/phase1")} onNavigate={navigate} />
     </div>
   );

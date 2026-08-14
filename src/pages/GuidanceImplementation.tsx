@@ -594,9 +594,9 @@ function TechniqueExampleQuote({ text, variant }: { text: string; variant: "with
         margin: 0,
         maxWidth: 560,
         padding: "14px 18px",
-        background: (isBad ? C.destructive : C.success) + "0a",
+        background: C.confidentBlack,
         borderRadius: 8,
-        borderLeft: `3px solid ${isBad ? C.destructive : C.success}`,
+        borderLeft: `4px solid ${isBad ? C.destructive : C.yellow}`,
       }}
     >
       {text}
@@ -616,24 +616,24 @@ function PromptTechniquesPanel() {
       gap: 0,
       borderRadius: 8,
       overflow: "hidden",
-      border: `1px solid ${C.borderOnDark}`,
-      background: C.eyBgCard,
+      border: "1px solid rgba(46,46,56,0.10)",
+      background: C.offWhite,
       textAlign: "left",
       minHeight: 520,
     }}>
       <nav aria-label="Prompting techniques" style={{
-        borderRight: `1px solid ${C.borderOnDark}`,
+        borderRight: "1px solid rgba(46,46,56,0.08)",
         padding: "16px 0",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
-        background: C.confidentBlack,
+        background: C.white,
       }}>
-        <div style={{ padding: "0 20px 14px", borderBottom: `1px solid ${C.borderOnDark}` }}>
-          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.yellow, fontFamily: F.bold, marginBottom: 4 }}>
+        <div style={{ padding: "0 20px 14px", borderBottom: "1px solid rgba(46,46,56,0.08)" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.eyebrowGold, fontFamily: F.bold, marginBottom: 4 }}>
             8 Techniques
           </div>
-          <div style={{ fontSize: 13, color: C.onDarkMuted, fontFamily: F.regular, lineHeight: 1.5 }}>
+          <div style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5 }}>
             Pick one to explore.
           </div>
         </div>
@@ -653,7 +653,7 @@ function PromptTechniquesPanel() {
                   gap: 10,
                   padding: "8px 12px",
                   marginBottom: 2,
-                  background: active ? C.surfaceOnDark : "transparent",
+                  background: active ? C.yellowAlpha10 : "transparent",
                   border: "1px solid transparent",
                   borderRadius: 6,
                   cursor: "pointer",
@@ -676,7 +676,7 @@ function PromptTechniquesPanel() {
                 <span style={{
                   flex: 1, minWidth: 0,
                   fontSize: 12, fontWeight: 700,
-                  color: active ? C.onDark : C.onDarkMuted,
+                  color: active ? C.confidentBlack : C.gray01,
                   fontFamily: F.bold,
                   lineHeight: 1.3,
                 }}>
@@ -688,11 +688,11 @@ function PromptTechniquesPanel() {
         </div>
       </nav>
 
-      <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+      <div style={{ display: "flex", flexDirection: "column", minHeight: 0, background: C.offWhite }}>
         <div style={{
           padding: "14px 24px",
-          background: C.surfaceOnDark,
-          borderBottom: `1px solid ${C.borderOnDark}`,
+          background: C.white,
+          borderBottom: "1px solid rgba(46,46,56,0.08)",
           flexShrink: 0,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -704,9 +704,9 @@ function PromptTechniquesPanel() {
             }}>
               {technique.id}
             </span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: C.onDark, fontFamily: F.bold }}>{technique.technique}</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold }}>{technique.technique}</span>
           </div>
-          <p style={{ fontSize: 12, color: C.onDarkMuted, fontFamily: F.light, margin: "4px 0 0", paddingLeft: 34 }}>
+          <p style={{ fontSize: 12, color: C.gray01, fontFamily: F.light, margin: "4px 0 0", paddingLeft: 34 }}>
             {technique.does}
           </p>
         </div>
@@ -733,7 +733,7 @@ function PromptTechniquesPanel() {
                 {f.key === "without" || f.key === "with" ? (
                   <TechniqueExampleQuote text={text} variant={f.key} />
                 ) : (
-                  <p style={{ fontSize: 14, lineHeight: 1.6, color: C.onDarkMuted, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
+                  <p style={{ fontSize: 14, lineHeight: 1.6, color: C.gray01, fontFamily: F.regular, margin: 0, maxWidth: 560 }}>
                     {text}
                   </p>
                 )}
@@ -844,15 +844,15 @@ function Panel2() {
       id="p3-prompts"
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: C.confidentBlack,
+        background: C.offWhite,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
       }}
     >
       <div style={{ ...contentRailStyle }}>
         <div style={sectionHeader}>
-          <p style={eyebrow(C.yellow)}>Prompt Engineering Refresher</p>
-          <h2 style={{ ...h2Style, color: C.onDark }}>Building Better Tax Prompts</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
+          <p style={eyebrow(C.eyebrowGold)}>Prompt Engineering Refresher</p>
+          <h2 style={{ ...h2Style, color: C.confidentBlack }}>Building Better Tax Prompts</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, marginBottom: 0 }}>
             A prompt is the control surface for quality, scope and reviewability. Click an element to see it at work.
           </p>
         </div>
@@ -864,7 +864,6 @@ function Panel2() {
           ]}
           active={panelTab}
           onChange={setPanelTab}
-          onDark
         />
 
         {panelTab === "techniques" ? (
@@ -876,24 +875,24 @@ function Panel2() {
           gap: 0,
           borderRadius: 8,
           overflow: "hidden",
-          border: `1px solid ${C.borderOnDark}`,
-          background: C.eyBgCard,
+          border: "1px solid rgba(46,46,56,0.10)",
+          background: C.offWhite,
           textAlign: "left",
         }}>
           {/* Left — element picker */}
           <nav aria-label="Prompt elements" style={{
-            borderRight: `1px solid ${C.borderOnDark}`,
+            borderRight: "1px solid rgba(46,46,56,0.08)",
             padding: "16px 0",
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
-            background: C.confidentBlack,
+            background: C.white,
           }}>
-            <div style={{ padding: "0 20px 14px", borderBottom: `1px solid ${C.borderOnDark}` }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.yellow, fontFamily: F.bold, marginBottom: 4 }}>
+            <div style={{ padding: "0 20px 14px", borderBottom: "1px solid rgba(46,46,56,0.08)" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.eyebrowGold, fontFamily: F.bold, marginBottom: 4 }}>
                 8 Elements
               </div>
-              <div style={{ fontSize: 13, color: C.onDarkMuted, fontFamily: F.regular, lineHeight: 1.5 }}>
+              <div style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5 }}>
                 Pick one to highlight it in the prompt.
               </div>
             </div>
@@ -913,8 +912,8 @@ function Panel2() {
                       gap: 10,
                       padding: "8px 12px",
                       marginBottom: 2,
-                      background: active ? C.surfaceOnDark : "transparent",
-                      border: active ? "none" : "1px solid transparent",
+                      background: active ? C.yellowAlpha10 : "transparent",
+                      border: "1px solid transparent",
                       borderRadius: 6,
                       cursor: "pointer",
                       textAlign: "left",
@@ -925,10 +924,10 @@ function Panel2() {
                     <span style={{
                       width: 22, height: 22, borderRadius: 4, flexShrink: 0,
                       background: active ? C.yellow : "transparent",
-                      border: `1.5px solid ${C.yellow}`,
+                      border: `1.5px solid ${active ? C.yellow : C.gray02}`,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontSize: 10, fontWeight: 700,
-                      color: active ? C.confidentBlack : C.yellow,
+                      color: active ? C.confidentBlack : C.eyebrowGold,
                       fontFamily: F.bold,
                     }}>
                       {item.n}
@@ -936,7 +935,7 @@ function Panel2() {
                     <span style={{
                       flex: 1, minWidth: 0,
                       fontSize: 13, fontWeight: 700,
-                      color: active ? C.onDark : C.onDarkMuted,
+                      color: active ? C.confidentBlack : C.gray01,
                       fontFamily: F.bold,
                     }}>
                       {item.label}
@@ -948,13 +947,14 @@ function Panel2() {
           </nav>
 
           {/* Right — example prompt with live highlighting */}
-          <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+          <div style={{ display: "flex", flexDirection: "column", minHeight: 0, background: C.offWhite }}>
             <div style={{
               padding: "14px 24px",
-              background: C.surfaceOnDark,
-              borderBottom: `1px solid ${C.borderOnDark}`,
-              display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap",
+              background: C.white,
+              borderBottom: "1px solid rgba(46,46,56,0.08)",
+              display: "flex", alignItems: "center", gap: 10,
               flexShrink: 0,
+              minHeight: 54,
             }}>
               {elem ? (
                 <>
@@ -966,11 +966,15 @@ function Panel2() {
                   }}>
                     {elem.n}
                   </span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: C.onDark, fontFamily: F.bold }}>{elem.label}</span>
-                  <span style={{ fontSize: 12, color: C.yellow, fontFamily: F.light }}>— {elem.question}</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold, flexShrink: 0 }}>{elem.label}</span>
+                  <span style={{
+                    fontSize: 12, color: C.gray01, fontFamily: F.light,
+                    minWidth: 0, flex: 1,
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>— {elem.question}</span>
                 </>
               ) : (
-                <span style={{ fontSize: 13, color: C.onDarkMuted, fontFamily: F.light }}>
+                <span style={{ fontSize: 13, color: C.gray01, fontFamily: F.light }}>
                   Select an element to see where it lives in this prompt.
                 </span>
               )}
@@ -979,27 +983,27 @@ function Panel2() {
             <div style={{ padding: "24px 28px", flex: 1, overflowY: "auto" }}>
               {/* Example Prompt Seed — artifact card */}
               <div style={{
-                background: C.surfaceOnDark,
+                background: C.confidentBlack,
                 borderRadius: 4,
                 padding: "24px 28px",
                 borderLeft: `4px solid ${C.yellow}`,
                 marginBottom: 20,
               }}>
-                <p style={eyebrow(C.yellow)}>Example Prompt Seed</p>
+                <p style={eyebrow(C.eyebrowGold)}>Example Prompt Seed</p>
                 <p style={{ fontFamily: F.light, fontSize: 17, fontWeight: 300, color: C.onDarkMuted, lineHeight: 1.7, margin: 0 }}>
                   {PROMPT_SEGMENTS.map((seg, i) => {
                     const highlight = activeEl != null && seg.el === activeEl;
                     return highlight ? (
                       <motion.span
                         key={i}
-                        initial={{ backgroundColor: "rgba(255,230,0,0.25)" }}
-                        animate={{ backgroundColor: "rgba(255,230,0,0.22)" }}
+                        initial={{ backgroundColor: C.yellowAlpha12 }}
+                        animate={{ backgroundColor: C.yellowAlpha12 }}
                         style={{
-                          background: "rgba(255,230,0,0.22)",
+                          background: C.yellowAlpha12,
                           borderRadius: 3,
                           padding: "1px 4px",
                           margin: "0 -1px",
-                          color: C.yellow,
+                          color: C.onDark,
                           fontWeight: 700,
                         }}
                       >
@@ -1013,11 +1017,11 @@ function Panel2() {
               </div>
               <div style={{
                 padding: "18px 22px",
-                background: C.eyBgCard,
+                background: C.white,
                 borderRadius: 4,
                 borderLeft: `4px solid ${C.yellow}`,
               }}>
-                <p style={{ fontFamily: F.bold, fontSize: 20, fontWeight: 700, color: C.onDark, lineHeight: 1.3 }}>
+                <p style={{ fontFamily: F.bold, fontSize: 20, fontWeight: 700, color: C.confidentBlack, lineHeight: 1.3 }}>
                   Good outputs start with good prompts.
                 </p>
               </div>
@@ -1427,9 +1431,9 @@ function Panel3() {
                         aria-hidden={!showDetail}
                         style={{
                           overflow: "hidden",
-                          maxHeight: showDetail ? 56 : 0,
+                          height: 38,
                           opacity: showDetail ? 1 : 0,
-                          transition: "max-height 200ms ease, opacity 200ms ease",
+                          transition: "opacity 200ms ease",
                         }}
                       >
                         <span style={{ fontFamily: F.light, fontSize: 13, color: C.gray01, lineHeight: 1.45, display: "block" }}>

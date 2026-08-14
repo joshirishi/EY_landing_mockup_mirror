@@ -47,7 +47,7 @@ const PROGRESS_MARKER_CENTERS = [
   { x: 574, y: 280 }, // stage 2 — module 1.3
   { x: 789, y: 260 }, // stage 3 — phase 2
   { x: 1038, y: 247 }, // stage 4 — phase 3
-  { x: 1140, y: 181 }, // stage 5 — phase 4
+  { x: 1184, y: 222 }, // stage 5 — phase 4 (path terminus)
   { x: 1241, y: 114 }, // stage 6 — summit
 ] as const;
 
@@ -145,7 +145,7 @@ const STAGE_NODES = [
   { left: 554, top: 260, icon: ASSET.iconCpu, alt: "M365 Copilot Hub" },
   { left: 769, top: 240, icon: ASSET.iconTrendingUp, alt: "Brainstorming Use Cases" },
   { left: 1018, top: 227, icon: ASSET.iconSearch, alt: "Guidance for Implementation" },
-  { left: 1120, top: 161, icon: ASSET.iconCpu, alt: "Closure & AI Reinforcement" },
+  { left: 1164, top: 202, icon: ASSET.iconCpu, alt: "Closure & AI Reinforcement" },
   { left: 1221, top: 94, icon: ASSET.iconShield, alt: "AI-enabled tax professional" },
 ] as const;
 
@@ -446,7 +446,7 @@ const STAGE_TITLE_LABELS = [
   { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
   { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1168, labelTop: 209, labelWidth: 105 },
+  { title: "Closure & AI Reinforcement", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
   { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
 ] as const;
 
@@ -1585,7 +1585,7 @@ export default function AscentJourneyInfographic(overrides: AscentOverrides = {}
   return (
     <div
       ref={shellRef}
-      className="relative w-full overflow-x-clip"
+      className="relative w-full overflow-hidden"
       style={{ height: H * scale, background: colors.confidentBlack }}
       data-name="ascent-journey-infographic-viewport"
     >

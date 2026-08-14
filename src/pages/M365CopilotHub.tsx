@@ -50,7 +50,7 @@ const TABS = [
   { id: "ppt",     label: "PowerPoint Decks", color: C.pptOrange,  appColor: C.pptOrange,  logo: "/pipeline/powerpoint.svg" },
   { id: "outlook", label: "Outlook Threads",  color: C.outlookBlue,appColor: C.outlookBlue,logo: "/pipeline/outlook.svg" },
   { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
-  { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/m365-agent-icon.png" },
+  { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/m365-agent-icon.svg" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -81,7 +81,7 @@ const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSS
 const LAPTOP_STAGE_AGENT = {
   id: "agent" as TabId,
   label: "M365 Agent",
-  logo: "/pipeline/m365-agent-icon.png",
+  logo: "/pipeline/m365-agent-icon.svg",
   pos: { bottom: 34, left: 0, right: 0, marginLeft: "auto", marginRight: "auto", animationDelay: "2s" } as React.CSSProperties,
 };
 
@@ -1059,15 +1059,15 @@ function CopilotOverlay({ typedText }: { typedText: string }) {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <span style={{
-          width: 24, height: 24, borderRadius: 12, background: C.framePurple, flexShrink: 0,
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-        }}>
-          <Sparkles size={14} strokeWidth={1.75} color={C.white} aria-hidden />
-        </span>
-        {typedText
-          ? <span style={{ fontFamily: F.bold, fontSize: 12, color: C.offBlack }}>Copilot</span>
-          : <span aria-hidden style={{ width: 80, height: 14, borderRadius: 7, background: MOCK_SKEL }} />}
+        <img
+          src="/pipeline/copilot-icon.svg"
+          alt=""
+          aria-hidden
+          width={24}
+          height={24}
+          style={{ objectFit: "contain", flexShrink: 0 }}
+        />
+        <span style={{ fontFamily: F.bold, fontSize: 12, color: C.offBlack }}>Copilot</span>
       </div>
       {typedText ? (
         <p style={{
@@ -2753,7 +2753,7 @@ const AGENT_ICONS: Record<
   analyst:      { from: "#B400FF", to: "#FF3C7E" },
   labourCode:   { from: "#2BC7C7", to: "#2563EB" },
   taxEvaluator: { from: "#FF7A45", to: "#FF3C7E" },
-  newAgent:     { src: "/pipeline/m365-agent-icon.png", from: "#7C5CFF", to: "#FF3C7E" },
+  newAgent:     { src: "/pipeline/m365-agent-icon.svg", from: "#7C5CFF", to: "#FF3C7E" },
 };
 
 function AgentTile({ icon, size = 13, radius = 4 }: { icon: AgentIcon; size?: number; radius?: number }) {
@@ -3419,6 +3419,10 @@ const SECURITY_CHECKLIST: SecurityChecklistItem[] = [
   },
 ];
 
+const LIGHTBOX_PAD = 24;
+const LIGHTBOX_MIN_ZOOM = 1;
+const LIGHTBOX_MAX_ZOOM = 4;
+
 function SecurityImageLightbox({
   item,
   onClose,
@@ -3426,9 +3430,30 @@ function SecurityImageLightbox({
   item: SecurityChecklistItem;
   onClose: () => void;
 }) {
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const scaleRef = useRef(1);
+  const panRef = useRef({ x: 0, y: 0 });
+  const pinchRef = useRef<{ dist: number; scale: number } | null>(null);
+  const dragRef = useRef<{ panX: number; panY: number; startX: number; startY: number } | null>(null);
+
+  const [scale, setScale] = useState(LIGHTBOX_MIN_ZOOM);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+
+  const clampScale = (next: number) =>
+    Math.min(LIGHTBOX_MAX_ZOOM, Math.max(LIGHTBOX_MIN_ZOOM, next));
+
+  const applyScale = (next: number) => {
+    const clamped = clampScale(next);
+    scaleRef.current = clamped;
+    setScale(clamped);
+    if (clamped <= LIGHTBOX_MIN_ZOOM) {
+      panRef.current = { x: 0, y: 0 };
+      setPan({ x: 0, y: 0 });
+    }
+  };
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
@@ -3440,9 +3465,9 @@ function SecurityImageLightbox({
         onClose();
         return;
       }
-      if (e.key !== "Tab" || !dialogRef.current) return;
+      if (e.key !== "Tab" || !overlayRef.current) return;
 
-      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+      const focusable = overlayRef.current.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       if (focusable.length === 0) return;
@@ -3469,9 +3494,92 @@ function SecurityImageLightbox({
     };
   }, [onClose]);
 
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      applyScale(scaleRef.current + (e.deltaY > 0 ? -0.12 : 0.12));
+    };
+
+    viewport.addEventListener("wheel", onWheel, { passive: false });
+    return () => viewport.removeEventListener("wheel", onWheel);
+  }, []);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY,
+      );
+      pinchRef.current = { dist, scale: scaleRef.current };
+      dragRef.current = null;
+    } else if (e.touches.length === 1 && scaleRef.current > LIGHTBOX_MIN_ZOOM) {
+      dragRef.current = {
+        panX: panRef.current.x,
+        panY: panRef.current.y,
+        startX: e.touches[0].clientX,
+        startY: e.touches[0].clientY,
+      };
+    }
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && pinchRef.current) {
+      e.preventDefault();
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY,
+      );
+      applyScale(pinchRef.current.scale * (dist / pinchRef.current.dist));
+    } else if (e.touches.length === 1 && dragRef.current && scaleRef.current > LIGHTBOX_MIN_ZOOM) {
+      e.preventDefault();
+      const next = {
+        x: dragRef.current.panX + (e.touches[0].clientX - dragRef.current.startX),
+        y: dragRef.current.panY + (e.touches[0].clientY - dragRef.current.startY),
+      };
+      panRef.current = next;
+      setPan(next);
+    }
+  };
+
+  const onTouchEnd = () => {
+    pinchRef.current = null;
+    dragRef.current = null;
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "touch" || scaleRef.current <= LIGHTBOX_MIN_ZOOM) return;
+    dragRef.current = {
+      panX: panRef.current.x,
+      panY: panRef.current.y,
+      startX: e.clientX,
+      startY: e.clientY,
+    };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current || scaleRef.current <= LIGHTBOX_MIN_ZOOM) return;
+    const next = {
+      x: dragRef.current.panX + (e.clientX - dragRef.current.startX),
+      y: dragRef.current.panY + (e.clientY - dragRef.current.startY),
+    };
+    panRef.current = next;
+    setPan(next);
+  };
+
+  const onPointerUp = () => {
+    dragRef.current = null;
+  };
+
   return (
     <div
-      role="presentation"
+      ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${item.title} security infographic`}
       onClick={onClose}
       style={{
         position: "fixed",
@@ -3482,59 +3590,84 @@ function SecurityImageLightbox({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: 24,
+        padding: LIGHTBOX_PAD,
       }}
     >
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label={`${item.title} security infographic`}
-        onClick={(e) => e.stopPropagation()}
+      <button
+        ref={closeRef}
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        aria-label="Close infographic"
         style={{
-          position: "relative",
+          position: "fixed",
+          top: LIGHTBOX_PAD,
+          right: LIGHTBOX_PAD,
+          zIndex: 9999,
+          width: 44,
+          height: 44,
+          borderRadius: "50%",
+          background: C.surfaceOnDark,
+          border: `1px solid ${C.borderOnDark}`,
+          color: C.onDark,
+          cursor: "pointer",
           display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-          gap: 12,
-          maxWidth: "min(92vw, 1200px)",
-          maxHeight: "92vh",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <button
-          ref={closeRef}
-          type="button"
-          onClick={onClose}
-          aria-label="Close infographic"
+        <X size={22} strokeWidth={1.75} aria-hidden />
+      </button>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          maxWidth: "min(92vw, 1200px)",
+          maxHeight: "92vh",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          ref={viewportRef}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          onTouchCancel={onTouchEnd}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: "50%",
-            background: C.surfaceOnDark,
-            border: `1px solid ${C.borderOnDark}`,
-            color: C.onDark,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
+            overflow: "hidden",
+            touchAction: "none",
+            cursor: scale > LIGHTBOX_MIN_ZOOM ? "grab" : "zoom-in",
+            maxWidth: "100%",
+            maxHeight: "92vh",
           }}
         >
-          <X size={22} strokeWidth={1.75} aria-hidden />
-        </button>
-        <img
-          src={item.image}
-          alt={item.title}
-          style={{
-            maxWidth: "100%",
-            maxHeight: "calc(92vh - 68px)",
-            width: "auto",
-            height: "auto",
-            objectFit: "contain",
-            borderRadius: 12,
-            boxShadow: `0 24px 64px color-mix(in srgb, ${C.dark} 60%, transparent)`,
-          }}
-        />
+          <img
+            src={item.image}
+            alt={item.title}
+            draggable={false}
+            style={{
+              display: "block",
+              maxWidth: "min(92vw, 1200px)",
+              maxHeight: "92vh",
+              width: "auto",
+              height: "auto",
+              objectFit: "contain",
+              borderRadius: 12,
+              boxShadow: `0 24px 64px color-mix(in srgb, ${C.dark} 60%, transparent)`,
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
+              transformOrigin: "center center",
+              userSelect: "none",
+            }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -61,7 +61,7 @@ const CURRICULUM_STAGE_NODES: readonly AscentStageNodeEntry[] = [
   { left: 554, top: 260, icon: "/ascent/icon-cpu.svg", alt: "M365 Copilot Hub" },
   { left: 769, top: 240, icon: "/ascent/icon-trending-up.svg", alt: "Brainstorming Use Cases" },
   { left: 1018, top: 227, icon: "/ascent/icon-search.svg", alt: "Guidance for Implementation" },
-  { left: 1120, top: 161, icon: "/ascent/icon-cpu.svg", alt: "Closure & AI Reinforcement" },
+  { left: 1164, top: 202, icon: "/ascent/icon-cpu.svg", alt: "Closure & AI Reinforcement" },
   { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "AI-enabled tax professional" },
 ];
 
@@ -71,7 +71,7 @@ const CURRICULUM_STAGE_TITLES: readonly AscentStageTitleEntry[] = [
   { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
   { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Closure & AI Reinforcement", markerTop: 161, markerSize: 40, calloutIndex: 5, labelLeft: 1168, labelTop: 209, labelWidth: 105 },
+  { title: "Closure & AI Reinforcement", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
   { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
 ];
 
