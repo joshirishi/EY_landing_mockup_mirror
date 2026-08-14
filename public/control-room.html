@@ -100,7 +100,8 @@ body{
 ══════════════════════════════ */
 
 /* ambient yellow scrim — mirrors ClosureAiReinforcement hero scrim pattern */
-#intro{background:var(--ink);position:relative}
+/* NOTE: #intro stays position:absolute (from .screen) — do NOT add position:relative here */
+#intro{background:var(--ink)}
 #intro::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(255,230,0,.07) 0%,transparent 50%,rgba(255,230,0,.03) 100%);
@@ -119,6 +120,8 @@ body{
 /* typeScale.body + colors.onDarkMuted rgba(255,255,255,0.72) */
 .intro-left .lead{font-family:var(--font-light);font-size:clamp(15px,1.5vw,17px);line-height:1.65;color:rgba(255,255,255,.72);max-width:540px;letter-spacing:-0.01em}
 
+/* eyebrow tag — must not stretch in flex column */
+.intro-left .tag{align-self:flex-start}
 /* tag suffix */
 .tag-sub{opacity:.6;font-family:var(--font-reg);letter-spacing:0;text-transform:none}
 
