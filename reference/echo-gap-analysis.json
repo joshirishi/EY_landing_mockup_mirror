@@ -1,0 +1,572 @@
+{
+  "implemented": [
+    {
+      "id": "09ca1a48-f5ad-42cb-b141-ebc07876a896",
+      "page": "/phased",
+      "preview": "I have built 10 no-code agents assisting me in my day-to-day Tax work",
+      "note": "Ascent callout stage 4"
+    },
+    {
+      "id": "08aa2810-e217-4831-8c3c-bdc9954326d1",
+      "page": "/phased",
+      "preview": "I have reimagined atleast 5-7 tax use cases via prompts and/or M365 Agents.",
+      "note": "Ascent callout stage 3"
+    },
+    {
+      "id": "a3423e59-3c1b-4ea7-b7eb-20d65df5dc89",
+      "page": "/phased",
+      "preview": "I understand AI concepts which can help me work towards atleast 20%++ efficiency",
+      "note": "Ascent callout stage 2"
+    },
+    {
+      "id": "e149bde4-4e8e-4469-8b16-1869f86aee70",
+      "page": "/closure-ai-reinforcement",
+      "preview": "To come up as a common card below.  Redraft the sentence to: How do you use AI c",
+      "note": "Phase 4 closure hero/checks"
+    },
+    {
+      "id": "470fd9a9-b693-4798-a69f-495e8634db8f",
+      "page": "/foundational",
+      "preview": "Gen AI Convo",
+      "note": "Foundational Gen AI Convo section"
+    },
+    {
+      "id": "3a141d07-27ae-40e4-8b5e-425e3b8a2475",
+      "page": "/phased",
+      "preview": "Flip the sequence",
+      "note": "Phase 4 coverage order flipped"
+    },
+    {
+      "id": "20118a20-4215-4eae-ad73-fc790eed0fd7",
+      "page": "/phased",
+      "preview": "5-10 self-developed no-code agents",
+      "note": "Phase 3 deliverable: 5-10 agents"
+    },
+    {
+      "id": "92f67ae2-6b03-4b33-b3a4-dc3c246928ce",
+      "page": "/phased",
+      "preview": "Foundation Workshops",
+      "note": "Phase 1 card title \u2192 Foundation Workshops"
+    },
+    {
+      "id": "52c45908-3234-44ca-b693-892465f5a241",
+      "page": "/phased",
+      "preview": "Remove Hub. Remove Labs references.  Instead: Practical AI skills for the modern",
+      "note": "Site rebrand (AI for Tax Excellence + tagline)"
+    },
+    {
+      "id": "79526897-c408-435e-bb78-9c6ef40bec87",
+      "page": "/phased",
+      "preview": "AI for Tax Excellence",
+      "note": "Site rebrand (AI for Tax Excellence + tagline)"
+    },
+    {
+      "id": "36d846ca-4a42-4fc3-857a-6020b27d9269",
+      "page": "/foundational#evolution",
+      "preview": "just Welcome",
+      "note": "Foundational Gen AI Convo section"
+    },
+    {
+      "id": "ec1e4a77-c6e6-4582-b555-26ab91cdd767",
+      "page": "/foundational#evolution",
+      "preview": "gen ai convo",
+      "note": "Foundational Gen AI Convo section"
+    },
+    {
+      "id": "06aa650d-38fa-4760-9a14-1b0a309be422",
+      "page": "/phase1",
+      "preview": "there is no dashboard - remove dashboard word from everywhere",
+      "note": "Dashboard wording removed \u2192 Copilot Hub"
+    },
+    {
+      "id": "99b1b7f3-d1f4-4b24-8e04-fabfbac26bf7",
+      "page": "/phase1",
+      "preview": "keep the cards as it is enabled",
+      "note": "Phase 1 cards enabled (no change needed)"
+    },
+    {
+      "id": "3f0737d0-01ec-4dd6-9721-1fa9058d2032",
+      "page": "/foundational",
+      "preview": "Change to:  AI Hype\n+\nZero Fundamentals\n=\nMissed Opportunities",
+      "note": "Foundational paths heading"
+    }
+  ],
+  "gap_phased": [
+    {
+      "id": "578a3104-a0d2-43e1-b73c-aa6ff7e62231",
+      "page": "/phased",
+      "preview": "Remove this statement",
+      "note": ""
+    },
+    {
+      "id": "321ea4f1-4897-430f-bff5-cf1deae931b0",
+      "page": "/phased",
+      "preview": "keep this in one line- layout",
+      "note": ""
+    },
+    {
+      "id": "64217fbf-0f62-4630-ba96-59ab7faba5af",
+      "page": "/phased",
+      "preview": "Need hierarchy",
+      "note": ""
+    },
+    {
+      "id": "2268970d-8151-4990-9083-9dbce7b22cd1",
+      "page": "/phased",
+      "preview": "ad hierachy for information",
+      "note": ""
+    },
+    {
+      "id": "cf628b83-faa2-4dd4-a2c8-418b4a877523",
+      "page": "/phased",
+      "preview": "\"x\"",
+      "note": ""
+    }
+  ],
+  "gap_foundational": [
+    {
+      "id": "1a3eefab-64a1-4181-9b8c-f4f23098f0c7",
+      "page": "/foundational#evolution",
+      "preview": "knowledge layer and rag - thinkk about a button \"solution?\"",
+      "note": ""
+    },
+    {
+      "id": "447e080b-4729-4e45-9f26-b26f3bc2b3ca",
+      "page": "/foundational#evolution",
+      "preview": "no need of the previous screen- you can add the images here in this section- on ",
+      "note": ""
+    },
+    {
+      "id": "916fad88-861c-48ba-80fa-bbb16584dd90",
+      "page": "/foundational#evolution",
+      "preview": "redesign these in figma and build later",
+      "note": ""
+    },
+    {
+      "id": "8e1f24f8-d47f-486c-bdec-bc1455a935ba",
+      "page": "/foundational#evolution",
+      "preview": "make this interesting- something which people can relate",
+      "note": ""
+    },
+    {
+      "id": "b796166b-f907-4c0b-964b-a6ba41d78b30",
+      "page": "/foundational#evolution",
+      "preview": "red line and output button should come together",
+      "note": ""
+    },
+    {
+      "id": "5a258413-5079-4afc-b278-72bc87e84430",
+      "page": "/foundational#evolution",
+      "preview": "this should come one by one in same line",
+      "note": ""
+    },
+    {
+      "id": "f4514412-f242-4029-a9a5-b8ac579fb701",
+      "page": "/foundational",
+      "preview": "Should be Blank",
+      "note": ""
+    },
+    {
+      "id": "629fe87e-e758-476c-934d-e09be61b055d",
+      "page": "/foundational#evolution",
+      "preview": "remove this line",
+      "note": ""
+    },
+    {
+      "id": "fbda90da-dc5c-45f9-ae13-2cb26acb328d",
+      "page": "/foundational",
+      "preview": "The sentence should be in a single line",
+      "note": ""
+    },
+    {
+      "id": "e7652d3d-86c7-41a6-af9f-3391eacc3de6",
+      "page": "/foundational#evolution",
+      "preview": "the image is not complete.  Needs to be updated",
+      "note": ""
+    },
+    {
+      "id": "0b7f22bd-791e-468f-8fdd-549a8dea794e",
+      "page": "/foundational#evolution",
+      "preview": "Updated image for an AI Agent solving multiple tasks",
+      "note": ""
+    },
+    {
+      "id": "51d71909-6775-4c55-9820-3909731c9435",
+      "page": "/foundational#evolution",
+      "preview": "An AI agent is a GenAI program that can semi-autonomously execute tasks for a us",
+      "note": ""
+    },
+    {
+      "id": "f8cf9f16-d091-48ce-8c52-12f38ee91b33",
+      "page": "/foundational#evolution",
+      "preview": "this is ai agent",
+      "note": ""
+    },
+    {
+      "id": "9620d571-7f5f-47a3-a125-361e875c41f5",
+      "page": "/foundational#evolution",
+      "preview": "just keep 2017",
+      "note": ""
+    },
+    {
+      "id": "5e0fd24f-322f-42d3-8e98-a2927975ce8c",
+      "page": "/foundational#evolution",
+      "preview": "remove this line",
+      "note": ""
+    },
+    {
+      "id": "d80f20e2-c718-4e59-be36-1dedb2637f90",
+      "page": "/foundational",
+      "preview": "the headers for these 2 could follow a opacity background, and th bottom line as",
+      "note": ""
+    },
+    {
+      "id": "b8e36162-6b4f-4448-b885-61e3e2655726",
+      "page": "/foundational",
+      "preview": "this section and above should look same - in terms of title and summary line - c",
+      "note": ""
+    },
+    {
+      "id": "c44d7e4a-b699-49f9-85be-11c40620459f",
+      "page": "/foundational",
+      "preview": "keep it enable all the time, not visible right now without hover",
+      "note": ""
+    },
+    {
+      "id": "2553dd3c-0748-4f3b-bc3e-fb6ababa731d",
+      "page": "/foundational",
+      "preview": "text will change- they will share changes",
+      "note": ""
+    },
+    {
+      "id": "70dc060e-2ff5-4f55-9d4e-4cd297e17bca",
+      "page": "/foundational",
+      "preview": "thinking partner",
+      "note": ""
+    },
+    {
+      "id": "37330720-6259-4da6-9159-ad3baa9c1739",
+      "page": "/foundational",
+      "preview": "make these bigger for more clarity- both learn and apply",
+      "note": ""
+    },
+    {
+      "id": "c272b37b-216a-46b0-adbb-9b42c3c0ef15",
+      "page": "/foundational",
+      "preview": "Change to: Follow a prompt and discover what happens behind the scenes\u2014from your",
+      "note": ""
+    },
+    {
+      "id": "4df10fcc-b445-4cf9-ba71-385e128a7fd8",
+      "page": "/foundational",
+      "preview": "Change to: Inside Every Gen AI Conversation",
+      "note": ""
+    },
+    {
+      "id": "49774902-7f57-4d3f-a5cd-b615f5a45dd3",
+      "page": "/foundational",
+      "preview": "Change to: Understanding AI is the first step toward realizing its value.\n\nLet's",
+      "note": ""
+    },
+    {
+      "id": "756ebfbe-69c4-4258-974a-126768d3d62d",
+      "page": "/foundational",
+      "preview": "Re-design the graph with updated image attached.",
+      "note": ""
+    },
+    {
+      "id": "b49116e5-10be-4846-b6c7-62b40005e6ca",
+      "page": "/foundational",
+      "preview": "change to: The AI Advantage Won't Wait",
+      "note": ""
+    },
+    {
+      "id": "8365ea8b-6951-4746-89c3-c5942980e7b6",
+      "page": "/foundational",
+      "preview": "Change title to: \nAI Foundations for the Future-Ready Tax Function",
+      "note": ""
+    }
+  ],
+  "gap_phase_workshops": [
+    {
+      "id": "814565c9-1c8b-4bbe-b2e3-767db0cbfcb9",
+      "page": "/closure-ai-reinforcement",
+      "preview": "To be removed",
+      "note": ""
+    },
+    {
+      "id": "8fc09737-2db2-4d1b-867f-cbb646b9a8fe",
+      "page": "/closure-ai-reinforcement",
+      "preview": "To be removed",
+      "note": ""
+    },
+    {
+      "id": "be1a08ec-cdd6-4551-8f6c-c2f1af777989",
+      "page": "/closure-ai-reinforcement",
+      "preview": "To be removed",
+      "note": ""
+    },
+    {
+      "id": "fcbd4c82-be91-4511-b453-93a9c1dc5a4f",
+      "page": "/closure-ai-reinforcement",
+      "preview": "To be removed",
+      "note": ""
+    },
+    {
+      "id": "70a69673-2644-49dd-b6c3-7fdc7fee2e01",
+      "page": "/closure-ai-reinforcement",
+      "preview": "To be removed",
+      "note": ""
+    },
+    {
+      "id": "beaaabcf-94d8-45ef-a5fc-053297e97139",
+      "page": "/closure-ai-reinforcement",
+      "preview": "To be removed",
+      "note": ""
+    },
+    {
+      "id": "054cf596-5b45-4142-b4bd-8e323a4c32d1",
+      "page": "/closure-ai-reinforcement",
+      "preview": "remove this entirely",
+      "note": ""
+    },
+    {
+      "id": "21b7fc77-ab31-4981-a880-92192666c1ad",
+      "page": "/control-room.html",
+      "preview": "We need to change this",
+      "note": ""
+    },
+    {
+      "id": "c9276782-ea70-4e1e-a4df-6da55a220e5d",
+      "page": "/closure-ai-reinforcement",
+      "preview": "remove this",
+      "note": ""
+    },
+    {
+      "id": "92487371-4705-4aef-856a-17b84f8918f6",
+      "page": "/closure-ai-reinforcement",
+      "preview": "remove this",
+      "note": ""
+    },
+    {
+      "id": "d22e0459-6c3e-4f65-9126-d73aa168b0ea",
+      "page": "/closure-ai-reinforcement",
+      "preview": "This will go away and the questions coming here can go inside the next section >",
+      "note": ""
+    },
+    {
+      "id": "9cd8b426-3603-4eb1-971f-748008520634",
+      "page": "/closure-ai-reinforcement",
+      "preview": "remove 7",
+      "note": ""
+    },
+    {
+      "id": "0c25363d-fa67-4ac1-a249-4808914825a4",
+      "page": "/guidance-implementation",
+      "preview": "This will probably go in agent library. This will have a different organisation.",
+      "note": ""
+    },
+    {
+      "id": "3776355f-e2de-4147-9dc4-e1bd8e8cb2b4",
+      "page": "/guidance-implementation",
+      "preview": "Section after this >>> we bring what users entered in 3 buckets",
+      "note": ""
+    },
+    {
+      "id": "6a6c0ae3-b753-4008-afbb-8428e8c6fc51",
+      "page": "/guidance-implementation",
+      "preview": "This section comes from prompt page 1.3 and this goes there in best practices fo",
+      "note": ""
+    },
+    {
+      "id": "eab97b3b-4a1c-47d3-b5d4-6380aad3923e",
+      "page": "/phase2",
+      "preview": "There may be images coming in here",
+      "note": ""
+    },
+    {
+      "id": "675f5e49-2547-4d01-b808-1ac2397b4cfc",
+      "page": "/guidance-implementation",
+      "preview": "Remove this section",
+      "note": ""
+    },
+    {
+      "id": "a3e20aa6-f2cb-41ae-9552-5133e7fa7c24",
+      "page": "/guidance-implementation",
+      "preview": "Remove this prompt",
+      "note": ""
+    },
+    {
+      "id": "d1d2cf56-13c1-4807-95fb-56859d9bc2e9",
+      "page": "/guidance-implementation",
+      "preview": "Have another tab here called \" Techniques \"",
+      "note": ""
+    },
+    {
+      "id": "7e21e072-728b-41b7-8782-ab33eab7771c",
+      "page": "/guidance-implementation",
+      "preview": "This will be removed",
+      "note": ""
+    },
+    {
+      "id": "10b9d82f-682c-49f2-9eaa-3f8a1078ff32",
+      "page": "/guidance-implementation",
+      "preview": "This should be review",
+      "note": ""
+    },
+    {
+      "id": "f5b26f98-26d8-4a4a-a90d-e1f832fafa08",
+      "page": "/phase2",
+      "preview": "This will go away",
+      "note": ""
+    },
+    {
+      "id": "b48de1da-3702-4f44-b4f4-587b7d91dd79",
+      "page": "/phase2",
+      "preview": "This section will go as well",
+      "note": ""
+    },
+    {
+      "id": "8f369d2c-5c8d-493e-88eb-e580642edf89",
+      "page": "/phase2",
+      "preview": "This section will go away",
+      "note": ""
+    },
+    {
+      "id": "d5bb6040-a5ba-4f45-a55b-66af16f6999b",
+      "page": "/phase2",
+      "preview": "this section will be removed",
+      "note": ""
+    },
+    {
+      "id": "46140b32-7a69-41ca-82e9-411b13bf9671",
+      "page": "/phase2",
+      "preview": "There will be 3 sections here",
+      "note": ""
+    },
+    {
+      "id": "3b9a5c08-28fc-43f4-83c5-0b99fca47493",
+      "page": "/closure-ai-reinforcement",
+      "preview": "This page is emtpy",
+      "note": ""
+    },
+    {
+      "id": "f98d0e60-8e39-41ee-a667-a80c2070582a",
+      "page": "/closure-ai-reinforcement",
+      "preview": "BG color options to show heirarchy?",
+      "note": ""
+    },
+    {
+      "id": "7322c400-8cc0-499b-945b-c13c46173e88",
+      "page": "/closure-ai-reinforcement",
+      "preview": "remove this",
+      "note": ""
+    },
+    {
+      "id": "d8a3c351-3ed6-4d43-8335-0921207b52b8",
+      "page": "/closure-ai-reinforcement",
+      "preview": "This can be one single line",
+      "note": ""
+    },
+    {
+      "id": "44d60a89-19fd-43d0-ac2f-aff68d30e750",
+      "page": "/closure-ai-reinforcement",
+      "preview": "Can we use some differentiation in these 3 boxes?",
+      "note": ""
+    },
+    {
+      "id": "0a6c5e64-3fac-44d3-aab6-6d1b57d9574e",
+      "page": "/closure-ai-reinforcement",
+      "preview": "we dont use this sort of rainbow line anywhere",
+      "note": ""
+    }
+  ],
+  "deferred": [
+    {
+      "id": "aab93e6f-8d13-4f4b-85f3-fd472826e7ff",
+      "page": "/phased",
+      "preview": "Library of Prompt and No-code Agent templates",
+      "note": "Template assets in public/templates/"
+    },
+    {
+      "id": "5651916a-258f-45f2-8c6c-6ebcd9eb27a7",
+      "page": "/phased",
+      "preview": "Recommendation Note with Sample Prompt and No-code Agent templates",
+      "note": "Template assets in public/templates/"
+    },
+    {
+      "id": "28e70c4c-65ce-4cc3-a129-edadd1e80d5c",
+      "page": "/copilot-hub",
+      "preview": "This is going to change >>> check with Gayatri and PriyaDarshini. DOs and Dont, ",
+      "note": "Copilot Hub reorg \u2014 stakeholder blocked"
+    },
+    {
+      "id": "8c7fbc98-d3ad-4a1b-a73a-06a550b63887",
+      "page": "/foundational",
+      "preview": "Change layout to attached image.",
+      "note": "Asset-dependent redesign"
+    },
+    {
+      "id": "12a87aca-db38-4a77-a4a5-be593f3c1f46",
+      "page": "/foundational",
+      "preview": "Change to attached image",
+      "note": "Asset-dependent redesign"
+    },
+    {
+      "id": "49f5ce32-05e0-4d9c-ad36-70c6cd48aeee",
+      "page": "/foundational",
+      "preview": "Change to attached image",
+      "note": "Asset-dependent redesign"
+    },
+    {
+      "id": "236aaf1f-4598-46fb-ab48-cc83f4038c13",
+      "page": "/foundational",
+      "preview": "Redo this section with attached image",
+      "note": "Asset-dependent redesign"
+    },
+    {
+      "id": "829907cf-c510-4e1c-8266-2a2017a1a05f",
+      "page": "/foundational",
+      "preview": "Redo this section with attached newspaper articles.",
+      "note": "Asset-dependent redesign"
+    }
+  ],
+  "unclear": [
+    {
+      "id": "54924f67-e880-43d7-9390-79ee4c370f07",
+      "page": "/ai-tax-prompting",
+      "preview": "this can be clickable and on click show this like you are presenting",
+      "note": ""
+    },
+    {
+      "id": "7bfd1285-b02d-4bf4-9c59-ff120f20c7fa",
+      "page": "/phase1",
+      "preview": "some other infographic icon , m365 icon or something",
+      "note": ""
+    },
+    {
+      "id": "ef8bc00a-f7d6-4ba5-81b9-0548d972bcbe",
+      "page": "/phase1",
+      "preview": "this is not needed",
+      "note": ""
+    },
+    {
+      "id": "4538abd0-c259-4cd9-b0bd-cab8e42b6531",
+      "page": "/phase1",
+      "preview": "back button can go here as well",
+      "note": ""
+    },
+    {
+      "id": "6be8f174-a00d-44ae-8851-d33893b3e24f",
+      "page": "/phase1",
+      "preview": "remove on this page",
+      "note": ""
+    },
+    {
+      "id": "cf596ab5-9352-4591-89b0-1e9723c9a266",
+      "page": "/phase1",
+      "preview": "ai tax excellence thing- add here",
+      "note": ""
+    }
+  ]
+}

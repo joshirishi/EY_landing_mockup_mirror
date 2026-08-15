@@ -52,7 +52,7 @@ export const PHASE_PATH = "/phase1";
  */
 export const PHASE_NUMBER = 1;
 export const TOTAL_PHASES = 4;
-export const BRAND_LABEL = "EY.ai Tax Labs";
+export const BRAND_LABEL = "AI for Tax Excellence";
 
 export const PHASE2_LABEL = "Phase 2: Brainstorming Tax Use Cases";
 export const PHASE2_PATH = "/phase2";
@@ -70,9 +70,9 @@ export const MODULES: CurriculumModule[] = [
       { id: "act-now", label: "Act Now", group: "learn" },
       { id: "rise-of-ai", label: "Understanding AI", group: "learn" },
       { id: "evolution", label: "Evolution", group: "learn" },
-      { id: "terminology", label: "Guided Demo", group: "learn" },
-      { id: "cheatsheet", label: "Cheat Sheet", group: "apply" },
+      { id: "terminology", label: "Gen AI Convo", group: "learn" },
       { id: "genai-vs-agents", label: "GenAI vs Agents", group: "learn" },
+      { id: "cheatsheet", label: "Thinking Partner", group: "learn" },
       { id: "quiz", label: "Quiz", group: "apply" },
     ],
   },
@@ -95,7 +95,7 @@ export const MODULES: CurriculumModule[] = [
   },
   {
     id: "copilot-hub",
-    title: "M365 Copilot Dashboard",
+    title: "M365 Copilot Hub",
     path: "/copilot-hub",
     order: 3,
     estimatedTime: "~60 min",

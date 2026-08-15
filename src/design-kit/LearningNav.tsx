@@ -16,7 +16,7 @@
  *
  * Usage (Phase 1 overview):
  *   <SiteHeader variant="learning" onNavigate={navigate} />
- *   <ModuleHeader mode="phase-overview" onNavigate={navigate} onBack={() => navigate("/phased")} />
+ *   <ModuleHeader mode="phase-overview" onNavigate={navigate} onBack={() => navigate("/")} />
  *
  * Usage (module page):
  *   <ModuleHeader currentModuleId="ai-tax-prompting" onNavigate={navigate} onBack={onBack} />
@@ -30,6 +30,7 @@ import {
   PHASE_NUMBER,
   PHASE_PATH,
   TOTAL_PHASES,
+  BRAND_LABEL,
   getAdjacentModules,
   getCurrentPhase,
   getModule,
@@ -196,12 +197,16 @@ export function ModuleHeader(props: ModuleHeaderProps) {
   }, [pickerOpen]);
 
   return (
-    <div ref={stickyRef} style={{ position: "sticky", top: 0, zIndex: 200 }}>
+    <div
+      ref={stickyRef}
+      className="ey-module-header-sticky"
+      style={{ position: "sticky", top: 0, zIndex: 300, width: "100%" }}
+    >
       {/* ── Level 2: breadcrumb + progress — fluid padding, collapses on narrow screens ── */}
       <div
         className="flex flex-wrap items-center justify-between gap-3 md:gap-4 px-4 sm:px-6 md:px-10 py-3"
         style={{
-          background: colors.offBlack,
+          background: colors.confidentBlack,
           borderBottom: `1px solid ${colors.offBlack}`,
         }}
       >
@@ -216,7 +221,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
               padding: 0,
               borderRadius: 4,
             }}
-            aria-label="Back to Tax Labs"
+            aria-label={`Back to ${BRAND_LABEL}`}
             onFocus={applyFocusRing}
             onBlur={clearFocusRing}
           >
@@ -225,7 +230,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
               className="hidden sm:inline"
               style={{ fontFamily: fonts.bold, fontSize: 14, color: colors.yellow, whiteSpace: "nowrap" }}
             >
-              Tax Labs
+              {BRAND_LABEL}
             </span>
           </button>
 
@@ -628,7 +633,7 @@ function ModulePickerMenu({
           minHeight: 0,
         }}
       >
-        {phase.modules.map((mod) => (
+        {phase.modules.filter(isModuleAvailable).map((mod) => (
           <PickerItem
             key={mod.id}
             label={mod.title}
@@ -762,14 +767,14 @@ function TabCluster({
           alignItems: "center",
           flexShrink: 0,
           fontFamily: fonts.bold,
-          fontSize: 11,
+          fontSize: 13,
           letterSpacing: "0.06em",
           textTransform: "uppercase",
           color: colors.offBlack,
           background: isApply ? colors.yellowAlpha12 : colors.white,
           border: `1px solid ${isApply ? "rgba(255, 230, 0, 0.4)" : "rgba(46, 46, 56, 0.16)"}`,
           borderRadius: 999,
-          padding: "5px 12px",
+          padding: "6px 14px",
           lineHeight: 1.2,
           marginBottom: 10,
           boxShadow: "0 1px 2px rgba(26, 26, 36, 0.06)",

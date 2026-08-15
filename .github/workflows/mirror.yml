@@ -1,0 +1,81 @@
+name: Mirror to EY_landing_mockup_mirror
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify mirror deploy key secret
+        env:
+          MIRROR_DEPLOY_KEY: ${{ secrets.MIRROR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MIRROR_DEPLOY_KEY}" ]; then
+            echo "::error::MIRROR_DEPLOY_KEY is missing or empty. In joshirishi/EY_landing_mockup go to Settings → Secrets and variables → Actions → Repository secrets, add MIRROR_DEPLOY_KEY with the full deploy key private key (include -----BEGIN ... PRIVATE KEY----- and -----END ... PRIVATE KEY----- lines, no extra quotes)."
+            exit 1
+          fi
+          if ! printf '%s' "${MIRROR_DEPLOY_KEY}" | grep -qE 'BEGIN (OPENSSH|RSA|EC|DSA) PRIVATE KEY'; then
+            echo "::error::MIRROR_DEPLOY_KEY does not look like a PEM private key. Re-paste the deploy key from GitHub → joshirishi/EY_landing_mockup_mirror → Settings → Deploy keys (generate a new key pair if needed)."
+            exit 1
+          fi
+
+      - name: Load SSH deploy key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MIRROR_DEPLOY_KEY }}
+
+      - name: Swap SDK token and amend commit
+        env:
+          ECHO_SDK_TOKEN: ${{ secrets.ECHO_SDK_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -n "${ECHO_SDK_TOKEN}" ] && [ -f index.html ]; then
+            sed -i "s/data-sdk-token=\"echo_sdk_[^\"]*\"/data-sdk-token=\"${ECHO_SDK_TOKEN}\"/" index.html
+          fi
+          git config user.email "mirror-bot@github.com"
+          git config user.name "Mirror Bot"
+          if [ -f index.html ] && ! git diff --quiet index.html; then
+            git add index.html
+            git commit --amend --no-edit
+          fi
+
+      - name: Push all branches and tags to mirror
+        env:
+          SOURCE_REF: ${{ github.ref }}
+          SOURCE_REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          git remote add mirror git@github.com:joshirishi/EY_landing_mockup_mirror.git 2>/dev/null || \
+            git remote set-url mirror git@github.com:joshirishi/EY_landing_mockup_mirror.git
+
+          # Detach so we can fetch/update local branch refs (Git refuses fetch into checked-out branch).
+          AMENDED_SHA="$(git rev-parse HEAD)"
+          git checkout --detach
+
+          if [ "${SOURCE_REF}" = "refs/heads/${SOURCE_REF_NAME}" ]; then
+            while read -r _sha ref; do
+              branch="${ref#refs/heads/}"
+              if [ "$branch" = "$SOURCE_REF_NAME" ]; then
+                git update-ref "refs/heads/${branch}" "$AMENDED_SHA"
+              else
+                git fetch origin "refs/heads/${branch}:refs/heads/${branch}" --force
+              fi
+            done < <(git ls-remote --heads origin)
+          else
+            git fetch origin '+refs/heads/*:refs/heads/*' --force
+          fi
+
+          git fetch origin '+refs/tags/*:refs/tags/*' --force
+
+          git push mirror --all --force
+          git push mirror --tags --force

@@ -10,10 +10,10 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
-import { EYWhatsNext } from "../design-kit/EYWhatsNext";
-import { colors, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
+import { colors, contentRailStyle, fonts, layout, spacing, typeScale } from "../design-kit/tokens";
 
 /**
  * Token bridge — maps the lesson HTML's CSS custom properties onto the
@@ -104,9 +104,6 @@ const TOKEN_BRIDGE = `
 #module-content .rise-card {
   border-color: var(--ey-card-deep);
   border-top-width: 4px;
-}
-#module-content .rise-card-top--img::after {
-  background: linear-gradient(0deg, var(--ey-card-deep) 0%, transparent 100%);
 }
 #module-content .rise-card-meta .source {
   color: ${colors.yellow};
@@ -544,7 +541,7 @@ export default function FoundationalConcepts({
   }, [scripts]);
 
   return (
-    <div style={{ position: "fixed", inset: 0, overflowY: "auto", background: colors.white }}>
+    <div style={{ width: "100%", background: colors.white }}>
       <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#module-content" />
       <ModuleHeader currentModuleId="foundational" onNavigate={onNavigate} onBack={onBack} />
 
@@ -553,12 +550,10 @@ export default function FoundationalConcepts({
         <div dangerouslySetInnerHTML={{ __html: body }} />
       </div>
 
-      {/* Shared dark CTA — Figma 3455:18320 palette */}
-      <EYWhatsNext
-        title="Fundamentals are clear."
-        ctaLabel="Continue to Part 2: Basics of Prompting in Tax"
-        onContinue={() => onNavigate("/ai-tax-prompting")}
-        meta="Part 2 covers: prompt structure, role-setting, context framing, output formatting, and real tax prompt templates"
+      {/* Journey progress — continue via next trek-step CTA */}
+      <AscentModuleProgressSection
+        moduleKey="m1_1"
+        onNextStepCta={() => onNavigate("/ai-tax-prompting")}
       />
     </div>
   );

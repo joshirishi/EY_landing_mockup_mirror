@@ -1,8 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Lock, PlusCircle } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle } from "lucide-react";
+import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
+import {
+  EMPTY_USE_CASE_DRAFTS,
+  readStoredUseCaseEntries,
+  type UseCaseBucketId,
+  writeStoredUseCaseEntries,
+} from "../data/use-case-buckets";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
-import AscentJourneyInfographic, { type AscentCalloutEntry, type AscentStageNodeEntry, type AscentStageTitleEntry } from "../imports/Frame353/AscentJourneyInfographic";
+import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-2212662948.jpg";
@@ -15,10 +22,10 @@ import heroImg from "../assets/images/GettyImages-2212662948.jpg";
  */
 const PHASE2_SECTIONS = [
   { id: "quick-recall", label: "Quick Recall", group: "learn" as const },
-  { id: "memory-refresh", label: "Memory Refresh", group: "learn" as const },
   { id: "problem-first", label: "Problem First", group: "learn" as const },
+  { id: "your-use-cases", label: "Your Use Cases", group: "learn" as const },
   { id: "guided-examples", label: "Prompt Examples", group: "learn" as const },
-  { id: "agent-examples", label: "Agent Examples", group: "learn" as const },
+  { id: "workshop-library", label: "Library", group: "learn" as const },
   { id: "deliverables", label: "Outputs", group: "apply" as const },
   { id: "next-steps", label: "What's Next", group: "apply" as const },
 ];
@@ -57,6 +64,20 @@ const AGENT_ROLE = [
   "Uses specified knowledge sources",
   "Follows workflows and restrictions",
   "Produces outputs for human review",
+];
+
+const PROCODE_TASKS = [
+  "Complex multi-step automation",
+  "Custom integrations with enterprise systems",
+  "Advanced data transformation pipelines",
+  "Scalable workflow orchestration",
+];
+
+const PROCODE_ROLE = [
+  "Built by developers or technical teams",
+  "Requires coding and API access",
+  "Suited for organisation-wide deployment",
+  "Maintained with version control and testing",
 ];
 
 // ── Animation keyframes injected once ────────────────────────────────────────
@@ -109,250 +130,6 @@ const TO_ITEMS = [
   "Identifying recurring workflows for Agents",
   "Discovering your own priority opportunities",
 ];
-
-// ── Memory Refresh data — verbatim from PDF slide 3 ─────────────────────────
-const PROMPT_ELEMENTS = [
-  { n: 1, kw: "Persona",       sub: "Perspective" },
-  { n: 2, kw: "Context",       sub: "Relevant facts" },
-  { n: 3, kw: "Objective",     sub: "What AI should do" },
-  { n: 4, kw: "Instructions",  sub: "Steps and criteria" },
-  { n: 5, kw: "Sources",       sub: "Material to use" },
-  { n: 6, kw: "Output",        sub: "Format and detail" },
-  { n: 7, kw: "Constraints",   sub: "What not to assume or do" },
-  { n: 8, kw: "Review",        sub: "What the user must verify" },
-];
-
-const AGENT_ELEMENTS = [
-  { n: 1, kw: "Purpose",               sub: "Goal to accomplish" },
-  { n: 2, kw: "General guidance",      sub: "Directions, tone, restrictions" },
-  { n: 3, kw: "Skills",                sub: "Support expected" },
-  { n: 4, kw: "Workflow",              sub: "Steps to follow" },
-  { n: 5, kw: "Knowledge",             sub: "Approved information" },
-  { n: 6, kw: "Errors & limitations",  sub: "When to stop or clarify" },
-  { n: 7, kw: "Examples",              sub: "Appropriate interaction" },
-  { n: 8, kw: "Follow-up & closing",   sub: "How to complete the exchange" },
-];
-
-// ── Memory Refresh section ───────────────────────────────────────────────────
-function MemoryRefreshSection() {
-  const [activeTab, setActiveTab] = useState<"prompt" | "agent">("prompt");
-  const [subsVisible, setSubsVisible] = useState(false);
-  const [hoveredTile, setHoveredTile] = useState<number | null>(null);
-
-  const isPrompt = activeTab === "prompt";
-  const elements = isPrompt ? PROMPT_ELEMENTS : AGENT_ELEMENTS;
-  const accentColor = isPrompt ? colors.yellow : colors.framePurple;
-  const accentText = isPrompt ? colors.confidentBlack : colors.white;
-
-  const switchTab = (tab: "prompt" | "agent") => {
-    setActiveTab(tab);
-    setSubsVisible(false);
-  };
-
-  return (
-    <section
-      id="memory-refresh"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.confidentBlack,
-        padding: `${spacing.sectionPaddingY} 0`,
-        width: "100%",
-      }}
-    >
-      <div style={{ ...contentRailStyle }}>
-
-        {/* Eyebrow + heading */}
-        <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <p style={{
-            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px",
-          }}>
-            Memory Refresh
-          </p>
-          <h2 style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(22px, 3.5vw, 36px)",
-            color: colors.white,
-            margin: "0 0 8px",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.1,
-          }}>
-            Good Outcomes Begin with Clear Instructions
-          </h2>
-          <p style={{
-            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 16px)",
-            color: colors.onDarkMuted, margin: 0, lineHeight: 1.5,
-          }}>
-            Recall the building blocks — without repeating the full Phase 1 training.
-          </p>
-        </div>
-
-        {/* Tab toggle + show descriptions row */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 28,
-          gap: 12,
-        }}>
-        <div style={{
-          display: "inline-flex",
-          background: "rgba(255,255,255,0.06)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          borderRadius: 8,
-          padding: 4,
-          gap: 4,
-        }}>
-          {(["prompt", "agent"] as const).map((tab) => {
-            const active = activeTab === tab;
-            const tabAccent = tab === "prompt" ? colors.yellow : colors.framePurple;
-            const tabText = tab === "prompt" ? colors.confidentBlack : colors.white;
-            const label = tab === "prompt" ? "Effective Prompt" : "Effective M365 Agent instructions";
-            return (
-              <button
-                key={tab}
-                onClick={() => switchTab(tab)}
-                style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 13,
-                  letterSpacing: "-0.01em",
-                  color: active ? tabText : colors.gray01,
-                  background: active ? tabAccent : "transparent",
-                  border: "none",
-                  borderRadius: 6,
-                  padding: "8px 18px",
-                  cursor: "pointer",
-                  transition: "background 200ms, color 200ms",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-
-          {/* Show/hide descriptions — right-aligned, inline with tabs */}
-          <button
-            onClick={() => setSubsVisible((v) => !v)}
-            style={{
-              fontFamily: fonts.bold, fontSize: 12,
-              color: accentColor,
-              background: "transparent",
-              border: `1px solid ${accentColor}`,
-              borderRadius: 20, padding: "6px 16px",
-              cursor: "pointer", letterSpacing: "-0.01em",
-              display: "inline-flex", alignItems: "center", gap: 6,
-              opacity: 0.85,
-              whiteSpace: "nowrap",
-              flexShrink: 0,
-            }}
-          >
-            {subsVisible ? "Hide descriptions" : "Show descriptions"}
-            {subsVisible ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          </button>
-        </div>
-
-        {/* 2×4 tile grid */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "clamp(8px, 1.2vw, 14px)",
-          marginBottom: 20,
-        }}>
-          {elements.map((el) => {
-            const showSub = subsVisible || hoveredTile === el.n;
-            const isHovered = hoveredTile === el.n;
-            return (
-              <div
-                key={`${activeTab}-${el.n}`}
-                onMouseEnter={() => setHoveredTile(el.n)}
-                onMouseLeave={() => setHoveredTile(null)}
-                style={{
-                  background: isHovered ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)",
-                  border: `1px solid ${isHovered ? accentColor : "rgba(255,255,255,0.1)"}`,
-                  borderRadius: 8,
-                  padding: "clamp(14px, 1.5vw, 20px)",
-                  animation: "ey-slide-up 260ms cubic-bezier(.22,.68,0,1.05) both",
-                  animationDelay: `${el.n * 30}ms`,
-                  cursor: "default",
-                  transition: "background 180ms, border-color 180ms",
-                }}
-              >
-                <span style={{
-                  fontFamily: fonts.bold, fontSize: 11,
-                  color: accentColor, display: "block", marginBottom: 6,
-                }}>
-                  {el.n}
-                </span>
-                <span style={{
-                  fontFamily: fonts.bold, fontSize: 13,
-                  color: colors.white, lineHeight: 1.3, display: "block",
-                }}>
-                  {el.kw}
-                </span>
-                {showSub && (
-                  <span style={{
-                    fontFamily: fonts.regular, fontSize: 12,
-                    color: colors.onDarkMuted, lineHeight: 1.4,
-                    display: "block", marginTop: 6,
-                    borderTop: "1px solid rgba(255,255,255,0.08)",
-                    paddingTop: 6,
-                    animation: "ey-hero-fade-up 200ms cubic-bezier(.22,.68,0,1.05) both",
-                  }}>
-                    {el.sub}
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Drag & Drop placeholder */}
-        <div style={{ marginBottom: 40 }}>
-          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 20px" }}>
-            Drag &amp; Drop Exercise
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            {["Column A", "Column B"].map((col) => (
-              <div key={col} style={{
-                border: "1.5px dashed rgba(255,255,255,0.25)",
-                borderRadius: 8,
-                padding: 24,
-                minHeight: 160,
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-              }}>
-                <p style={{ fontFamily: fonts.bold, fontSize: 12, color: colors.white, margin: 0, letterSpacing: "0.04em" }}>{col}</p>
-                <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.onDarkMuted, margin: 0, fontStyle: "italic" }}>Content coming soon</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Transition line — verbatim from PDF */}
-        <div style={{
-          borderTop: "1px solid rgba(255,255,255,0.1)",
-          paddingTop: 28,
-          textAlign: "center",
-        }}>
-          <p style={{
-            fontFamily: fonts.regular, fontSize: "clamp(14px, 1.5vw, 17px)",
-            color: colors.onDarkMuted, margin: "0 0 4px",
-          }}>
-            Now that we know how to instruct AI,
-          </p>
-          <p style={{
-            fontFamily: fonts.bold, fontSize: "clamp(15px, 1.6vw, 18px)",
-            color: colors.yellow, margin: 0, letterSpacing: "-0.01em",
-          }}>
-            which tax activities are worth redesigning?
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ── Problem First data — verbatim from PDF slide 4 ──────────────────────────
 const PROBLEM_STEPS = [
@@ -681,6 +458,90 @@ const GUIDED_EXAMPLES = [
   },
 ];
 
+// ── Your Use Cases — workshop buckets (Prompt / Agent / Pro Code) ─────────────
+function UseCaseBucketsSection() {
+  const [entries, setEntries] = useState<Record<UseCaseBucketId, string[]>>(() => readStoredUseCaseEntries());
+  const [drafts, setDrafts] = useState<Record<UseCaseBucketId, string>>(EMPTY_USE_CASE_DRAFTS);
+
+  useEffect(() => {
+    writeStoredUseCaseEntries(entries);
+  }, [entries]);
+
+  const addEntry = (bucketId: UseCaseBucketId) => {
+    const text = drafts[bucketId].trim();
+    if (!text) return;
+    setEntries((prev) => ({ ...prev, [bucketId]: [...prev[bucketId], text] }));
+    setDrafts((prev) => ({ ...prev, [bucketId]: "" }));
+  };
+
+  const removeEntry = (bucketId: UseCaseBucketId, index: number) => {
+    setEntries((prev) => ({
+      ...prev,
+      [bucketId]: prev[bucketId].filter((_, i) => i !== index),
+    }));
+  };
+
+  return (
+    <section
+      id="your-use-cases"
+      style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.confidentBlack,
+        padding: `${spacing.sectionPaddingY} 0`,
+        width: "100%",
+      }}
+    >
+      <div style={{ ...contentRailStyle }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <p style={{
+            fontFamily: fonts.bold,
+            fontSize: typeScale.label.size,
+            letterSpacing: typeScale.label.tracking,
+            textTransform: "uppercase",
+            color: colors.yellow,
+            margin: "0 0 12px",
+          }}>
+            Your Use Cases
+          </p>
+          <h2 style={{
+            fontFamily: fonts.bold,
+            fontSize: "clamp(22px, 3.5vw, 36px)",
+            color: colors.onDark,
+            margin: "0 0 8px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}>
+            Sort Each Idea into the Right Box
+          </h2>
+          <p style={{
+            fontFamily: fonts.regular,
+            fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.onDarkMuted,
+            margin: 0,
+            lineHeight: 1.5,
+            maxWidth: 680,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}>
+            Use the same Prompt, M365 Agent and Pro Code buckets from Quick Recall.
+            Add tax activities from your workshop discussion — one box per lever.
+          </p>
+        </div>
+
+        <UseCaseBucketCards
+          sectionId="your-use-cases"
+          entries={entries}
+          editable
+          drafts={drafts}
+          onDraftChange={(bucketId, value) => setDrafts((prev) => ({ ...prev, [bucketId]: value }))}
+          onAdd={addEntry}
+          onRemove={removeEntry}
+        />
+      </div>
+    </section>
+  );
+}
+
 // ── Guided Examples section ──────────────────────────────────────────────────
 function GuidedExamplesSection() {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -952,88 +813,32 @@ function GuidedExamplesSection() {
   );
 }
 
-// ── M365 Agent Examples data — verbatim from PDF slide 6 ───────────────────
-const AGENT_EXAMPLES = [
-  {
-    name: "Tax Knowledge Retrieval Agent",
-    purpose: "Acts as a centralized knowledge assistant for locating historical tax positions, precedents and supporting materials.",
-    actions: "Searches approved repositories containing tax opinions, notices, submissions, laws, policies and knowledge documents.",
-    outcome: "Enables faster research, improves consistency in tax positions and reduces time spent searching for information.",
-  },
-  {
-    name: "Transfer Pricing Documentation Agent",
-    purpose: "Supports preparation and maintenance of transfer pricing documentation and supporting evidence.",
-    actions: "Reviews related-party schedules, TP reports, benchmarking studies, GL records and supporting documentation.",
-    outcome: "Identifies transactions, summarizes supporting information, highlights exceptions and improves audit readiness.",
-  },
-  {
-    name: "Advance Tax Reviewer Agent",
-    purpose: "Assists tax teams in reviewing advance tax computations and identifying key movements between reporting periods.",
-    actions: "Compares current and prior quarter computations, validates changes in assumptions and workings, and analyses variances across tax forecasts and calculations.",
-    outcome: "Produces variance analysis narratives, management summary notes and review observations that support faster validation, stakeholder reporting and decision-making.",
-  },
-  {
-    name: "Tax Information Request Agent",
-    purpose: "Streamlines the collection and management of information required from stakeholders during tax projects.",
-    actions: "Drafts information requests, reviews responses, summarizes stakeholder inputs and identifies missing information.",
-    outcome: "Reduces follow-up effort and improves the completeness and quality of information received.",
-  },
-  {
-    name: "Assessment Evidence Agent",
-    purpose: "Assists tax teams in gathering and organizing supporting evidence for audits, assessments and disputes.",
-    actions: "Searches SharePoint, Teams, Outlook and supporting repositories for relevant documentation and correspondence.",
-    outcome: "Creates issue-wise evidence packs, highlights missing support and strengthens audit preparedness.",
-  },
-  {
-    name: "Tax Leadership Reporting Agent",
-    purpose: "Provides leadership with periodic consolidated visibility over tax activities, developments and risks.",
-    actions: "Collects status updates, auditor comments, legislative changes and regional tax developments for analysis.",
-    outcome: "Produces executive dashboards, management reports and briefing materials to support decision-making.",
-  },
-  {
-    name: "Personalized Tracker Agent (including Compliance Tracker)",
-    purpose: "Acts as a centralized monitoring tool for tax compliance activities, deadlines and action items.",
-    actions: "Maintains compliance calendars, trackers, filing records and related correspondence.",
-    outcome: "Identifies upcoming, due and overdue obligations, highlights risks and supports timely compliance management.",
-  },
-  {
-    name: "Repetitive Tax Correspondence Agent",
-    purpose: "Standardizes recurring tax communications across stakeholders, management and employees.",
-    actions: "Generates communication templates, drafts correspondence, refines messaging and applies approved communication standards.",
-    outcome: "Improves consistency, reduces drafting effort and accelerates turnaround of routine communications.",
-  },
-  {
-    name: "Second Brain Agent",
-    purpose: "Acts as a personalized tax knowledge companion that helps professionals quickly access information, insights and prior work products accumulated over time.",
-    actions: "Searches across emails, meeting notes, presentations, research materials, working papers, tax opinions and enterprise repositories to build contextual understanding.",
-    outcome: "Enables users to retrieve historical knowledge, identify relevant precedents, surface action items and obtain context-aware guidance without manually searching through multiple sources.",
-  },
-];
-
-// ── M365 Agent Examples section ──────────────────────────────────────────────
-function AgentExamplesSection() {
-  const [activeIdx, setActiveIdx] = useState<number>(0);
-
-  const agent = AGENT_EXAMPLES[activeIdx];
-
+// ── Workshop Library — placeholder until Gmail-shared assets are integrated ───
+// Expected: browsable library of Prompt and No-code Agent templates (distinct
+// organisation from the guided example tiles above). Mirror Phase 3 Reference
+// Library patterns (sidebar categories, preview/download) once content arrives.
+function WorkshopLibrarySection() {
   return (
     <section
-      id="agent-examples"
-      style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: colors.white,
+      id="workshop-library"
+      style={{
+        scrollMarginTop: SUBNAV_SCROLL_MARGIN,
+        background: colors.offWhite,
         padding: `${spacing.sectionPaddingY} 0`,
         width: "100%",
       }}
     >
       <div style={{ ...contentRailStyle }}>
-
-        {/* Eyebrow + heading + intro */}
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
+            fontFamily: fonts.bold,
+            fontSize: typeScale.label.size,
+            letterSpacing: typeScale.label.tracking,
+            textTransform: "uppercase",
+            color: colors.eyebrowGold,
+            margin: "0 0 12px",
           }}>
-            Guided Examples
+            Workshop Library
           </p>
           <h2 style={{
             fontFamily: fonts.bold,
@@ -1043,154 +848,56 @@ function AgentExamplesSection() {
             letterSpacing: "-0.02em",
             lineHeight: 1.1,
           }}>
-            EY-Guided M365 Agent Examples
+            Prompt &amp; Agent Template Library
           </h2>
           <p style={{
-            fontFamily: fonts.regular, fontSize: "clamp(13px, 1.4vw, 15px)",
-            color: colors.gray01, margin: 0, lineHeight: 1.5,
+            fontFamily: fonts.regular,
+            fontSize: "clamp(13px, 1.4vw, 15px)",
+            color: colors.gray01,
+            margin: 0,
+            lineHeight: 1.5,
+            maxWidth: 640,
+            marginLeft: "auto",
+            marginRight: "auto",
           }}>
-            Purpose, actions and outcome as summarised in Sheet1 of Sample use cases.xlsx.
-            Agents are reusable assistants for clearly defined business scenarios.
+            Full library content is coming next — sourced from the Gmail-shared workshop pack
+            (Sample use cases.xlsx and template screenshots).
           </p>
         </div>
 
-        {/* Tile rows — detail panel injects after the row containing the active tile */}
-        {[0, 1, 2].map((rowIdx) => {
-          const rowStart = rowIdx * 3;
-          const rowAgents = AGENT_EXAMPLES.slice(rowStart, rowStart + 3);
-          const activeRow = Math.floor(activeIdx / 3);
-          const showPanel = activeRow === rowIdx;
-
-          return (
-            <div key={rowIdx} style={{ marginBottom: 10 }}>
-              {/* Tile row */}
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 10,
-              }}>
-                {rowAgents.map((a, i) => {
-                  const idx = rowStart + i;
-                  const isActive = activeIdx === idx;
-                  return (
-                    <button
-                      key={a.name}
-                      onClick={() => setActiveIdx(idx)}
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 10,
-                        padding: "14px 16px",
-                        background: isActive ? "rgba(134,48,255,0.08)" : colors.white,
-                        border: `1px solid ${isActive ? colors.framePurple : colors.gray02}`,
-                        borderBottom: isActive ? `3px solid ${colors.framePurple}` : `1px solid ${colors.gray02}`,
-                        borderRadius: 6,
-                        cursor: "pointer",
-                        textAlign: "left",
-                        transition: "background 180ms, border-color 180ms",
-                        userSelect: "none",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(134,48,255,0.03)";
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) (e.currentTarget as HTMLElement).style.background = colors.white;
-                      }}
-                    >
-                      <span style={{
-                        fontFamily: fonts.bold, fontSize: 11,
-                        color: isActive ? colors.framePurple : colors.gray01,
-                        lineHeight: 1.4, flexShrink: 0, marginTop: 1,
-                      }}>
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span style={{
-                        fontFamily: fonts.bold, fontSize: 12,
-                        color: isActive ? colors.framePurple : colors.offBlack,
-                        lineHeight: 1.35, letterSpacing: "-0.01em",
-                        transition: "color 180ms",
-                      }}>
-                        {a.name}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Detail panel — only for the active row */}
-              {showPanel && (
-                <div
-                  key={activeIdx}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: "clamp(16px, 2vw, 28px)",
-                    background: colors.white,
-                    borderTop: `1px solid ${colors.gray02}`,
-                    borderRight: `1px solid ${colors.gray02}`,
-                    borderBottom: `1px solid ${colors.gray02}`,
-                    borderLeft: `3px solid ${colors.framePurple}`,
-                    borderRadius: 8,
-                    padding: "clamp(16px, 2vw, 24px) clamp(20px, 2.5vw, 28px)",
-                    minHeight: 140,
-                    animation: "ey-slide-up 180ms cubic-bezier(.22,.68,0,1.05) both",
-                    marginTop: 8,
-                    marginBottom: 10,
-                  }}
-                >
-                  {[
-                    { label: "Purpose", body: agent.purpose },
-                    { label: "Actions", body: agent.actions },
-                    { label: "Outcome", body: agent.outcome },
-                  ].map(({ label, body }) => (
-                    <div key={label}>
-                      <p style={{
-                        fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.1em",
-                        textTransform: "uppercase", color: colors.eyebrowGold,
-                        margin: "0 0 8px",
-                      }}>
-                        {label}
-                      </p>
-                      <p style={{
-                        fontFamily: fonts.regular, fontSize: 13,
-                        color: colors.offBlack, margin: 0, lineHeight: 1.6,
-                      }}>
-                        {body}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        {/* Discussion prompt */}
         <div style={{
-          marginTop: 6,
-          background: "rgba(134,48,255,0.07)",
-          border: `1px solid rgba(134,48,255,0.18)`,
-          borderLeft: `3px solid ${colors.framePurple}`,
+          border: "1.5px dashed rgba(46,46,56,0.18)",
           borderRadius: 10,
-          padding: "clamp(20px, 2.5vw, 28px)",
+          background: colors.white,
+          padding: "clamp(32px, 4vw, 48px)",
+          textAlign: "center",
+          minHeight: 240,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
         }}>
           <p style={{
-            fontFamily: fonts.bold, fontSize: 10,
-            letterSpacing: "0.1em", textTransform: "uppercase",
-            color: colors.framePurple, margin: "0 0 12px",
+            fontFamily: fonts.bold,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: colors.eyebrowGoldDark,
+            margin: 0,
           }}>
-            Discussion Prompt
+            Library placeholder
           </p>
           <p style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: colors.offBlack,
+            fontFamily: fonts.regular,
+            fontSize: 14,
+            color: colors.gray01,
             margin: 0,
-            lineHeight: 1.45,
-            letterSpacing: "-0.01em",
+            lineHeight: 1.6,
+            maxWidth: 480,
+            fontStyle: "italic",
           }}>
-            Which recurring tax workflow repeatedly requires people to search, collect,
-            coordinate, track or report?
+            Browse, preview and download templates will appear here once the shared library assets are integrated.
           </p>
         </div>
       </div>
@@ -1205,31 +912,6 @@ function AgentExamplesSection() {
 
 const D1_ACCENT = "#0076A8";
 const D2_ACCENT = "#7B5EA7";
-
-// Phase 2 section data for the journey infographic in What's Next
-const P2_CALLOUTS: readonly AscentCalloutEntry[] = [
-  { left: 140, top: 250, width: 149, quote: "I know exactly where AI fits in my tax work." },
-  { left: 290, top: 195, width: 187, quote: "I memorised which AI lever to use for every task." },
-  { left: 502, top: 123, width: 167, quote: "I feel confident mapping AI to my daily activities." },
-  { left: 722, top: 106, width: 150, quote: "I learned to lead with the problem, not the tool." },
-  { left: 953, top: 114, width: 170, quote: "I can now build prompts that get real results." },
-  { left: 1247, top: 8, width: 180, quote: "I feel ready to automate what once seemed impossible.", rounded: 4 },
-];
-const P2_STAGE_NODES: readonly AscentStageNodeEntry[] = [
-  { left: 359, top: 295, icon: "/ascent/icon-book-open.svg", alt: "Quick Recall" },
-  { left: 554, top: 260, icon: "/ascent/icon-search.svg", alt: "Memory Refresh" },
-  { left: 769, top: 240, icon: "/ascent/icon-cpu.svg", alt: "Problem First" },
-  { left: 1018, top: 227, icon: "/ascent/icon-trending-up.svg", alt: "Prompt Examples" },
-  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Agent Examples" },
-];
-const P2_STAGE_TITLE_LABELS: readonly AscentStageTitleEntry[] = [
-  { title: "Phase 2 Start", markerTop: 366, markerSize: 46, calloutIndex: 0 },
-  { title: "Quick Recall", markerTop: 295, markerSize: 40, calloutIndex: 1 },
-  { title: "Memory Refresh", markerTop: 260, markerSize: 40, calloutIndex: 2 },
-  { title: "Problem First", markerTop: 240, markerSize: 40, calloutIndex: 3 },
-  { title: "Prompt Examples", markerTop: 227, markerSize: 40, calloutIndex: 4 },
-  { title: "Agent Examples", markerTop: 94, markerSize: 40, calloutIndex: 5 },
-];
 
 function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => void }) {
   return (
@@ -1447,31 +1129,11 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
       </section>
 
       {/* What's Next — Journey Map */}
-      <section
+      <AscentModuleProgressSection
+        moduleKey="m2"
         id="next-steps"
-        style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN, background: colors.confidentBlack, width: "100%" }}
-      >
-        {/* Header */}
-        <div style={{ ...contentRailStyle, paddingTop: spacing.sectionPaddingY, paddingBottom: 32, textAlign: "center" }}>
-          <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.yellow, margin: "0 0 12px" }}>
-            What's Next
-          </p>
-          <h2 style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.white, margin: 0, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-            Continue Your Learning Journey
-          </h2>
-        </div>
-
-        {/* Journey map infographic */}
-        <AscentJourneyInfographic
-          callouts={P2_CALLOUTS}
-          stageNodes={P2_STAGE_NODES}
-          stageTitleLabels={P2_STAGE_TITLE_LABELS}
-          defaultAllOpen
-          lastNodeCtaLabel="Building Solutions"
-          onLastNodeCta={() => onNavigate("/guidance-implementation")}
-        />
-
-      </section>
+        onNextStepCta={() => onNavigate("/guidance-implementation")}
+      />
     </>
   );
 }
@@ -1775,6 +1437,66 @@ function QuickRecallSection() {
               </ul>
             </div>
           )}
+
+          {/* ── Pro Code card — third Quick Recall pillar (Echo 46140b32) ── */}
+          <div
+            className="ey-recall-procode"
+            style={{
+              ...cardBase,
+              borderTop: `3px solid ${colors.frameBlue}`,
+              animation: "ey-slide-up 420ms cubic-bezier(.22,.68,0,1.05) 120ms both",
+            }}
+          >
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span style={{
+                fontFamily: fonts.bold,
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: colors.white,
+                background: colors.frameBlue,
+                borderRadius: 4,
+                padding: "3px 10px",
+              }}>
+                Pro Code
+              </span>
+            </div>
+            <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: "0 0 20px", lineHeight: 1.4 }}>
+              Developer-built solutions for complex, scalable tax workflows
+            </p>
+
+            <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 10px" }}>
+              Typically useful when work requires:
+            </p>
+            <ul style={{ margin: "0 0 20px", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 7 }}>
+              {PROCODE_TASKS.map((task) => (
+                <li key={task} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: "50%",
+                    background: colors.frameBlue, flexShrink: 0, marginTop: 6,
+                  }} />
+                  <span style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack, lineHeight: 1.4 }}>{task}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div style={{ height: 1, background: colors.gray02, margin: "0 0 16px" }} />
+
+            <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 10px" }}>
+              The solution
+            </p>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 7 }}>
+              {PROCODE_ROLE.map((role) => (
+                <li key={role} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: "50%",
+                    background: colors.frameBlue, flexShrink: 0, marginTop: 6,
+                  }} />
+                  <span style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack, lineHeight: 1.4 }}>{role}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Post-reveal summary — verbatim from PDF slide 2 */}
@@ -2043,26 +1765,20 @@ export default function BrainstormingUseCases({
 
   return (
     <div
-      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0 overflow-x-hidden"
+      className="relative bg-white content-stretch flex flex-col items-stretch w-full max-w-full min-w-0"
       data-name="EY.ai Tax Labs - Phase 2"
     >
-      {/* ── Sticky chrome ── */}
-      <div
-        className="content-stretch flex flex-col items-stretch relative shrink-0 w-full sticky top-0 z-[300]"
-        data-name="Top Navigation"
-      >
-        <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
-        <ModuleHeader
-          mode="phase-overview"
-          hideModuleDropdown
-          phaseLabel={PHASE2_LABEL}
-          phaseNumber={PHASE2_NUMBER}
-          subPhaseLabel="2.1"
-          sections={PHASE2_SECTIONS}
-          onNavigate={onNavigate}
-          onBack={onBack}
-        />
-      </div>
+      <SiteHeader variant="learning" onNavigate={onNavigate} skipLinkTarget="#phase2-content" />
+      <ModuleHeader
+        mode="phase-overview"
+        hideModuleDropdown
+        phaseLabel={PHASE2_LABEL}
+        phaseNumber={PHASE2_NUMBER}
+        subPhaseLabel="2.1"
+        sections={PHASE2_SECTIONS}
+        onNavigate={onNavigate}
+        onBack={onBack}
+      />
 
       {/* ── Main content ── */}
       <main id="phase2-content">
@@ -2073,13 +1789,13 @@ export default function BrainstormingUseCases({
 
         <QuickRecallSection />
 
-        <MemoryRefreshSection />
-
         <ProblemFirstSection />
+
+        <UseCaseBucketsSection />
 
         <GuidedExamplesSection />
 
-        <AgentExamplesSection />
+        <WorkshopLibrarySection />
 
         <DeliverablesSection onNavigate={onNavigate} />
 

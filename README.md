@@ -34,8 +34,8 @@ The experience is branded, progressive, and interactive: learners click through 
 
 | Route | Page | Status |
 |-------|------|--------|
-| `/` | Home — product entry and hero | Live |
-| `/phased` | Phased engagement overview (4-phase journey) | Live |
+| `/` | Phased engagement overview (4-phase journey) — app landing | Live |
+| `/phased` | Redirects to `/` | Live |
 | `/phase1` | Phase 1 course card hub — unlocks the three live modules | Live |
 
 ### Phase 1 modules (live)
@@ -59,7 +59,7 @@ The experience is branded, progressive, and interactive: learners click through 
 - **Module header & in-page nav** — sticky sub-navigation with hash-based section scrolling (`LearningNav`, `ModuleHeader`)
 - **HTML lesson embeds** — Foundational Concepts renders from `src/imports/Foundational_Concepts.html` into the React page with a token bridge so EY styling stays consistent
 - **Native React modules** — AI Tax Prompting and M365 Copilot Hub are fully React pages with interactive widgets (tabs, activities, walkthroughs)
-- **Phased layout system** — fluid, production-width layouts (no canvas zoom-shrink) for `/phased` and `/phase1`
+- **Phased layout system** — fluid, production-width layouts (no canvas zoom-shrink) for `/` (phased landing) and `/phase1`
 - **EY design kit** — shared tokens, typography, buttons, cards, headers, footers, and "What's Next" progression blocks
 - **Echo feedback SDK** — in-app comment FAB for stakeholder review (see [Echo feedback](#echo-feedback))
 - **Vercel deployment** — SPA rewrites configured in `vercel.json`
@@ -169,7 +169,7 @@ Phase 1 is labeled **"Phase 1: Foundational Training Workshops"** in the app. In
 | Route | Component | Description |
 |-------|-----------|-------------|
 | `/` | `Home2` (import) | Landing / entry |
-| `/phased` | `PhasedEngagementView` | Four-phase journey overview |
+| `/` | `PhasedEngagementView` | Four-phase journey overview (landing) |
 | `/phase1` | `Phase1View` | Course card hub — links to all Phase 1 modules |
 | `/foundational` | `FoundationalConcepts` | Module 1 — HTML lesson embed |
 | `/ai-tax-prompting` | `AiTaxPrompting` | Module 2 — native React |

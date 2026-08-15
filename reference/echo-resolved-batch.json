@@ -1,0 +1,372 @@
+{
+  "resolved_ids": [
+    "09ca1a48-f5ad-42cb-b141-ebc07876a896",
+    "08aa2810-e217-4831-8c3c-bdc9954326d1",
+    "a3423e59-3c1b-4ea7-b7eb-20d65df5dc89",
+    "e149bde4-4e8e-4469-8b16-1869f86aee70",
+    "470fd9a9-b693-4798-a69f-495e8634db8f",
+    "3a141d07-27ae-40e4-8b5e-425e3b8a2475",
+    "20118a20-4215-4eae-ad73-fc790eed0fd7",
+    "92f67ae2-6b03-4b33-b3a4-dc3c246928ce",
+    "52c45908-3234-44ca-b693-892465f5a241",
+    "79526897-c408-435e-bb78-9c6ef40bec87",
+    "36d846ca-4a42-4fc3-857a-6020b27d9269",
+    "ec1e4a77-c6e6-4582-b555-26ab91cdd767",
+    "06aa650d-38fa-4760-9a14-1b0a309be422",
+    "99b1b7f3-d1f4-4b24-8e04-fabfbac26bf7",
+    "3f0737d0-01ec-4dd6-9721-1fa9058d2032",
+    "814565c9-1c8b-4bbe-b2e3-767db0cbfcb9",
+    "8fc09737-2db2-4d1b-867f-cbb646b9a8fe",
+    "be1a08ec-cdd6-4551-8f6c-c2f1af777989",
+    "fcbd4c82-be91-4511-b453-93a9c1dc5a4f",
+    "70a69673-2644-49dd-b6c3-7fdc7fee2e01",
+    "beaaabcf-94d8-45ef-a5fc-053297e97139",
+    "054cf596-5b45-4142-b4bd-8e323a4c32d1",
+    "5651916a-258f-45f2-8c6c-6ebcd9eb27a7",
+    "aab93e6f-8d13-4f4b-85f3-fd472826e7ff",
+    "578a3104-a0d2-43e1-b73c-aa6ff7e62231",
+    "d22e0459-6c3e-4f65-9126-d73aa168b0ea",
+    "9cd8b426-3603-4eb1-971f-748008520634",
+    "0c25363d-fa67-4ac1-a249-4808914825a4",
+    "3776355f-e2de-4147-9dc4-e1bd8e8cb2b4",
+    "675f5e49-2547-4d01-b808-1ac2397b4cfc",
+    "a3e20aa6-f2cb-41ae-9552-5133e7fa7c24",
+    "d1d2cf56-13c1-4807-95fb-56859d9bc2e9",
+    "7e21e072-728b-41b7-8782-ab33eab7771c",
+    "10b9d82f-682c-49f2-9eaa-3f8a1078ff32",
+    "f5b26f98-26d8-4a4a-a90d-e1f832fafa08",
+    "b48de1da-3702-4f44-b4f4-587b7d91dd79",
+    "8f369d2c-5c8d-493e-88eb-e580642edf89",
+    "d5bb6040-a5ba-4f45-a55b-66af16f6999b"
+  ],
+  "results": [
+    {
+      "app": {
+        "id": "e5c9058d-15d6-4378-b70c-06daa141a1a1",
+        "name": "Tax Labs AI"
+      },
+      "ok": true,
+      "status": 200,
+      "resolved_count": 20,
+      "total": 20,
+      "results": [
+        {
+          "thread_id": "09ca1a48-f5ad-42cb-b141-ebc07876a896",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:11.072Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "08aa2810-e217-4831-8c3c-bdc9954326d1",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:12.839Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "a3423e59-3c1b-4ea7-b7eb-20d65df5dc89",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:14.598Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "e149bde4-4e8e-4469-8b16-1869f86aee70",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:15.510Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "470fd9a9-b693-4798-a69f-495e8634db8f",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/foundational",
+          "resolved_at": "2026-08-10T11:44:16.393Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "3a141d07-27ae-40e4-8b5e-425e3b8a2475",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:17.289Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "20118a20-4215-4eae-ad73-fc790eed0fd7",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:19.065Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "92f67ae2-6b03-4b33-b3a4-dc3c246928ce",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:19.979Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "52c45908-3234-44ca-b693-892465f5a241",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:20.877Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "79526897-c408-435e-bb78-9c6ef40bec87",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:21.789Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "36d846ca-4a42-4fc3-857a-6020b27d9269",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/foundational#evolution",
+          "resolved_at": "2026-08-10T11:44:22.693Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "ec1e4a77-c6e6-4582-b555-26ab91cdd767",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/foundational#evolution",
+          "resolved_at": "2026-08-10T11:44:23.968Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "06aa650d-38fa-4760-9a14-1b0a309be422",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phase1",
+          "resolved_at": "2026-08-10T11:44:25.276Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "99b1b7f3-d1f4-4b24-8e04-fabfbac26bf7",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phase1",
+          "resolved_at": "2026-08-10T11:44:26.159Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "3f0737d0-01ec-4dd6-9721-1fa9058d2032",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/foundational",
+          "resolved_at": "2026-08-10T11:44:27.051Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "814565c9-1c8b-4bbe-b2e3-767db0cbfcb9",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:27.981Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "8fc09737-2db2-4d1b-867f-cbb646b9a8fe",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:28.879Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "be1a08ec-cdd6-4551-8f6c-c2f1af777989",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:29.754Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "fcbd4c82-be91-4511-b453-93a9c1dc5a4f",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:30.661Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "70a69673-2644-49dd-b6c3-7fdc7fee2e01",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:31.542Z",
+          "alreadyResolved": false
+        }
+      ]
+    },
+    {
+      "app": {
+        "id": "e5c9058d-15d6-4378-b70c-06daa141a1a1",
+        "name": "Tax Labs AI"
+      },
+      "ok": true,
+      "status": 200,
+      "resolved_count": 18,
+      "total": 18,
+      "results": [
+        {
+          "thread_id": "beaaabcf-94d8-45ef-a5fc-053297e97139",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:32.931Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "054cf596-5b45-4142-b4bd-8e323a4c32d1",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:33.804Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "5651916a-258f-45f2-8c6c-6ebcd9eb27a7",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:35.132Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "aab93e6f-8d13-4f4b-85f3-fd472826e7ff",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:36.026Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "578a3104-a0d2-43e1-b73c-aa6ff7e62231",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phased",
+          "resolved_at": "2026-08-10T11:44:36.919Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "d22e0459-6c3e-4f65-9126-d73aa168b0ea",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:37.810Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "9cd8b426-3603-4eb1-971f-748008520634",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/closure-ai-reinforcement",
+          "resolved_at": "2026-08-10T11:44:38.701Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "0c25363d-fa67-4ac1-a249-4808914825a4",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/guidance-implementation",
+          "resolved_at": "2026-08-10T11:44:39.580Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "3776355f-e2de-4147-9dc4-e1bd8e8cb2b4",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/guidance-implementation",
+          "resolved_at": "2026-08-10T11:44:40.468Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "675f5e49-2547-4d01-b808-1ac2397b4cfc",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/guidance-implementation",
+          "resolved_at": "2026-08-10T11:44:41.371Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "a3e20aa6-f2cb-41ae-9552-5133e7fa7c24",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/guidance-implementation",
+          "resolved_at": "2026-08-10T11:44:42.259Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "d1d2cf56-13c1-4807-95fb-56859d9bc2e9",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/guidance-implementation",
+          "resolved_at": "2026-08-10T11:44:43.158Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "7e21e072-728b-41b7-8782-ab33eab7771c",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/guidance-implementation",
+          "resolved_at": "2026-08-10T11:44:44.040Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "10b9d82f-682c-49f2-9eaa-3f8a1078ff32",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/guidance-implementation",
+          "resolved_at": "2026-08-10T11:44:45.331Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "f5b26f98-26d8-4a4a-a90d-e1f832fafa08",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phase2",
+          "resolved_at": "2026-08-10T11:44:46.219Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "b48de1da-3702-4f44-b4f4-587b7d91dd79",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phase2",
+          "resolved_at": "2026-08-10T11:44:47.131Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "8f369d2c-5c8d-493e-88eb-e580642edf89",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phase2",
+          "resolved_at": "2026-08-10T11:44:48.029Z",
+          "alreadyResolved": false
+        },
+        {
+          "thread_id": "d5bb6040-a5ba-4f45-a55b-66af16f6999b",
+          "ok": true,
+          "status": 200,
+          "page_url": "https://ey-landing-mockup.vercel.app/phase2",
+          "resolved_at": "2026-08-10T11:44:48.910Z",
+          "alreadyResolved": false
+        }
+      ]
+    }
+  ]
+}
