@@ -11,7 +11,7 @@ import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculu
 import { TemplatePreviewModal } from "../components/TemplatePreviewModal";
 import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
 import { PROMPTING_TECHNIQUES, TECHNIQUE_FACETS } from "../data/prompt-techniques";
-import { AGENT_BEST_PRACTICES_SLIDES } from "../data/agent-best-practices";
+import { AGENT_TEMPLATE_LIBRARY } from "../data/agent-template-library";
 import {
   colors as C,
   contentInlinePad,
@@ -95,6 +95,24 @@ const BTR = [
   { n: "03", label: "Refine", color: C.frameGreen },
 ];
 
+const WORKSHOP_COLS = [
+  {
+    color: C.frameBlue,
+    label: "Workshop objective",
+    items: ["Translate Phase 2 use cases into practical AI solutions for the tax function."],
+  },
+  {
+    color: C.frameOrange,
+    label: "Today's build zone",
+    items: ["Prompt engineering", "M365 Copilot Agents", "Human review controls"],
+  },
+  {
+    color: C.frameGreen,
+    label: "Expected outcomes",
+    items: ["Tax Prompt Templates", "Draft Agent Instructions", "Pilot Use Cases", "Human Review Framework", "AI Adoption Playbook"],
+  },
+];
+
 function Panel1() {
   return (
     <section style={{ position: "relative", scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
@@ -154,7 +172,7 @@ function Panel1() {
       >
         <div style={{ ...contentRailStyle }}>
         {/* Build / Review / Refine — yellow-tinted cards on light surface; top bars form a shared yellow line */}
-        <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+        <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 16 }}>
           {BTR.map((step, i) => (
             <motion.div
               key={step.n}
@@ -176,6 +194,33 @@ function Panel1() {
               <p style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: step.color, letterSpacing: "0.06em", marginBottom: 6 }}>{step.n}</p>
               <p style={{ fontFamily: F.bold, fontSize: 20, fontWeight: 700, color: C.confidentBlack }}>{step.label}</p>
             </motion.div>
+          ))}
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+          {WORKSHOP_COLS.map((col) => (
+            <div
+              key={col.label}
+              style={{
+                background: C.white,
+                borderRadius: 4,
+                padding: "20px 24px",
+                borderLeft: `3px solid ${col.color}`,
+                boxShadow: "0 2px 8px rgba(26,26,36,0.07)",
+                transition: "box-shadow 150ms ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,26,36,0.14)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 2px 8px rgba(26,26,36,0.07)"; }}
+            >
+              <p style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.eyebrowGold, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 12 }}>{col.label}</p>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+                {col.items.map((item) => (
+                  <li key={item} style={{ fontFamily: F.light, fontSize: 13, color: C.gray01, lineHeight: 1.5, display: "flex", gap: 8, alignItems: "flex-start" }}>
+                    <span style={{ color: col.color, flexShrink: 0 }}>·</span>{item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
         </div>
@@ -556,63 +601,19 @@ function TechniqueExampleQuote({ text, variant }: { text: string; variant: "with
   );
 }
 
-function AgentExampleCard({
-  tone,
-  label,
-  lines,
-}: {
-  tone: "bad" | "good" | "neutral";
-  label?: string;
-  lines: readonly string[];
-}) {
-  const bar = tone === "bad" ? C.destructive : C.yellow;
-  const caption =
-    label ?? (tone === "bad" ? "Avoid" : tone === "good" ? "Use" : "Reference");
-
-  return (
-    <div
-      style={{
-        background: C.confidentBlack,
-        borderRadius: 4,
-        borderLeft: `4px solid ${bar}`,
-        padding: "16px 20px",
-      }}
-    >
-      <p
-        style={{
-          fontFamily: F.bold,
-          fontSize: 11,
-          fontWeight: 700,
-          letterSpacing: "0.06em",
-          textTransform: "uppercase",
-          color: tone === "bad" ? C.destructive : C.yellow,
-          margin: "0 0 8px",
-        }}
-      >
-        {caption}
-      </p>
-      {lines.map((line) => (
-        <p
-          key={line}
-          style={{
-            fontFamily: F.light,
-            fontSize: 14,
-            lineHeight: 1.6,
-            color: C.onDark,
-            margin: "0 0 4px",
-          }}
-        >
-          {line}
-        </p>
-      ))}
-    </div>
-  );
+function agentSlideBody(agent: (typeof AGENT_TEMPLATE_LIBRARY)[number], sub: string) {
+  return agent.slides.find((s) => s.sub === sub)?.body ?? "";
 }
 
 function AgentBestPracticesPanel() {
-  const [selectedN, setSelectedN] = useState(AGENT_BEST_PRACTICES_SLIDES[0].n);
-  const slide = AGENT_BEST_PRACTICES_SLIDES.find((s) => s.n === selectedN) ?? AGENT_BEST_PRACTICES_SLIDES[0];
+  const [selectedId, setSelectedId] = useState(AGENT_TEMPLATE_LIBRARY[0].id);
+  const agent = AGENT_TEMPLATE_LIBRARY.find((a) => a.id === selectedId) ?? AGENT_TEMPLATE_LIBRARY[0];
   const focusRing = `2px solid ${C.yellow}`;
+  const sections = [
+    { label: "Purpose", body: agentSlideBody(agent, "Purpose") },
+    { label: "Actions", body: agentSlideBody(agent, "Actions") },
+    { label: "Outcome", body: agentSlideBody(agent, "Outcome") },
+  ];
 
   return (
     <div style={{
@@ -626,7 +627,7 @@ function AgentBestPracticesPanel() {
       textAlign: "left",
       minHeight: 520,
     }}>
-      <nav aria-label="Agent best practices" style={{
+      <nav aria-label="EY-guided M365 agent examples" style={{
         borderRight: "1px solid rgba(46,46,56,0.08)",
         padding: "16px 0",
         display: "flex",
@@ -636,21 +637,21 @@ function AgentBestPracticesPanel() {
       }}>
         <div style={{ padding: "0 20px 14px", borderBottom: "1px solid rgba(46,46,56,0.08)" }}>
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.eyebrowGold, fontFamily: F.bold, marginBottom: 4 }}>
-            10 Practices
+            {AGENT_TEMPLATE_LIBRARY.length} Agents
           </div>
           <div style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5 }}>
-            Pick one to see how to write the instruction.
+            Pick one to see purpose, actions and outcome.
           </div>
         </div>
         <div style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
-          {AGENT_BEST_PRACTICES_SLIDES.map((item) => {
-            const active = selectedN === item.n;
+          {AGENT_TEMPLATE_LIBRARY.map((item) => {
+            const active = selectedId === item.id;
             return (
               <button
-                key={item.n}
+                key={item.id}
                 type="button"
                 aria-current={active ? "true" : undefined}
-                onClick={() => setSelectedN(item.n)}
+                onClick={() => setSelectedId(item.id)}
                 style={{
                   width: "100%",
                   display: "flex",
@@ -676,7 +677,7 @@ function AgentBestPracticesPanel() {
                   color: active ? C.confidentBlack : C.eyebrowGold,
                   fontFamily: F.bold,
                 }}>
-                  {item.n}
+                  {String(item.id).padStart(2, "0")}
                 </span>
                 <span style={{
                   flex: 1, minWidth: 0,
@@ -685,7 +686,7 @@ function AgentBestPracticesPanel() {
                   fontFamily: F.bold,
                   lineHeight: 1.3,
                 }}>
-                  {item.heading}
+                  {item.name}
                 </span>
               </button>
             );
@@ -707,32 +708,31 @@ function AgentBestPracticesPanel() {
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 11, fontWeight: 700, fontFamily: F.bold,
             }}>
-              {slide.n}
+              {String(agent.id).padStart(2, "0")}
             </span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold }}>{slide.heading}</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold }}>{agent.name}</span>
           </div>
           <p style={{ fontSize: 12, color: C.gray01, fontFamily: F.light, margin: "4px 0 0", paddingLeft: 34 }}>
-            {slide.sub}
+            EY-Guided M365 Agent Example
           </p>
         </div>
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
-          <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
-            {slide.content.map((line) => (
-              <li key={line} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <span style={{ width: 6, height: 6, background: C.yellow, flexShrink: 0, marginTop: 7 }} aria-hidden />
-                <span style={{ fontFamily: F.regular, fontSize: 14, color: C.gray01, lineHeight: 1.6 }}>
-                  {line.startsWith("- ") ? line.slice(2) : line}
-                </span>
-              </li>
-            ))}
-          </ul>
-          {slide.examples.map((block, i) => (
-            <AgentExampleCard
-              key={`${slide.n}-${block.tone}-${i}`}
-              tone={block.tone}
-              label={block.label}
-              lines={block.lines}
-            />
+        <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px 28px" }}>
+          {sections.map(({ label, body }, i) => (
+            <div key={label}>
+              {i > 0 && <div style={{ height: 1, background: C.gray02, margin: "20px 0" }} />}
+              <p style={{
+                fontFamily: F.bold, fontSize: 10, letterSpacing: "0.1em",
+                textTransform: "uppercase", color: C.eyebrowGold, margin: "0 0 8px",
+              }}>
+                {label}
+              </p>
+              <p style={{
+                fontFamily: F.regular, fontSize: 14, color: C.offBlack,
+                margin: 0, lineHeight: 1.6,
+              }}>
+                {body}
+              </p>
+            </div>
           ))}
         </div>
       </div>
@@ -980,7 +980,7 @@ function Panel2() {
       id="p3-prompts"
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: C.offWhite,
+        background: C.white,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
       }}
     >
@@ -1187,29 +1187,29 @@ function Panel2UseCases({ onNavigate }: { onNavigate: (path: string) => void }) 
       id="p3-your-use-cases"
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: C.confidentBlack,
+        background: C.offWhite,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
       }}
     >
       <div style={{ ...contentRailStyle }}>
         <div style={sectionHeader}>
-          <p style={eyebrow(C.yellow)}>Your Use Cases</p>
-          <h2 style={{ ...h2Style, color: C.onDark }}>Workshop Bucket Results</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
+          <p style={eyebrow(C.eyebrowGold)}>Your Use Cases</p>
+          <h2 style={{ ...h2Style, color: C.confidentBlack }}>Workshop Bucket Results</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, marginBottom: 0 }}>
             Ideas you sorted in Phase 2 — Prompt, M365 Agent, and Pro Code — carried forward for implementation planning.
           </p>
         </div>
 
         {hasEntries ? (
-          <UseCaseBucketCards sectionId="p3-your-use-cases" entries={entries} />
+          <UseCaseBucketCards sectionId="p3-your-use-cases" entries={entries} tone="light" />
         ) : (
           <div
             style={{
               textAlign: "center",
               padding: "clamp(32px, 5vw, 48px)",
               borderRadius: 10,
-              border: `1px dashed ${C.borderOnDark}`,
-              background: C.eyBgCard,
+              border: `1px dashed ${C.gray02}`,
+              background: C.white,
               maxWidth: 560,
               margin: "0 auto",
             }}
@@ -1218,7 +1218,7 @@ function Panel2UseCases({ onNavigate }: { onNavigate: (path: string) => void }) 
               style={{
                 fontFamily: F.regular,
                 fontSize: typeScale.body.size,
-                color: C.onDarkMuted,
+                color: C.gray01,
                 margin: "0 0 20px",
                 lineHeight: 1.6,
               }}
@@ -1235,8 +1235,8 @@ function Panel2UseCases({ onNavigate }: { onNavigate: (path: string) => void }) 
                 fontFamily: F.bold,
                 fontSize: 13,
                 fontWeight: 700,
-                color: C.confidentBlack,
-                background: C.yellow,
+                color: C.white,
+                background: C.confidentBlack,
                 border: "none",
                 borderRadius: 6,
                 padding: "10px 18px",

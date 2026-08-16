@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { Bot, Check, ChevronDown, ChevronLeft, ChevronRight, ListTree, MessageSquare, RotateCcw, ShieldOff, Undo2, X } from "lucide-react";
+import { Bot, Check, ChevronDown, ChevronLeft, ChevronRight, Eye, ListTree, MessageSquare, RotateCcw, ShieldOff, Undo2, X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
@@ -30,6 +30,16 @@ const RESPONSIBLE_USE_NEWS = [
     source: "Forbes",
     date: "2 May 2023",
     description: "Following multiple incidents involving confidential source code and internal information being uploaded to ChatGPT, Samsung imposed company-wide restrictions on generative AI tools.",
+    isReal: true,
+  },
+  {
+    src: "/reference-images/p4-news-cbdt-chatgpt.png",
+    tag: "Unreviewed filing",
+    headline: "CBDT Says ChatGPT Returns Can Be Filed With No Professional Review",
+    source: "Briefing",
+    date: "August 2026",
+    description: "This one is made up for the room. No tax authority treats an unreviewed AI draft as a completed return. A professional still has to check and sign off.",
+    isReal: false,
   },
   {
     src: "/reference-images/p4-news-confidentiality.png",
@@ -38,6 +48,16 @@ const RESPONSIBLE_USE_NEWS = [
     source: "Forbes",
     date: "2023",
     description: "Financial institutions including JPMorgan imposed restrictions on ChatGPT due to concerns that employees could inadvertently expose sensitive financial and customer information.",
+    isReal: true,
+  },
+  {
+    src: "/reference-images/p4-news-copilot-gst.png",
+    tag: "Auto-submit",
+    headline: "Copilot Now Submits GST Returns With No Human Reviewer",
+    source: "Dispatch",
+    date: "August 2026",
+    description: "This one is made up for the room. Copilot can help draft a working paper. It cannot file a GST return on its own, and a human still has to review it.",
+    isReal: false,
   },
   {
     src: "/reference-images/p4-news-shadow-ai.png",
@@ -46,6 +66,7 @@ const RESPONSIBLE_USE_NEWS = [
     source: "Seoul Economic Daily",
     date: "27 July 2026",
     description: "A Samsung SDS survey found that 38% of employees were using personally subscribed AI services for work instead of enterprise-approved platforms.",
+    isReal: true,
   },
   {
     src: "/reference-images/p4-news-tokenmaxxing.png",
@@ -54,6 +75,7 @@ const RESPONSIBLE_USE_NEWS = [
     source: "The Hans India",
     date: "2026",
     description: "Uber's CTO warned against indiscriminately consuming AI tokens and model capacity without considering cost, efficiency, or business value.",
+    isReal: true,
   },
   {
     src: "/reference-images/p4-news-value-leakage.png",
@@ -62,8 +84,12 @@ const RESPONSIBLE_USE_NEWS = [
     source: "CFO Dive",
     date: "2026",
     description: "As AI budgets grow, many leadership teams struggle to distinguish genuine business impact from AI experimentation and usage statistics.",
+    isReal: true,
   },
 ] as const;
+
+type NewsArticle = (typeof RESPONSIBLE_USE_NEWS)[number];
+const NEWS_FOCUS = `2px solid ${colors.yellow}`;
 
 function NewsLightbox({
   src,
@@ -160,42 +186,40 @@ function NewsLightbox({
 
 function ResponsibleUseNewsCard({
   article,
-  onOpen,
+  revealed,
+  onGuess,
+  onOpenClipping,
 }: {
-  article: (typeof RESPONSIBLE_USE_NEWS)[number];
-  onOpen: () => void;
+  article: NewsArticle;
+  revealed: boolean;
+  onGuess: () => void;
+  onOpenClipping: () => void;
 }) {
+  const tone = revealed ? (article.isReal ? "real" : "fake") : "idle";
+  const bodyBg = tone === "real" ? colors.success : tone === "fake" ? colors.destructive : colors.white;
+  const bodyText = tone === "idle" ? colors.offBlack : colors.white;
+  const mutedText = tone === "idle" ? colors.gray01 : colors.white;
+
   return (
     <article
-      role="button"
-      tabIndex={0}
-      onClick={onOpen}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(); } }}
-      aria-label={`${article.source} — ${article.headline}. Click to view full article.`}
+      aria-label={
+        revealed
+          ? `${article.headline} — ${article.isReal ? "Real" : "Fake"}`
+          : `${article.headline}. Ask the room, then choose Real or Fake.`
+      }
       style={{
         background: colors.white,
         borderRadius: 0,
         overflow: "hidden",
-        cursor: "pointer",
         display: "flex",
         flexDirection: "column",
         height: "100%",
         textAlign: "left",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-        transition: "transform 0.18s ease, box-shadow 0.18s ease",
+        boxShadow: "0 2px 8px rgba(26,26,36,0.08)",
         width: "100%",
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-4px)";
-        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.14)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.08)";
-      }}
     >
-      {/* wrong-card-top — matches Module 1.1 Reality Check cards */}
-      <div style={{ position: "relative", width: "100%", height: 220, overflow: "hidden", flexShrink: 0, lineHeight: 0 }}>
+      <div style={{ position: "relative", width: "100%", height: 180, overflow: "hidden", flexShrink: 0, lineHeight: 0 }}>
         <img
           src={article.src}
           alt=""
@@ -204,156 +228,240 @@ function ResponsibleUseNewsCard({
           style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
         />
       </div>
-      {/* wrong-card-body */}
-      <div style={{ padding: "16px 16px 20px", display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0, background: colors.white }}>
-        <p style={{ fontFamily: fonts.bold, fontSize: 15, color: colors.offBlack, margin: 0, lineHeight: 1.4, letterSpacing: "-0.01em" }}>
+      <div
+        style={{
+          padding: "16px 16px 18px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          flex: 1,
+          minHeight: 0,
+          background: bodyBg,
+          transition: "background 160ms ease",
+        }}
+      >
+        {revealed && (
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              fontFamily: fonts.bold,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: colors.white,
+            }}
+          >
+            {article.isReal ? <Check size={14} strokeWidth={2} aria-hidden /> : <X size={14} strokeWidth={2} aria-hidden />}
+            {article.isReal ? "Real" : "Fake"}
+          </span>
+        )}
+        <p style={{ fontFamily: fonts.bold, fontSize: 15, color: bodyText, margin: 0, lineHeight: 1.4, letterSpacing: "-0.01em" }}>
           {article.headline}
         </p>
-        <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, margin: 0, lineHeight: 1.55, flex: 1 }}>
-          {article.description}
-        </p>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "auto", paddingTop: 10 }}>
-          <span style={{ fontFamily: fonts.regular, fontSize: 11, color: colors.gray01 }}>{article.date}</span>
-          <span aria-hidden style={{ fontSize: 11, color: colors.gray02 }}>|</span>
-          <span style={{ fontFamily: fonts.bold, fontSize: 11, color: colors.offBlack }}>
-            {article.source}
-          </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontFamily: fonts.regular, fontSize: 11, color: mutedText }}>{article.date}</span>
+          <span aria-hidden style={{ fontSize: 11, color: tone === "idle" ? colors.gray02 : colors.white }}>|</span>
+          <span style={{ fontFamily: fonts.bold, fontSize: 11, color: bodyText }}>{article.source}</span>
         </div>
+        {revealed ? (
+          <>
+            <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.white, margin: 0, lineHeight: 1.55, flex: 1 }}>
+              {article.description}
+            </p>
+            <button
+              type="button"
+              onClick={onOpenClipping}
+              aria-label={`View clipping: ${article.headline}`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                marginTop: 4,
+                padding: 0,
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                fontFamily: fonts.bold,
+                fontSize: 12,
+                fontWeight: 700,
+                color: colors.white,
+                textDecoration: "underline",
+                textUnderlineOffset: 3,
+              }}
+              onFocus={(e) => { e.currentTarget.style.outline = NEWS_FOCUS; }}
+              onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
+            >
+              <Eye size={14} strokeWidth={1.75} aria-hidden />
+              View clipping
+            </button>
+          </>
+        ) : (
+          <div style={{ display: "flex", gap: 8, marginTop: "auto", paddingTop: 8 }}>
+            <EYButton type="button" size="sm" variant="primary" onClick={onGuess} aria-label={`Reveal ${article.headline} as Real or Fake`}>
+              Real
+            </EYButton>
+            <EYButton type="button" size="sm" variant="secondary" onClick={onGuess} aria-label={`Reveal ${article.headline} as Real or Fake`}>
+              Fake
+            </EYButton>
+          </div>
+        )}
       </div>
     </article>
   );
 }
 
 const NEWS_CARD_GAP = 20;
-const NEWS_VISIBLE_COUNT = 3;
+
+function CarouselChevron({
+  dir,
+  onClick,
+}: {
+  dir: "prev" | "next";
+  onClick: () => void;
+}) {
+  const Icon = dir === "prev" ? ChevronLeft : ChevronRight;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={dir === "prev" ? "Previous headline" : "Next headline"}
+      style={{
+        position: "absolute",
+        top: "50%",
+        [dir === "prev" ? "left" : "right"]: 0,
+        transform: "translateY(-50%)",
+        zIndex: 3,
+        width: 44,
+        height: 44,
+        borderRadius: "50%",
+        border: `1px solid ${colors.gray02}`,
+        background: colors.white,
+        color: colors.offBlack,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        boxShadow: "0 2px 8px rgba(26,26,36,0.10)",
+        padding: 0,
+      }}
+      onFocus={(e) => { e.currentTarget.style.outline = NEWS_FOCUS; }}
+      onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
+    >
+      <Icon size={20} strokeWidth={1.75} aria-hidden />
+    </button>
+  );
+}
 
 function ResponsibleUseNewsCarousel({
-  onOpen,
+  revealed,
+  onGuess,
+  onOpenClipping,
 }: {
-  onOpen: (article: (typeof RESPONSIBLE_USE_NEWS)[number]) => void;
+  revealed: Record<string, boolean>;
+  onGuess: (src: string) => void;
+  onOpenClipping: (article: NewsArticle) => void;
 }) {
   const count = RESPONSIBLE_USE_NEWS.length;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
 
-  const visibleArticles = useMemo(
+  const slots = useMemo(
     () =>
-      Array.from({ length: Math.min(NEWS_VISIBLE_COUNT, count) }, (_, i) => ({
-        article: RESPONSIBLE_USE_NEWS[(activeIndex + i) % count],
-        key: `${activeIndex}-${i}-${RESPONSIBLE_USE_NEWS[(activeIndex + i) % count].src}`,
+      ([-1, 0, 1] as const).map((offset) => ({
+        offset,
+        article: RESPONSIBLE_USE_NEWS[(activeIndex + offset + count) % count],
       })),
     [activeIndex, count],
   );
 
   const go = (delta: number) => {
-    setDirection(delta);
     setActiveIndex((i) => (i + delta + count) % count);
   };
-
-  const navBtnStyle = (primary = false): CSSProperties => ({
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 6,
-    padding: "10px 16px",
-    minHeight: 44,
-    borderRadius: 8,
-    border: primary ? "none" : `1px solid ${colors.gray02}`,
-    background: primary ? colors.yellow : colors.white,
-    cursor: "pointer",
-    fontFamily: fonts.regular,
-    fontSize: 13,
-    fontWeight: 700,
-    color: colors.offBlack,
-  });
 
   return (
     <div>
       <div
         role="list"
-        aria-label="Real-world AI governance headlines"
+        aria-label="Real or Fake headlines"
         aria-live="polite"
-        style={{ overflow: "hidden", marginBottom: 20 }}
+        style={{ position: "relative", padding: "8px 28px", marginBottom: 20 }}
       >
-        <motion.div
-          key={activeIndex}
-          initial={{ opacity: 0.72, x: direction * 56 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+        <CarouselChevron dir="prev" onClick={() => go(-1)} />
+        <CarouselChevron dir="next" onClick={() => go(1)} />
+
+        <div
           style={{
             display: "grid",
-            gridTemplateColumns: `repeat(${Math.min(NEWS_VISIBLE_COUNT, count)}, minmax(0, 1fr))`,
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr)",
             gap: NEWS_CARD_GAP,
-            alignItems: "stretch",
+            alignItems: "center",
           }}
         >
-          {visibleArticles.map(({ article, key }) => (
-            <div key={key} role="listitem" style={{ minWidth: 0 }}>
-              <ResponsibleUseNewsCard article={article} onOpen={() => onOpen(article)} />
-            </div>
-          ))}
-        </motion.div>
+          {slots.map(({ offset, article }) => {
+            const isCenter = offset === 0;
+            return (
+              <motion.div
+                key={article.src}
+                role="listitem"
+                layout
+                initial={{ opacity: 0, scale: 0.86 }}
+                animate={{
+                  opacity: isCenter ? 1 : 0.48,
+                  scale: isCenter ? 1 : 0.88,
+                  zIndex: isCenter ? 2 : 1,
+                }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                style={{ minWidth: 0, transformOrigin: "center center" }}
+              >
+                <ResponsibleUseNewsCard
+                  article={article}
+                  revealed={Boolean(revealed[article.src])}
+                  onGuess={() => onGuess(article.src)}
+                  onOpenClipping={() => onOpenClipping(article)}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-          flexWrap: "wrap",
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => go(-1)}
-          aria-label="Previous headline"
-          style={navBtnStyle()}
-        >
-          <ChevronLeft size={16} strokeWidth={1.75} aria-hidden />
-          Previous
-        </button>
-
-        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
-          {RESPONSIBLE_USE_NEWS.map((article, i) => (
-            <button
-              key={article.src}
-              type="button"
-              aria-label={`Go to headline ${i + 1}: ${article.tag}`}
-              aria-current={i === activeIndex ? "true" : undefined}
-              onClick={() => {
-                setDirection(i === activeIndex ? 0 : i > activeIndex ? 1 : -1);
-                setActiveIndex(i);
-              }}
-              style={{
-                width: i === activeIndex ? 22 : 8,
-                height: 8,
-                borderRadius: 999,
-                border: "none",
-                padding: 0,
-                cursor: "pointer",
-                background: i === activeIndex ? colors.yellow : colors.gray02,
-                transition: "width 0.2s, background 0.2s",
-              }}
-            />
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => go(1)}
-          aria-label="Next headline"
-          style={navBtnStyle(true)}
-        >
-          Next
-          <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
-        </button>
+      <div style={{ display: "flex", gap: 6, alignItems: "center", justifyContent: "center" }}>
+        {RESPONSIBLE_USE_NEWS.map((article, i) => (
+          <button
+            key={article.src}
+            type="button"
+            aria-label={`Go to headline ${i + 1}: ${article.tag}`}
+            aria-current={i === activeIndex ? "true" : undefined}
+            onClick={() => setActiveIndex(i)}
+            style={{
+              width: i === activeIndex ? 22 : 8,
+              height: 8,
+              borderRadius: 999,
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              background: i === activeIndex ? colors.yellow : colors.gray02,
+              transition: "width 0.2s, background 0.2s",
+            }}
+          />
+        ))}
       </div>
     </div>
   );
 }
 
 function RecogniseTheRisk() {
-  const [lightbox, setLightbox] = useState<(typeof RESPONSIBLE_USE_NEWS)[number] | null>(null);
+  const [lightbox, setLightbox] = useState<NewsArticle | null>(null);
+  const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+  const revealedCount = RESPONSIBLE_USE_NEWS.filter((a) => revealed[a.src]).length;
+  const allRevealed = revealedCount === RESPONSIBLE_USE_NEWS.length;
+
+  const guess = (src: string) => {
+    setRevealed((prev) => (prev[src] ? prev : { ...prev, [src]: true }));
+  };
+
   return (
     <section
       id="p4-risk"
@@ -367,22 +475,90 @@ function RecogniseTheRisk() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        {/* eyebrow/heading/subheading: center-aligned on all non-hero sections */}
-        <p style={{ fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px", textAlign: "center" }}>
-          Recognise the Risk
-        </p>
-        <h2
+        <EYEyebrow style={{ textAlign: "center", marginBottom: 12 }}>Icebreaker</EYEyebrow>
+        <EYHeading
           id="risk-heading"
-          style={{ fontFamily: fonts.bold, fontSize: "clamp(22px, 3vw, 36px)", color: colors.offBlack, margin: "0 0 12px", letterSpacing: "-0.02em", lineHeight: 1.1, textAlign: "center" }}
+          level={2}
+          style={{
+            fontSize: "clamp(22px, 3vw, 36px)",
+            margin: "0 0 12px",
+            textAlign: "center",
+          }}
         >
-          Why Responsible Use Matters
-        </h2>
-        <p style={{ fontFamily: fonts.regular, fontSize: "clamp(14px, 1.4vw, 16px)", color: colors.gray01, margin: "0 auto 40px", lineHeight: 1.5, textAlign: "center", maxWidth: 560 }}>
-          Real-world headlines on AI governance risks
-        </p>
+          Real or Fake?
+        </EYHeading>
+        <EYBody style={{ margin: "0 auto 24px", textAlign: "center", maxWidth: 560, color: colors.gray01 }}>
+          Ask the room. Then tap Real or Fake.
+        </EYBody>
 
-        {/* Newspaper article cards — horizontal scroll + prev/next cycle */}
-        <ResponsibleUseNewsCarousel onOpen={setLightbox} />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+            marginBottom: 20,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setRevealed({})}
+            disabled={revealedCount === 0}
+            aria-label="Refresh icebreaker — hide all answers"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 14px",
+              borderRadius: 999,
+              border: `1px solid ${colors.gray02}`,
+              background: colors.offWhite,
+              color: colors.offBlack,
+              fontFamily: fonts.bold,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              cursor: revealedCount === 0 ? "not-allowed" : "pointer",
+              opacity: revealedCount === 0 ? 0.45 : 1,
+            }}
+            onFocus={(e) => { e.currentTarget.style.outline = NEWS_FOCUS; }}
+            onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
+          >
+            <RotateCcw size={14} strokeWidth={2} aria-hidden />
+            Refresh
+          </button>
+          <EYCaption style={{ margin: 0, color: colors.gray01 }}>
+            {revealedCount > 0
+              ? `${revealedCount} of ${RESPONSIBLE_USE_NEWS.length} revealed`
+              : "Tap Real or Fake to reveal the answer."}
+          </EYCaption>
+        </div>
+
+        <ResponsibleUseNewsCarousel
+          revealed={revealed}
+          onGuess={guess}
+          onOpenClipping={setLightbox}
+        />
+
+        {allRevealed && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              fontFamily: fonts.regular,
+              fontSize: typeScale.body.size,
+              color: colors.offBlack,
+              textAlign: "center",
+              margin: "28px 0 0",
+              lineHeight: 1.5,
+            }}
+          >
+            The real ones happened. The fakes are the shortcuts that still need a human. Next: the checks that stop this in a tax file.
+          </motion.p>
+        )}
 
         {lightbox && (
           <NewsLightbox

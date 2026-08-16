@@ -14,11 +14,11 @@ type Props = {
   onAdd?: (bucketId: UseCaseBucketId) => void;
   onRemove?: (bucketId: UseCaseBucketId, index: number) => void;
   sectionId?: string;
+  /** Dark cards on black sections; light cards on grey/white sections. */
+  tone?: "dark" | "light";
 };
 
 const cardBase: CSSProperties = {
-  background: colors.eyBgCard,
-  border: `1px solid ${colors.borderOnDark}`,
   borderRadius: 10,
   padding: "clamp(20px, 2.5vw, 28px)",
   flex: 1,
@@ -36,15 +36,28 @@ export function UseCaseBucketCards({
   onAdd,
   onRemove,
   sectionId = "use-case-buckets",
+  tone = "dark",
 }: Props) {
   const focusRing = `2px solid ${colors.yellow}`;
+  const light = tone === "light";
+  const cardBg = light ? colors.white : colors.eyBgCard;
+  const cardBorder = light ? "rgba(46,46,56,0.10)" : colors.borderOnDark;
+  const hintColor = light ? colors.gray01 : colors.onDarkMuted;
+  const emptyColor = light ? colors.gray01 : colors.onDarkSubtle;
+  const wellBg = light ? colors.offWhite : colors.surfaceOnDark;
+  const wellEmptyBorder = light ? colors.gray02 : colors.borderOnDark;
+  const itemBorder = light ? "rgba(46,46,56,0.10)" : colors.borderOnDark;
+  const itemText = light ? colors.offBlack : colors.onDark;
+  const iconColor = light ? colors.gray01 : colors.onDarkMuted;
+  const inputText = light ? colors.offBlack : colors.onDark;
+  const addIdle = light ? colors.gray01 : colors.onDarkSubtle;
 
   return (
     <>
       {editable && (
         <style>{`
           #${sectionId} input::placeholder {
-            color: rgba(255, 255, 255, 0.45);
+            color: ${light ? colors.gray01 : "rgba(255, 255, 255, 0.45)"};
           }
         `}</style>
       )}
@@ -67,6 +80,8 @@ export function UseCaseBucketCards({
               key={bucket.id}
               style={{
                 ...cardBase,
+                background: cardBg,
+                border: `1px solid ${cardBorder}`,
                 borderTop: `3px solid ${bucket.accent}`,
               }}
             >
@@ -90,7 +105,7 @@ export function UseCaseBucketCards({
                 style={{
                   fontFamily: fonts.regular,
                   fontSize: 13,
-                  color: colors.onDarkMuted,
+                  color: hintColor,
                   margin: "0 0 16px",
                   lineHeight: 1.45,
                 }}
@@ -104,10 +119,10 @@ export function UseCaseBucketCards({
                   display: "flex",
                   flexDirection: "column",
                   gap: 12,
-                  border: `1.5px dashed ${isEmpty ? colors.borderOnDark : `${bucket.accent}88`}`,
+                  border: `1.5px dashed ${isEmpty ? wellEmptyBorder : `${bucket.accent}88`}`,
                   borderRadius: 8,
                   padding: 14,
-                  background: isEmpty ? colors.surfaceOnDark : "rgba(255,255,255,0.04)",
+                  background: isEmpty ? wellBg : (light ? colors.offWhite : "rgba(255,255,255,0.04)"),
                   minHeight: 180,
                 }}
               >
@@ -116,7 +131,7 @@ export function UseCaseBucketCards({
                     style={{
                       fontFamily: fonts.regular,
                       fontSize: 12,
-                      color: colors.onDarkSubtle,
+                      color: emptyColor,
                       margin: 0,
                       lineHeight: 1.5,
                       fontStyle: "italic",
@@ -148,8 +163,8 @@ export function UseCaseBucketCards({
                           gap: 8,
                           padding: "10px 12px",
                           borderRadius: 6,
-                          background: colors.surfaceOnDark,
-                          border: `1px solid ${colors.borderOnDark}`,
+                          background: wellBg,
+                          border: `1px solid ${itemBorder}`,
                         }}
                       >
                         <span
@@ -167,7 +182,7 @@ export function UseCaseBucketCards({
                             flex: 1,
                             fontFamily: fonts.regular,
                             fontSize: 13,
-                            color: colors.onDark,
+                            color: itemText,
                             lineHeight: 1.45,
                           }}
                         >
@@ -183,7 +198,7 @@ export function UseCaseBucketCards({
                               background: "transparent",
                               cursor: "pointer",
                               padding: 2,
-                              color: colors.onDarkMuted,
+                              color: iconColor,
                               flexShrink: 0,
                             }}
                             onFocus={(e) => {
@@ -221,9 +236,9 @@ export function UseCaseBucketCards({
                       minWidth: 0,
                       fontFamily: fonts.regular,
                       fontSize: 13,
-                      color: colors.onDark,
-                      background: colors.surfaceOnDark,
-                      border: `1px solid ${colors.borderOnDark}`,
+                      color: inputText,
+                      background: wellBg,
+                      border: `1px solid ${itemBorder}`,
                       borderRadius: 6,
                       padding: "10px 12px",
                       lineHeight: 1.4,
@@ -246,9 +261,9 @@ export function UseCaseBucketCards({
                       fontFamily: fonts.bold,
                       fontSize: 12,
                       fontWeight: 700,
-                      color: draftValue.trim() ? colors.confidentBlack : colors.onDarkSubtle,
-                      background: draftValue.trim() ? colors.yellow : colors.surfaceOnDark,
-                      border: `1px solid ${draftValue.trim() ? colors.yellow : colors.borderOnDark}`,
+                      color: draftValue.trim() ? colors.confidentBlack : addIdle,
+                      background: draftValue.trim() ? colors.yellow : wellBg,
+                      border: `1px solid ${draftValue.trim() ? colors.yellow : itemBorder}`,
                       borderRadius: 6,
                       padding: "10px 14px",
                       cursor: draftValue.trim() ? "pointer" : "not-allowed",
