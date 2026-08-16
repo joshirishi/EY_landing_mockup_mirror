@@ -35,8 +35,17 @@ See [[Design/interaction-patterns]] for full SectionNav details.
 />
 ```
 
+## Live libraries on this page
+
+| Section | What | Source |
+|---------|------|--------|
+| `#guided-examples` | EY-Guided Prompt Examples (purpose / approach / outcome) | `Sample use cases.xlsx` Sheet1 **(absent)** · [[Content/phase2-slide-5]] |
+| `#workshop-library` | Same bookshelf as Phase 3: Prompt Template Library + Agent Template Library | Priya PPT + 9 agents · [[Reference/source-map]] |
+| `#agent-examples` | EY-Guided M365 Agent Examples | Removed from this branch’s nav; content is the Agent Template Library · [[Content/phase2-slide-6]] |
+
 ## Related
 
 - [[Pages/PhasedEngagement]] — entry point (back destination)
 - [[Design/interaction-patterns]] — SectionNav scroll behavior
-- [[Pages/GuidanceImplementation]] — sibling supporting page
+- [[Pages/GuidanceImplementation]] — sibling supporting page (same bookshelf)
+- [[Reference/source-map]] — reference folder graph

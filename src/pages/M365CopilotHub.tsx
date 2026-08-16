@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-  AlertTriangle, AlignCenter, AlignLeft, AlignRight, Archive, ArrowRight,
-  BarChart3, Bold, Calculator, Check, CheckCircle, ChevronDown, ChevronLeft,
-  ChevronRight, CirclePlus, ClipboardList, Code2, Columns2, Compass, Copy,
-  CornerUpLeft, CornerUpRight, DollarSign, ExternalLink, FileText, FolderOpen,
+  AlertTriangle, AlignLeft, Archive, ArrowRight,
+  BarChart3, Bold, Briefcase, Calculator, Calendar, Check, CheckCircle, ChevronDown, ChevronLeft,
+  ChevronRight, ClipboardList, Compass, Copy,
+  Ban, CornerUpLeft, DollarSign, ExternalLink, FileText, FolderOpen,
   Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, LineChart, Link2, BookOpen,
-  List, ListOrdered, Mail, Megaphone, MessagesSquare, Mic, Minus, PenLine,
-  Percent, Pin, Play, Plus, PlusSquare, Rocket, Search, Sparkles, Strikethrough,
-  Target, Timer, Trash2, Type, Underline, X, XCircle, ZoomIn, ZoomOut,
+  List, ListOrdered, Mail, Megaphone, Menu, MessagesSquare, Mic, MoreHorizontal, PenLine,
+  Pencil, Percent, Pin, Play, Plus, PlusSquare, Rocket, Search, Send, ShieldCheck, Sparkles,
+  Target, Timer, Trash2, Type, Underline, Users, X, XCircle, ZoomIn, ZoomOut,
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
@@ -16,6 +16,11 @@ import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, typeScale } from "../design-kit/tokens";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { M365ChatSlideTour } from "../components/M365ChatSlideTour";
+import { M365AgentSlideTour } from "../components/M365AgentSlideTour";
+import {
+  AGENT_BEST_PRACTICES_SLIDES,
+  type AgentBestPracticeSlide,
+} from "../data/agent-best-practices";
 
 // Canonical token alias — keeps existing C.dark / C.dark2 references working
 const C = {
@@ -750,205 +755,58 @@ OUTPUT (concise)
   },
 ] as const;
 
-const AGENT_HUB_TABS = [
-  { id: "guide", label: "Write Effective Instructions" },
-  { id: "templates", label: "Instruction Templates and Design Patterns" },
-  { id: "best-practices", label: "Agent Best Practices" },
-] as const;
-type AgentHubTabId = (typeof AGENT_HUB_TABS)[number]["id"];
-
-/**
- * One Avoid/Use (or plain reference) block inside the agent Instructions field.
- * The mailer's Examples column is not uniformly a bad/good pair — some rows are
- * an unlabelled reference list (domain vocabulary) or a set of neutral, labelled
- * task tiers (reasoning depth), so `tone` carries that distinction.
- */
-type ExampleBlock = {
-  tone: "bad" | "good" | "neutral";
-  label?: string;
-  lines: readonly string[];
-};
-
-/**
- * Verbatim from reference/assets/"Agent Best Practices mailer content.xlsx".
- * `content` keeps the sheet's own line breaks: a line prefixed "- " renders as
- * a bullet, anything else as a lead-in paragraph.
- */
-type AgentBestPracticeSlide = {
-  n: string;
-  heading: string;
-  sub: string;
-  content: readonly string[];
-  examples: readonly ExampleBlock[];
-};
-
-const AGENT_BEST_PRACTICES_SLIDES: readonly AgentBestPracticeSlide[] = [
+/** Agent don'ts — from the mailer, instruction navigator, and MS Learn notes in /reference. */
+const AGENT_DONTS = [
   {
     n: "01",
-    heading: "Use Clear, Actionable Language",
-    sub: "Stop Telling Copilot Agent What NOT To Do. Just tell It What TO Do.",
-    content: [
-      "Use clear verbs like Ask, Search, Check, Use, Send",
-      "The more precise your instructions, the more reliable your agent's output",
-      "Avoid vague instructions.",
-    ],
-    examples: [
-      { tone: "bad", lines: ["Review Section 194R applicability"] },
-      { tone: "good", lines: ["Analyze whether Section 194R applies to the attached sales promotion scheme and identify compliance requirements"] },
-    ],
+    title: "Don't tell the agent what not to do",
+    desc: "List what it should do, with clear verbs like Ask, Search, Check, Use, and Send. Prohibitions leave the agent guessing.",
+    example: "Instead of “Do not overlook differences between the trial balance and tax computation,” say “Compare the trial balance with the tax computation. List each difference, quantify the variance, and classify it as temporary or permanent.”",
   },
   {
     n: "02",
-    heading: "Build Step-by-Step Workflows with transitions",
-    sub: "Confused Agents Follow Confused Instructions.",
-    content: ["Every workflow should have:", "- Goal", "- Action", "- Transition"],
-    examples: [
-      { tone: "bad", label: "Instead of", lines: ["Review tax notices and prepare responses."] },
-      { tone: "good", label: "Use", lines: ["Step 1: Identify pending notices.", "Step 2: Extract due dates.", "Step 3: Draft response summary."] },
-    ],
+    title: "Don't start the task without complete information",
+    desc: "The agent will call tools before it has what it needs. Tell it to ask the user when inputs are missing.",
+    example: "Search Outlook for notices, submissions and correspondence relating to AY 2025-26. If not available, ask the user.",
   },
   {
     n: "03",
-    heading: "Use strict structure",
-    sub: "Great Results Start with Great Structure",
-    content: ["Use:", "- Sections for categories", "- Bullets for parallel tasks", "- Steps for sequential workflows"],
-    examples: [
-      { tone: "bad", lines: ["Mixed instructions in one paragraph"] },
-      { tone: "good", label: "Separate sections", lines: ["Research", "Analysis", "Output"] },
-    ],
+    title: "Don't let the agent copy the same phrases",
+    desc: "One example gets reused word for word. Give more than one sample, and ask for varied professional language.",
+    example: "Draft an email requesting missing tax documents. Use varied openings — do not repeat the same greeting or close.",
   },
   {
     n: "04",
-    heading: "Make tasks atomic",
-    sub: "One Instruction. One Outcome.",
-    content: [
-      "Complex work isn't solved in a single leap.",
-      "Guide your agent through the same logical path you would follow:",
-      "- Review the facts",
-      "- Identify the issues",
-      "- Analyze the impact",
-      "- Recommend the next steps",
-    ],
-    examples: [
-      { tone: "bad", lines: ["Extract case laws and draft litigation arguments"] },
-      { tone: "good", lines: ["Extract relevant case laws", "Summarize legal principles", "Draft litigation arguments"] },
-    ],
+    title: "Don't leave length and format open",
+    desc: "Unspecified output becomes long and over-formatted. Set length, structure, and what to leave out.",
+    example: "Summarize GST audit observations in a maximum of 5 bullets, one line each. Mention only the issue and impact.",
   },
   {
     n: "05",
-    heading: "Always specify tone, verbosity, and output format",
-    sub: "If You Don't Specify It, Copilot Will Guess.",
-    content: ["Always define:", "- Tone", "- Detail level", "- Output format"],
-    examples: [
-      { tone: "bad", label: "Poor Instruction", lines: ["Draft an email to the client summarising the provisions covered u/s 90"] },
-      { tone: "good", label: "Better Instruction", lines: [
-        "Draft an email to the client summarising the provisions covered u/s 90",
-        "Tone: Professional and reassuring",
-        "Length: Under 150 words",
-        "Output Format: Email ready to send with subject line",
-      ] },
-    ],
+    title: "Don't skip a self-check before the final answer",
+    desc: "Without a review step, the agent can miss requirements or leave gaps. Ask it to confirm completeness first.",
+    example: "Before finalising the transfer pricing report summary, confirm you have covered functional changes, transaction changes, and benchmarking updates.",
   },
   {
     n: "06",
-    heading: "Structure instructions in Markdown",
-    sub: "Help Your Agent See the Bigger Picture",
-    content: [
-      "Use #, ##, and ### for section headers",
-      "Use bullets or numbered lists",
-      "Highlight tool or system names",
-      "Make critical instructions bold by using **",
-    ],
-    examples: [
-      { tone: "bad", lines: ["Prepare a transfer pricing risk assessment."] },
-      { tone: "good", lines: [
-        "Scope",
-        "Review FY 2025-26 transactions",
-        "Analysis",
-        "Identify related party transactions",
-        "Evaluate transfer pricing exposure",
-        "Risk Assessment",
-        "High-risk areas",
-        "Supporting documentation gaps",
-        "Deliverable",
-        "Risk matrix and recommendations",
-      ] },
-    ],
+    title: "Don't let the agent assume facts or reorder steps",
+    desc: "The agent may invent transactions or change your workflow. Tell it to follow the instructions literally.",
+    example: "Analyze only information explicitly stated in the tax audit report. Do not assume exposures or risks that are not mentioned.",
   },
   {
     n: "07",
-    heading: "Provide domain vocabulary",
-    sub: "Teach Your Agent Your Language",
-    content: [
-      "Never Assume Copilot Knows Your Acronyms.",
-      "Define:",
-      "- Acronyms",
-      "- Tax terms",
-      "- Internal terms",
-      "- Specialized formulas",
-    ],
-    examples: [
-      { tone: "neutral", lines: [
-        "TP = Transfer Pricing",
-        "FAI = Foreign Asset Information",
-        "PE = Permanent Establishment",
-        "AO = Assessing Officer",
-      ] },
-    ],
+    title: "Don't treat the first instruction set as finished",
+    desc: "Prompt quality stalls if you never revisit it. Test outputs, then update knowledge sources, instructions, and examples.",
+    example: "Check whether the agent cites sources, asks when information is missing, and follows the defined output structure — then revise.",
   },
   {
     n: "08",
-    heading: "Explicitly reference capabilities, knowledge, and actions",
-    sub: "Tell Copilot Where To Look",
-    content: [
-      "Tell the agent:",
-      "- Search Teams",
-      "- Check emails",
-      "- Use SharePoint knowledge",
-      "- Use OneDrive documents",
-    ],
-    examples: [
-      { tone: "bad", label: "Instead", lines: ["Summarize action items"] },
-      { tone: "good", label: "Use", lines: ["Search Teams conversations and summarize action items"] },
-    ],
-  },
-  {
-    n: "09",
-    heading: "Provide examples",
-    sub: "Examples Are Superpowers",
-    content: [
-      "Don't Just Describe It. Show It.",
-      "Provide examples for more than one example for edge cases.",
-      "Remove ambiguity and help your agent replicate the outcome you expect",
-    ],
-    examples: [
-      { tone: "bad", label: "Instruction Only", lines: ["Draft a client communication."] },
-      { tone: "good", label: "Instruction + Example", lines: [
-        "Use the tone and structure below:",
-        "Dear Client, We would like to inform you about the recent amendment impacting withholding tax obligations.",
-        "Recommended next step: Review current vendor arrangements.",
-        "Now draft a communication regarding Section 194T using the same style.",
-      ] },
-    ],
-  },
-  {
-    n: "10",
-    heading: "Control reasoning through phrasing",
-    sub: "Control How Much Reasoning You Need",
-    content: [
-      "Not Every Task Needs Deep Thinking.",
-      "Choose the right instruction style:",
-      "- Deep reasoning to analyze, derive, evaluate, justify, think step by step, reflect, verify logic and structure tasks into multiple dependent steps",
-      "- Moderate reasoning (balanced) for concise but structured explanation",
-      "- Fast and minimal reasoning for short answers, no reasoning on explanation and final result only.",
-    ],
-    examples: [
-      { tone: "neutral", label: "Deep Task", lines: ["Analyze litigation strategy considering recent High Court and Supreme Court rulings."] },
-      { tone: "neutral", label: "Moderate Task", lines: ["Summarize implications of Section 148A."] },
-      { tone: "neutral", label: "Quick Task", lines: ["Extract due dates from this notice."] },
-    ],
+    title: "Don't store agent instructions in SharePoint to dodge the limit",
+    desc: "Knowledge files are not trusted instruction text. Directive language can be blocked, and anyone who can edit the file can change the agent.",
+    example: "Keep maker-authored instructions in the agent itself — not in a SharePoint document used to work around the 8,000-character limit.",
   },
 ] as const;
+
 
 type AgentInstructionNavItem = {
   id: string;
@@ -1009,9 +867,9 @@ function useTypingPrompt() {
   return { activeIndex, typedText, select };
 }
 
-// ── Pattern 2a: Light app-editor mock (Figma 4034:4538) ────────────────────
-// Word / Excel / PowerPoint / Outlook chrome with a Copilot overlay at the
-// bottom. Prompt text still types into that overlay when a card is clicked.
+// ── Pattern 2a: In-app Copilot pane (matches MS Word / Excel / PPT / Outlook)
+// Title bar + ribbon + workspace, with Copilot as a right-hand side pane.
+// Clicking a suggestion card types the prompt into the composer.
 const MOCK_SKEL = "rgba(46, 46, 56, 0.10)";
 const MOCK_TOOL_ON = "rgba(26, 26, 36, 0.08)";
 
@@ -1030,10 +888,6 @@ function MockTool({ icon: Icon, active }: { icon: LucideIcon; active?: boolean }
   );
 }
 
-function MockToolDivider() {
-  return <span aria-hidden style={{ width: 1, height: 16, background: C.gray02, flexShrink: 0, margin: "0 2px" }} />;
-}
-
 function MockZoom() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1048,45 +902,41 @@ function MockZoom() {
   );
 }
 
-function CopilotOverlay({ typedText }: { typedText: string }) {
-  return (
-    <div
-      style={{
-        position: "absolute", left: 16, right: 16, bottom: 10, height: 148,
-        background: C.white, border: `1px solid ${C.gray02}`, borderRadius: 16,
-        padding: 16, boxShadow: "0 8px 24px -6px rgba(26, 26, 36, 0.08)",
-        display: "flex", flexDirection: "column", gap: 10, zIndex: 2, overflow: "hidden",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <img
-          src="/pipeline/copilot-icon.svg"
-          alt=""
-          aria-hidden
-          width={24}
-          height={24}
-          style={{ objectFit: "contain", flexShrink: 0 }}
-        />
-        <span style={{ fontFamily: F.bold, fontSize: 12, color: C.offBlack }}>Copilot</span>
-      </div>
-      {typedText ? (
-        <p style={{
-          margin: 0, flex: 1, overflow: "auto", fontFamily: F.regular, fontSize: 13,
-          color: C.offBlack, lineHeight: 1.55,
-        }}>{typedText}</p>
-      ) : (
-        <>
-          <span aria-hidden style={{ width: 180, maxWidth: "70%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-            <span aria-hidden style={{ width: "72%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
-            <span aria-hidden style={{ width: "86%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
-            <span aria-hidden style={{ width: "52%", height: 14, borderRadius: 7, background: MOCK_SKEL }} />
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
+const APP_ACCENT: Record<TabId, string> = {
+  word: C.wordBlue,
+  excel: C.excelGreen,
+  ppt: C.pptOrange,
+  outlook: C.outlookBlue,
+  m365: C.teamsViolet,
+  agent: C.wordBlue,
+};
+
+const RIBBON_TABS: Record<TabId, string[]> = {
+  word: ["File", "Home", "Insert", "Draw", "Layout", "References", "Review", "View"],
+  excel: ["File", "Home", "Insert", "Formulas", "Data", "Review", "View"],
+  ppt: ["File", "Home", "Insert", "Design", "Transitions", "Slide Show", "Review", "View"],
+  outlook: ["File", "Home", "View", "Help"],
+  m365: ["Chat"],
+  agent: ["File", "Home", "Insert", "Review", "View"],
+};
+
+const COPILOT_HEADING: Record<TabId, string> = {
+  word: "Let's edit your document",
+  excel: "Let's edit your workbook",
+  ppt: "Let's edit your presentation",
+  outlook: "What can I help with?",
+  m365: "What can I help with?",
+  agent: "Let's edit your document",
+};
+
+const COPILOT_PLACEHOLDER: Record<TabId, string> = {
+  word: "Describe what you'd like to edit",
+  excel: "Describe what you'd like to edit",
+  ppt: "Create a presentation about…",
+  outlook: "Message Copilot",
+  m365: "Message Copilot",
+  agent: "Describe what you'd like to edit",
+};
 
 const DOC_TITLES: Partial<Record<TabId, string>> = {
   word: "EY_AI_Governance_Framework_2026.docx",
@@ -1095,72 +945,260 @@ const DOC_TITLES: Partial<Record<TabId, string>> = {
   agent: "EY_AI_Governance_Framework_2026.docx",
 };
 
-function MockEditorTopBar({ tabId }: { tabId: TabId }) {
+function MsTitleBar({ tabId }: { tabId: TabId }) {
+  const accent = APP_ACCENT[tabId];
   const isMail = tabId === "outlook";
-  const tools: LucideIcon[] =
-    tabId === "ppt" ? [PlusSquare, LayoutTemplate, Type, Hexagon, Image, Play]
-    : tabId === "excel" ? [Bold, Italic, Grid3x3, Columns2, DollarSign, Percent, CirclePlus]
-    : [Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, List, ListOrdered, Code2];
-  const activeAt = tabId === "ppt" ? [0, 5] : tabId === "excel" ? [0] : [0, 4];
-  const splitAfter = tabId === "ppt" ? [1, 4] : tabId === "excel" ? [2, 5] : [3, 6];
-
+  const title = isMail ? "Mail — Outlook" : (DOC_TITLES[tabId] ?? `${APP_NAME[tabId]}`);
   return (
     <div style={{
       background: C.white, borderBottom: `1px solid ${C.gray02}`,
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      gap: 12, padding: isMail ? "12px 20px" : "12px 20px", flexShrink: 0, minHeight: isMail ? 56 : 64,
+      display: "flex", alignItems: "center", gap: 12, padding: "6px 12px", flexShrink: 0, minHeight: 40,
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-        <span aria-hidden style={{ width: 16, height: 16, borderRadius: 4, background: C.yellow, flexShrink: 0 }} />
-        {isMail ? (
-          <span style={{ fontFamily: F.bold, fontSize: 14, color: C.offBlack }}>Mail</span>
-        ) : (
-          <div style={{ display: "flex", alignItems: "baseline", gap: 6, minWidth: 0 }}>
-            <span style={{
-              fontFamily: F.bold, fontSize: 14, color: C.offBlack, whiteSpace: "nowrap",
-              overflow: "hidden", textOverflow: "ellipsis",
-            }}>{DOC_TITLES[tabId]}</span>
-            <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, whiteSpace: "nowrap", flexShrink: 0 }}>
-              • Saved to Cloud
-            </span>
-          </div>
-        )}
-      </div>
-      {isMail ? (
-        <div style={{
-          flex: 1, maxWidth: 420, height: 32, borderRadius: 8, background: C.offWhite,
-          display: "flex", alignItems: "center", gap: 8, padding: "0 12px",
-        }}>
-          <Search size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
-          <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>Search emails, events, and contacts</span>
-        </div>
-      ) : (
-        <div style={{
-          display: "flex", alignItems: "center", gap: 4, background: C.offWhite,
-          borderRadius: 8, padding: "4px 8px", overflow: "hidden",
-        }}>
-          {tools.map((icon, i) => (
-            <span key={i} style={{ display: "contents" }}>
-              <MockTool icon={icon} active={activeAt.includes(i)} />
-              {splitAfter.includes(i) ? <MockToolDivider /> : null}
-            </span>
-          ))}
-        </div>
+      {!isMail && (
+        <span style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, flexShrink: 0 }}>AutoSave Off</span>
       )}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
-        {!isMail && (
-          <span style={{
-            fontFamily: F.bold, fontSize: 14, color: C.offBlack,
-            border: `1.5px solid ${C.offBlack}`, padding: "8px 20px",
-          }}>Share</span>
-        )}
-        <span style={{
-          width: 32, height: 32, borderRadius: 16, background: C.confidentBlack,
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          fontFamily: F.bold, fontSize: 12, color: C.white,
-        }}>EY</span>
+      <span aria-hidden style={{ width: 8, height: 8, borderRadius: 2, background: accent, flexShrink: 0 }} />
+      <span style={{
+        fontFamily: F.bold, fontSize: 13, color: C.offBlack, whiteSpace: "nowrap",
+        overflow: "hidden", textOverflow: "ellipsis", minWidth: 0,
+      }}>{title}</span>
+      <div style={{
+        flex: 1, maxWidth: 280, height: 26, margin: "0 auto", borderRadius: 6, background: C.offWhite,
+        display: "flex", alignItems: "center", gap: 6, padding: "0 10px",
+      }}>
+        <Search size={12} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        <span style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01 }}>
+          {isMail ? "Search emails" : "Search"}
+        </span>
+      </div>
+      <span style={{
+        fontFamily: F.bold, fontSize: 11, color: C.white, background: accent,
+        padding: "5px 12px", borderRadius: 4, flexShrink: 0,
+      }}>Share</span>
+      <span style={{
+        width: 26, height: 26, borderRadius: 13, background: C.confidentBlack,
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        fontFamily: F.bold, fontSize: 10, color: C.white, flexShrink: 0,
+      }}>EY</span>
+    </div>
+  );
+}
+
+function MsRibbon({ tabId }: { tabId: TabId }) {
+  const accent = APP_ACCENT[tabId];
+  const tools: LucideIcon[] =
+    tabId === "ppt" ? [PlusSquare, LayoutTemplate, Type, Image, Play]
+    : tabId === "excel" ? [Bold, Italic, Grid3x3, DollarSign, Percent]
+    : tabId === "outlook" ? [Plus, CornerUpLeft, Archive, Trash2]
+    : [Bold, Italic, Underline, AlignLeft, List, ListOrdered];
+  return (
+    <div style={{ background: C.white, borderBottom: `1px solid ${C.gray02}`, flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 2, padding: "0 10px", minHeight: 28 }}>
+        {RIBBON_TABS[tabId].map((tab, i) => (
+          <span key={tab} style={{
+            fontFamily: i === 1 || tab === "Home" ? F.bold : F.regular,
+            fontSize: 11, color: C.offBlack, padding: "6px 10px",
+            borderBottom: tab === "Home" || (tabId === "outlook" && tab === "Home") ? `2px solid ${accent}` : "2px solid transparent",
+          }}>{tab}</span>
+        ))}
+        <span style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 8px" }}>
+          <Sparkles size={13} strokeWidth={1.75} color={accent} aria-hidden />
+          <span style={{ fontFamily: F.bold, fontSize: 11, color: accent }}>Copilot</span>
+        </span>
+      </div>
+      <div style={{
+        display: "flex", alignItems: "center", gap: 2, padding: "4px 10px 6px",
+        background: C.offWhite,
+      }}>
+        {tools.map((icon, i) => (
+          <MockTool key={i} icon={icon} active={i === 0} />
+        ))}
       </div>
     </div>
+  );
+}
+
+function CopilotComposer({
+  tabId, typedText, accent,
+}: {
+  tabId: TabId;
+  typedText: string;
+  accent: string;
+}) {
+  return (
+    <div style={{
+      padding: "10px 12px 8px", background: C.white,
+      border: `1px solid ${C.gray02}`, borderRadius: 12,
+      minHeight: 76, display: "flex", flexDirection: "column",
+    }}>
+      <p style={{
+        margin: 0, flex: 1, fontFamily: F.regular, fontSize: 12, lineHeight: 1.5,
+        color: typedText ? C.offBlack : C.gray01, overflow: "auto",
+      }}>
+        {typedText || COPILOT_PLACEHOLDER[tabId]}
+        {typedText ? (
+          <span aria-hidden style={{
+            display: "inline-block", width: 1, height: 12, marginLeft: 1,
+            background: C.offBlack, verticalAlign: "text-bottom",
+          }} />
+        ) : null}
+      </p>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 8 }}>
+        <span style={{ display: "inline-flex", gap: 8 }}>
+          <Plus size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+          <Mic size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        </span>
+        <span style={{
+          width: 26, height: 26, borderRadius: 13, background: accent,
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <Send size={12} strokeWidth={2} color={C.white} aria-hidden />
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function CopilotSuggestionCards({
+  prompts, activeIndex, onSelect, accent,
+}: {
+  prompts: { label: string; text: string }[];
+  activeIndex: number | null;
+  onSelect: (idx: number) => void;
+  accent: string;
+}) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      {prompts.map((p, i) => {
+        const active = i === activeIndex;
+        return (
+          <button
+            key={p.label}
+            type="button"
+            onClick={() => onSelect(i)}
+            style={{
+              display: "block", width: "100%", textAlign: "left", cursor: "pointer",
+              padding: "10px 12px", borderRadius: 10, fontFamily: F.regular,
+              background: C.white,
+              border: active ? `1px solid ${accent}` : `1px solid ${C.gray02}`,
+              boxShadow: active ? `inset 3px 0 0 ${C.yellow}` : "none",
+            }}
+          >
+            <span style={{ fontFamily: F.regular, fontSize: 12, color: C.offBlack, lineHeight: 1.4 }}>{p.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function CopilotSidePane({
+  tabId, prompts, activeIndex, typedText, onSelect,
+}: {
+  tabId: TabId;
+  prompts: { label: string; text: string }[];
+  activeIndex: number | null;
+  typedText: string;
+  onSelect: (idx: number) => void;
+}) {
+  const accent = APP_ACCENT[tabId];
+  const isMail = tabId === "outlook";
+  return (
+    <aside
+      aria-label={`Copilot in ${APP_NAME[tabId]}`}
+      style={{
+        width: 292, flexShrink: 0, background: C.white,
+        borderLeft: `1px solid ${C.gray02}`,
+        display: "flex", flexDirection: "column", minHeight: 0,
+      }}
+    >
+      <div style={{
+        display: "flex", alignItems: "center", gap: 8, padding: "10px 12px",
+        borderBottom: `1px solid ${C.gray02}`, flexShrink: 0,
+      }}>
+        <Menu size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        <ShieldCheck size={14} strokeWidth={1.75} color={C.success} aria-hidden />
+        {isMail ? (
+          <>
+            <span style={{
+              marginLeft: 4, display: "inline-flex", alignItems: "center", gap: 2,
+              background: C.offWhite, borderRadius: 8, padding: 2,
+            }}>
+              <span style={{
+                width: 22, height: 22, borderRadius: 6, background: C.white,
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <Briefcase size={11} strokeWidth={1.75} color={C.offBlack} aria-hidden />
+              </span>
+              <span style={{
+                width: 22, height: 22, borderRadius: 6,
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <Globe size={11} strokeWidth={1.75} color={C.gray01} aria-hidden />
+              </span>
+            </span>
+            <span style={{ flex: 1 }} />
+          </>
+        ) : (
+          <>
+            <img src="/pipeline/copilot-icon.svg" alt="" width={16} height={16} style={{ objectFit: "contain" }} />
+            <span style={{ fontFamily: F.bold, fontSize: 13, color: C.offBlack, flex: 1 }}>Copilot</span>
+          </>
+        )}
+        <span style={{
+          width: 22, height: 22, borderRadius: 5, background: accent,
+          display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+        }}>
+          <Pencil size={11} strokeWidth={1.75} color={C.white} aria-hidden />
+        </span>
+        <MoreHorizontal size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        <X size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+      </div>
+
+      <div style={{ padding: "18px 14px 8px", flexShrink: 0 }}>
+        <p style={{ margin: 0, fontFamily: F.bold, fontSize: 18, color: C.offBlack, lineHeight: 1.25 }}>
+          {COPILOT_HEADING[tabId]}
+        </p>
+        {!isMail && (
+          <span style={{
+            marginTop: 8, fontFamily: F.regular, fontSize: 11, color: C.gray01,
+            display: "inline-flex", alignItems: "center", gap: 4,
+          }}>
+            Allow editing <ChevronDown size={12} strokeWidth={1.75} aria-hidden />
+          </span>
+        )}
+      </div>
+
+      {isMail ? (
+        <>
+          <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "8px 12px 12px" }}>
+            <CopilotSuggestionCards prompts={prompts} activeIndex={activeIndex} onSelect={onSelect} accent={accent} />
+          </div>
+          <div style={{ padding: "0 12px 10px", flexShrink: 0 }}>
+            <CopilotComposer tabId={tabId} typedText={typedText} accent={accent} />
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ padding: "4px 12px 12px", flexShrink: 0 }}>
+            <CopilotComposer tabId={tabId} typedText={typedText} accent={accent} />
+          </div>
+          <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "0 12px 8px" }}>
+            <CopilotSuggestionCards prompts={prompts} activeIndex={activeIndex} onSelect={onSelect} accent={accent} />
+          </div>
+        </>
+      )}
+
+      <div style={{
+        padding: "8px 12px 12px", flexShrink: 0, display: "flex",
+        alignItems: "center", justifyContent: "space-between",
+      }}>
+        <span style={{ fontFamily: F.regular, fontSize: 10, color: C.gray01 }}>M365 Copilot</span>
+        <span style={{ fontFamily: F.regular, fontSize: 11, color: C.gray01, display: "inline-flex", alignItems: "center", gap: 2 }}>
+          See more <ChevronDown size={12} strokeWidth={1.75} aria-hidden />
+        </span>
+      </div>
+    </aside>
   );
 }
 
@@ -1169,24 +1207,34 @@ function WordWorkspace() {
     <span aria-hidden style={{ display: "block", width: w, height: h, borderRadius: 4, background: MOCK_SKEL }} />
   );
   return (
-    <div style={{ flex: 1, background: C.offWhite, display: "flex", justifyContent: "center", padding: "28px 48px 80px", minHeight: 0, overflow: "hidden" }}>
-      <div style={{
-        width: "100%", maxWidth: 640, background: C.white, borderRadius: 4,
-        padding: "40px 48px", display: "flex", flexDirection: "column", gap: 20, boxShadow: "0 1px 0 rgba(26, 26, 36, 0.04)",
-      }}>
-        {bar("100%", 18)}
-        {bar("100%", 52)}
-        {bar("42%", 14)}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span aria-hidden style={{ width: 6, height: 6, borderRadius: 3, background: C.yellow, flexShrink: 0 }} />
-          {bar("100%", 14)}
+    <div style={{ flex: 1, background: C.offWhite, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+      <div aria-hidden style={{
+        height: 18, flexShrink: 0, backgroundColor: C.white, borderBottom: `1px solid ${C.gray02}`,
+        backgroundImage: `repeating-linear-gradient(90deg, ${C.gray02} 0 1px, transparent 1px 24px)`,
+      }} />
+      <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
+        <div aria-hidden style={{
+          width: 18, flexShrink: 0, backgroundColor: C.white, borderRight: `1px solid ${C.gray02}`,
+          backgroundImage: `repeating-linear-gradient(180deg, ${C.gray02} 0 1px, transparent 1px 24px)`,
+        }} />
+        <div style={{ flex: 1, display: "flex", justifyContent: "center", padding: "20px 28px", overflow: "hidden" }}>
+          <div style={{
+            width: "100%", maxWidth: 520, background: C.white,
+            padding: "36px 40px", display: "flex", flexDirection: "column", gap: 16,
+            boxShadow: "0 1px 8px rgba(26, 26, 36, 0.06)",
+          }}>
+            {bar("72%", 16)}
+            {bar("100%", 10)}
+            {bar("100%", 10)}
+            {bar("88%", 10)}
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span aria-hidden style={{ width: 6, height: 6, borderRadius: 3, background: C.yellow, flexShrink: 0 }} />
+              {bar("100%", 10)}
+            </div>
+            {bar("64%", 10)}
+            {bar("100%", 10)}
+          </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span aria-hidden style={{ width: 6, height: 6, borderRadius: 3, background: C.gray01, flexShrink: 0 }} />
-          {bar("68%", 14)}
-        </div>
-        {bar("38%", 14)}
-        {bar("100%", 36)}
       </div>
     </div>
   );
@@ -1211,22 +1259,20 @@ function PptWorkspace() {
           </div>
         ))}
       </div>
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 24px 88px" }}>
-        <div style={{ width: "100%", maxWidth: 520, aspectRatio: "16 / 9", background: C.white, borderRadius: 4, padding: 32, boxShadow: "0 8px 24px -8px rgba(26, 26, 36, 0.12)", display: "flex", flexDirection: "column", gap: 16 }}>
-          <span aria-hidden style={{ width: 64, height: 5, borderRadius: 2, background: C.yellow }} />
-          <p style={{ margin: 0, fontFamily: F.bold, fontSize: 22, color: C.offBlack, lineHeight: 1.2 }}>EY AI Strategy 2026</p>
-          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01, lineHeight: 1.45 }}>
-            Accelerating enterprise growth through trustworthy and compliance-first agentic infrastructure.
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 8 }}>
-            {["01 / Trust Governance", "02 / Scalable Models"].map(label => (
-              <div key={label} style={{ background: C.offWhite, borderRadius: 6, padding: 12 }}>
-                <p style={{ margin: "0 0 8px", fontFamily: F.bold, fontSize: 11, color: C.offBlack }}>{label}</p>
-                <span aria-hidden style={{ display: "block", height: 4, width: "100%", borderRadius: 2, background: MOCK_SKEL, marginBottom: 6 }} />
-                <span aria-hidden style={{ display: "block", height: 4, width: "50%", borderRadius: 2, background: MOCK_SKEL }} />
-              </div>
-            ))}
-          </div>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+        <div style={{
+          width: "100%", maxWidth: 480, aspectRatio: "16 / 9", background: C.white,
+          padding: 36, boxShadow: "0 8px 24px -8px rgba(26, 26, 36, 0.12)",
+          display: "flex", flexDirection: "column", justifyContent: "center", gap: 16,
+        }}>
+          <div style={{
+            border: `1px dashed ${C.gray02}`, padding: "10px 12px",
+            fontFamily: F.regular, fontSize: 22, color: C.gray01,
+          }}>Click to add title</div>
+          <div style={{
+            border: `1px dashed ${C.gray02}`, padding: "8px 12px", maxWidth: 280,
+            fontFamily: F.regular, fontSize: 13, color: C.gray01,
+          }}>Click to add subtitle</div>
         </div>
       </div>
     </div>
@@ -1264,7 +1310,7 @@ function ExcelWorkspace() {
         <span style={{ fontFamily: F.bold, fontSize: 13, color: C.gray01, fontStyle: "italic" }}>fx</span>
         <span style={{ fontFamily: F.regular, fontSize: 13, color: C.offBlack }}>=SUM(C2:C6)</span>
       </div>
-      <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", paddingBottom: 72 }}>
+      <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
         <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 2.2fr 1fr 1fr 1fr 1fr", background: C.offWhite }}>
           <span style={{ ...cell, justifyContent: "center" }} />
           {cols.map(c => (
@@ -1276,7 +1322,14 @@ function ExcelWorkspace() {
             <span style={{ ...cell, justifyContent: "center", background: C.offWhite, fontSize: 11, color: C.gray01 }}>{i + 1}</span>
             <span style={cell} />
             <span style={{ ...cell, fontFamily: i === 0 || row.total ? F.bold : F.regular }}>{row.metric}</span>
-            <span style={{ ...cell, justifyContent: "flex-end", fontFamily: i === 0 || row.total ? F.bold : F.regular }}>{row.value}</span>
+            <span style={{
+              ...cell,
+              justifyContent: "flex-end",
+              fontFamily: i === 0 || row.total ? F.bold : F.regular,
+              outline: row.total ? `2px solid ${C.excelGreen}` : undefined,
+              outlineOffset: -2,
+              background: row.total ? C.offWhite : undefined,
+            }}>{row.value}</span>
             <span style={cell} /><span style={cell} /><span style={cell} />
           </div>
         ))}
@@ -1299,27 +1352,39 @@ const OUTLOOK_MAILS = [
 ];
 
 function OutlookWorkspace() {
+  const rail: { icon: LucideIcon; on?: boolean }[] = [
+    { icon: Mail, on: true },
+    { icon: Calendar },
+    { icon: Users },
+    { icon: ClipboardList },
+  ];
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+    <div style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
       <div style={{
-        height: 48, background: C.white, borderBottom: `1px solid ${C.gray02}`,
-        display: "flex", alignItems: "center", gap: 8, padding: "0 20px", flexShrink: 0,
+        width: 44, flexShrink: 0, background: C.offWhite, borderRight: `1px solid ${C.gray02}`,
+        display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 10, gap: 4,
       }}>
-        <span style={{
-          display: "inline-flex", alignItems: "center", gap: 6, height: 32, padding: "0 14px",
-          background: C.confidentBlack, color: C.white, fontFamily: F.bold, fontSize: 13, borderRadius: 4,
-        }}>
-          <Plus size={14} strokeWidth={1.75} aria-hidden /> New Mail
-        </span>
-        <span aria-hidden style={{ width: 1, height: 16, background: C.gray02, margin: "0 6px" }} />
-        <MockTool icon={CornerUpLeft} />
-        <MockTool icon={CornerUpRight} />
-        <span aria-hidden style={{ width: 1, height: 16, background: C.gray02, margin: "0 6px" }} />
-        <MockTool icon={Archive} />
-        <MockTool icon={Trash2} />
+        {rail.map(({ icon: Icon, on }) => (
+          <span key={Icon.displayName ?? Icon.name} style={{
+            width: 32, height: 32, borderRadius: 8,
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            background: on ? C.white : "transparent",
+            boxShadow: on ? `inset 0 0 0 1.5px ${C.outlookBlue}` : "none",
+            color: on ? C.outlookBlue : C.gray01,
+          }}>
+            <Icon size={16} strokeWidth={1.75} aria-hidden />
+          </span>
+        ))}
       </div>
       <div style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
-        <div style={{ width: 140, flexShrink: 0, background: C.white, borderRight: `1px solid ${C.gray02}`, padding: 12 }}>
+        <div style={{ width: 118, flexShrink: 0, background: C.white, borderRight: `1px solid ${C.gray02}`, padding: 10 }}>
+          <span style={{
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            height: 30, marginBottom: 10, borderRadius: 6, background: C.outlookBlue,
+            color: C.white, fontFamily: F.bold, fontSize: 11,
+          }}>
+            <Plus size={12} strokeWidth={1.75} aria-hidden /> New email
+          </span>
           {[
             { name: "Inbox", badge: "3", on: true },
             { name: "Sent Items" },
@@ -1342,7 +1407,7 @@ function OutlookWorkspace() {
             </div>
           ))}
         </div>
-        <div style={{ width: 220, flexShrink: 0, background: C.white, borderRight: `1px solid ${C.gray02}`, overflow: "hidden" }}>
+        <div style={{ width: 188, flexShrink: 0, background: C.white, borderRight: `1px solid ${C.gray02}`, overflow: "hidden" }}>
           {OUTLOOK_MAILS.map((m, i) => (
             <div key={m.subject} style={{
               padding: "12px 14px", borderBottom: `1px solid ${C.gray02}`,
@@ -1358,7 +1423,7 @@ function OutlookWorkspace() {
             </div>
           ))}
         </div>
-        <div style={{ flex: 1, minWidth: 0, background: C.white, padding: "20px 20px 88px", overflow: "hidden" }}>
+        <div style={{ flex: 1, minWidth: 0, background: C.white, padding: "16px 16px 20px", overflow: "hidden" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{
@@ -1431,7 +1496,15 @@ function MockStatusBar({ tabId }: { tabId: TabId }) {
   );
 }
 
-function CopilotAppMock({ tabId, typedText }: { tabId: TabId; typedText: string }) {
+function CopilotAppMock({
+  tabId, prompts, activeIndex, typedText, onSelect,
+}: {
+  tabId: TabId;
+  prompts: { label: string; text: string }[];
+  activeIndex: number | null;
+  typedText: string;
+  onSelect: (idx: number) => void;
+}) {
   const workspace =
     tabId === "excel" ? <ExcelWorkspace />
     : tabId === "ppt" ? <PptWorkspace />
@@ -1440,54 +1513,25 @@ function CopilotAppMock({ tabId, typedText }: { tabId: TabId; typedText: string 
 
   return (
     <div style={{
-      width: "100%", minHeight: 560, background: C.offWhite, borderRadius: 16, overflow: "hidden",
+      width: "100%", minHeight: 640, background: C.offWhite, borderRadius: 12, overflow: "hidden",
       border: `1px solid ${C.gray02}`, boxShadow: "0 16px 40px rgba(26, 26, 36, 0.10)",
       display: "flex", flexDirection: "column",
     }}>
-      <MockEditorTopBar tabId={tabId} />
-      <div style={{ flex: 1, position: "relative", display: "flex", flexDirection: "column", minHeight: 0 }}>
-        {workspace}
-        <CopilotOverlay typedText={typedText} />
+      <MsTitleBar tabId={tabId} />
+      <MsRibbon tabId={tabId} />
+      <div style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
+        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+          {workspace}
+        </div>
+        <CopilotSidePane
+          tabId={tabId}
+          prompts={prompts}
+          activeIndex={activeIndex}
+          typedText={typedText}
+          onSelect={onSelect}
+        />
       </div>
       <MockStatusBar tabId={tabId} />
-    </div>
-  );
-}
-
-// ── Pattern 2b: "Ask Copilot in {App}" prompt panel — 5 clickable prompts ──
-function CopilotPromptPanel({ appLabel, prompts, activeIndex, onSelect }: {
-  appLabel: string; prompts: { label: string; text: string }[];
-  activeIndex: number | null; onSelect: (idx: number) => void;
-}) {
-  return (
-    <div style={{ width: "100%", minHeight: 520, background: `linear-gradient(151deg, ${C.dark2} 8.5%, ${C.dark} 91.5%)`, border: "0.75px solid rgba(255,255,255,0.08)", borderRadius: 22, padding: "22.75px", boxShadow: "0 20px 25px rgba(0,0,0,0.24)", display: "flex", flexDirection: "column" }}>
-      <p style={{ fontFamily: F.regular, fontWeight: 700, fontSize: 16, color: C.white, marginBottom: 16, display: "flex", alignItems: "center", gap: 8, lineHeight: 1.5 }}>
-        <Sparkles size={16} strokeWidth={1.75} color={C.yellow} aria-hidden /> Ask Copilot in {appLabel}
-      </p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, overflowY: "auto", minHeight: 0, flex: 1, paddingRight: 4 }}>
-        {prompts.map((p, i) => {
-          const active = i === activeIndex;
-          return (
-            <button
-              key={p.label}
-              onClick={() => onSelect(i)}
-              style={{
-                display: "flex", alignItems: "center", gap: 12, padding: "11.75px 12.75px", borderRadius: 14,
-                background: active ? "rgba(255,230,0,0.14)" : "rgba(255,255,255,0.04)",
-                border: active ? `0.75px solid ${C.yellow}` : "0.75px solid rgba(255,255,255,0.08)",
-                cursor: "pointer", textAlign: "left", width: "100%", fontFamily: F.regular,
-                transition: "background 0.2s, border-color 0.2s, transform 0.2s",
-              }}
-              onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.transform = "translateX(3px)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
-            >
-              <span style={{ width: 24, height: 24, minWidth: 24, borderRadius: 12, background: active ? C.yellow : "rgba(255,255,255,0.12)", color: active ? C.dark : C.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{i + 1}</span>
-              <span style={{ flex: 1, minWidth: 0, fontSize: 13, fontWeight: 700, color: C.white, lineHeight: 1.5 }}>{p.label}</span>
-              <ArrowRight size={14} strokeWidth={1.75} color={active ? C.yellow : "rgba(255,255,255,0.35)"} aria-hidden style={{ flexShrink: 0 }} />
-            </button>
-          );
-        })}
-      </div>
     </div>
   );
 }
@@ -1536,7 +1580,6 @@ function CopilotGovernanceStrip() {
 // ── Pattern 2: Use cases (top) → prompts + app mock side-by-side — all app tabs
 function CopilotScene({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
-  const appLabel = APP_NAME[tabId];
   const { activeIndex, typedText, select } = useTypingPrompt();
 
   return (
@@ -1550,19 +1593,19 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
             <M365ChatSlideTour />
             <CopilotGovernanceStrip />
           </div>
+        ) : tabId === "agent" ? (
+          <div className="copilot-scene-main copilot-scene-main--chat-tour">
+            <M365AgentSlideTour />
+          </div>
         ) : (
           <div className="copilot-scene-main">
-            <div className="copilot-scene-prompts">
-              <CopilotPromptPanel
-                appLabel={appLabel}
-                prompts={d.prompts}
-                activeIndex={activeIndex}
-                onSelect={idx => select(idx, d.prompts[idx].text)}
-              />
-            </div>
-            <div className="copilot-scene-mock">
-              <CopilotAppMock tabId={tabId} typedText={typedText} />
-            </div>
+            <CopilotAppMock
+              tabId={tabId}
+              prompts={d.prompts}
+              activeIndex={activeIndex}
+              typedText={typedText}
+              onSelect={idx => select(idx, d.prompts[idx].text)}
+            />
           </div>
         )}
       </div>
@@ -1602,49 +1645,12 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
           }
         }
         .copilot-scene-main {
-          display: flex;
-          flex-direction: row;
-          align-items: stretch;
-          gap: 20px;
           width: 100%;
         }
         .copilot-scene-main--chat-tour {
+          display: flex;
           flex-direction: column;
-        }
-        .copilot-scene-prompts {
-          flex: 0 0 360px;
-          width: 360px;
-          min-width: 320px;
-          max-width: 392px;
-          display: flex;
-        }
-        .copilot-scene-prompts > * {
-          flex: 1 1 auto !important;
-          min-height: 560px !important;
-          max-height: none !important;
-          width: 100% !important;
-        }
-        .copilot-scene-mock {
-          flex: 1 1 auto;
-          min-width: 0;
-          display: flex;
-        }
-        .copilot-scene-mock > * {
-          flex: 1 1 auto !important;
-          width: 100% !important;
-          min-height: 560px !important;
-          max-height: none !important;
-        }
-        @media (max-width: 900px) {
-          .copilot-scene-main {
-            flex-direction: column;
-          }
-          .copilot-scene-prompts {
-            flex: none;
-            width: 100%;
-            min-width: 0;
-            max-width: none;
-          }
+          gap: 20px;
         }
       `}</style>
     </>
@@ -3151,11 +3157,191 @@ function AgentBestPracticesTab() {
   );
 }
 
-function AgentHubTabs() {
-  const [activeSubTab, setActiveSubTab] = useState<AgentHubTabId>("guide");
+const AGENT_HUB_TABS = [
+  { id: "donts", label: "Don'ts" },
+  { id: "templates", label: "Templates" },
+  { id: "best-practices", label: "Best Practices" },
+] as const;
+type AgentHubTabId = (typeof AGENT_HUB_TABS)[number]["id"];
+
+function AgentDonts() {
+  const navItems: AgentBuilderSidebarItem[] = AGENT_DONTS.map(item => ({
+    id: `dont-${item.n}`,
+    label: item.title,
+    badge: item.n,
+    group: "Don'ts",
+  }));
+  const [activeId, setActiveId] = useState(navItems[0]?.id ?? "dont-01");
+  const activeIndex = navItems.findIndex(item => item.id === activeId);
+  const active = AGENT_DONTS[Math.max(0, activeIndex)] ?? AGENT_DONTS[0];
+  const total = AGENT_DONTS.length;
 
   return (
-    <div>
+    <>
+      <AgentBuilderShell
+        fullPanel
+        sidebarTitle="Don'ts"
+        sidebarItems={navItems}
+        activeSidebarId={activeId}
+        onSidebarSelect={setActiveId}
+      >
+        <div
+          style={{
+            padding: "16px 24px",
+            background: C.confidentBlack,
+            borderBottom: `1px solid rgba(255,255,255,0.12)`,
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexWrap: "wrap",
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 6,
+              flexShrink: 0,
+              background: C.yellow,
+              color: C.dark2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 12,
+              fontWeight: 700,
+              fontFamily: F.bold,
+            }}
+          >
+            {active.n}
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontFamily: F.bold, fontSize: 15, fontWeight: 700, color: C.onDark, margin: 0, lineHeight: 1.3 }}>
+              {active.title}
+            </p>
+            <p style={{ fontFamily: F.regular, fontSize: 12, color: C.onDarkSubtle, margin: "4px 0 0", lineHeight: 1.45 }}>
+              A habit to avoid when you write agent instructions
+            </p>
+          </div>
+          <span style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.yellow, letterSpacing: "0.04em" }}>
+            {activeIndex + 1}/{total}
+          </span>
+        </div>
+
+        <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", minHeight: 0 }}>
+          <AgentProse>{active.desc}</AgentProse>
+          <div
+            style={{
+              marginTop: 16,
+              padding: "14px 16px",
+              borderRadius: 10,
+              background: C.offWhite,
+              border: `1px solid ${C.gray02}`,
+              borderLeft: `3px solid ${C.destructive}`,
+            }}
+          >
+            <p style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: C.destructive, margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6 }}>
+              <Ban size={13} strokeWidth={1.75} aria-hidden />
+              Instead, write it this way
+            </p>
+            <p style={{ fontFamily: F.regular, fontSize: 14, color: C.dark2, lineHeight: 1.65, margin: 0 }}>{active.example}</p>
+          </div>
+        </div>
+
+        <div
+          style={{
+            padding: "14px 24px",
+            borderTop: `1px solid ${C.gray02}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            flexShrink: 0,
+            background: C.offWhite,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setActiveId(navItems[Math.max(0, activeIndex - 1)].id)}
+            disabled={activeIndex === 0}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 16px",
+              minHeight: 44,
+              borderRadius: 8,
+              border: `1px solid ${C.gray02}`,
+              background: C.white,
+              cursor: activeIndex === 0 ? "not-allowed" : "pointer",
+              opacity: activeIndex === 0 ? 0.45 : 1,
+              fontFamily: F.regular,
+              fontSize: 13,
+              fontWeight: 700,
+              color: C.dark2,
+            }}
+          >
+            <ChevronLeft size={16} strokeWidth={1.75} aria-hidden />
+            Previous
+          </button>
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+            {navItems.map((item, i) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-label={`Go to ${item.label}`}
+                onClick={() => setActiveId(item.id)}
+                style={{
+                  width: i === activeIndex ? 22 : 8,
+                  height: 8,
+                  borderRadius: 999,
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  background: i === activeIndex ? C.yellow : C.gray02,
+                  transition: "width 0.2s, background 0.2s",
+                }}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setActiveId(navItems[Math.min(total - 1, activeIndex + 1)].id)}
+            disabled={activeIndex === total - 1}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 16px",
+              minHeight: 44,
+              borderRadius: 8,
+              border: "none",
+              background: activeIndex === total - 1 ? C.gray02 : C.yellow,
+              cursor: activeIndex === total - 1 ? "not-allowed" : "pointer",
+              opacity: activeIndex === total - 1 ? 0.45 : 1,
+              fontFamily: F.regular,
+              fontSize: 13,
+              fontWeight: 700,
+              color: C.dark2,
+            }}
+          >
+            Next
+            <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        </div>
+      </AgentBuilderShell>
+      <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, textAlign: "center", marginTop: 12, lineHeight: 1.5 }}>
+        Source: Agent Best Practices mailer and the tax agent instruction navigator
+      </p>
+    </>
+  );
+}
+
+function AgentHubTabs() {
+  const [activeSubTab, setActiveSubTab] = useState<AgentHubTabId>("donts");
+
+  return (
+    <div style={{ marginTop: 32 }}>
       <div style={{ textAlign: "center", marginBottom: 32 }}>
         <div style={{ display: "inline-flex", gap: 8, background: C.dark2, borderRadius: 12, padding: 8, flexWrap: "wrap", justifyContent: "center" }}>
           {AGENT_HUB_TABS.map(t => (
@@ -3184,7 +3370,7 @@ function AgentHubTabs() {
         </div>
       </div>
 
-      {activeSubTab === "guide" && <AgentInstructionsHub />}
+      {activeSubTab === "donts" && <AgentDonts />}
       {activeSubTab === "templates" && <AgentTemplatesTab />}
       {activeSubTab === "best-practices" && <AgentBestPracticesTab />}
     </div>
@@ -3328,11 +3514,7 @@ function TabSection({ tabId }: { tabId: TabId }) {
 
       <CopilotScene tabId={tabId} />
 
-      {tabId === "agent" && (
-        <div style={{ marginTop: 48 }}>
-          <AgentHubTabs />
-        </div>
-      )}
+      {tabId === "agent" && <AgentHubTabs />}
       </div>
     </div>
   );
@@ -3776,8 +3958,7 @@ export default function M365CopilotHub({
       </section>
 
       {/* ── Active tab section ──────────────────────────────────────────────── */}
-      {/* key={activeTab} forces a clean remount per tab so the prompt-panel's
-          typing animation state doesn't leak between apps on switch. */}
+      {/* key={activeTab} remounts each app so Copilot typing state does not leak. */}
       <TabSection key={activeTab} tabId={activeTab} />
 
       {/* ── Useful Links (Figma: useful-links-section-redesign) ─────────────── */}
@@ -3804,11 +3985,9 @@ export default function M365CopilotHub({
       {/* ── Security (Figma: security-case-studies — 4 horizontal cards) ─────── */}
       <section id="security" style={{ background: C.dark, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
         <div style={{ ...contentRailStyle }}>
-        <SectionAnchorTitle theme="dark" align="center">Security &amp; Governance</SectionAnchorTitle>
         <header style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 40 }}>
-          {/* GOVERNANCE & TRUST kicker badge */}
           <div style={{ display: "inline-flex", alignItems: "center", background: "rgba(255,230,0,0.12)", border: "1px solid rgba(255,230,0,0.25)", borderRadius: 20, padding: "5px 14px", marginBottom: 24 }}>
-            <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow }}>GOVERNANCE &amp; TRUST</span>
+            <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow }}>Security &amp; Governance</span>
           </div>
           <h2 style={{ fontFamily: F.bold, fontSize: typeScale.h2.size, fontWeight: 700, color: C.white, lineHeight: 1.2, letterSpacing: typeScale.h2.tracking, marginBottom: 14 }}>Enterprise-Grade Security</h2>
           <p style={{ fontFamily: F.bold, fontSize: typeScale.subheading.size, fontWeight: 700, color: C.white, marginBottom: 10 }}>

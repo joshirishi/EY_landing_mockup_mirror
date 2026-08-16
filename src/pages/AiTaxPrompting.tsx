@@ -304,7 +304,7 @@ const ADVANCED_USE_CASE =
 
 /** Chain of Thought — 4 filter-chip groups shown inside the CoT detail pane. */
 type COTGroupId = "initiation" | "structuring" | "adaptation" | "uncertainty";
-type COTTechnique = { name: string; purpose: string; explain: string };
+type COTTechnique = { name: string; purpose: string; explain: string; samplePrompt?: string };
 type COTGroup = {
   id: COTGroupId;
   label: string;
@@ -319,8 +319,18 @@ const COT_GROUPS: COTGroup[] = [
     label: "Initiation of Thoughts",
     framing: "How should I begin thinking about this problem?",
     techniques: [
-      { name: "Step-Back Prompting", purpose: "Look at the bigger picture first", explain: "Before solving the problem, ask AI to step back and identify broader considerations." },
-      { name: "Analogical Prompting", purpose: "Learn from similar situations", explain: "Use past cases, familiar situations or known examples to guide reasoning." },
+      {
+        name: "Step-Back Prompting",
+        purpose: "Look at the bigger picture first",
+        explain: "Before solving the problem, ask AI to step back and identify broader considerations.",
+        samplePrompt: "Before analysing withholding tax on software royalty payments to a US parent, step back: which treaty articles, characterisation questions, and source rules should we settle first?",
+      },
+      {
+        name: "Analogical Prompting",
+        purpose: "Learn from similar situations",
+        explain: "Use past cases, familiar situations or known examples to guide reasoning.",
+        samplePrompt: "Think of a similar case where software payments to a related overseas company were treated as royalties versus business profits. Use that analogy to reason about withholding tax here.",
+      },
     ],
   },
   {
@@ -942,7 +952,6 @@ function TeamBriefingSection() {
   const missingItems = ["What issue?", "Which jurisdiction?", "What output?", "By when?"];
   const [beat, setBeat] = useState<BriefBeat>(0);
   const [tagsReady, setTagsReady] = useState(false);
-  const [presenting, setPresenting] = useState(false);
 
   useEffect(() => {
     if (beat !== 2) {
@@ -953,17 +962,6 @@ function TeamBriefingSection() {
     return () => window.clearTimeout(timer);
   }, [beat]);
 
-  useEffect(() => {
-    if (!presenting) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setPresenting(false);
-      if (e.key === "ArrowRight" && beat < 3) setBeat((b) => (b + 1) as BriefBeat);
-      if (e.key === "ArrowLeft" && beat > 0) setBeat((b) => (b - 1) as BriefBeat);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [presenting, beat]);
-
   const showGeneric = beat >= 1;
   const showMissing = beat >= 2;
   const showStrong = beat >= 3;
@@ -972,18 +970,6 @@ function TeamBriefingSection() {
 
   const leftCtaLabel = beat === 0 ? "See the Outcome" : "Show what's missing";
 
-  const startPresentation = () => {
-    setBeat(0);
-    setPresenting(true);
-  };
-
-  const presentationSlides = [
-    { title: "Weak Brief", body: "Research this matter and get back to me.", accent: C.destructive },
-    { title: "Generic Outcome", body: "Without context, AI produces a generic response that lacks jurisdiction, scope, and deadline.", accent: C.destructive },
-    { title: "What's Missing", body: missingItems.join(" · "), accent: C.destructive },
-    { title: "Strong Brief", body: "Issue, jurisdiction, output format, and deadline — all defined.", accent: C.success },
-  ];
-
   return (
     <section id="team-briefing" style={{ background: SURFACE.light.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }} data-node-id="3978:2179">
       <div style={{ ...contentRailStyle }}>
@@ -991,102 +977,9 @@ function TeamBriefingSection() {
         <h2 style={{ fontSize: 36, fontWeight: 700, color: C.confidentBlack, textAlign: "center", marginBottom: 8, fontFamily: F.bold }}>
           Brief AI Like You Brief Your Team
         </h2>
-        <p style={{ fontSize: 16, color: C.gray01, textAlign: "center", lineHeight: 1.7, marginBottom: 24, fontFamily: F.light }}>
+        <p style={{ fontSize: 16, color: C.gray01, textAlign: "center", lineHeight: 1.7, marginBottom: 40, fontFamily: F.light }}>
           The more context you provide, the better the outcome.
         </p>
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
-          <button
-            type="button"
-            onClick={startPresentation}
-            style={{
-              ...BRIEF_CTA_STYLE,
-              height: 40,
-              padding: "10px 22px",
-              fontSize: 13,
-            }}
-          >
-            <Play size={16} strokeWidth={2} aria-hidden />
-            Present briefing
-          </button>
-        </div>
-
-        {presenting && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Team briefing presentation"
-            style={{
-              position: "fixed",
-              inset: 0,
-              zIndex: 500,
-              background: C.confidentBlack,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 32,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setPresenting(false)}
-              aria-label="Close presentation"
-              style={{
-                position: "absolute",
-                top: 24,
-                right: 24,
-                background: "transparent",
-                border: `1px solid ${C.borderOnDark}`,
-                borderRadius: 6,
-                color: C.onDark,
-                cursor: "pointer",
-                padding: 8,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <X size={20} strokeWidth={1.75} aria-hidden />
-            </button>
-            <p style={{ fontFamily: F.bold, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: C.yellow, margin: "0 0 16px" }}>
-              Slide {beat + 1} of {presentationSlides.length}
-            </p>
-            <div style={{
-              maxWidth: 720,
-              width: "100%",
-              background: C.white,
-              borderRadius: 12,
-              borderTop: `4px solid ${presentationSlides[beat].accent}`,
-              padding: "40px 48px",
-              textAlign: "center",
-            }}>
-              <p style={{ fontFamily: F.bold, fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase", color: presentationSlides[beat].accent, margin: "0 0 20px" }}>
-                {presentationSlides[beat].title}
-              </p>
-              <p style={{ fontFamily: F.regular, fontSize: "clamp(18px, 2.5vw, 24px)", color: C.offBlack, margin: 0, lineHeight: 1.5 }}>
-                {presentationSlides[beat].body}
-              </p>
-            </div>
-            <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
-              <button
-                type="button"
-                disabled={beat === 0}
-                onClick={() => setBeat((b) => (b - 1) as BriefBeat)}
-                style={{ ...BRIEF_CTA_STYLE, opacity: beat === 0 ? 0.4 : 1, cursor: beat === 0 ? "not-allowed" : "pointer" }}
-              >
-                Previous
-              </button>
-              <button
-                type="button"
-                onClick={() => (beat < 3 ? setBeat((b) => (b + 1) as BriefBeat) : setPresenting(false))}
-                style={BRIEF_CTA_STYLE}
-              >
-                {beat < 3 ? "Next" : "End presentation"}
-                <ArrowRight size={16} strokeWidth={2} aria-hidden />
-              </button>
-            </div>
-          </div>
-        )}
 
         <div
           data-brief-grid
@@ -1099,11 +992,6 @@ function TeamBriefingSection() {
         >
           {/* ── Weak Brief (always visible; discloses outcome + missing) ── */}
           <div
-            role="button"
-            tabIndex={0}
-            onClick={startPresentation}
-            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); startPresentation(); } }}
-            aria-label="Open team briefing presentation"
             style={{
               border: `1px solid ${C.destructive}33`,
               borderRadius: 12,
@@ -1112,7 +1000,6 @@ function TeamBriefingSection() {
               display: "flex",
               flexDirection: "column",
               minHeight: 403,
-              cursor: "pointer",
             }}
           >
             <div
@@ -1518,12 +1405,34 @@ function AiLazyProSection() {
                 </p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, minHeight: 76 }}>
-                {["Role defined", "Task clear", "Format set", "Length capped"].map(t => (
-                  <div key={t} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 12px", background: C.success + "0d", borderRadius: 6 }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.success} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span style={{ color: C.success, fontSize: 11, fontWeight: 600, fontFamily: F.bold }}>{t}</span>
-                  </div>
-                ))}
+                {[
+                  { label: "Role defined", accent: C.yellow },
+                  { label: "Task clear", accent: C.frameBlue },
+                  { label: "Format set", accent: C.framePurple },
+                  { label: "Length capped", accent: C.success },
+                ].map(({ label, accent }) => {
+                  const isYellow = accent === C.yellow;
+                  return (
+                    <div
+                      key={label}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "7px 12px",
+                        borderRadius: 6,
+                        background: isYellow ? C.yellow : `${accent}33`,
+                        border: `1.5px solid ${accent}`,
+                        borderLeft: `3px solid ${accent}`,
+                      }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={isYellow ? C.offBlack : accent} strokeWidth="2.5" aria-hidden>
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span style={{ color: isYellow ? C.offBlack : C.onDark, fontSize: 11, fontWeight: 700, fontFamily: F.bold }}>{label}</span>
+                    </div>
+                  );
+                })}
               </div>
               <div style={{ background: C.success + "0a", border: `1px dashed ${C.success}33`, borderRadius: 8, padding: 14, marginTop: "auto" }}>
                 <div style={{ color: C.success, fontSize: 10, fontWeight: 700, letterSpacing: "1px", marginBottom: 6, fontFamily: F.bold }}>↓ WHAT YOU GET BACK</div>
@@ -2760,7 +2669,7 @@ function SteppedFlow({ steps }: { steps: string[] }) {
 
 /** Technique card — name + purpose + one-line explanation, in the same visual language as
  *  AdvancedDecomposition's facet pills, condensed into a compact card for chip-filtered groups. */
-function AdvancedFrameworkCard({ name, purpose, explain }: COTTechnique) {
+function AdvancedFrameworkCard({ name, purpose, explain, samplePrompt }: COTTechnique) {
   return (
     <div style={{
       border: `1px solid rgba(46,46,56,0.10)`,
@@ -2777,6 +2686,40 @@ function AdvancedFrameworkCard({ name, purpose, explain }: COTTechnique) {
       <p style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.6, margin: 0 }}>
         {explain}
       </p>
+      {samplePrompt && (
+        <div
+          style={{
+            marginTop: 12,
+            padding: "10px 12px",
+            background: C.white,
+            border: `1px solid rgba(46,46,56,0.10)`,
+            borderLeft: `3px solid ${C.yellow}`,
+            borderRadius: 6,
+          }}
+        >
+          <p style={{
+            margin: "0 0 6px",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: C.gray01,
+            fontFamily: F.bold,
+          }}>
+            Sample prompt
+          </p>
+          <p style={{
+            margin: 0,
+            fontSize: 12,
+            fontStyle: "italic",
+            lineHeight: 1.55,
+            color: C.offBlack,
+            fontFamily: F.light,
+          }}>
+            &ldquo;{samplePrompt}&rdquo;
+          </p>
+        </div>
+      )}
     </div>
   );
 }

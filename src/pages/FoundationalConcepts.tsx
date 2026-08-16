@@ -8,8 +8,9 @@
  * high-specificity universal reset).
  */
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import foundationalHtml from "../imports/Foundational_Concepts.html?raw";
+import { HitlUnderstandModal } from "../components/HitlUnderstandModal";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, SUBNAV_SCROLL_OFFSET, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
@@ -516,7 +517,14 @@ export default function FoundationalConcepts({
     [foundationalHtml]
   );
   const contentRef = useRef<HTMLDivElement>(null);
+  const [hitlSlide, setHitlSlide] = useState<number | null>(null);
   useModuleSectionHashScroll();
+
+  useEffect(() => {
+    const onOpen = () => setHitlSlide(0);
+    window.addEventListener("ey-open-hitl-modal", onOpen);
+    return () => window.removeEventListener("ey-open-hitl-modal", onOpen);
+  }, []);
 
   // Inline onclick="" handlers work via innerHTML; <script> blocks do not —
   // re-run them after the markup is in the DOM. Wrapped in IIFEs so HMR /
@@ -555,6 +563,13 @@ export default function FoundationalConcepts({
         moduleKey="m1_1"
         onNextStepCta={() => onNavigate("/ai-tax-prompting")}
       />
+      {hitlSlide != null && (
+        <HitlUnderstandModal
+          slideIndex={hitlSlide}
+          onClose={() => setHitlSlide(null)}
+          onChangeSlide={setHitlSlide}
+        />
+      )}
     </div>
   );
 }

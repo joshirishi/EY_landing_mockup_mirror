@@ -57,22 +57,22 @@ const CALLOUT_LAYOUT = [
 ] as const;
 
 const CURRICULUM_STAGE_NODES: readonly AscentStageNodeEntry[] = [
-  { left: 359, top: 295, icon: "/ascent/icon-search.svg", alt: "AI Tax Prompting" },
-  { left: 554, top: 260, icon: "/ascent/icon-cpu.svg", alt: "M365 Copilot Hub" },
-  { left: 769, top: 240, icon: "/ascent/icon-trending-up.svg", alt: "Brainstorming Use Cases" },
-  { left: 1018, top: 227, icon: "/ascent/icon-search.svg", alt: "Guidance for Implementation" },
-  { left: 1164, top: 202, icon: "/ascent/icon-cpu.svg", alt: "Closure & AI Reinforcement" },
-  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "AI-enabled tax professional" },
+  { left: 359, top: 295, icon: "/ascent/icon-search.svg", alt: "Laying the Foundation" },
+  { left: 554, top: 260, icon: "/ascent/icon-cpu.svg", alt: "Discovering Opportunities" },
+  { left: 769, top: 240, icon: "/ascent/icon-trending-up.svg", alt: "Building Solutions" },
+  { left: 1018, top: 227, icon: "/ascent/icon-search.svg", alt: "Embedding Confidence" },
+  { left: 1164, top: 202, icon: "/ascent/icon-cpu.svg", alt: "Embedding Confidence" },
+  { left: 1221, top: 94, icon: "/ascent/icon-shield.svg", alt: "Peak Performance" },
 ];
 
 const CURRICULUM_STAGE_TITLES: readonly AscentStageTitleEntry[] = [
-  { title: "Foundational Concepts", markerTop: 366, markerSize: 46, calloutIndex: 0 },
-  { title: "AI Tax Prompting", markerTop: 295, markerSize: 40, calloutIndex: 1 },
-  { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
-  { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
-  { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Closure & AI Reinforcement", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
-  { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
+  { title: "Base Camp", markerTop: 366, markerSize: 46, calloutIndex: 0 },
+  { title: "Laying the Foundation", markerTop: 295, markerSize: 40, calloutIndex: 1 },
+  { title: "Discovering Opportunities", markerTop: 260, markerSize: 40, calloutIndex: 2 },
+  { title: "Building Solutions", markerTop: 240, markerSize: 40, calloutIndex: 3 },
+  { title: "Embedding Confidence", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
+  { title: "Embedding Confidence", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
+  { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
 ];
 
 /** Module-end / progress trek — confident completion quotes per marker. */

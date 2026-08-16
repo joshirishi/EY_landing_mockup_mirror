@@ -92,3 +92,5 @@ Since the content is in an iframe-like scroll context, `ModuleHeader` receives `
 - [[Patterns/SurfaceRhythm]] — `.surface-*` class conventions
 - [[Components/ModuleHeader]] — tab navigation
 - [[Pages/Phase1]] — navigates here from module card
+- [[Reference/html-prototypes]] — `reference/html/Foundational_Concepts.html`
+- [[Reference/source-map]] — news / hallucination images and pipeline stills

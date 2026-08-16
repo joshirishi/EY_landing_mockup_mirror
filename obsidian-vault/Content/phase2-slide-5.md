@@ -12,6 +12,8 @@ tags: [phase2, slide, prompt-examples, use-cases]
 **Section:** GUIDED EXAMPLES  
 **Subtitle:** Purpose, approach and outcome as summarised in Sheet1 of Sample use cases.xlsx. These examples stimulate discussion; they are not a preselected implementation list.
 
+> **File status:** `Sample use cases.xlsx` is **not** in `reference/`. Wording is preserved here and in `GUIDED_EXAMPLES` on [[Pages/BrainstormingUseCases]]. This list is **not** the Priya PPT library — see [[Reference/source-map]].
+
 ---
 
 ## Prompt Examples

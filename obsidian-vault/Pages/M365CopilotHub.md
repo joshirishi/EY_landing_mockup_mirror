@@ -62,3 +62,5 @@ A "laptop" visual metaphor where each M365 app icon on the dock jumps the user t
 - [[Pages/Phase1]] — navigates here from module card
 - [[Patterns/ModulePage]] — page shell
 - [[Components/ModuleHeader]] — tab navigation
+- [[Reference/source-map]] — M365 PPTX, screen recordings, agent-practices xlsx
+- `src/data/agent-best-practices.ts` — same mailer sheet as Phase 3 Quick Recall

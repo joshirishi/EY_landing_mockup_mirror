@@ -748,7 +748,23 @@ function TabCluster({
   activeSectionId: string | null;
   onSectionClick?: (sectionId: string) => void;
 }) {
-  const isApply = label.toLowerCase() === "apply";
+  const clusterLabelStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    flexShrink: 0,
+    fontFamily: fonts.bold,
+    fontSize: 13,
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
+    color: colors.offBlack,
+    background: colors.white,
+    border: `1px solid ${colors.gray02}`,
+    borderRadius: 999,
+    padding: "6px 14px",
+    lineHeight: 1.2,
+    marginBottom: 10,
+    boxShadow: "0 1px 2px rgba(26, 26, 36, 0.06)",
+  };
 
   return (
     <div
@@ -760,26 +776,7 @@ function TabCluster({
         flexShrink: 0,
       }}
     >
-      <span
-        aria-hidden="true"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          flexShrink: 0,
-          fontFamily: fonts.bold,
-          fontSize: 13,
-          letterSpacing: "0.06em",
-          textTransform: "uppercase",
-          color: colors.offBlack,
-          background: isApply ? colors.yellowAlpha12 : colors.white,
-          border: `1px solid ${isApply ? "rgba(255, 230, 0, 0.4)" : "rgba(46, 46, 56, 0.16)"}`,
-          borderRadius: 999,
-          padding: "6px 14px",
-          lineHeight: 1.2,
-          marginBottom: 10,
-          boxShadow: "0 1px 2px rgba(26, 26, 36, 0.06)",
-        }}
-      >
+      <span aria-hidden="true" style={clusterLabelStyle}>
         {label}
       </span>
       <div style={{ display: "flex", gap: 20, alignItems: "flex-end" }}>

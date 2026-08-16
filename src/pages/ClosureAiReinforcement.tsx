@@ -391,32 +391,6 @@ function RecogniseTheRisk() {
             onClose={() => setLightbox(null)}
           />
         )}
-
-        {/* Callout strip — verbatim from PDF slide 2: yellow left border, left=yellow bold, right=white regular */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ delay: 0.2, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            marginTop: 44,
-            background: colors.confidentBlack,
-            borderLeft: `4px solid ${colors.yellow}`,
-            borderRadius: 6,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 32,
-            padding: "24px 28px",
-            alignItems: "center",
-          }}
-        >
-          <p style={{ fontFamily: fonts.bold, fontSize: "clamp(14px, 1.4vw, 17px)", color: colors.yellow, margin: 0, lineHeight: 1.45 }}>
-            Professional risk begins when an AI output is accepted without examination.
-          </p>
-          <p style={{ fontFamily: fonts.regular, fontSize: "clamp(13px, 1.2vw, 15px)", color: colors.onDark, margin: 0, lineHeight: 1.55, textAlign: "center" }}>
-            When an AI error leaves the chat window, it can become a professional error.
-          </p>
-        </motion.div>
       </div>
     </section>
   );
@@ -1036,9 +1010,8 @@ function TheChecks() {
           Each check maps to a step in the Responsible AI Journey. Apply them throughout the task—not only at the end.
         </p>
 
-        {/* Accordion — Check 5 (n: "5") is kept in CHECKS_META but hidden for now. Restore: drop the filter. */}
-        <div role="list" aria-label="The seven checks" style={{ overflowAnchor: "none" }}>
-          {CHECKS_META.filter((check) => check.n !== "5").map((check, i) => {
+        <div role="list" aria-label="The five checks" style={{ overflowAnchor: "none" }}>
+          {CHECKS_META.map((check, i) => {
             const isOpen = openSet.has(i);
             return (
               <div
@@ -1552,7 +1525,6 @@ function GovernanceCompareCard({
   iconColor,
   titleBefore,
   titleEmph,
-  countLabel,
   items,
   leftCount,
   hierarchyRank,
@@ -1562,7 +1534,6 @@ function GovernanceCompareCard({
   iconColor: string;
   titleBefore: string;
   titleEmph: string;
-  countLabel: string;
   items: readonly string[];
   leftCount: number;
   hierarchyRank: 1 | 2;
@@ -1627,18 +1598,6 @@ function GovernanceCompareCard({
             <span style={{ fontFamily: fonts.bold, fontWeight: 700 }}>{titleEmph}</span>
           </h3>
         </div>
-        <p
-          style={{
-            fontFamily: fonts.bold,
-            fontSize: typeScale.caption.size,
-            letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase",
-            color: colors.gray01,
-            margin: 0,
-          }}
-        >
-          {countLabel}
-        </p>
         <div style={{ height: 1, background: colors.gray02 }} />
       </header>
       <GovernanceBulletCols items={items} leftCount={leftCount} Icon={Icon} iconColor={iconColor} />
@@ -1687,28 +1646,6 @@ function LeadWithGovernance() {
           </div>
         </div>
 
-        {/* Overall yes / no tally — scanable before reading every bullet */}
-        <div
-          aria-label="Overall outcomes"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 24,
-            marginBottom: 24,
-          }}
-        >
-          <p style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, fontFamily: fonts.regular, fontSize: 14, color: colors.offBlack }}>
-            <Check size={16} strokeWidth={1.75} color={colors.success} aria-hidden />
-            <span style={{ fontFamily: fonts.bold, fontWeight: 700 }}>{LEAD_GOVERNANCE_OUTCOMES.length}</span>
-            {" "}outcomes when organisations lead
-          </p>
-          <p style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, fontFamily: fonts.regular, fontSize: 14, color: colors.offBlack }}>
-            <X size={16} strokeWidth={1.75} color={colors.destructive} aria-hidden />
-            <span style={{ fontFamily: fonts.bold, fontWeight: 700 }}>{DONT_LEAD_GOVERNANCE_OUTCOMES.length}</span>
-            {" "}outcomes when they do not
-          </p>
-        </div>
-
         <div
           style={{
             display: "grid",
@@ -1723,7 +1660,6 @@ function LeadWithGovernance() {
             iconColor={colors.success}
             titleBefore="Organizations who"
             titleEmph="Lead with governance"
-            countLabel={`${LEAD_GOVERNANCE_OUTCOMES.length} outcomes`}
             items={LEAD_GOVERNANCE_OUTCOMES}
             leftCount={4}
             hierarchyRank={1}
@@ -1734,7 +1670,6 @@ function LeadWithGovernance() {
             iconColor={colors.destructive}
             titleBefore="Organizations who"
             titleEmph="Do not lead with governance"
-            countLabel={`${DONT_LEAD_GOVERNANCE_OUTCOMES.length} outcomes`}
             items={DONT_LEAD_GOVERNANCE_OUTCOMES}
             leftCount={3}
             hierarchyRank={2}

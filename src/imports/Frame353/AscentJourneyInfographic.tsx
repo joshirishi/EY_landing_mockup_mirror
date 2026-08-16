@@ -141,12 +141,12 @@ const CALLOUTS = [
 ] as const;
 
 const STAGE_NODES = [
-  { left: 359, top: 295, icon: ASSET.iconSearch, alt: "AI Tax Prompting" },
-  { left: 554, top: 260, icon: ASSET.iconCpu, alt: "M365 Copilot Hub" },
-  { left: 769, top: 240, icon: ASSET.iconTrendingUp, alt: "Brainstorming Use Cases" },
-  { left: 1018, top: 227, icon: ASSET.iconSearch, alt: "Guidance for Implementation" },
-  { left: 1164, top: 202, icon: ASSET.iconCpu, alt: "Closure & AI Reinforcement" },
-  { left: 1221, top: 94, icon: ASSET.iconShield, alt: "AI-enabled tax professional" },
+  { left: 359, top: 295, icon: ASSET.iconSearch, alt: "Laying the Foundation" },
+  { left: 554, top: 260, icon: ASSET.iconCpu, alt: "Discovering Opportunities" },
+  { left: 769, top: 240, icon: ASSET.iconTrendingUp, alt: "Building Solutions" },
+  { left: 1018, top: 227, icon: ASSET.iconSearch, alt: "Embedding Confidence" },
+  { left: 1164, top: 202, icon: ASSET.iconCpu, alt: "Embedding Confidence" },
+  { left: 1221, top: 94, icon: ASSET.iconShield, alt: "Peak Performance" },
 ] as const;
 
 /** Vertical gap between marker button bottom and its title label box. */
@@ -156,7 +156,6 @@ const TITLE_LABEL_GAP = 8;
 const ARTBOARD_SAFE = { left: 16, right: 16, top: 10, bottom: 10 } as const;
 const OVERLAY_MAX_BOTTOM = BANNER_TOP - 12;
 const CALLOUT_EST_HEIGHT = 100;
-const CTA_EST_HEIGHT = 52;
 const OVERLAY_GAP = 10;
 
 type BoxRect = { left: number; top: number; width: number; height: number };
@@ -436,18 +435,80 @@ function resolveCtaBox(desired: BoxRect, obstacles: BoxRect[]): BoxRect {
   return box;
 }
 
+const CTA_MARKER_GAP = 10;
+const CTA_MAX_WIDTH = 212;
+const CTA_MIN_HEIGHT = STAGE_MARKER_SIZE;
+const CTA_H_PAD = 16;
+const CTA_V_PAD = 8;
+const CTA_FONT_SIZE = 12;
+const CTA_CHAR_WIDTH = 7.35;
+const CTA_LINE_HEIGHT = 15;
+
+function estimateCtaDimensions(label: string): { width: number; height: number } {
+  const text = label.toUpperCase();
+  const width = CTA_MAX_WIDTH;
+  const innerWidth = width - CTA_H_PAD * 2 - 18;
+  const charsPerLine = Math.max(10, Math.floor(innerWidth / CTA_CHAR_WIDTH));
+  const lines = Math.max(1, Math.ceil(text.length / charsPerLine));
+  const height = Math.max(CTA_MIN_HEIGHT, CTA_V_PAD * 2 + lines * CTA_LINE_HEIGHT);
+  return { width, height };
+}
+
+/** Place continue CTA beside the next marker on one horizontal row. */
+function resolveInlineCtaBox(
+  marker: BoxRect,
+  ctaWidth: number,
+  ctaHeight: number,
+  obstacles: BoxRect[],
+): BoxRect {
+  const rowTop = marker.top + (marker.height - ctaHeight) / 2;
+  const baseLeft = marker.left + marker.width + CTA_MARKER_GAP;
+
+  for (let dx = 0; dx <= 240; dx += 12) {
+    const candidate = clampBox({
+      left: baseLeft + dx,
+      top: rowTop,
+      width: ctaWidth,
+      height: ctaHeight,
+    });
+    if (!obstacles.some((o) => boxesOverlap(candidate, o))) {
+      return candidate;
+    }
+  }
+
+  const leftOfMarker = clampBox({
+    left: marker.left - CTA_MARKER_GAP - ctaWidth,
+    top: rowTop,
+    width: ctaWidth,
+    height: ctaHeight,
+  });
+  if (!obstacles.some((o) => boxesOverlap(leftOfMarker, o))) {
+    return leftOfMarker;
+  }
+
+  return resolveCtaBox(
+    {
+      left: marker.left,
+      top: marker.top + marker.height + OVERLAY_GAP,
+      width: ctaWidth,
+      height: ctaHeight,
+    },
+    obstacles,
+  );
+}
+
 /**
  * Title labels sit below each marker and share the callout's left edge + width
  * so they stay horizontally aligned with that stage's thought-bubble callout.
  */
 const STAGE_TITLE_LABELS = [
-  { title: "Foundational Concepts", markerTop: 366, markerSize: 46, calloutIndex: 0 },
-  { title: "AI Tax Prompting", markerTop: 295, markerSize: 40, calloutIndex: 1 },
-  { title: "M365 Copilot Hub", markerTop: 260, markerSize: 40, calloutIndex: 2 },
-  { title: "Brainstorming Use Cases", markerTop: 240, markerSize: 40, calloutIndex: 3 },
-  { title: "Guidance for Implementation", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Closure & AI Reinforcement", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
-  { title: "AI-enabled tax professional", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
+  { title: "Base Camp", markerTop: 366, markerSize: 46, calloutIndex: 0 },
+  { title: "Laying the Foundation", markerTop: 295, markerSize: 40, calloutIndex: 1 },
+  { title: "Discovering Opportunities", markerTop: 260, markerSize: 40, calloutIndex: 2 },
+  { title: "Building Solutions", markerTop: 240, markerSize: 40, calloutIndex: 3 },
+  { title: "Embedding Confidence", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
+  { title: "Embedding Confidence", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
+  { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
 ] as const;
 
 /** null = hidden; 0 = module 1.1 callout … 6 = summit callout. */
@@ -839,8 +900,8 @@ function ModuleStartMarker({
       onClick={onClick}
       ariaLabel={
         advancesJourney
-          ? "Foundational Concepts — continue to the next module"
-          : "Foundational Concepts"
+          ? "Base Camp — continue to the next module"
+          : "Base Camp — start of journey"
       }
     >
       <div
@@ -1413,7 +1474,7 @@ function AscentCanvas({
 
         return (
           <StageTitleLabel
-            key={title}
+            key={`stage-title-${calloutIndex}`}
             title={title}
             left={labelBox.left}
             top={labelBox.top}
@@ -1475,7 +1536,7 @@ function AscentCanvas({
 
         return (
           <StageNode
-            key={node.alt}
+            key={`stage-node-${calloutIndex}`}
             {...node}
             isActive={markerState.isActive}
             isReached={markerState.isReached}
@@ -1486,36 +1547,25 @@ function AscentCanvas({
         );
       })}
 
-      {/* Continue CTA on the next trek step (or summit when path is complete) */}
+      {/* Continue CTA inline with the next trek marker */}
       {(() => {
         const ctaLabel = nextStepCtaLabel ?? lastNodeCtaLabel;
         const ctaHandler = onNextStepCta ?? onLastNodeCta;
         if (!ctaLabel || !ctaHandler) return null;
 
-        // Prefer the next unopened stage; fall back to summit when fully complete
         const targetIndex: CalloutIndex =
           ctaTargetCalloutIndex !== null ? ctaTargetCalloutIndex : 6;
-        const targetCallout = callouts[targetIndex];
-        const targetTitle = stageTitleLabels[targetIndex];
-        if (!targetCallout || !targetTitle) return null;
+        const markerBox = getMarkerBox(targetIndex, stageNodes);
+        if (!markerBox) return null;
 
-        const titleBox = getTitleLabelBox(targetTitle, targetCallout);
-        const ctaWidth = Math.max(titleBox.width + 40, 200);
+        const { width: ctaWidth, height: ctaHeight } = estimateCtaDimensions(ctaLabel);
         const obstacles = buildOpenOverlayObstacles(
           callouts,
           stageTitleLabels,
           openCallouts,
           openCalloutLayout,
         );
-        const ctaBox = resolveCtaBox(
-          {
-            left: titleBox.left - 20,
-            top: titleBox.top + titleBox.height + OVERLAY_GAP,
-            width: ctaWidth,
-            height: CTA_EST_HEIGHT,
-          },
-          obstacles,
-        );
+        const ctaBox = resolveInlineCtaBox(markerBox, ctaWidth, ctaHeight, obstacles);
 
         return (
           <>
@@ -1534,28 +1584,40 @@ function AscentCanvas({
                 left: ctaBox.left,
                 top: ctaBox.top,
                 width: ctaBox.width,
+                height: ctaBox.height,
                 zIndex: 20,
+                boxSizing: "border-box",
                 fontFamily: fonts.bold,
-                fontSize: 12,
+                fontSize: CTA_FONT_SIZE,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
                 background: colors.yellow,
                 color: colors.confidentBlack,
                 border: `2px solid ${colors.yellow}`,
                 borderRadius: 32,
-                padding: "12px 18px",
+                padding: `${CTA_V_PAD}px ${CTA_H_PAD}px`,
                 cursor: "pointer",
                 animation: "ascent-cta-pulse 2s ease-in-out infinite",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 8,
-                lineHeight: 1.25,
+                gap: 6,
+                lineHeight: `${CTA_LINE_HEIGHT}px`,
                 textAlign: "center",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
               }}
             >
-              <span>{ctaLabel}</span>
-              <span style={{ fontFamily: fonts.regular, fontSize: 16, lineHeight: 1 }} aria-hidden>
+              <span style={{ minWidth: 0, flex: "1 1 auto" }}>{ctaLabel}</span>
+              <span
+                style={{
+                  fontFamily: fonts.regular,
+                  fontSize: 16,
+                  lineHeight: 1,
+                  flexShrink: 0,
+                }}
+                aria-hidden
+              >
                 →
               </span>
             </button>

@@ -7,18 +7,31 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import {
   BookMarked,
   BookOpen,
+  Bot,
   ChevronLeft,
   ChevronRight,
+  Download,
+  FileText,
   Library,
   X,
 } from "lucide-react";
+import { AGENT_TEMPLATE_LIBRARY } from "@/data/agent-template-library";
 import {
   PROMPT_LIBRARY,
   PROMPT_LIBRARY_FILTERS,
+  PROMPT_LIBRARY_WHY_TYPE_FILTERS,
   type PromptLibraryCategory,
   type PromptLibraryEntry,
+  type PromptLibraryWhyType,
 } from "@/data/prompt-library";
 import { colors, fonts, spacing, typeScale } from "@/design-kit";
+
+type LibraryKind = "prompt" | "agent";
+
+const LIBRARY_TABS: { id: LibraryKind; label: string; icon: typeof FileText }[] = [
+  { id: "prompt", label: "Prompt Template Library", icon: FileText },
+  { id: "agent", label: "Agent Template Library", icon: Bot },
+];
 
 const CATEGORY_SPINE: Record<PromptLibraryCategory, string> = {
   Research: colors.frameBlue,
@@ -29,7 +42,61 @@ const CATEGORY_SPINE: Record<PromptLibraryCategory, string> = {
 
 const SPINE_HEIGHTS = [176, 192, 208, 224] as const;
 
-type FilterId = "all" | PromptLibraryCategory;
+type CategoryFilterId = "all" | PromptLibraryCategory;
+type WhyTypeFilterId = "all" | PromptLibraryWhyType;
+
+function matchesCategory(entry: PromptLibraryEntry, categoryFilter: CategoryFilterId) {
+  return categoryFilter === "all" || entry.category === categoryFilter;
+}
+
+function matchesWhyType(entry: PromptLibraryEntry, whyTypeFilter: WhyTypeFilterId) {
+  return whyTypeFilter === "all" || entry.capabilities.includes(whyTypeFilter);
+}
+
+/** Builds a plain-text pack from the open book so learners can download it. */
+function downloadPromptPack(entry: PromptLibraryEntry, kind: LibraryKind) {
+  const pages = entry.slides
+    .map((slide, i) => `${i + 1}. ${slide.title}\n${slide.sub}\n${slide.body}`)
+    .join("\n\n");
+  const text = `${entry.name}\n${entry.category}\n\n${pages}\n`;
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  const suffix = kind === "agent" ? "agent" : "prompt";
+  link.download = `${entry.name.replace(/[^\w]+/g, "-").toLowerCase()}-${suffix}.txt`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function filterChipStyle(isActive: boolean): CSSProperties {
+  return {
+    padding: "8px 16px",
+    borderRadius: 6,
+    border: `1px solid ${isActive ? colors.yellow : colors.borderOnDark}`,
+    background: isActive ? colors.yellowAlpha12 : colors.surfaceOnDark,
+    color: isActive ? colors.yellow : colors.onDarkMuted,
+    fontFamily: isActive ? fonts.bold : fonts.regular,
+    fontSize: typeScale.caption.size,
+    fontWeight: isActive ? 700 : 400,
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    transition: "border-color 150ms, background 150ms",
+  };
+}
+
+function filterCountStyle(isActive: boolean): CSSProperties {
+  return {
+    fontFamily: fonts.bold,
+    fontSize: 10,
+    padding: "1px 6px",
+    borderRadius: 10,
+    background: isActive ? colors.yellowAlpha10 : colors.borderOnDark,
+    color: isActive ? colors.confidentBlack : colors.onDarkSubtle,
+  };
+}
 
 function spineHeight(entry: PromptLibraryEntry) {
   return SPINE_HEIGHTS[entry.id % SPINE_HEIGHTS.length];
@@ -60,20 +127,72 @@ function shelfLipStyle(): CSSProperties {
 }
 
 export function PromptBookshelfLibrary() {
-  const [filter, setFilter] = useState<FilterId>("all");
+  const [libraryKind, setLibraryKind] = useState<LibraryKind>("prompt");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilterId>("all");
+  const [whyTypeFilter, setWhyTypeFilter] = useState<WhyTypeFilterId>("all");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [slide, setSlide] = useState(0);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
+  const catalog = libraryKind === "prompt" ? PROMPT_LIBRARY : AGENT_TEMPLATE_LIBRARY;
+  const activeLibrary = LIBRARY_TABS.find((tab) => tab.id === libraryKind) ?? LIBRARY_TABS[0];
+
+  const resetSelection = useCallback(() => {
+    setSelectedId(null);
+    setSlide(0);
+  }, []);
+
+  const switchLibrary = useCallback((kind: LibraryKind) => {
+    setLibraryKind(kind);
+    setCategoryFilter("all");
+    setWhyTypeFilter("all");
+    setSelectedId(null);
+    setSlide(0);
+  }, []);
+
   const filtered = useMemo(
     () =>
-      filter === "all"
-        ? PROMPT_LIBRARY
-        : PROMPT_LIBRARY.filter((p) => p.category === filter),
-    [filter],
+      catalog.filter(
+        (entry) =>
+          matchesCategory(entry, categoryFilter) &&
+          matchesWhyType(entry, whyTypeFilter),
+      ),
+    [catalog, categoryFilter, whyTypeFilter],
   );
+
+  const whyTypeFiltersWithCounts = useMemo(
+    () =>
+      PROMPT_LIBRARY_WHY_TYPE_FILTERS.map((f) => ({
+        ...f,
+        count:
+          f.id === "all"
+            ? catalog.filter((entry) => matchesCategory(entry, categoryFilter)).length
+            : catalog.filter(
+                (entry) =>
+                  entry.capabilities.includes(f.id) &&
+                  matchesCategory(entry, categoryFilter),
+              ).length,
+      })),
+    [catalog, categoryFilter],
+  );
+
+  const visibleWhyTypeFilters = useMemo(
+    () => whyTypeFiltersWithCounts.filter((f) => f.id === "all" || f.count > 0),
+    [whyTypeFiltersWithCounts],
+  );
+
+  useEffect(() => {
+    if (whyTypeFilter === "all") return;
+    const stillVisible = whyTypeFiltersWithCounts.some(
+      (f) => f.id === whyTypeFilter && f.count > 0,
+    );
+    if (!stillVisible) {
+      setWhyTypeFilter("all");
+      resetSelection();
+    }
+  }, [whyTypeFilter, whyTypeFiltersWithCounts, resetSelection]);
 
   const selected = useMemo(
     () => filtered.find((b) => b.id === selectedId) ?? null,
@@ -140,8 +259,17 @@ export function PromptBookshelfLibrary() {
     };
   }, [selected, closeReading]);
 
-  const activeFilterLabel =
-    PROMPT_LIBRARY_FILTERS.find((f) => f.id === filter)?.label ?? "All";
+  const activeCategoryLabel =
+    PROMPT_LIBRARY_FILTERS.find((f) => f.id === categoryFilter)?.label ?? "All";
+  const activeWhyTypeLabel =
+    PROMPT_LIBRARY_WHY_TYPE_FILTERS.find((f) => f.id === whyTypeFilter)?.label ?? "All types";
+
+  const filterSummary = useMemo(() => {
+    const parts: string[] = [];
+    if (categoryFilter !== "all") parts.push(activeCategoryLabel);
+    if (whyTypeFilter !== "all") parts.push(activeWhyTypeLabel);
+    return parts.length > 0 ? parts.join(" · ") : "full collection";
+  }, [activeCategoryLabel, activeWhyTypeLabel, categoryFilter, whyTypeFilter]);
 
   return (
     <div>
@@ -155,6 +283,39 @@ export function PromptBookshelfLibrary() {
           boxShadow: `0 12px 40px ${colors.onDarkSubtle}`,
         }}
       >
+        <div
+          role="tablist"
+          aria-label="Template libraries"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            marginBottom: 20,
+          }}
+        >
+          {LIBRARY_TABS.map((tab) => {
+            const isActive = libraryKind === tab.id;
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => switchLibrary(tab.id)}
+                style={{
+                  ...filterChipStyle(isActive),
+                  padding: "10px 16px",
+                  fontSize: typeScale.caption.size,
+                }}
+              >
+                <Icon size={14} strokeWidth={1.75} aria-hidden />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Library header */}
         <div
           style={{
@@ -196,7 +357,7 @@ export function PromptBookshelfLibrary() {
                   margin: 0,
                 }}
               >
-                Reference shelf
+                {activeLibrary.label}
               </p>
               <p
                 style={{
@@ -207,7 +368,8 @@ export function PromptBookshelfLibrary() {
                 }}
               >
                 {filtered.length} template{filtered.length === 1 ? "" : "s"}
-                {filter !== "all" ? ` · ${activeFilterLabel} section` : " · full collection"}
+                {" · "}
+                {filterSummary}
               </p>
             </div>
           </div>
@@ -221,70 +383,103 @@ export function PromptBookshelfLibrary() {
               lineHeight: 1.45,
             }}
           >
-            Click a spine to open the template. Use arrow keys to turn pages.
+            Click a spine to open it. Use arrow keys to turn pages.
           </p>
         </div>
 
         {/* Library section filters */}
-        <div
-          role="tablist"
-          aria-label="Library sections"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 8,
-            marginBottom: 24,
-          }}
-        >
-          {PROMPT_LIBRARY_FILTERS.map((f) => {
-            const isActive = filter === f.id;
-            const count =
-              f.id === "all"
-                ? PROMPT_LIBRARY.length
-                : PROMPT_LIBRARY.filter((p) => p.category === f.id).length;
-            return (
-              <button
-                key={f.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => {
-                  setFilter(f.id);
-                  setSelectedId(null);
-                  setSlide(0);
-                }}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: 6,
-                  border: `1px solid ${isActive ? colors.yellow : colors.borderOnDark}`,
-                  background: isActive ? colors.yellowAlpha12 : colors.surfaceOnDark,
-                  color: isActive ? colors.yellow : colors.onDarkMuted,
-                  fontFamily: isActive ? fonts.bold : fonts.regular,
-                  fontSize: typeScale.caption.size,
-                  fontWeight: isActive ? 700 : 400,
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  transition: "border-color 150ms, background 150ms",
-                }}
-              >
-                {f.label}
-                <span
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: 10,
-                    padding: "1px 6px",
-                    borderRadius: 10,
-                    background: isActive ? colors.yellowAlpha10 : colors.borderOnDark,
-                    color: isActive ? colors.confidentBlack : colors.onDarkSubtle,
+        <div style={{ marginBottom: 20 }}>
+          <p
+            style={{
+              fontFamily: fonts.bold,
+              fontSize: 10,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: colors.onDarkSubtle,
+              margin: "0 0 8px",
+            }}
+          >
+            Section
+          </p>
+          <div
+            role="tablist"
+            aria-label="Library sections"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+            }}
+          >
+            {PROMPT_LIBRARY_FILTERS.map((f) => {
+              const isActive = categoryFilter === f.id;
+              const count =
+                f.id === "all"
+                  ? catalog.filter((entry) => matchesWhyType(entry, whyTypeFilter)).length
+                  : catalog.filter(
+                      (entry) => entry.category === f.id && matchesWhyType(entry, whyTypeFilter),
+                    ).length;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => {
+                    setCategoryFilter(f.id);
+                    resetSelection();
                   }}
+                  style={filterChipStyle(isActive)}
                 >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+                  {f.label}
+                  <span style={filterCountStyle(isActive)}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 24 }}>
+          <p
+            style={{
+              fontFamily: fonts.bold,
+              fontSize: 10,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: colors.onDarkSubtle,
+              margin: "0 0 8px",
+            }}
+          >
+            Task type
+          </p>
+          <div
+            role="tablist"
+            aria-label="Task type filters"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+            }}
+          >
+            {visibleWhyTypeFilters.map((f) => {
+              const isActive = whyTypeFilter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => {
+                    setWhyTypeFilter(f.id);
+                    resetSelection();
+                  }}
+                  style={filterChipStyle(isActive)}
+                >
+                  {f.label}
+                  <span style={filterCountStyle(isActive)}>{f.count}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Single shelf — all books in one row, scroll on narrow viewports */}
@@ -298,7 +493,7 @@ export function PromptBookshelfLibrary() {
               margin: 0,
             }}
           >
-            No templates in this section
+            No templates match these filters
           </p>
         ) : (
           <div style={{ marginBottom: 8 }}>
@@ -483,7 +678,7 @@ export function PromptBookshelfLibrary() {
               flexDirection: "column",
               alignItems: "flex-end",
               gap: 12,
-              width: "min(92vw, 720px)",
+              width: "min(94vw, 880px)",
               maxHeight: "92vh",
               animation: "bookshelfModalIn 220ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
@@ -579,7 +774,7 @@ export function PromptBookshelfLibrary() {
                     margin: "4px 0 0",
                   }}
                 >
-                  {selected.category} · Template #{selected.id}
+                  {selected.category} · {libraryKind === "agent" ? "Agent" : "Template"} #{selected.id}
                 </p>
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -611,7 +806,7 @@ export function PromptBookshelfLibrary() {
               display: "flex",
               alignItems: "stretch",
               gap: 0,
-              minHeight: 240,
+              minHeight: 280,
             }}
           >
             {/* Left page margin — book gutter */}
@@ -623,8 +818,9 @@ export function PromptBookshelfLibrary() {
                 background: colors.offWhite,
                 borderRight: `1px solid ${colors.gray02}`,
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "center",
+                paddingTop: 32,
               }}
             >
               <BookMarked size={14} strokeWidth={1.75} color={colors.gray01} />
@@ -634,9 +830,9 @@ export function PromptBookshelfLibrary() {
               style={{
                 flex: 1,
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 gap: 12,
-                padding: "28px 16px",
+                padding: "24px 16px 32px",
               }}
             >
               <button
@@ -662,39 +858,28 @@ export function PromptBookshelfLibrary() {
                 <ChevronLeft size={20} strokeWidth={1.75} />
               </button>
 
-              <div style={{ flex: 1, textAlign: "center", padding: "0 8px" }}>
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontFamily: fonts.bold,
-                    fontSize: typeScale.label.size,
-                    letterSpacing: typeScale.label.tracking,
-                    textTransform: "uppercase",
-                    color: colors.eyebrowGoldDark,
-                    marginBottom: 10,
-                  }}
-                >
-                  {selected.slides[slide].sub}
-                </span>
+              <div style={{ flex: 1, textAlign: "left", padding: "0 8px", minWidth: 0 }}>
                 <h4
                   style={{
                     fontFamily: fonts.bold,
-                    fontSize: "clamp(20px, 2.5vw, 28px)",
+                    fontSize: "clamp(16px, 2vw, 22px)",
                     color: colors.confidentBlack,
-                    margin: "0 0 12px",
+                    margin: "0 0 16px",
                     letterSpacing: typeScale.h2.tracking,
+                    lineHeight: 1.3,
                   }}
                 >
-                  {selected.slides[slide].title}
+                  {selected.slides[slide].sub}
                 </h4>
                 <p
                   style={{
                     fontFamily: fonts.regular,
                     fontSize: typeScale.body.size,
                     color: colors.gray01,
-                    lineHeight: 1.6,
-                    margin: "0 auto",
-                    maxWidth: 560,
+                    lineHeight: 1.65,
+                    margin: 0,
+                    maxWidth: "100%",
+                    whiteSpace: "pre-wrap",
                   }}
                 >
                   {selected.slides[slide].body}
@@ -776,16 +961,38 @@ export function PromptBookshelfLibrary() {
                 </button>
               ))}
             </div>
-            <p
-              style={{
-                fontFamily: fonts.regular,
-                fontSize: typeScale.caption.size,
-                color: colors.gray01,
-                margin: 0,
-              }}
-            >
-              Page {slide + 1} of {selected.slides.length}
-            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <p
+                style={{
+                  fontFamily: fonts.regular,
+                  fontSize: typeScale.caption.size,
+                  color: colors.gray01,
+                  margin: 0,
+                }}
+              >
+                Page {slide + 1} of {selected.slides.length}
+              </p>
+              <button
+                type="button"
+                onClick={() => downloadPromptPack(selected, libraryKind)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontFamily: fonts.bold,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: colors.confidentBlack,
+                  background: colors.yellow,
+                  border: "none",
+                  borderRadius: 6,
+                  padding: "8px 14px",
+                  cursor: "pointer",
+                }}
+              >
+                <Download size={14} strokeWidth={1.75} aria-hidden /> Download
+              </button>
+            </div>
           </div>
             </div>
           </div>

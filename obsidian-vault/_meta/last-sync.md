@@ -1,27 +1,29 @@
 ---
 type: meta
-last-updated: 2026-07-31T00:00:00Z
+last-updated: 2026-08-17T00:00:00Z
 ---
 
 # Last Sync
 
-Full vault build: **2026-07-31**
+Full vault update: **2026-08-17** (Kavi collect + `reference/` source map)
 
 ## Changes in this rebuild
 
-Vault migrated from standalone `EY_TaxLabs_Vault/` into repo at `obsidian-vault/`. Added:
-- `Components/` — 9 component notes (EYButton, EYCard, EYFrame, EYTypography, SiteHeader, ModuleHeader, EYWhatsNext, EYNavbar, EYFooter, EYLogo)
-- `Pages/` — 8 page notes (Home, PhasedEngagement, Phase1, FoundationalConcepts, AiTaxPrompting, M365CopilotHub, BrainstormingUseCases, GuidanceImplementation)
-- `Patterns/` — 8 pattern notes (ModulePage, SurfaceRhythm, ContentRail, HtmlLesson, SectionNav, AccordionComparison, SpectrumFrame, Icons)
-- `Skills/index.md` — skills directory
+- Ran `npx analyzthis_design collect --target all` → 32 notes in `~/.analyzthis_design/vaults/ey-landing-mockup-42dcb242`, 113 notes synced to host knowledge banks.
+- Documented `reference/` inventory and interconnections in the **project** vault (`obsidian-vault/`).
+- New notes: `Reference/index.md`, `Reference/source-map.md`.
+- Updated HTML prototype paths, Phase 2/3 content notes, and Phase 2/3 page notes so the two bookshelf libraries and missing xlsx files are explicit.
 
 ## Sources consumed
 
-- `src/DESIGN.md` — canonical design reference
-- `src/design-kit/tokens.ts` — design tokens
-- `src/design-kit/index.ts` — component exports
-- `src/design-kit/EYButton.tsx`, `EYCard.tsx`, `SiteHeader.tsx` — component source
-- `src/design-kit/LearningNav.tsx` — ModuleHeader source
-- `src/design-kit/curriculum.ts` — module map
-- `src/app/routes.tsx` — route config
-- `reference/PDFs/ACFrOg...==.pdf` — Phase 2 workshop content (9 slides)
+- `reference/` folder listing (html, PDF, PPTX, xlsx, HILT, images, Echo dumps)
+- `src/data/prompt-library.ts`
+- `src/data/agent-template-library.ts`
+- `src/data/agent-best-practices.ts`
+- `src/components/PromptBookshelfLibrary.tsx`
+- `src/components/HitlUnderstandModal.tsx`
+- Existing vault Content/ and Pages/ notes
+
+## Collect CLI vault (separate from this folder)
+
+`/Users/rishikeshjoshi/.analyzthis_design/vaults/ey-landing-mockup-42dcb242`

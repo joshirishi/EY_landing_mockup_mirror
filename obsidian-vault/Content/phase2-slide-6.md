@@ -12,6 +12,8 @@ tags: [phase2, slide, agent-examples, m365-agents]
 **Section:** GUIDED EXAMPLES  
 **Subtitle:** Purpose, actions and outcome as summarised in Sheet1 of Sample use cases.xlsx. Agents are reusable assistants for clearly defined business scenarios.
 
+> **File status:** `Sample use cases.xlsx` is **not** in `reference/`. Same 9 agents now ship as the **Agent Template Library** (`src/data/agent-template-library.ts`) on the shared bookshelf. See [[Reference/source-map]].
+
 ---
 
 ## M365 Agent Examples

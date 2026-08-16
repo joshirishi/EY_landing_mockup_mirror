@@ -1,7 +1,7 @@
 ---
 type: reference
 source-file: README.md
-last-updated: 2026-07-30T00:00:00Z
+last-updated: 2026-08-17T00:00:00Z
 tags: [reference, html, prototypes, blueprint]
 ---
 
@@ -30,10 +30,12 @@ These are what the app actually loads:
 - `src/imports/Foundational_Concepts.html` — active lesson for Module 1
 - `src/imports/AiTaxPrompting.html` — active lesson for Module 2
 
-## Reference PDFs
+## Reference PDFs and later sources
 
 | File | Contents |
 |------|----------|
-| `reference/PDFs/ACFrOg...==.pdf` | Phase 2 — Tax AI Discovery & Opportunity Design (9 slides) |
+| `reference/PDFs/ACFrOg...==.pdf` | Phase 2 — Tax AI Discovery (9 slides). Path may be stale. |
+| `reference/PDF/phase3.pdf` | Phase 3 — Guidance for Implementation (current file) |
 
-See [[Content/phase2-workshop]] for full Phase 2 PDF content.
+See [[Content/phase2-workshop]] and [[Content/phase3-guidance]].  
+For decks, xlsx, HITL art, and the two bookshelf libraries see [[Reference/source-map]] and [[Reference/index]].

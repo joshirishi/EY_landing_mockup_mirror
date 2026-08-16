@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle } from "lucide-react";
+import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
 import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
 import {
   EMPTY_USE_CASE_DRAFTS,
@@ -23,11 +24,10 @@ import heroImg from "../assets/images/GettyImages-2212662948.jpg";
 const PHASE2_SECTIONS = [
   { id: "quick-recall", label: "Quick Recall", group: "learn" as const },
   { id: "problem-first", label: "Problem First", group: "learn" as const },
-  { id: "your-use-cases", label: "Your Use Cases", group: "learn" as const },
   { id: "guided-examples", label: "Prompt Examples", group: "learn" as const },
   { id: "workshop-library", label: "Library", group: "learn" as const },
+  { id: "your-use-cases", label: "Your Use Cases", group: "apply" as const },
   { id: "deliverables", label: "Outputs", group: "apply" as const },
-  { id: "next-steps", label: "What's Next", group: "apply" as const },
 ];
 
 // ── Quick Recall data — verbatim from PDF slide 2 ────────────────────────────
@@ -186,25 +186,12 @@ function ProblemFirstSection() {
 
       <div style={{ ...contentRailStyle }}>
 
-        {/* Eyebrow + heading + progress */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }}>
-          <p style={{
-            fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase", color: colors.eyebrowGold, margin: 0,
-          }}>
-            Problem First
-          </p>
-          {!promptVisible && (
-            <span style={{
-              fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em",
-              color: colors.gray01, background: colors.offWhite,
-              border: `1px solid ${colors.gray02}`,
-              borderRadius: 20, padding: "3px 12px",
-            }}>
-              {revealed} of {PROBLEM_STEPS.length}
-            </span>
-          )}
-        </div>
+        <p style={{
+          fontFamily: fonts.bold, fontSize: typeScale.label.size, letterSpacing: typeScale.label.tracking,
+          textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 8px",
+        }}>
+          Problem First
+        </p>
 
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <h2 style={{
@@ -813,10 +800,7 @@ function GuidedExamplesSection() {
   );
 }
 
-// ── Workshop Library — placeholder until Gmail-shared assets are integrated ───
-// Expected: browsable library of Prompt and No-code Agent templates (distinct
-// organisation from the guided example tiles above). Mirror Phase 3 Reference
-// Library patterns (sidebar categories, preview/download) once content arrives.
+// ── Workshop Library — browsable prompt template shelf ───────────────────────
 function WorkshopLibrarySection() {
   return (
     <section
@@ -838,7 +822,7 @@ function WorkshopLibrarySection() {
             color: colors.eyebrowGold,
             margin: "0 0 12px",
           }}>
-            Workshop Library
+            Reference Libraries
           </p>
           <h2 style={{
             fontFamily: fonts.bold,
@@ -848,11 +832,11 @@ function WorkshopLibrarySection() {
             letterSpacing: "-0.02em",
             lineHeight: 1.1,
           }}>
-            Prompt &amp; Agent Template Library
+            Workshop Reference Library
           </h2>
           <p style={{
             fontFamily: fonts.regular,
-            fontSize: "clamp(13px, 1.4vw, 15px)",
+            fontSize: typeScale.body.size,
             color: colors.gray01,
             margin: 0,
             lineHeight: 1.5,
@@ -860,46 +844,11 @@ function WorkshopLibrarySection() {
             marginLeft: "auto",
             marginRight: "auto",
           }}>
-            Full library content is coming next — sourced from the Gmail-shared workshop pack
-            (Sample use cases.xlsx and template screenshots).
+            Switch between the Prompt Template Library and the Agent Template Library, then open a book on the shelf.
           </p>
         </div>
 
-        <div style={{
-          border: "1.5px dashed rgba(46,46,56,0.18)",
-          borderRadius: 10,
-          background: colors.white,
-          padding: "clamp(32px, 4vw, 48px)",
-          textAlign: "center",
-          minHeight: 240,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 12,
-        }}>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: 11,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: colors.eyebrowGoldDark,
-            margin: 0,
-          }}>
-            Library placeholder
-          </p>
-          <p style={{
-            fontFamily: fonts.regular,
-            fontSize: 14,
-            color: colors.gray01,
-            margin: 0,
-            lineHeight: 1.6,
-            maxWidth: 480,
-            fontStyle: "italic",
-          }}>
-            Browse, preview and download templates will appear here once the shared library assets are integrated.
-          </p>
-        </div>
+        <PromptBookshelfLibrary />
       </div>
     </section>
   );
@@ -1131,7 +1080,6 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
       {/* What's Next — Journey Map */}
       <AscentModuleProgressSection
         moduleKey="m2"
-        id="next-steps"
         onNextStepCta={() => onNavigate("/guidance-implementation")}
       />
     </>
@@ -1164,10 +1112,17 @@ function PlaceholderSection({ id, label }: { id: string; label: string }) {
 function QuickRecallSection() {
   const [agentsRevealed, setAgentsRevealed] = useState(false);
   const [btnDissolving, setBtnDissolving] = useState(false);
+  const [proCodeRevealed, setProCodeRevealed] = useState(false);
+  const [proCodeBtnDissolving, setProCodeBtnDissolving] = useState(false);
 
   const reveal = () => {
     setBtnDissolving(true);
     setTimeout(() => setAgentsRevealed(true), 280);
+  };
+
+  const revealProCode = () => {
+    setProCodeBtnDissolving(true);
+    setTimeout(() => setProCodeRevealed(true), 280);
   };
 
   const cardBase: React.CSSProperties = {
@@ -1438,7 +1393,72 @@ function QuickRecallSection() {
             </div>
           )}
 
-          {/* ── Pro Code card — third Quick Recall pillar (Echo 46140b32) ── */}
+          {/* ── Pro Code card: ghost/locked → revealed ── */}
+          {!proCodeRevealed ? (
+            <div
+              style={{
+                ...cardBase,
+                borderTop: `3px solid ${colors.gray02}`,
+                border: `1px dashed ${colors.gray02}`,
+                borderTopStyle: "solid",
+                borderTopWidth: 3,
+                borderTopColor: colors.gray02,
+                background: colors.offWhite,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 16,
+                animation: proCodeBtnDissolving
+                  ? "ey-fade-dissolve 280ms cubic-bezier(.4,0,.2,1) both"
+                  : "ey-slide-up 420ms cubic-bezier(.22,.68,0,1.05) 120ms both",
+                minHeight: 200,
+              }}
+            >
+              <div style={{
+                width: 44, height: 44, borderRadius: "50%",
+                background: colors.white, border: `1px solid ${colors.gray02}`,
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+              }}>
+                <Lock size={20} color={colors.gray01} strokeWidth={1.75} aria-hidden="true" />
+              </div>
+
+              <div style={{ textAlign: "center" }}>
+                <span style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 11,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: colors.gray01,
+                  background: colors.gray02,
+                  borderRadius: 4,
+                  padding: "3px 10px",
+                  display: "inline-block",
+                  marginBottom: 8,
+                }}>
+                  Pro Code
+                </span>
+                <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, margin: 0 }}>
+                  Developer-built solutions for complex, scalable tax workflows
+                </p>
+              </div>
+
+              <button
+                onClick={revealProCode}
+                style={{
+                  fontFamily: fonts.bold, fontSize: 13,
+                  color: colors.confidentBlack, background: colors.yellow,
+                  border: "none", borderRadius: 24, padding: "10px 24px",
+                  cursor: "pointer", letterSpacing: "-0.01em",
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  boxShadow: "0 2px 12px rgba(255,230,0,0.35)",
+                }}
+              >
+                Reveal Pro Code
+                <ArrowRight size={15} aria-hidden="true" />
+              </button>
+            </div>
+          ) : (
           <div
             className="ey-recall-procode"
             style={{
@@ -1497,6 +1517,7 @@ function QuickRecallSection() {
               ))}
             </ul>
           </div>
+          )}
         </div>
 
         {/* Post-reveal summary — verbatim from PDF slide 2 */}
@@ -1627,7 +1648,7 @@ function HeroSection() {
   );
 }
 
-// ── Hero context — challenge + FROM→TO (separated from dark hero per pattern) ─
+// ── Hero context — FROM→TO (separated from dark hero per pattern) ─────────────
 function HeroContextSection() {
   return (
     <section
@@ -1638,38 +1659,6 @@ function HeroContextSection() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-
-        {/* Challenge card — light-theme */}
-        <div style={{
-          background: colors.offWhite,
-          border: `1px solid ${colors.gray02}`,
-          borderTop: `3px solid ${colors.yellow}`,
-          borderRadius: 10,
-          padding: "clamp(20px, 3vw, 32px)",
-          marginBottom: 32,
-        }}>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: typeScale.label.size,
-            letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase",
-            color: colors.eyebrowGold,
-            margin: "0 0 12px",
-          }}>
-            Today's Challenge
-          </p>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(16px, 2vw, 22px)",
-            color: colors.offBlack,
-            margin: 0,
-            lineHeight: 1.4,
-            letterSpacing: "-0.01em",
-          }}>
-            Which activities consume time, create friction, or depend heavily on repeated
-            searching, reviewing, drafting, coordination or follow-up?
-          </p>
-        </div>
 
         {/* FROM → TO orientation strip */}
         <div style={{
@@ -1791,11 +1780,11 @@ export default function BrainstormingUseCases({
 
         <ProblemFirstSection />
 
-        <UseCaseBucketsSection />
-
         <GuidedExamplesSection />
 
         <WorkshopLibrarySection />
+
+        <UseCaseBucketsSection />
 
         <DeliverablesSection onNavigate={onNavigate} />
 

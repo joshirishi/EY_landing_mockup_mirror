@@ -9,7 +9,7 @@ metadata:
 
 **Route:** `/guidance-implementation`  
 **Component:** `src/pages/GuidanceImplementation.tsx`  
-**PDF source:** `reference/PDFs/ACFrOgBcEOY38Vo...==.pdf` (8 slides)
+**PDF source:** `reference/PDF/phase3.pdf` (current). Older notes cited `reference/PDFs/ACFrOgBcEOY38Vo...==.pdf`.
 
 ---
 
@@ -43,15 +43,14 @@ metadata:
 - Golden Rule: "AI assists. Tax professionals decide."
 - **Interaction:** whileInView stagger (delay 0.12s per step) + scale pulse on step 04 (delay 0.7s, scale 1→1.04→1)
 
-### Panel 5 — Workshop Reference Library (Slide 6)
-- Note: "Use the programme handouts for detailed templates; use this slide as the build menu."
-- Compare & Assess Prompts: Calendar Year vs Financial Year · New Regime vs Old Regime · Global vs Local Policy Review
-- Review & Recommend Prompts: Tax Exposure Assessment · Process Gap Assessment · Shared Service Cost Allocation Review
-- Analyse & Detect Prompts: Outlier Detection · Tax-Sensitive GL Review · Predictive Tax Analytics
-- Appendix A refs: Master Prompt Template · Comparative Assessment Prompt · Risk Assessment Prompt · Data Analysis Prompt
+### Panel 5 — Workshop Reference Library (live shelf, not the old slide menu)
+- One bookshelf, two catalogs — see [[Reference/source-map]]
+- **Prompt Template Library** — 21 books from `reference/3.1 - Sample Prompt Templates_Priya.pptx` → `src/data/prompt-library.ts`
+- **Agent Template Library** — 9 books (purpose / actions / outcome) from Sheet1 of `Sample use cases.xlsx` (**file absent**) → `src/data/agent-template-library.ts` · [[Content/phase2-slide-6]]
+- UI: `PromptBookshelfLibrary` on `#p5-templates`
 
-### Panel 6 — Agent Library + Closing (Slides 7+8)
-- 7 agents: Tax Information Request · Transfer Pricing Documentation · Assessment & Litigation Evidence · Tax Knowledge Retrieval · Compliance Calendar · Tax Leadership Reporting · Tax Communication & Correspondence
+### Panel 6 — Agent Library + Closing (Slides 7+8) — hidden
+- Same 9 agents as the Agent Template Library (`SHOW_P3_AGENT_TEMPLATES = false`)
 - You now have: Identified tax AI opportunities · Built prompt templates · Designed AI-enabled processes · Built Copilot Agent instructions
 - Closing: "Controlled deployment, user adoption and continuous refinement of the Tax AI operating model."
 

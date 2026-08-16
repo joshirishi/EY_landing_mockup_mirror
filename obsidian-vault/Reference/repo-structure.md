@@ -1,7 +1,7 @@
 ---
 type: reference
 source-file: README.md
-last-updated: 2026-07-30T00:00:00Z
+last-updated: 2026-08-17T00:00:00Z
 tags: [repo, structure, tech-stack]
 ---
 
@@ -41,9 +41,12 @@ Path alias: `@/` → `src/`
 | `src/styles/` | Global CSS — theme vars, fonts, Tailwind entry |
 | `public/` | Static files — fonts, pipeline SVGs, lesson images |
 | `docs/` | Product docs, content briefs, plans |
-| `reference/` | Original HTML/CSS prototypes (not part of running app) |
+| `reference/` | Workshop originals — decks, xlsx, HTML, HITL art (not the running app) |
 | `reference/html/` | Reference HTML prototypes — product blueprint |
-| `reference/PDFs/` | Workshop content PDFs |
+| `reference/PDF/` | Current Phase 3 PDF (`phase3.pdf`) |
+| `src/data/prompt-library.ts` | Priya PPT → Prompt Template Library |
+| `src/data/agent-template-library.ts` | 9 M365 agent examples → Agent Template Library |
+| `src/data/agent-best-practices.ts` | Agent Best Practices xlsx → Quick Recall + Copilot Hub |
 | `skills/` | Agent skills for design/implementation workflows |
 
 ## Key Files
@@ -64,5 +67,6 @@ pnpm dev       # starts at http://localhost:5173
 pnpm build     # output to dist/
 ```
 
+See [[Reference/index]] and [[Reference/source-map]] for the full `reference/` graph.
 See [[Reference/html-prototypes]] for reference HTML files.
 See [[Design/design-system]] for design tokens.

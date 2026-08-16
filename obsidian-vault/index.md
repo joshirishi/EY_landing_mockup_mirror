@@ -1,13 +1,13 @@
 ---
 type: vault-index
-last-updated: 2026-07-31T00:00:00Z
+last-updated: 2026-08-17T00:00:00Z
 tags: [index, vault, ey-tax-labs]
 ---
 
 # EY.ai Tax Labs — Knowledge Vault
 
 Reference vault for the EY India AI Tax Hub learning platform. Lives in `obsidian-vault/` inside the repo.
-Last full build: 2026-07-31
+Last full build: 2026-08-17
 
 ## Product in one line
 
@@ -87,6 +87,8 @@ Last full build: 2026-07-31
 
 | Note | Contents |
 |------|----------|
+| [[Reference/index]] | Full `reference/` folder inventory |
+| [[Reference/source-map]] | How each reference file connects to live data and pages |
 | [[Reference/repo-structure]] | File paths, tech stack, how to run |
 | [[Reference/html-prototypes]] | Reference HTML files and their live counterparts |
 | [[Reference/what-we-are-building]] | Product intent and principles |
