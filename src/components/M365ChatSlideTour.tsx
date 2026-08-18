@@ -509,7 +509,7 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
         {/* Main settings panel */}
         <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "16px 32px 24px", overflow: "hidden" }}>
           {/* Top bar */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
             <span
               data-tour-id="work-iq"
               style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 999, border: "1px solid #d0d0d0", fontFamily: F.regular, fontSize: 12, color: "#1f1f1f", background: C.white }}
@@ -520,24 +520,51 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
                 <span style={{ position: "absolute", right: 2, top: 2, width: 12, height: 12, borderRadius: 999, background: C.white }} />
               </span>
             </span>
-            <span
-              data-tour-id="auto-model"
-              style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 999, border: "1px solid #d0d0d0", fontFamily: F.regular, fontSize: 12, color: "#1f1f1f" }}
-            >
-              Auto <ChevronDown size={12} strokeWidth={1.5} color="#616161" />
-            </span>
-            {/* Model picker inline */}
-            <div style={{ display: "flex", gap: 4, padding: "3px 8px", borderRadius: 8, background: "#f5f5f5", border: "1px solid #e0e0e0" }}>
-              {[
-                { label: "Auto", active: true },
-                { label: "GPT Quick", active: false },
-                { label: "GPT Advanced", active: false },
-                { label: "Claude Opus", active: false },
-              ].map(m => (
-                <span key={m.label} style={{ padding: "3px 8px", borderRadius: 5, background: m.active ? C.white : "transparent", border: m.active ? "1px solid #d0d0d0" : "1px solid transparent", fontFamily: F.regular, fontSize: 10, color: m.active ? "#1f1f1f" : "#757575", whiteSpace: "nowrap" }}>
-                  {m.label}
-                </span>
-              ))}
+            {/* Auto pill + open dropdown grouped together as one target */}
+            <div data-tour-id="auto-model" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 999, border: "1px solid #d0d0d0", fontFamily: F.regular, fontSize: 12, color: "#1f1f1f", alignSelf: "flex-start" }}>
+                Auto <ChevronDown size={12} strokeWidth={1.5} color="#616161" />
+              </span>
+              {/* Dropdown panels — shown open, matching real M365 UI */}
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginTop: 2 }}>
+                {/* Primary dropdown card */}
+                <div style={{ width: 200, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 13px", borderBottom: "1px solid #f0f0f0" }}>
+                    <span style={{ fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: "#1f1f1f" }}>Auto</span>
+                    <ChevronDown size={13} strokeWidth={1.5} color="#616161" />
+                  </div>
+                  {[
+                    { label: "Auto", sub: "Decides how long to think", checked: true },
+                    { label: "Quick response", sub: "Answers right away", checked: false },
+                    { label: "Think deeper", sub: "Think longer for better answers", checked: false },
+                  ].map(opt => (
+                    <div key={opt.label} style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "8px 13px", borderBottom: "1px solid #f5f5f5" }}>
+                      <span style={{ width: 14, height: 14, marginTop: 2, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {opt.checked && <Check size={12} strokeWidth={2.5} color="#1f1f1f" />}
+                      </span>
+                      <div>
+                        <div style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 600, color: "#1f1f1f" }}>{opt.label}</div>
+                        <div style={{ fontFamily: F.regular, fontSize: 10, color: "#757575", marginTop: 1 }}>{opt.sub}</div>
+                      </div>
+                    </div>
+                  ))}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 13px", background: "#f7f0fd" }}>
+                    <div>
+                      <div style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 600, color: "#1f1f1f" }}>GPT</div>
+                      <div style={{ fontFamily: F.regular, fontSize: 10, color: "#757575" }}>OpenAI</div>
+                    </div>
+                    <ChevronRight size={13} strokeWidth={1.5} color="#616161" />
+                  </div>
+                </div>
+                {/* GPT sub-menu */}
+                <div style={{ width: 180, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
+                  {["GPT 5.6 Think deeper", "GPT 5.6 Quick response", "GPT 5.5 Quick response"].map((label, i) => (
+                    <div key={label} style={{ padding: "10px 14px", fontFamily: F.regular, fontSize: 11, color: "#1f1f1f", borderBottom: i < 2 ? "1px solid #f5f5f5" : "none" }}>
+                      {label}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -724,11 +751,15 @@ function CalloutBox({
   active,
   stepNum,
   frame,
+  onNext,
+  isLast,
 }: {
   callout: Callout;
   active: boolean;
   stepNum: number;
   frame: HTMLDivElement | null;
+  onNext: () => void;
+  isLast: boolean;
 }) {
   const Icon = callout.icon;
   const [rect, setRect] = useState<CalloutRect | null>(null);
@@ -785,6 +816,18 @@ function CalloutBox({
             <p style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, margin: 0, lineHeight: 1.5 }}>{callout.body}</p>
           </div>
         </div>
+        {/* Inline next button */}
+        {!isLast && (
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+            <button
+              type="button"
+              onClick={onNext}
+              style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 12px", borderRadius: 999, border: "none", background: C.yellow, color: C.dark2, fontFamily: F.bold, fontSize: 11, fontWeight: 700, cursor: "pointer" }}
+            >
+              Next <ChevronRight size={13} strokeWidth={2} />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -814,26 +857,38 @@ export function M365ChatSlideTour() {
   const slide = CHAT_TOUR_SLIDES[slideIndex];
   const totalSlides = CHAT_TOUR_SLIDES.length;
   const totalCallouts = slide.callouts.length;
-  const isFirstCallout = calloutIndex === 0;
-  const isLastCallout = calloutIndex === totalCallouts - 1;
+  const safeCalloutIndex = Math.min(calloutIndex, totalCallouts - 1);
+  const isFirstCallout = safeCalloutIndex === 0;
+  const isLastCallout = safeCalloutIndex === totalCallouts - 1;
   const isFirstSlide = slideIndex === 0;
   const isLastSlide = slideIndex === totalSlides - 1;
   const tourComplete = isLastSlide && isLastCallout;
 
   const goNext = useCallback(() => {
-    if (!isLastCallout) { setCalloutIndex(i => i + 1); return; }
-    if (!isLastSlide) { setSlideIndex(s => s + 1); setCalloutIndex(0); setFrameEl(null); }
-  }, [isLastCallout, isLastSlide]);
+    setCalloutIndex(prev => {
+      if (prev < totalCallouts - 1) return prev + 1;
+      // Last callout — advance to next slide
+      if (!isLastSlide) {
+        setSlideIndex(s => s + 1);
+        setFrameEl(null);
+        return 0;
+      }
+      return prev; // tour complete — stay put
+    });
+  }, [totalCallouts, isLastSlide]);
 
   const goPrev = useCallback(() => {
-    if (!isFirstCallout) { setCalloutIndex(i => i - 1); return; }
-    if (!isFirstSlide) {
-      const prev = slideIndex - 1;
-      setSlideIndex(prev);
-      setCalloutIndex(CHAT_TOUR_SLIDES[prev].callouts.length - 1);
-      setFrameEl(null);
-    }
-  }, [isFirstCallout, isFirstSlide, slideIndex]);
+    setCalloutIndex(prev => {
+      if (prev > 0) return prev - 1;
+      if (!isFirstSlide) {
+        const prevSlide = slideIndex - 1;
+        setSlideIndex(prevSlide);
+        setFrameEl(null);
+        return CHAT_TOUR_SLIDES[prevSlide].callouts.length - 1;
+      }
+      return 0;
+    });
+  }, [isFirstSlide, slideIndex]);
 
   const restart = useCallback(() => {
     setSlideIndex(0); setCalloutIndex(0); setFrameEl(null);
@@ -863,7 +918,7 @@ export function M365ChatSlideTour() {
             {slide.label}
           </span>
           <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>
-            Step {calloutIndex + 1} of {totalCallouts}
+            Step {safeCalloutIndex + 1} of {totalCallouts}
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }} aria-hidden>
@@ -880,7 +935,7 @@ export function M365ChatSlideTour() {
         {slideIndex === 2 && <ChatTourCanvas frameRef={frameRefCb} />}
 
         {slide.callouts.map((c, i) => (
-          <CalloutBox key={`${slideIndex}-${c.target}`} callout={c} active={i === calloutIndex} stepNum={i + 1} frame={frameEl} />
+          <CalloutBox key={`${slideIndex}-${c.target}`} callout={c} active={i === safeCalloutIndex} stepNum={i + 1} frame={frameEl} onNext={goNext} isLast={tourComplete || (i === totalCallouts - 1 && isLastSlide)} />
         ))}
       </div>
 
