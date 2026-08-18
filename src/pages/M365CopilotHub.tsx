@@ -1037,7 +1037,7 @@ function MsRibbon({ tabId }: { tabId: TabId }) {
           }}>{tab}</span>
         ))}
         <span style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 8px" }}>
-          <Sparkles size={13} strokeWidth={1.75} color={accent} aria-hidden />
+          <img src="/pipeline/copilot-icon.svg" alt="" width={13} height={13} style={{ objectFit: "contain", display: "block" }} />
           <span style={{ fontFamily: F.bold, fontSize: 11, color: accent }}>Copilot</span>
         </span>
       </div>
@@ -1529,7 +1529,7 @@ function TeamsWorkspace() {
     { icon: Video },
   ];
   const people = [
-    { initials: "PN", name: "Priyadharshini N" },
+    { initials: "PR", name: "Presenter" },
     { initials: "RK", name: "Reviewer" },
     { initials: "AM", name: "Organiser" },
     { initials: "EY", name: "You" },
