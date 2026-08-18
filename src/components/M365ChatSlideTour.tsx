@@ -5,6 +5,7 @@ import {
   BarChart3,
   BookOpen,
   Bot,
+  Brain,
   Check,
   ChevronDown,
   ChevronRight,
@@ -22,7 +23,9 @@ import {
   Pin,
   Plus,
   Rocket,
+  Save,
   Search,
+  Settings,
   Sparkles,
   X,
 } from "lucide-react";
@@ -96,6 +99,30 @@ type Slide = {
  * Sidebar: pad 24/16, nav rows 32px (8+16+8), gap 4. Agents heading ~13px.
  * Centre / right: remaining 759 split flex 1 (379.5 each). Input ~48px tall.
  */
+/**
+ * PersonalizationCanvas px coordinates (953×530 artboard):
+ *   Sidebar: 0–194, same as ChatSidebar
+ *   Right panel: 194–953 (759px wide), padding 32px each side
+ *   Top bar: y=24, h=40 — Work IQ pill left, Auto pill next to it
+ *   Section headers at y=88 (Custom Instructions) and y=260 (Saved Memories)
+ *   Text area: y=116, h=120
+ *   Memory chips: y=292, h=32
+ *   Saved Prompts strip: y=400, h=90
+ */
+const PERS_W = 953;
+const PERS_H = 530;
+
+/** Canvas coords for PersonalizationCanvas callout rects */
+function pwrap(x: number, y: number, w: number, h: number, pad = 3): CalloutRect {
+  const pct = (n: number, total: number) => Math.round((n / total) * 10000) / 100;
+  return {
+    left: pct(x - pad, PERS_W),
+    top: pct(y - pad, PERS_H),
+    width: pct(w + pad * 2, PERS_W),
+    height: pct(h + pad * 2, PERS_H),
+  };
+}
+
 const CHAT_TOUR_SLIDES: Slide[] = [
   {
     label: "Chat essentials",
@@ -128,8 +155,8 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         placement: "right",
       },
       {
-        title: "Researcher",
-        body: "Performs deep, multi-step research across your work data and the web to deliver a structured, source-cited report.",
+        title: "Researcher agent",
+        body: "Deep investigation across multiple sources — collects information, organises findings, and creates a meeting-ready briefing document for complex decisions.",
         icon: Search,
         rect: wrap(16, 221, 162, 32),
         anchorLeft: 24,
@@ -137,13 +164,63 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         placement: "right",
       },
       {
-        title: "Analyst",
-        body: "Analyzes data, identifies patterns and turns raw information into insights, forecasts and visualisations — from spreadsheet to answer in minutes.",
+        title: "Analyst agent",
+        body: "Thinks like a skilled data scientist — identifies filing patterns, highlights missed deadlines, finds high-risk periods, and creates charts showing trends over time.",
         icon: BarChart3,
         rect: wrap(16, 257, 162, 32),
         anchorLeft: 24,
         anchorTop: 58,
         placement: "right",
+      },
+    ],
+  },
+  {
+    label: "Personalization",
+    callouts: [
+      {
+        title: "Work IQ grounding",
+        body: "When enabled, Copilot uses both your work data and web data (based on your permissions). When disabled, responses are based only on web content.",
+        icon: Sparkles,
+        rect: pwrap(210, 20, 110, 30),
+        anchorLeft: 26,
+        anchorTop: 20,
+        placement: "right",
+      },
+      {
+        title: "Language model choice",
+        body: "Auto lets Copilot choose automatically. Or select: GPT Quick for fast drafting, GPT Advanced for analysis, Claude Opus for deep reasoning and strategy.",
+        icon: Brain,
+        rect: pwrap(330, 20, 80, 30),
+        anchorLeft: 50,
+        anchorTop: 14,
+        placement: "bottom",
+      },
+      {
+        title: "Custom instructions",
+        body: "Tell Copilot exactly how you want responses presented. Example: \"I am an Indian tax professional — prioritise Indian tax laws, highlight risks and deadlines in bullet points.\"",
+        icon: Settings,
+        rect: pwrap(210, 104, 520, 128),
+        anchorLeft: 55,
+        anchorTop: 38,
+        placement: "bottom",
+      },
+      {
+        title: "Saved memories",
+        body: "Copilot remembers your preferences — preferred writing style, frequently used formats — so every response feels tailored without repeating yourself each time.",
+        icon: Brain,
+        rect: pwrap(210, 268, 520, 60),
+        anchorLeft: 72,
+        anchorTop: 58,
+        placement: "left",
+      },
+      {
+        title: "Saved prompts",
+        body: "Your personal library of reusable prompt templates. Launch a GST compliance check, meeting summary, or inbox triage with a single click — consistent results every time.",
+        icon: Save,
+        rect: pwrap(210, 390, 700, 108),
+        anchorLeft: 55,
+        anchorTop: 82,
+        placement: "top",
       },
     ],
   },
@@ -160,8 +237,8 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         placement: "right",
       },
       {
-        title: "Create an agent",
-        body: "Build your own AI expert for a specific business need — the difference between generic AI and AI that knows your work.",
+        title: "New agent",
+        body: "Build a specialised AI assistant that follows your instructions and uses designated knowledge sources to support specific tax processes — your own expert on demand.",
         icon: Sparkles,
         rect: wrap(16, 365, 162, 38),
         anchorLeft: 24,
@@ -944,6 +1021,314 @@ function ChatTourCanvas() {
   );
 }
 
+const SAVED_PROMPTS = [
+  { label: "GST Compliance Check", icon: FileText },
+  { label: "Meeting Summary", icon: MessagesSquare },
+  { label: "Inbox Triage", icon: Search },
+] as const;
+
+const MODEL_OPTIONS = [
+  { label: "Auto", sub: "Let Copilot choose" },
+  { label: "GPT Quick", sub: "Fast drafting" },
+  { label: "GPT Advanced", sub: "Analysis & creation" },
+  { label: "Claude Opus", sub: "Deep reasoning" },
+] as const;
+
+/**
+ * PersonalizationCanvas — 953×530 artboard showing the Copilot Chat
+ * personalization / settings panel with Custom Instructions, Saved Memories,
+ * and Saved Prompts library.
+ */
+function PersonalizationCanvas() {
+  const { ref, scale } = useScaleToWidth(PERS_W);
+  const icon = { size: 16, strokeWidth: 1.75, color: C.dark2 } as const;
+
+  return (
+    <div
+      ref={ref}
+      role="img"
+      aria-label="M365 Copilot Chat personalization settings"
+      style={{
+        width: "100%",
+        aspectRatio: `${PERS_W} / ${PERS_H}`,
+        position: "relative",
+        overflow: "hidden",
+        background: C.white,
+      }}
+    >
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: PERS_W,
+          height: PERS_H,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          display: "flex",
+          background: C.white,
+        }}
+      >
+        <ChatSidebar icon={icon} />
+
+        {/* Main panel */}
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            padding: "20px 32px 24px",
+            gap: 0,
+            overflow: "hidden",
+          }}
+        >
+          {/* Top bar — Work IQ + Auto model selector */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "5px 12px",
+                borderRadius: 999,
+                border: `1px solid ${C.gray02}`,
+                fontFamily: F.bold,
+                fontSize: 12,
+                fontWeight: 700,
+                color: C.dark2,
+              }}
+            >
+              <Sparkles size={13} strokeWidth={1.75} color={C.framePurple} aria-hidden />
+              Work IQ
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 28,
+                  height: 16,
+                  borderRadius: 999,
+                  background: C.frameGreen,
+                  position: "relative",
+                  marginLeft: 4,
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    right: 2,
+                    top: 2,
+                    width: 12,
+                    height: 12,
+                    borderRadius: 999,
+                    background: C.white,
+                  }}
+                />
+              </span>
+            </span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "5px 10px",
+                borderRadius: 999,
+                border: `1px solid ${C.gray02}`,
+              }}
+            >
+              <span style={{ fontFamily: F.regular, fontSize: 12, color: C.dark2 }}>Auto</span>
+              <ChevronDown size={12} strokeWidth={1.75} color={C.dark2} />
+            </span>
+            {/* Model options preview */}
+            <div
+              style={{
+                display: "flex",
+                gap: 6,
+                marginLeft: 8,
+                padding: "4px 10px",
+                borderRadius: 10,
+                background: C.offWhite,
+                border: `1px solid ${C.gray02}`,
+              }}
+            >
+              {MODEL_OPTIONS.map((m, i) => (
+                <span
+                  key={m.label}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    padding: "4px 8px",
+                    borderRadius: 6,
+                    background: i === 0 ? C.yellow : "transparent",
+                    minWidth: 80,
+                  }}
+                >
+                  <span style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, color: C.dark2 }}>{m.label}</span>
+                  <span style={{ fontFamily: F.regular, fontSize: 9, color: i === 0 ? C.dark2 : C.gray01 }}>{m.sub}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Custom Instructions */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              marginBottom: 16,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <Settings size={15} strokeWidth={1.75} color={C.dark2} aria-hidden />
+              <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.dark2 }}>
+                Custom Instructions
+              </span>
+              <span
+                style={{
+                  padding: "2px 8px",
+                  borderRadius: 999,
+                  background: `color-mix(in srgb, ${C.framePurple} 10%, ${C.white})`,
+                  fontFamily: F.regular,
+                  fontSize: 10,
+                  color: C.framePurple,
+                }}
+              >
+                Personalisation
+              </span>
+            </div>
+            <div
+              style={{
+                padding: "12px 16px",
+                borderRadius: 10,
+                border: `1px solid ${C.gray02}`,
+                background: C.offWhite,
+                minHeight: 128,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: F.regular,
+                  fontSize: 12,
+                  color: C.dark2,
+                  margin: 0,
+                  lineHeight: 1.6,
+                }}
+              >
+                I am an Indian tax professional. When responding to tax questions, prioritise Indian tax laws and
+                regulations. Present compliance requirements in bullet points and highlight risks, deadlines, and
+                penalties separately.
+              </p>
+            </div>
+          </div>
+
+          {/* Saved Memories */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              marginBottom: 20,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <Brain size={15} strokeWidth={1.75} color={C.dark2} aria-hidden />
+              <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.dark2 }}>
+                Saved Memories
+              </span>
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {["Preferred writing style", "Frequently used formats", "Tax jurisdiction: India"].map((mem) => (
+                <span
+                  key={mem}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "6px 12px",
+                    borderRadius: 999,
+                    border: `1px solid ${C.gray02}`,
+                    background: C.white,
+                    fontFamily: F.regular,
+                    fontSize: 11,
+                    color: C.dark2,
+                  }}
+                >
+                  <Brain size={11} strokeWidth={1.75} color={C.framePurple} aria-hidden />
+                  {mem}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Saved Prompts strip */}
+          <div
+            style={{
+              borderTop: `1px solid ${C.gray02}`,
+              paddingTop: 16,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+              <Save size={15} strokeWidth={1.75} color={C.dark2} aria-hidden />
+              <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.dark2 }}>
+                Saved Prompts
+              </span>
+              <span
+                style={{
+                  padding: "2px 8px",
+                  borderRadius: 999,
+                  background: `color-mix(in srgb, ${C.yellow} 22%, ${C.white})`,
+                  fontFamily: F.regular,
+                  fontSize: 10,
+                  color: C.dark2,
+                }}
+              >
+                Personal library
+              </span>
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              {SAVED_PROMPTS.map(({ label, icon: Icon }) => (
+                <div
+                  key={label}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: `1px solid ${C.gray02}`,
+                    background: C.white,
+                    boxShadow: `0 2px 8px color-mix(in srgb, ${C.confidentBlack} 5%, transparent)`,
+                    minWidth: 160,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: 7,
+                      background: C.yellow,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon size={14} strokeWidth={1.75} color={C.dark2} aria-hidden />
+                  </span>
+                  <span style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.dark2 }}>{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CalloutBox({
   callout,
   active,
@@ -1229,7 +1614,7 @@ export function M365ChatSlideTour() {
           boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
         }}
       >
-        {slideIndex === 0 ? <ChatMainCanvas /> : <ChatTourCanvas />}
+        {slideIndex === 0 ? <ChatMainCanvas /> : slideIndex === 1 ? <PersonalizationCanvas /> : <ChatTourCanvas />}
 
         {slide.callouts.map((c, i) => (
           <CalloutBox
