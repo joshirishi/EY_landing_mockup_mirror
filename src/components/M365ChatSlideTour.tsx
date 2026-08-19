@@ -930,7 +930,7 @@ export function M365ChatSlideTour() {
       </div>
 
       {/* Canvas with callout overlays */}
-      <div style={{ position: "relative", width: "100%", borderRadius: 16, overflow: "hidden", border: `1px solid ${C.gray02}`, background: C.white, boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)` }}>
+      <div style={{ position: "relative", width: "100%", borderRadius: 16, border: `1px solid ${C.gray02}`, background: C.white, boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)` }}>
         {slideIndex === 0 && <ChatMainCanvas frameRef={frameRefCb} />}
         {slideIndex === 1 && <PersonalizationCanvas frameRef={frameRefCb} />}
         {slideIndex === 2 && <ChatTourCanvas frameRef={frameRefCb} />}
