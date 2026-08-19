@@ -526,7 +526,7 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
                 Auto <ChevronDown size={12} strokeWidth={1.5} color="#616161" />
               </span>
               {/* Dropdown panels — shown open, matching real M365 UI */}
-              <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginTop: 2 }}>
+              <div style={{ display: "flex", gap: 6, alignItems: "flex-start", marginTop: 2 }}>
                 {/* Primary dropdown card */}
                 <div style={{ width: 200, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 13px", borderBottom: "1px solid #f0f0f0" }}>
@@ -556,8 +556,9 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
                     <ChevronRight size={13} strokeWidth={1.5} color="#616161" />
                   </div>
                 </div>
-                {/* GPT sub-menu */}
-                <div style={{ width: 180, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
+                {/* GPT sub-menu — marginTop aligns it with the GPT row in the primary card */}
+                {/* header(38) + 3 option rows(~38px each) = ~152px before GPT row */}
+                <div style={{ marginTop: 152, width: 180, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
                   {["GPT 5.6 Think deeper", "GPT 5.6 Quick response", "GPT 5.5 Quick response"].map((label, i) => (
                     <div key={label} style={{ padding: "10px 14px", fontFamily: F.regular, fontSize: 11, color: "#1f1f1f", borderBottom: i < 2 ? "1px solid #f5f5f5" : "none" }}>
                       {label}
