@@ -13,12 +13,12 @@ import {
   Clock,
   FileText,
   Grid3x3,
+  Image,
   MessagesSquare,
   Mic,
   MoreHorizontal,
   PenLine,
   Pencil,
-  Pin,
   Plus,
   Rocket,
   Save,
@@ -26,6 +26,7 @@ import {
   Settings,
   ShieldCheck,
   Sparkles,
+  Video,
   X,
 } from "lucide-react";
 import { colors, fonts as F, spectrumCss, typeScale } from "../design-kit/tokens";
@@ -47,12 +48,19 @@ type Callout = {
   /** Matches data-tour-id on the canvas element — highlight measured live. */
   target: string;
   placement: Placement;
+  /** Shared 1–8 workflow number (Step 3 has two beats). */
+  workflowStep: number;
 };
+
+type SlideKind = "personalization" | "analyst" | "builder" | "researcher" | "create";
 
 type Slide = {
   label: string;
+  kind: SlideKind;
   callouts: Callout[];
 };
+
+const WORKFLOW_STEPS = 8;
 
 // ── Callout measurement (from rendered DOM — works across scale transforms) ───
 
@@ -89,168 +97,125 @@ function cardTransform(placement: Placement): CSSProperties {
   }
 }
 
+/** Flip a callout if it would sit off the canvas (avoids page jump on Next). */
+function safePlacement(rect: CalloutRect, placement: Placement): Placement {
+  if (placement === "top" && rect.top < 24) return "bottom";
+  if (placement === "bottom" && rect.top + rect.height > 76) return "top";
+  if (placement === "right" && rect.left + rect.width > 70) return "left";
+  if (placement === "left" && rect.left < 30) return "right";
+  return placement;
+}
+
 // ── Slide data ────────────────────────────────────────────────────────────────
 
 const CHAT_TOUR_SLIDES: Slide[] = [
   {
-    label: "Chat essentials",
+    label: "Set up Copilot",
+    kind: "personalization",
     callouts: [
       {
-        title: "Start a new chat",
-        body: "Opens a fresh conversation with Copilot — start from a clean thread whenever you need a new tax question or research task.",
-        icon: MessagesSquare,
-        target: "new-chat",
-        placement: "right",
-      },
-      {
-        title: "Search across work",
-        body: "Finds information quickly across files, emails, meetings and people — like an AI-powered search engine when you know what you're looking for.",
-        icon: Search,
-        target: "search",
-        placement: "right",
-      },
-      {
-        title: "Pages hub",
-        body: "Your central hub for all Copilot-generated content — Pages, images, infographics and items shared with you. Open it from Library in the sidebar.",
-        icon: FileText,
-        target: "library",
-        placement: "right",
-      },
-      {
-        title: "Researcher agent",
-        body: "Deep investigation across multiple sources — collects information, organises findings, and creates a meeting-ready briefing document for complex decisions.",
-        icon: Search,
-        target: "researcher",
-        placement: "right",
-      },
-      {
-        title: "Analyst agent",
-        body: "Thinks like a skilled data scientist — identifies filing patterns, highlights missed deadlines, finds high-risk periods, and creates charts showing trends over time.",
-        icon: BarChart3,
-        target: "analyst",
-        placement: "right",
-      },
-    ],
-  },
-  {
-    label: "Personalization",
-    callouts: [
-      {
-        title: "Work IQ grounding",
-        body: "When enabled, Copilot uses both your work data and web data based on your permissions. When disabled, responses are based only on web content.",
+        title: "Enable Work IQ",
+        body: "When on, Copilot can use your work data and the web, within your permissions. When off, answers come from web content only — you control what it can see.",
         icon: Sparkles,
         target: "work-iq",
         placement: "bottom",
+        workflowStep: 1,
       },
       {
-        title: "Language model choice",
-        body: "Auto lets Copilot choose automatically. Or select: GPT Quick for fast drafting, GPT Advanced for analysis, Claude Opus for deep reasoning and strategy.",
+        title: "Select the right model",
+        body: "Auto picks for you. GPT Quick is for fast drafts. GPT Advanced is for analysis. Claude Opus is for deep research and strategy.",
         icon: Brain,
         target: "auto-model",
         placement: "bottom",
+        workflowStep: 2,
       },
       {
         title: "Custom instructions",
-        body: "Tell Copilot exactly how you want responses presented. Example: \"I am an Indian tax professional — prioritise Indian tax laws, highlight risks and deadlines in bullet points.\"",
+        body: "Tell Copilot how to answer. Example: you are an Indian tax professional — prioritise Indian law, use bullets, and call out risks, deadlines and penalties.",
         icon: Settings,
         target: "custom-instructions",
-        placement: "right",
+        placement: "bottom",
+        workflowStep: 3,
       },
       {
         title: "Saved memories",
-        body: "Copilot remembers your preferences — preferred writing style, frequently used formats — so every response feels tailored without repeating yourself each time.",
+        body: "Copilot remembers your writing style, formats and recurring context so later answers match you without repeating the brief.",
         icon: Brain,
         target: "saved-memories",
-        placement: "right",
+        placement: "bottom",
+        workflowStep: 3,
       },
       {
         title: "Saved prompts",
-        body: "Your personal library of reusable prompt templates. Launch a GST compliance check, meeting summary, or inbox triage with a single click — consistent results every time.",
+        body: "Reuse a GST template: analyse a period, flag late filings, highlight high-risk months and create trend charts — one click, same quality.",
         icon: Save,
         target: "saved-prompts",
         placement: "top",
+        workflowStep: 4,
       },
     ],
   },
   {
-    label: "Advanced features",
+    label: "Analyst Agent",
+    kind: "analyst",
     callouts: [
       {
-        title: "Previous chats",
-        body: "All your previous chats are displayed here — pick up where you left off on any tax matter or research thread.",
-        icon: MessagesSquare,
-        target: "prev-chats",
+        title: "Analyst agent",
+        body: "Ask it to analyse 12 months of GST filings. It finds patterns, late filings and high-risk periods, then builds the charts — minutes, not hours.",
+        icon: BarChart3,
+        target: "analyst",
         placement: "right",
+        workflowStep: 5,
       },
+    ],
+  },
+  {
+    label: "Custom Agent",
+    kind: "builder",
+    callouts: [
       {
         title: "New agent",
-        body: "Build a specialised AI assistant that follows your instructions and uses designated knowledge sources to support specific tax processes — your own expert on demand.",
-        icon: Sparkles,
+        body: "Create a specialist for Indian tax — your instructions, your knowledge sources, your compliance process. No need to re-explain the brief each time.",
+        icon: Bot,
         target: "new-agent",
         placement: "right",
-      },
-      {
-        title: "Work IQ toggle",
-        body: "Work IQ grounds Copilot in your Microsoft 365 data — the difference between generic AI and AI that knows your work context.",
-        icon: Sparkles,
-        target: "work-iq-main",
-        placement: "bottom",
-      },
-      {
-        title: "Auto LLM selection",
-        body: "Automatically selects the most suitable LLM and reasoning level for your task — no manual model switching required.",
-        icon: Sparkles,
-        target: "auto-main",
-        placement: "bottom",
-      },
-      {
-        title: "Apps & agents gateway",
-        body: "Your gateway to apps, agents and tools that help Copilot get work done — launch specialised workflows from the plus menu.",
-        icon: Rocket,
-        target: "plus-apps",
-        placement: "top",
-      },
-      {
-        title: "Create content",
-        body: "Turns ideas into professional content such as images, videos, surveys, pages and other branded assets using AI.",
-        icon: Rocket,
-        target: "create-content",
-        placement: "left",
-      },
-      {
-        title: "Prompt with context",
-        body: "Prompts with a clear goal, context and references generate the best results. Be specific about what you need.",
-        icon: Pin,
-        target: "prompt-input",
-        placement: "top",
-      },
-      {
-        title: "Voice chat",
-        body: "Start dictating with voice chat — speak your prompt instead of typing for hands-free Copilot interaction.",
-        icon: Mic,
-        target: "voice-btn",
-        placement: "left",
-      },
-      {
-        title: "Temporary chat",
-        body: "Start a temporary chat when you don't want the thread saved — useful for sensitive or one-off queries.",
-        icon: Clock,
-        target: "temp-chat",
-        placement: "bottom",
-      },
-      {
-        title: "Governance shield",
-        body: "Confirms your organisation's compliance and security policies are active — Copilot responses respect your permissions at all times.",
-        icon: ShieldCheck,
-        target: "gov-shield",
-        placement: "left",
+        workflowStep: 6,
       },
       {
         title: "Agent Builder",
-        body: "Define instructions, tone and knowledge sources for your agent — deploy a specialist that handles recurring tax workflows without supervision.",
+        body: "Name the agent, write instructions and attach approved sources so the team can run the same tax workflow consistently.",
         icon: Sparkles,
         target: "agent-builder",
         placement: "left",
+        workflowStep: 6,
+      },
+    ],
+  },
+  {
+    label: "Researcher Agent",
+    kind: "researcher",
+    callouts: [
+      {
+        title: "Researcher agent",
+        body: "Prep a manufacturing client exploring global expansion — it pulls indirect tax, customs and transfer pricing, then returns a meeting-ready brief.",
+        icon: Search,
+        target: "researcher",
+        placement: "right",
+        workflowStep: 7,
+      },
+    ],
+  },
+  {
+    label: "Create",
+    kind: "create",
+    callouts: [
+      {
+        title: "Create content",
+        body: "Turn ideas into professional images, videos, surveys and pages. Describe the asset and brand style, then refine what Copilot generates.",
+        icon: Rocket,
+        target: "create-content",
+        placement: "top",
+        workflowStep: 8,
       },
     ],
   },
@@ -398,7 +363,14 @@ function ChatSidebar({ prevChatsId }: { prevChatsId?: string }) {
 
 const QUICK_PILLS = ["File Insights", "Inbox Triage", "People Search", "Meeting Prep"] as const;
 
-function ChatMainCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | null) => void }) {
+const CREATE_MENU_ITEMS = [
+  { label: "Image", icon: Image },
+  { label: "Video", icon: Video },
+  { label: "Survey", icon: FileText },
+  { label: "Page", icon: FileText },
+] as const;
+
+function ChatMainCanvas({ frameRef, showCreateMenu }: { frameRef: (el: HTMLDivElement | null) => void; showCreateMenu?: boolean }) {
   const { ref, scale } = useScaleToWidth(FIGMA_W);
   return (
     <div
@@ -451,8 +423,37 @@ function ChatMainCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | null) =>
                 data-tour-id="prompt-input"
                 style={{ display: "flex", alignItems: "center", gap: 10, padding: "13px 16px", borderRadius: 28, border: "1px solid #d0d0d0", background: C.white, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", cursor: "text" }}
               >
-                <span data-tour-id="plus-apps" style={{ display: "inline-flex" }}>
+                <span
+                  data-tour-id={showCreateMenu ? "create-content" : undefined}
+                  style={{ position: "relative", display: "inline-flex" }}
+                >
                   <Plus size={18} strokeWidth={1.5} color="#424242" />
+                  {showCreateMenu && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        bottom: "calc(100% + 8px)",
+                        width: 188,
+                        borderRadius: 10,
+                        border: "1px solid #e0e0e0",
+                        background: C.white,
+                        boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
+                        overflow: "hidden",
+                        zIndex: 4,
+                      }}
+                    >
+                      <div style={{ padding: "8px 12px", fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: "#1f1f1f", borderBottom: "1px solid #f0f0f0" }}>
+                        Create
+                      </div>
+                      {CREATE_MENU_ITEMS.map(({ label, icon: Icon }) => (
+                        <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px" }}>
+                          <Icon size={14} strokeWidth={1.5} color="#424242" />
+                          <span style={{ fontFamily: F.regular, fontSize: 12, color: "#1f1f1f" }}>{label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </span>
                 <span style={{ flex: 1, fontFamily: F.regular, fontSize: 14, color: "#9e9e9e" }}>Message Copilot</span>
                 <span data-tour-id="voice-btn" style={{ display: "inline-flex" }}>
@@ -490,7 +491,7 @@ const SAVED_PROMPTS_DATA = [
   { label: "Inbox Triage", icon: Search },
 ] as const;
 
-function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | null) => void }) {
+function PersonalizationCanvas({ frameRef, showModelMenu }: { frameRef: (el: HTMLDivElement | null) => void; showModelMenu: boolean }) {
   const { ref, scale } = useScaleToWidth(FIGMA_W);
   return (
     <div
@@ -509,7 +510,7 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
         {/* Main settings panel */}
         <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "16px 32px 24px", overflow: "hidden" }}>
           {/* Top bar */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 16 }}>
             <span
               data-tour-id="work-iq"
               style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 999, border: "1px solid #d0d0d0", fontFamily: F.regular, fontSize: 12, color: "#1f1f1f", background: C.white }}
@@ -525,7 +526,8 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
               <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 999, border: "1px solid #d0d0d0", fontFamily: F.regular, fontSize: 12, color: "#1f1f1f", alignSelf: "flex-start" }}>
                 Auto <ChevronDown size={12} strokeWidth={1.5} color="#616161" />
               </span>
-              {/* Dropdown panels — shown open, matching real M365 UI */}
+              {/* Open only on the model step — otherwise later settings are clipped and callouts jump the page */}
+              {showModelMenu && (
               <div style={{ display: "flex", gap: 6, alignItems: "flex-start", marginTop: 2 }}>
                 {/* Primary dropdown card */}
                 <div style={{ width: 200, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
@@ -534,31 +536,32 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
                     <ChevronDown size={13} strokeWidth={1.5} color="#616161" />
                   </div>
                   {[
-                    { label: "Auto", sub: "Decides how long to think", checked: true },
-                    { label: "Quick response", sub: "Answers right away", checked: false },
-                    { label: "Think deeper", sub: "Think longer for better answers", checked: false },
+                    { label: "Auto", sub: "Picks the best model for your query", checked: true },
+                    { label: "GPT Quick response", sub: "Fast drafts and summaries", checked: false },
+                    { label: "GPT Advanced", sub: "Analysis and complex problem-solving", checked: false },
+                    { label: "Claude Opus", sub: "Deep research and strategic planning", checked: false },
                   ].map(opt => (
                     <div key={opt.label} style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "8px 13px", borderBottom: "1px solid #f5f5f5" }}>
                       <span style={{ width: 14, height: 14, marginTop: 2, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                         {opt.checked && <Check size={12} strokeWidth={2.5} color="#1f1f1f" />}
                       </span>
                       <div>
-                        <div style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 600, color: "#1f1f1f" }}>{opt.label}</div>
+                        <div style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: "#1f1f1f" }}>{opt.label}</div>
                         <div style={{ fontFamily: F.regular, fontSize: 10, color: "#757575", marginTop: 1 }}>{opt.sub}</div>
                       </div>
                     </div>
                   ))}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 13px", background: "#f7f0fd" }}>
                     <div>
-                      <div style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 600, color: "#1f1f1f" }}>GPT</div>
-                      <div style={{ fontFamily: F.regular, fontSize: 10, color: "#757575" }}>OpenAI</div>
+                      <div style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: "#1f1f1f" }}>GPT</div>
+                      <div style={{ fontFamily: F.regular, fontSize: 10, color: "#757575" }}>OpenAI versions</div>
                     </div>
                     <ChevronRight size={13} strokeWidth={1.5} color="#616161" />
                   </div>
                 </div>
                 {/* GPT sub-menu — marginTop aligns it with the GPT row in the primary card */}
-                {/* header(38) + 3 option rows(~38px each) = ~152px before GPT row */}
-                <div style={{ marginTop: 152, width: 180, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
+                {/* header(38) + 4 option rows(~38px each) = ~190px before GPT row */}
+                <div style={{ marginTop: 190, width: 180, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, boxShadow: "0 4px 16px rgba(0,0,0,0.10)", overflow: "hidden", flexShrink: 0 }}>
                   {["GPT 5.6 Think deeper", "GPT 5.6 Quick response", "GPT 5.5 Quick response"].map((label, i) => (
                     <div key={label} style={{ padding: "10px 14px", fontFamily: F.regular, fontSize: 11, color: "#1f1f1f", borderBottom: i < 2 ? "1px solid #f5f5f5" : "none" }}>
                       {label}
@@ -566,12 +569,13 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
                   ))}
                 </div>
               </div>
+              )}
             </div>
           </div>
 
           {/* Custom Instructions */}
-          <div data-tour-id="custom-instructions" style={{ marginBottom: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+          <div style={{ marginBottom: 16 }}>
+            <div data-tour-id="custom-instructions" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
               <Settings size={14} strokeWidth={1.5} color="#424242" />
               <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 600, color: "#1f1f1f" }}>Custom Instructions</span>
               <span style={{ padding: "2px 8px", borderRadius: 999, background: "#f0e6fa", fontFamily: F.regular, fontSize: 10, color: "#7719AA" }}>Personalisation</span>
@@ -584,8 +588,8 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
           </div>
 
           {/* Saved Memories */}
-          <div data-tour-id="saved-memories" style={{ marginBottom: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+          <div style={{ marginBottom: 20 }}>
+            <div data-tour-id="saved-memories" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
               <Brain size={14} strokeWidth={1.5} color="#424242" />
               <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 600, color: "#1f1f1f" }}>Saved Memories</span>
             </div>
@@ -600,8 +604,8 @@ function PersonalizationCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | n
           </div>
 
           {/* Saved Prompts */}
-          <div data-tour-id="saved-prompts" style={{ borderTop: "1px solid #e5e5e5", paddingTop: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+          <div style={{ borderTop: "1px solid #e5e5e5", paddingTop: 16 }}>
+            <div data-tour-id="saved-prompts" style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
               <Save size={14} strokeWidth={1.5} color="#424242" />
               <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 600, color: "#1f1f1f" }}>Saved Prompts</span>
               <span style={{ padding: "2px 8px", borderRadius: 999, background: "#FFF8CC", fontFamily: F.regular, fontSize: 10, color: "#5a4500" }}>Personal library</span>
@@ -729,7 +733,7 @@ function ChatTourCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | null) =>
           <p style={{ fontFamily: F.regular, fontSize: 13, color: "#9e9e9e", margin: 0 }}>Describe your agent</p>
 
           {/* Instructions */}
-          <div data-tour-id="create-content" style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, flex: 1 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, borderRadius: 10, border: "1px solid #e0e0e0", background: C.white, flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 600, color: "#1f1f1f" }}>Instructions</span>
             </div>
@@ -777,7 +781,8 @@ function CalloutBox({
   }, [frame, callout.target, active]);
 
   if (!rect) return null;
-  const anchor = cardAnchor(rect, callout.placement);
+  const placement = safePlacement(rect, callout.placement);
+  const anchor = cardAnchor(rect, placement);
 
   return (
     <div
@@ -803,7 +808,7 @@ function CalloutBox({
 
       {/* Annotation card */}
       <div
-        style={{ position: "absolute", left: `${anchor.left}%`, top: `${anchor.top}%`, width: "min(260px, 38vw)", background: C.white, border: `1.5px solid ${C.yellow}`, borderRadius: 12, padding: "12px 14px", boxShadow: `0 12px 32px color-mix(in srgb, ${C.confidentBlack} 18%, transparent)`, zIndex: 3, pointerEvents: "auto", ...cardTransform(callout.placement) }}
+        style={{ position: "absolute", left: `${anchor.left}%`, top: `${anchor.top}%`, width: "min(260px, 38vw)", background: C.white, border: `1.5px solid ${C.yellow}`, borderRadius: 12, padding: "12px 14px", boxShadow: `0 12px 32px color-mix(in srgb, ${C.confidentBlack} 18%, transparent)`, zIndex: 3, pointerEvents: "auto", ...cardTransform(placement) }}
       >
         <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
           <span style={{ width: 26, height: 26, minWidth: 26, borderRadius: 7, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.dark2 }}>
@@ -822,6 +827,7 @@ function CalloutBox({
           <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
             <button
               type="button"
+              onMouseDown={e => e.preventDefault()}
               onClick={onNext}
               style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 12px", borderRadius: 999, border: "none", background: C.yellow, color: C.dark2, fontFamily: F.bold, fontSize: 11, fontWeight: 700, cursor: "pointer" }}
             >
@@ -859,6 +865,8 @@ export function M365ChatSlideTour() {
   const totalSlides = CHAT_TOUR_SLIDES.length;
   const totalCallouts = slide.callouts.length;
   const safeCalloutIndex = Math.min(calloutIndex, totalCallouts - 1);
+  const currentCallout = slide.callouts[safeCalloutIndex];
+  const workflowStep = currentCallout.workflowStep;
   const isFirstCallout = safeCalloutIndex === 0;
   const isLastCallout = safeCalloutIndex === totalCallouts - 1;
   const isFirstSlide = slideIndex === 0;
@@ -909,7 +917,7 @@ export function M365ChatSlideTour() {
   const frameRefCb = useCallback((el: HTMLDivElement | null) => setFrameEl(el), []);
 
   return (
-    <div ref={tourRef} tabIndex={0} role="region" aria-label="M365 Copilot Chat feature walkthrough" aria-roledescription="carousel"
+    <div ref={tourRef} tabIndex={0} role="region" aria-label="M365 Copilot Chat eight-step workflow" aria-roledescription="carousel"
       style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16, outline: "none" }}>
 
       {/* Header */}
@@ -919,24 +927,26 @@ export function M365ChatSlideTour() {
             {slide.label}
           </span>
           <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>
-            Step {safeCalloutIndex + 1} of {totalCallouts}
+            Step {workflowStep} of {WORKFLOW_STEPS}
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }} aria-hidden>
-          {CHAT_TOUR_SLIDES.map((s, i) => (
-            <span key={s.label} style={{ width: i === slideIndex ? 24 : 8, height: 8, borderRadius: 999, background: i === slideIndex ? C.yellow : C.gray02, transition: "width 0.2s ease" }} />
+          {Array.from({ length: WORKFLOW_STEPS }, (_, i) => (
+            <span key={i} style={{ width: i + 1 === workflowStep ? 24 : 8, height: 8, borderRadius: 999, background: i + 1 === workflowStep ? C.yellow : C.gray02, transition: "width 0.2s ease" }} />
           ))}
         </div>
       </div>
 
       {/* Canvas with callout overlays */}
       <div style={{ position: "relative", width: "100%", borderRadius: 16, border: `1px solid ${C.gray02}`, background: C.white, boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)` }}>
-        {slideIndex === 0 && <ChatMainCanvas frameRef={frameRefCb} />}
-        {slideIndex === 1 && <PersonalizationCanvas frameRef={frameRefCb} />}
-        {slideIndex === 2 && <ChatTourCanvas frameRef={frameRefCb} />}
+        {slide.kind === "personalization" && <PersonalizationCanvas frameRef={frameRefCb} showModelMenu={currentCallout.target === "auto-model"} />}
+        {slide.kind === "analyst" && <ChatMainCanvas frameRef={frameRefCb} />}
+        {slide.kind === "builder" && <ChatTourCanvas frameRef={frameRefCb} />}
+        {slide.kind === "researcher" && <ChatMainCanvas frameRef={frameRefCb} />}
+        {slide.kind === "create" && <ChatMainCanvas frameRef={frameRefCb} showCreateMenu />}
 
         {slide.callouts.map((c, i) => (
-          <CalloutBox key={`${slideIndex}-${c.target}`} callout={c} active={i === safeCalloutIndex} stepNum={i + 1} frame={frameEl} onNext={goNext} isLast={tourComplete || (i === totalCallouts - 1 && isLastSlide)} />
+          <CalloutBox key={`${slideIndex}-${c.target}`} callout={c} active={i === safeCalloutIndex} stepNum={c.workflowStep} frame={frameEl} onNext={goNext} isLast={tourComplete || (i === totalCallouts - 1 && isLastSlide)} />
         ))}
       </div>
 
@@ -948,12 +958,12 @@ export function M365ChatSlideTour() {
         {tourComplete ? (
           <button type="button" onClick={restart} aria-label="Restart tour" style={primaryBtnStyle}>Restart tour</button>
         ) : (
-          <button type="button" onClick={goNext} aria-label={isLastCallout && !isLastSlide ? "Next slide" : "Next step"} style={primaryBtnStyle}>
-            {isLastCallout && !isLastSlide ? "Next slide" : "Continue"} <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
+            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
           </button>
         )}
         <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, flex: "1 1 100%", textAlign: "center" }}>
-          Use arrow keys or Continue to reveal each feature
+          Use arrow keys or Continue to walk the eight-step workflow
         </span>
       </div>
     </div>

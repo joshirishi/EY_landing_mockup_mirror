@@ -2,12 +2,12 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   AlertTriangle, AlignLeft, Archive, ArrowRight,
-  BarChart3, Bold, Briefcase, Calculator, Calendar, Check, CheckCircle, ChevronDown, ChevronLeft,
+  BarChart3, Bold, Bot, Brain, Briefcase, Calculator, Calendar, Check, CheckCircle, ChevronDown, ChevronLeft,
   ChevronRight, ClipboardList, Compass, Copy,
   Ban, CornerUpLeft, DollarSign, ExternalLink, FileText, FolderOpen,
-  Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, LineChart, Link2, BookOpen,
+  Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, LineChart, Link2,
   List, ListOrdered, Mail, Megaphone, Menu, MessagesSquare, Mic, Monitor, MoreHorizontal, PenLine,
-  Pencil, Percent, Pin, Play, Plus, PlusSquare, Power, Rocket, Search, Send, ShieldCheck, Sparkles,
+  Pencil, Percent, Pin, Play, Plus, PlusSquare, Power, Rocket, Save, Search, Send, Settings, ShieldCheck, Sparkles,
   Target, Timer, Trash2, Type, Underline, Users, Video, X, XCircle, ZoomIn, ZoomOut,
 } from "lucide-react";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
@@ -232,11 +232,14 @@ const SECTION_DATA: Record<TabId, {
     h2: "Copilot in M365 Chat",
     subtitle: "Use Copilot in M365 Chat to ask questions, get summaries, and generate content across your Microsoft 365 data. Chat brings together information from documents, emails, meetings, and contacts to give you AI-powered answers grounded in your work data.",
     useCases: [
-      { icon: MessagesSquare, title: "Start a New Chat",   body: "Opens a fresh conversation whenever you need a new tax question or research task." },
-      { icon: Search,         title: "Search Across Work", body: "Finds files, emails, meetings and people across M365 — like an AI-powered search engine." },
-      { icon: BookOpen,       title: "Pages Hub",          body: "Central hub for Copilot-generated Pages, images, infographics and shared items." },
-      { icon: Search,         title: "Researcher Agent",   body: "Deep, multi-step research across work data and the web with source-cited reports." },
-      { icon: BarChart3,      title: "Analyst Agent",      body: "Analyzes data, identifies patterns and turns raw information into insights and forecasts." },
+      { icon: Sparkles,  title: "Enable Work IQ",         body: "Choose whether Copilot can use your work data and the web, or web content only." },
+      { icon: Brain,     title: "Select a Model",         body: "Auto, GPT Quick, GPT Advanced, or Claude Opus — pick speed or depth for the task." },
+      { icon: Settings,  title: "Personalize Responses",  body: "Custom instructions and saved memories so answers follow your tax style." },
+      { icon: Save,      title: "Saved Prompts",          body: "Reuse GST and other templates with one click for consistent results." },
+      { icon: BarChart3, title: "Analyst Agent",          body: "Turn GST filings into trends, late-filing flags, and charts in minutes." },
+      { icon: Bot,       title: "Custom Agent",           body: "Build a specialist for Indian tax with your instructions and knowledge sources." },
+      { icon: Search,    title: "Researcher Agent",       body: "Deep briefing for complex meetings — tax, customs, and transfer pricing." },
+      { icon: Rocket,    title: "Create Content",         body: "Generate professional images, videos, surveys, and pages from a short brief." },
     ],
     panelSubtitle: "Ask cross-app questions and retrieve tax context across Microsoft 365.",
     prompts: [
