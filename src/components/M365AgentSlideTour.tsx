@@ -811,12 +811,16 @@ function CalloutBox({
   stepNum,
   frame,
   showBlur,
+  onNext,
+  isLast,
 }: {
   callout: Callout;
   active: boolean;
   stepNum: number;
   frame: HTMLElement | null;
   showBlur: boolean;
+  onNext: () => void;
+  isLast: boolean;
 }) {
   const Icon = callout.icon;
   const [rect, setRect] = useState<CalloutRect | null>(null);
@@ -940,6 +944,17 @@ function CalloutBox({
             <p style={{ fontFamily: F.regular, fontSize: 13, color: C.gray01, margin: 0, lineHeight: 1.5 }}>{callout.body}</p>
           </div>
         </div>
+        {!isLast && (
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+            <button
+              type="button"
+              onClick={onNext}
+              style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "6px 12px", borderRadius: 999, border: "none", background: C.yellow, color: C.dark2, fontFamily: F.bold, fontSize: 11, fontWeight: 700, cursor: "pointer" }}
+            >
+              Next <ChevronRight size={13} strokeWidth={2} />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1124,6 +1139,8 @@ export function M365AgentSlideTour() {
               showBlur={phase === "focus" && i === calloutIndex}
               stepNum={i + 1}
               frame={frameEl}
+              onNext={goNext}
+              isLast={tourComplete || skipGate}
             />
           ))}
       </div>
