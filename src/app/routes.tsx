@@ -7,6 +7,7 @@ import M365CopilotHub from "../pages/M365CopilotHub";
 import BrainstormingUseCases from "../pages/BrainstormingUseCases";
 import GuidanceImplementation from "../pages/GuidanceImplementation";
 import ClosureAiReinforcement from "../pages/ClosureAiReinforcement";
+import WorkshopLibraryStandalone from "../pages/WorkshopLibraryStandalone";
 
 // ── /  (phased engagement is the landing page) ───────────────────────────────
 function PhasedRoute() {
@@ -158,6 +159,7 @@ export const router = createBrowserRouter([
       { path: "copilot-hub", Component: CopilotHubRoute },
       { path: "guidance-implementation", Component: GuidanceImplementationRoute },
       { path: "closure-ai-reinforcement", Component: ClosureAiReinforcementRoute },
+      { path: "workshop-library.html", Component: WorkshopLibraryStandalone },
     ],
   },
 ]);

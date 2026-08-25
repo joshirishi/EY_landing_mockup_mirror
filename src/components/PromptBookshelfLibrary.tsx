@@ -8,8 +8,10 @@ import {
   BookMarked,
   BookOpen,
   Bot,
+  Check,
   ChevronLeft,
   ChevronRight,
+  Copy,
   Download,
   FileText,
   Library,
@@ -42,6 +44,9 @@ const CATEGORY_SPINE: Record<PromptLibraryCategory, string> = {
 
 const SPINE_HEIGHTS = [176, 192, 208, 224] as const;
 
+/** Fixed reading-panel height so every book opens at the same size. */
+const READING_PANEL_HEIGHT = "80vh";
+
 type CategoryFilterId = "all" | PromptLibraryCategory;
 type WhyTypeFilterId = "all" | PromptLibraryWhyType;
 
@@ -53,12 +58,24 @@ function matchesWhyType(entry: PromptLibraryEntry, whyTypeFilter: WhyTypeFilterI
   return whyTypeFilter === "all" || entry.capabilities.includes(whyTypeFilter);
 }
 
-/** Builds a plain-text pack from the open book so learners can download it. */
-function downloadPromptPack(entry: PromptLibraryEntry, kind: LibraryKind) {
-  const pages = entry.slides
-    .map((slide, i) => `${i + 1}. ${slide.title}\n${slide.sub}\n${slide.body}`)
-    .join("\n\n");
-  const text = `${entry.name}\n${entry.category}\n\n${pages}\n`;
+/** Copy + Download as one mark — Lucide has no combined ClipboardDown in this version. */
+function CopyDownloadIcon() {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }} aria-hidden>
+      <Copy size={13} strokeWidth={1.75} />
+      <Download size={13} strokeWidth={1.75} />
+    </span>
+  );
+}
+
+/** Same text as the page body paragraphs — no title, category, or page labels. */
+function promptBodyText(entry: PromptLibraryEntry) {
+  return entry.slides.map((slide) => slide.body).join("\n\n");
+}
+
+/** Copies the visible prompt text, then saves the same text as a .txt file. */
+async function copyAndDownloadPrompt(entry: PromptLibraryEntry, kind: LibraryKind) {
+  const text = promptBodyText(entry);
   const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -67,6 +84,11 @@ function downloadPromptPack(entry: PromptLibraryEntry, kind: LibraryKind) {
   link.download = `${entry.name.replace(/[^\w]+/g, "-").toLowerCase()}-${suffix}.txt`;
   link.click();
   URL.revokeObjectURL(url);
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    // File still downloads if the browser blocks clipboard access.
+  }
 }
 
 function filterChipStyle(isActive: boolean): CSSProperties {
@@ -132,6 +154,7 @@ export function PromptBookshelfLibrary() {
   const [whyTypeFilter, setWhyTypeFilter] = useState<WhyTypeFilterId>("all");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [slide, setSlide] = useState(0);
+  const [packSaved, setPackSaved] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -202,6 +225,7 @@ export function PromptBookshelfLibrary() {
   const selectBook = useCallback((entry: PromptLibraryEntry) => {
     setSelectedId((prev) => (prev === entry.id ? null : entry.id));
     setSlide(0);
+    setPackSaved(false);
   }, []);
 
   const closeReading = useCallback(() => {
@@ -258,18 +282,6 @@ export function PromptBookshelfLibrary() {
       previousFocusRef.current?.focus?.();
     };
   }, [selected, closeReading]);
-
-  const activeCategoryLabel =
-    PROMPT_LIBRARY_FILTERS.find((f) => f.id === categoryFilter)?.label ?? "All";
-  const activeWhyTypeLabel =
-    PROMPT_LIBRARY_WHY_TYPE_FILTERS.find((f) => f.id === whyTypeFilter)?.label ?? "All types";
-
-  const filterSummary = useMemo(() => {
-    const parts: string[] = [];
-    if (categoryFilter !== "all") parts.push(activeCategoryLabel);
-    if (whyTypeFilter !== "all") parts.push(activeWhyTypeLabel);
-    return parts.length > 0 ? parts.join(" · ") : "full collection";
-  }, [activeCategoryLabel, activeWhyTypeLabel, categoryFilter, whyTypeFilter]);
 
   return (
     <div>
@@ -346,45 +358,18 @@ export function PromptBookshelfLibrary() {
             >
               <Library size={20} strokeWidth={1.75} />
             </div>
-            <div>
-              <p
-                style={{
-                  fontFamily: fonts.bold,
-                  fontSize: typeScale.label.size,
-                  letterSpacing: typeScale.label.tracking,
-                  textTransform: "uppercase",
-                  color: colors.onDarkMuted,
-                  margin: 0,
-                }}
-              >
-                {activeLibrary.label}
-              </p>
-              <p
-                style={{
-                  fontFamily: fonts.regular,
-                  fontSize: typeScale.body.size,
-                  color: colors.onDark,
-                  margin: "2px 0 0",
-                }}
-              >
-                {filtered.length} template{filtered.length === 1 ? "" : "s"}
-                {" · "}
-                {filterSummary}
-              </p>
-            </div>
+            <p
+              style={{
+                fontFamily: fonts.light,
+                fontSize: typeScale.body.size,
+                color: colors.onDark,
+                margin: 0,
+                lineHeight: 1.45,
+              }}
+            >
+              Click a spine to open it. Use arrow keys to turn pages.
+            </p>
           </div>
-          <p
-            style={{
-              fontFamily: fonts.light,
-              fontSize: typeScale.caption.size,
-              color: colors.onDarkSubtle,
-              margin: 0,
-              maxWidth: 280,
-              lineHeight: 1.45,
-            }}
-          >
-            Click a spine to open it. Use arrow keys to turn pages.
-          </p>
         </div>
 
         {/* Library section filters */}
@@ -679,7 +664,6 @@ export function PromptBookshelfLibrary() {
               alignItems: "flex-end",
               gap: 12,
               width: "min(94vw, 880px)",
-              maxHeight: "92vh",
               animation: "bookshelfModalIn 220ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
@@ -709,13 +693,16 @@ export function PromptBookshelfLibrary() {
               aria-label={`Reading ${selected.name}`}
               style={{
                 width: "100%",
+                height: READING_PANEL_HEIGHT,
+                minHeight: READING_PANEL_HEIGHT,
+                maxHeight: READING_PANEL_HEIGHT,
+                display: "flex",
+                flexDirection: "column",
                 borderRadius: 12,
                 overflow: "hidden",
                 border: `1px solid ${colors.gray02}`,
                 background: colors.white,
                 boxShadow: `0 24px 64px color-mix(in srgb, ${colors.confidentBlack} 60%, transparent)`,
-                maxHeight: "calc(92vh - 68px)",
-                overflowY: "auto",
               }}
             >
           {/* Book header — cover strip */}
@@ -724,6 +711,7 @@ export function PromptBookshelfLibrary() {
               display: "flex",
               alignItems: "stretch",
               minHeight: 72,
+              flexShrink: 0,
               background: `linear-gradient(90deg, ${CATEGORY_SPINE[selected.category]} 0%, ${colors.offBlack} 100%)`,
             }}
           >
@@ -777,7 +765,7 @@ export function PromptBookshelfLibrary() {
                   {selected.category} · {libraryKind === "agent" ? "Agent" : "Template"} #{selected.id}
                 </p>
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
                 {selected.capabilities.map((cap) => (
                   <span
                     key={cap}
@@ -796,6 +784,33 @@ export function PromptBookshelfLibrary() {
                     {cap}
                   </span>
                 ))}
+                <button
+                  type="button"
+                  onClick={() => {
+                    void copyAndDownloadPrompt(selected, libraryKind).then(() => {
+                      setPackSaved(true);
+                      window.setTimeout(() => setPackSaved(false), 2000);
+                    });
+                  }}
+                  aria-label="Copy prompt to clipboard and download as a text file"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontFamily: fonts.bold,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: colors.confidentBlack,
+                    background: colors.yellow,
+                    border: "none",
+                    borderRadius: 6,
+                    padding: "8px 14px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {packSaved ? <Check size={14} strokeWidth={1.75} aria-hidden /> : <CopyDownloadIcon />}
+                  {packSaved ? "Copied & saved" : "Copy & download"}
+                </button>
               </div>
             </div>
           </div>
@@ -806,7 +821,9 @@ export function PromptBookshelfLibrary() {
               display: "flex",
               alignItems: "stretch",
               gap: 0,
-              minHeight: 280,
+              flex: 1,
+              minHeight: 0,
+              overflowY: "auto",
             }}
           >
             {/* Left page margin — book gutter */}
@@ -936,6 +953,7 @@ export function PromptBookshelfLibrary() {
               padding: "12px 20px 16px",
               borderTop: `1px solid ${colors.gray02}`,
               background: colors.offWhite,
+              flexShrink: 0,
             }}
           >
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -961,38 +979,16 @@ export function PromptBookshelfLibrary() {
                 </button>
               ))}
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <p
-                style={{
-                  fontFamily: fonts.regular,
-                  fontSize: typeScale.caption.size,
-                  color: colors.gray01,
-                  margin: 0,
-                }}
-              >
-                Page {slide + 1} of {selected.slides.length}
-              </p>
-              <button
-                type="button"
-                onClick={() => downloadPromptPack(selected, libraryKind)}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  fontFamily: fonts.bold,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: colors.confidentBlack,
-                  background: colors.yellow,
-                  border: "none",
-                  borderRadius: 6,
-                  padding: "8px 14px",
-                  cursor: "pointer",
-                }}
-              >
-                <Download size={14} strokeWidth={1.75} aria-hidden /> Download
-              </button>
-            </div>
+            <p
+              style={{
+                fontFamily: fonts.regular,
+                fontSize: typeScale.caption.size,
+                color: colors.gray01,
+                margin: 0,
+              }}
+            >
+              Page {slide + 1} of {selected.slides.length}
+            </p>
           </div>
             </div>
           </div>

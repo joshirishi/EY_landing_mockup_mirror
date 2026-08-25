@@ -1297,7 +1297,7 @@ function CardCheckIcon() {
 
 function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS[0]; onProceed?: () => void; onNavigate?: () => void }) {
   return (
-    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] h-full min-w-px relative rounded-[8px] grid grid-rows-subgrid row-span-6 gap-y-[20px] p-[24px] xl:p-[28px] w-full min-h-0">
+    <div className="bg-white drop-shadow-[0px_4px_6px_rgba(0,0,0,0.05)] h-full min-w-0 max-w-[300px] relative rounded-[8px] grid grid-rows-subgrid row-span-6 gap-y-[20px] p-[24px] xl:p-[28px] w-full min-h-0">
       <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[8px]" />
       {/* Row 1: Phase number + week */}
       <div className="content-stretch flex items-center justify-between gap-[8px] relative w-full min-w-0">
@@ -1335,10 +1335,10 @@ function PhaseCard({ phase, onProceed, onNavigate }: { phase: typeof PHASE_CARDS
           ))}
         </div>
       </div>
-      {/* Row 5: Outcome */}
-      <div className="content-stretch flex flex-col gap-[8px] items-start relative w-full min-h-0">
+      {/* Row 5: Outcome — yellow box fills the shared subgrid row so all four match height */}
+      <div className="content-stretch flex flex-col gap-[8px] items-stretch relative w-full min-h-0 h-full">
         <p className="[word-break:break-word] font-['EYInterstate:Bold',sans-serif] leading-[normal] not-italic relative shrink-0 text-[#2e2e38] text-[12px] uppercase whitespace-nowrap">Outcome</p>
-        <div className="bg-[#FFFBE0] border border-[#FFE600] rounded-[6px] px-[12px] py-[8px] relative w-full">
+        <div className="bg-[#FFFBE0] border border-[#FFE600] rounded-[6px] px-[12px] py-[8px] relative w-full flex-1 h-full min-h-0 box-border">
           <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[18px] not-italic relative text-[#2e2e38] text-[13px]">{phase.outcome}</p>
         </div>
       </div>
@@ -1377,7 +1377,7 @@ function CardGrid({ onProceed, onNavigateToBrainstorming, onNavigateToImplementa
   return (
     <div className="relative shrink-0 w-full min-w-0">
       <div className="content-stretch flex flex-col gap-[24px] items-stretch px-4 sm:px-8 md:px-[64px] relative size-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-[24px] items-stretch relative shrink-0 w-full max-w-[85%] mx-auto">
+        <div className="grid grid-cols-4 gap-[24px] items-stretch justify-items-center relative shrink-0 w-full max-w-[85%] mx-auto min-w-0">
           <PhaseCard phase={PHASE_CARDS[0]} onProceed={onProceed} />
           <PhaseCard phase={PHASE_CARDS[1]} onNavigate={onNavigateToBrainstorming} />
           <PhaseCard phase={PHASE_CARDS[2]} onNavigate={onNavigateToImplementation} />
@@ -2019,7 +2019,7 @@ function CourseGrid({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub
   onOpenCopilotHub?: () => void;
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 relative shrink-0 w-full min-w-0">
+    <div className="grid grid-cols-3 gap-6 relative shrink-0 w-full min-w-0">
       <UnlockableCourseCard
         onNavigate={onOpenFoundational}
         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}

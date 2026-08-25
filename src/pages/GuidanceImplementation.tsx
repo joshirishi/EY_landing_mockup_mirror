@@ -1,17 +1,17 @@
 import type { CSSProperties } from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Check, ChevronRight, Download, Eye, RotateCcw, X } from "lucide-react";
 import { HitlUnderstandModal } from "../components/HitlUnderstandModal";
-import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
-import { countUseCaseEntries, readStoredUseCaseEntries } from "../data/use-case-buckets";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { TemplatePreviewModal } from "../components/TemplatePreviewModal";
 import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
+import { EightElementsPane } from "../components/EightElementsPane";
 import { PROMPTING_TECHNIQUES, TECHNIQUE_FACETS } from "../data/prompt-techniques";
-import { AGENT_TEMPLATE_LIBRARY } from "../data/agent-template-library";
+import { AgentHubTabs } from "./M365CopilotHub";
+import { TabRail } from "../design-kit/TabRail";
 import {
   colors as C,
   contentInlinePad,
@@ -33,7 +33,6 @@ export const PHASE3_NUMBER = 3;
 const PHASE3_SECTIONS = [
   { id: "p3-bingo", label: "AI Bingo", group: "learn" as const },
   { id: "p3-prompts", label: "Quick Recall", group: "learn" as const },
-  { id: "p3-your-use-cases", label: "Your Use Cases", group: "learn" as const },
   { id: "p3-hitl", label: "Human-in-Loop", group: "learn" as const },
   { id: "p5-templates", label: "Reference Library", group: "apply" as const },
 ];
@@ -490,93 +489,7 @@ function PanelBingo() {
 
 // ── Panel 2 — Building Better Tax Prompts (Slide 3) ───────────────────────────
 
-const PROMPT_COMPONENTS = [
-  { n: "01", label: "Persona",           question: "Who should the AI act as?" },
-  { n: "02", label: "Context",           question: "Why is the task being performed?" },
-  { n: "03", label: "Instructions",      question: "What exactly must be done?" },
-  { n: "04", label: "Tone & style",      question: "How should it read?" },
-  { n: "05", label: "Examples",          question: "Use few-shot examples where possible." },
-  { n: "06", label: "Output indicator",  question: "Specify sections or table format." },
-  { n: "07", label: "Constraints",       question: "Define what should not be done." },
-  { n: "08", label: "Grounding",         question: "Anchor to approved source documents." },
-];
-
-// Each prompt segment maps to an element index (0-7). Unmapped segments are plain.
-const PROMPT_SEGMENTS: { text: string; el?: number }[] = [
-  { text: "You are a senior Indian tax professional specialising in transfer pricing and international taxation.", el: 0 },
-  { text: " " },
-  { text: "Prepare the analysis for a regional tax director.", el: 1 },
-  { text: " " },
-  { text: "Compare current-year and prior-year intercompany transactions and identify material changes.", el: 2 },
-  { text: " " },
-  { text: "Use a professional advisory style", el: 3 },
-  { text: " " },
-  { text: "and present the findings in a table with sections: Summary, Material Changes, and Recommendations.", el: 5 },
-  { text: " " },
-  { text: "Do not cite external sources or speculate beyond the provided documents.", el: 6 },
-  { text: " " },
-  { text: "Rely only on the specified source documents.", el: 7 },
-];
-
 type TemplateAsset = { screenshot?: string; downloadUrl?: string };
-
-function TabRail<T extends string>({
-  tabs,
-  active,
-  onChange,
-  onDark = false,
-}: {
-  tabs: { id: T; label: string }[];
-  active: T;
-  onChange: (id: T) => void;
-  onDark?: boolean;
-}) {
-  const focusRing = `2px solid ${C.yellow}`;
-  return (
-    <div
-      role="tablist"
-      style={{
-        display: "inline-flex",
-        background: onDark ? "rgba(255,255,255,0.06)" : C.offWhite,
-        border: onDark ? `1px solid ${C.borderOnDark}` : `1px solid rgba(46,46,56,0.10)`,
-        borderRadius: 8,
-        padding: 4,
-        gap: 4,
-        marginBottom: 24,
-      }}
-    >
-      {tabs.map((tab) => {
-        const isActive = active === tab.id;
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={isActive}
-            onClick={() => onChange(tab.id)}
-            style={{
-              padding: "9px 18px",
-              borderRadius: 6,
-              border: "none",
-              cursor: "pointer",
-              background: isActive ? (onDark ? C.yellow : C.confidentBlack) : "transparent",
-              color: isActive ? (onDark ? C.confidentBlack : C.white) : (onDark ? C.onDarkMuted : C.gray01),
-              fontSize: 13,
-              fontWeight: isActive ? 700 : 400,
-              fontFamily: isActive ? F.bold : F.regular,
-              transition: "background 150ms ease, color 150ms ease",
-              whiteSpace: "nowrap",
-            }}
-            onFocus={(e) => { e.currentTarget.style.outline = focusRing; }}
-            onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
-          >
-            {tab.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 function TechniqueExampleQuote({ text, variant }: { text: string; variant: "without" | "with" }) {
   const isBad = variant === "without";
@@ -601,176 +514,37 @@ function TechniqueExampleQuote({ text, variant }: { text: string; variant: "with
   );
 }
 
-function agentSlideBody(agent: (typeof AGENT_TEMPLATE_LIBRARY)[number], sub: string) {
-  return agent.slides.find((s) => s.sub === sub)?.body ?? "";
-}
-
-function AgentBestPracticesPanel() {
-  const [selectedId, setSelectedId] = useState(AGENT_TEMPLATE_LIBRARY[0].id);
-  const agent = AGENT_TEMPLATE_LIBRARY.find((a) => a.id === selectedId) ?? AGENT_TEMPLATE_LIBRARY[0];
-  const focusRing = `2px solid ${C.yellow}`;
-  const sections = [
-    { label: "Purpose", body: agentSlideBody(agent, "Purpose") },
-    { label: "Actions", body: agentSlideBody(agent, "Actions") },
-    { label: "Outcome", body: agentSlideBody(agent, "Outcome") },
-  ];
-
-  return (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "minmax(220px, 260px) 1fr",
-      gap: 0,
-      borderRadius: 8,
-      overflow: "hidden",
-      border: "1px solid rgba(46,46,56,0.10)",
-      background: C.offWhite,
-      textAlign: "left",
-      minHeight: 520,
-    }}>
-      <nav aria-label="EY-guided M365 agent examples" style={{
-        borderRight: "1px solid rgba(46,46,56,0.08)",
-        padding: "16px 0",
-        display: "flex",
-        flexDirection: "column",
-        minHeight: 0,
-        background: C.white,
-      }}>
-        <div style={{ padding: "0 20px 14px", borderBottom: "1px solid rgba(46,46,56,0.08)" }}>
-          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.eyebrowGold, fontFamily: F.bold, marginBottom: 4 }}>
-            {AGENT_TEMPLATE_LIBRARY.length} Agents
-          </div>
-          <div style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5 }}>
-            Pick one to see purpose, actions and outcome.
-          </div>
-        </div>
-        <div style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
-          {AGENT_TEMPLATE_LIBRARY.map((item) => {
-            const active = selectedId === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-current={active ? "true" : undefined}
-                onClick={() => setSelectedId(item.id)}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "8px 12px",
-                  marginBottom: 2,
-                  background: active ? C.yellowAlpha10 : "transparent",
-                  border: "1px solid transparent",
-                  borderRadius: 6,
-                  cursor: "pointer",
-                  textAlign: "left",
-                }}
-                onFocus={(e) => { e.currentTarget.style.outline = focusRing; }}
-                onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
-              >
-                <span style={{
-                  width: 22, height: 22, borderRadius: 4, flexShrink: 0,
-                  background: active ? C.yellow : "transparent",
-                  border: `1.5px solid ${active ? C.yellow : C.gray02}`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 10, fontWeight: 700,
-                  color: active ? C.confidentBlack : C.eyebrowGold,
-                  fontFamily: F.bold,
-                }}>
-                  {String(item.id).padStart(2, "0")}
-                </span>
-                <span style={{
-                  flex: 1, minWidth: 0,
-                  fontSize: 12, fontWeight: 700,
-                  color: active ? C.confidentBlack : C.gray01,
-                  fontFamily: F.bold,
-                  lineHeight: 1.3,
-                }}>
-                  {item.name}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-
-      <div style={{ display: "flex", flexDirection: "column", minHeight: 0, background: C.offWhite }}>
-        <div style={{
-          padding: "14px 24px",
-          background: C.white,
-          borderBottom: "1px solid rgba(46,46,56,0.08)",
-          flexShrink: 0,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{
-              width: 26, height: 26, borderRadius: 4, flexShrink: 0,
-              background: C.yellow, color: C.confidentBlack,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 11, fontWeight: 700, fontFamily: F.bold,
-            }}>
-              {String(agent.id).padStart(2, "0")}
-            </span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold }}>{agent.name}</span>
-          </div>
-          <p style={{ fontSize: 12, color: C.gray01, fontFamily: F.light, margin: "4px 0 0", paddingLeft: 34 }}>
-            EY-Guided M365 Agent Example
-          </p>
-        </div>
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px 28px" }}>
-          {sections.map(({ label, body }, i) => (
-            <div key={label}>
-              {i > 0 && <div style={{ height: 1, background: C.gray02, margin: "20px 0" }} />}
-              <p style={{
-                fontFamily: F.bold, fontSize: 10, letterSpacing: "0.1em",
-                textTransform: "uppercase", color: C.eyebrowGold, margin: "0 0 8px",
-              }}>
-                {label}
-              </p>
-              <p style={{
-                fontFamily: F.regular, fontSize: 14, color: C.offBlack,
-                margin: 0, lineHeight: 1.6,
-              }}>
-                {body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function PromptTechniquesPanel() {
   const [selectedId, setSelectedId] = useState(PROMPTING_TECHNIQUES[0].id);
   const technique = PROMPTING_TECHNIQUES.find((t) => t.id === selectedId) ?? PROMPTING_TECHNIQUES[0];
   const focusRing = `2px solid ${C.yellow}`;
 
   return (
-    <div style={{
+    <div className="pt-wizard" style={{
       display: "grid",
-      gridTemplateColumns: "minmax(220px, 260px) 1fr",
+      gridTemplateColumns: "minmax(260px, 300px) 1fr",
       gap: 0,
-      borderRadius: 8,
+      borderRadius: 12,
       overflow: "hidden",
       border: "1px solid rgba(46,46,56,0.10)",
-      background: C.offWhite,
+      background: C.white,
       textAlign: "left",
-      minHeight: 520,
+      height: 760,
     }}>
       <nav aria-label="Prompting techniques" style={{
         borderRight: "1px solid rgba(46,46,56,0.08)",
-        padding: "16px 0",
+        padding: "20px 0",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
-        background: C.white,
+        background: C.offWhite,
       }}>
-        <div style={{ padding: "0 20px 14px", borderBottom: "1px solid rgba(46,46,56,0.08)" }}>
-          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.eyebrowGold, fontFamily: F.bold, marginBottom: 4 }}>
-            8 Techniques
+        <div style={{ padding: "0 20px 16px", borderBottom: "1px solid rgba(46,46,56,0.08)" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.gray01, fontFamily: F.bold, marginBottom: 4 }}>
+            Prompt like a Pro — Techniques
           </div>
-          <div style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5 }}>
-            Pick one to explore.
+          <div style={{ fontSize: 13, color: C.offBlack, fontFamily: F.regular, lineHeight: 1.5 }}>
+            Pick a technique to explore.
           </div>
         </div>
         <div style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
@@ -789,9 +563,9 @@ function PromptTechniquesPanel() {
                   gap: 10,
                   padding: "8px 12px",
                   marginBottom: 2,
-                  background: active ? C.yellowAlpha10 : "transparent",
-                  border: "1px solid transparent",
-                  borderRadius: 6,
+                  background: active ? C.confidentBlack : "transparent",
+                  border: active ? "none" : "1px solid transparent",
+                  borderRadius: 8,
                   cursor: "pointer",
                   textAlign: "left",
                 }}
@@ -799,7 +573,7 @@ function PromptTechniquesPanel() {
                 onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
               >
                 <span style={{
-                  width: 22, height: 22, borderRadius: 4, flexShrink: 0,
+                  width: 22, height: 22, borderRadius: 6, flexShrink: 0,
                   background: active ? C.yellow : item.color + "18",
                   border: `1.5px solid ${active ? C.yellow : item.color}`,
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -811,13 +585,14 @@ function PromptTechniquesPanel() {
                 </span>
                 <span style={{
                   flex: 1, minWidth: 0,
-                  fontSize: 12, fontWeight: 700,
-                  color: active ? C.confidentBlack : C.gray01,
+                  fontSize: 13, fontWeight: 700,
+                  color: active ? C.white : C.confidentBlack,
                   fontFamily: F.bold,
                   lineHeight: 1.3,
                 }}>
                   {item.technique}
                 </span>
+                <ChevronRight size={14} color={active ? C.yellow : C.gray01} style={{ flexShrink: 0 }} />
               </button>
             );
           })}
@@ -970,10 +745,7 @@ function TemplateAssetActions({
 }
 
 function Panel2() {
-  const [panelTab, setPanelTab] = useState<"elements" | "techniques" | "agents">("elements");
-  const [activeEl, setActiveEl] = useState<number | null>(null);
-  const elem = activeEl != null ? PROMPT_COMPONENTS[activeEl] : null;
-  const focusRing = `2px solid ${C.yellow}`;
+  const [panelTab, setPanelTab] = useState<"elements" | "techniques">("elements");
 
   return (
     <section
@@ -989,7 +761,7 @@ function Panel2() {
           <p style={eyebrow(C.eyebrowGold)}>Prompt Engineering Refresher</p>
           <h2 style={{ ...h2Style, color: C.confidentBlack }}>Building Better Tax Prompts</h2>
           <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, marginBottom: 0 }}>
-            A prompt is the control surface for quality, scope and reviewability. Click an element to see it at work.
+            A prompt is the control surface for quality, scope and reviewability. Pick an element to see what it is, why it matters, and how it changes a prompt.
           </p>
         </div>
 
@@ -997,7 +769,6 @@ function Panel2() {
           tabs={[
             { id: "elements" as const, label: "Elements" },
             { id: "techniques" as const, label: "Techniques" },
-            { id: "agents" as const, label: "Agents" },
           ]}
           active={panelTab}
           onChange={setPanelTab}
@@ -1005,255 +776,33 @@ function Panel2() {
 
         {panelTab === "techniques" ? (
           <PromptTechniquesPanel />
-        ) : panelTab === "agents" ? (
-          <AgentBestPracticesPanel />
         ) : (
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(260px, 300px) 1fr",
-          gap: 0,
-          borderRadius: 8,
-          overflow: "hidden",
-          border: "1px solid rgba(46,46,56,0.10)",
-          background: C.offWhite,
-          textAlign: "left",
-        }}>
-          {/* Left — element picker */}
-          <nav aria-label="Prompt elements" style={{
-            borderRight: "1px solid rgba(46,46,56,0.08)",
-            padding: "16px 0",
-            display: "flex",
-            flexDirection: "column",
-            minHeight: 0,
-            background: C.white,
-          }}>
-            <div style={{ padding: "0 20px 14px", borderBottom: "1px solid rgba(46,46,56,0.08)" }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.eyebrowGold, fontFamily: F.bold, marginBottom: 4 }}>
-                8 Elements
-              </div>
-              <div style={{ fontSize: 13, color: C.gray01, fontFamily: F.regular, lineHeight: 1.5 }}>
-                Pick one to highlight it in the prompt.
-              </div>
-            </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
-              {PROMPT_COMPONENTS.map((item, i) => {
-                const active = activeEl === i;
-                return (
-                  <button
-                    key={item.n}
-                    type="button"
-                    aria-current={active ? "true" : undefined}
-                    onClick={() => setActiveEl(active ? null : i)}
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      padding: "8px 12px",
-                      marginBottom: 2,
-                      background: active ? C.yellowAlpha10 : "transparent",
-                      border: "1px solid transparent",
-                      borderRadius: 6,
-                      cursor: "pointer",
-                      textAlign: "left",
-                    }}
-                    onFocus={e => { e.currentTarget.style.outline = focusRing; }}
-                    onBlur={e => { e.currentTarget.style.outline = "none"; }}
-                  >
-                    <span style={{
-                      width: 22, height: 22, borderRadius: 4, flexShrink: 0,
-                      background: active ? C.yellow : "transparent",
-                      border: `1.5px solid ${active ? C.yellow : C.gray02}`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 10, fontWeight: 700,
-                      color: active ? C.confidentBlack : C.eyebrowGold,
-                      fontFamily: F.bold,
-                    }}>
-                      {item.n}
-                    </span>
-                    <span style={{
-                      flex: 1, minWidth: 0,
-                      fontSize: 13, fontWeight: 700,
-                      color: active ? C.confidentBlack : C.gray01,
-                      fontFamily: F.bold,
-                    }}>
-                      {item.label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
-
-          {/* Right — example prompt with live highlighting */}
-          <div style={{ display: "flex", flexDirection: "column", minHeight: 0, background: C.offWhite }}>
-            <div style={{
-              padding: "14px 24px",
-              background: C.white,
-              borderBottom: "1px solid rgba(46,46,56,0.08)",
-              display: "flex", alignItems: "center", gap: 10,
-              flexShrink: 0,
-              minHeight: 54,
-            }}>
-              {elem ? (
-                <>
-                  <span style={{
-                    width: 26, height: 26, borderRadius: 4, flexShrink: 0,
-                    background: C.yellow, color: C.confidentBlack,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 11, fontWeight: 700, fontFamily: F.bold,
-                  }}>
-                    {elem.n}
-                  </span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: C.confidentBlack, fontFamily: F.bold, flexShrink: 0 }}>{elem.label}</span>
-                  <span style={{
-                    fontSize: 12, color: C.gray01, fontFamily: F.light,
-                    minWidth: 0, flex: 1,
-                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                  }}>— {elem.question}</span>
-                </>
-              ) : (
-                <span style={{ fontSize: 13, color: C.gray01, fontFamily: F.light }}>
-                  Select an element to see where it lives in this prompt.
-                </span>
-              )}
-            </div>
-
-            <div style={{ padding: "24px 28px", flex: 1, overflowY: "auto" }}>
-              {/* Example Prompt Seed — artifact card */}
-              <div style={{
-                background: C.confidentBlack,
-                borderRadius: 4,
-                padding: "24px 28px",
-                borderLeft: `4px solid ${C.yellow}`,
-                marginBottom: 20,
-              }}>
-                <p style={eyebrow(C.eyebrowGold)}>Example Prompt Seed</p>
-                <p style={{ fontFamily: F.light, fontSize: 17, fontWeight: 300, color: C.onDarkMuted, lineHeight: 1.7, margin: 0 }}>
-                  {PROMPT_SEGMENTS.map((seg, i) => {
-                    const highlight = activeEl != null && seg.el === activeEl;
-                    return highlight ? (
-                      <motion.span
-                        key={i}
-                        initial={{ backgroundColor: C.yellowAlpha12 }}
-                        animate={{ backgroundColor: C.yellowAlpha12 }}
-                        style={{
-                          background: C.yellowAlpha12,
-                          borderRadius: 3,
-                          padding: "1px 4px",
-                          margin: "0 -1px",
-                          color: C.onDark,
-                          fontWeight: 700,
-                        }}
-                      >
-                        {seg.text}
-                      </motion.span>
-                    ) : (
-                      <span key={i} style={{ color: C.onDarkMuted, fontWeight: 400 }}>{seg.text}</span>
-                    );
-                  })}
-                </p>
-              </div>
-              <div style={{
-                padding: "18px 22px",
-                background: C.confidentBlack,
-                borderRadius: 4,
-                borderLeft: `4px solid ${C.yellow}`,
-              }}>
-                <p style={{ fontFamily: F.bold, fontSize: 20, fontWeight: 700, color: C.onDark, lineHeight: 1.3 }}>
-                  Good outputs start with good prompts.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+          <EightElementsPane />
         )}
       </div>
     </section>
   );
 }
 
-function Panel2UseCases({ onNavigate }: { onNavigate: (path: string) => void }) {
-  const [entries, setEntries] = useState(() => readStoredUseCaseEntries());
-  const hasEntries = countUseCaseEntries(entries) > 0;
-  const focusRing = `2px solid ${C.yellow}`;
-
-  useEffect(() => {
-    setEntries(readStoredUseCaseEntries());
-  }, []);
-
+function PanelTaxAgents() {
   return (
     <section
-      id="p3-your-use-cases"
+      id="p3-agents"
       style={{
         scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-        background: C.offWhite,
+        background: C.confidentBlack,
         padding: `${spacing.sectionPaddingY} ${contentInlinePad}`,
       }}
     >
       <div style={{ ...contentRailStyle }}>
         <div style={sectionHeader}>
-          <p style={eyebrow(C.eyebrowGold)}>Your Use Cases</p>
-          <h2 style={{ ...h2Style, color: C.confidentBlack }}>Workshop Bucket Results</h2>
-          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, marginBottom: 0 }}>
-            Ideas you sorted in Phase 2 — Prompt, M365 Agent, and Pro Code — carried forward for implementation planning.
+          <p style={eyebrow(C.eyebrowGold)}>Agent Engineering Refresher</p>
+          <h2 style={{ ...h2Style, color: C.onDark }}>Building better Tax agents</h2>
+          <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.onDarkMuted, marginBottom: 0 }}>
+            Use the same Elements, Techniques and Summary practices from Copilot Hub to write clearer agent instructions.
           </p>
         </div>
-
-        {hasEntries ? (
-          <UseCaseBucketCards sectionId="p3-your-use-cases" entries={entries} tone="light" />
-        ) : (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "clamp(32px, 5vw, 48px)",
-              borderRadius: 10,
-              border: `1px dashed ${C.gray02}`,
-              background: C.white,
-              maxWidth: 560,
-              margin: "0 auto",
-            }}
-          >
-            <p
-              style={{
-                fontFamily: F.regular,
-                fontSize: typeScale.body.size,
-                color: C.gray01,
-                margin: "0 0 20px",
-                lineHeight: 1.6,
-              }}
-            >
-              Complete the Phase 2 workshop to see your use cases here.
-            </p>
-            <button
-              type="button"
-              onClick={() => onNavigate("/phase2#your-use-cases")}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                fontFamily: F.bold,
-                fontSize: 13,
-                fontWeight: 700,
-                color: C.white,
-                background: C.confidentBlack,
-                border: "none",
-                borderRadius: 6,
-                padding: "10px 18px",
-                cursor: "pointer",
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.outline = focusRing;
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.outline = "none";
-              }}
-            >
-              Go to Phase 2 workshop
-              <ArrowRight size={16} strokeWidth={1.75} aria-hidden />
-            </button>
-          </div>
-        )}
+        <AgentHubTabs variant="rail" />
       </div>
     </section>
   );
@@ -1807,7 +1356,7 @@ export default function GuidanceImplementation({ onBack, onNavigate }: Props) {
         <Panel1 />
         <PanelBingo />
         <Panel2 />
-        <Panel2UseCases onNavigate={onNavigate} />
+        <PanelTaxAgents />
         <Panel4 />
         <Panel5 />
         {SHOW_P3_AGENT_TEMPLATES && <Panel6 />}

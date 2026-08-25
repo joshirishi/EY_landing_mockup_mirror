@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { Bot, Check, ChevronDown, ChevronLeft, ChevronRight, Eye, ListTree, MessageSquare, RotateCcw, ShieldOff, Undo2, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Eye, RotateCcw, X } from "lucide-react";
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
@@ -18,7 +18,6 @@ const PHASE4_SECTIONS = [
   { id: "p4-checks",     label: "The Checks",     group: "learn" as const },
   { id: "p4-checklist",  label: "Your Checklist", group: "apply" as const },
   { id: "p4-lead-governance", label: "Lead with governance", group: "apply" as const },
-  { id: "p4-org",        label: "For Organisations", group: "apply" as const },
   { id: "journey-progress", label: "Ascent",  group: "apply" as const },
 ];
 
@@ -271,6 +270,7 @@ function ResponsibleUseNewsCard({
             <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.white, margin: 0, lineHeight: 1.55, flex: 1 }}>
               {article.description}
             </p>
+            {article.isReal && (
             <button
               type="button"
               onClick={onOpenClipping}
@@ -297,6 +297,7 @@ function ResponsibleUseNewsCard({
               <Eye size={14} strokeWidth={1.75} aria-hidden />
               View clipping
             </button>
+            )}
           </>
         ) : (
           <div style={{ display: "flex", gap: 8, marginTop: "auto", paddingTop: 8 }}>
@@ -539,7 +540,7 @@ function RecogniseTheRisk() {
         <ResponsibleUseNewsCarousel
           revealed={revealed}
           onGuess={guess}
-          onOpenClipping={setLightbox}
+          onOpenClipping={(article) => { if (article.isReal) setLightbox(article); }}
         />
 
         {allRevealed && (
@@ -856,11 +857,40 @@ function Check1Body() {
         ))}
       </div>
 
-      {/* Zone B: Traffic-light suitability tiers */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 14 }}>
+      {/* Zone B: Traffic-light suitability tiers — shared header row so bars stay equal height when labels wrap */}
+      <div
+        className="check1-tiers"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gridTemplateRows: "auto 1fr",
+          gap: 10,
+          marginBottom: 14,
+          alignItems: "stretch",
+        }}
+      >
         {tiers.map((tier) => (
-          <div key={tier.label} style={{ borderRadius: 8, overflow: "hidden", border: `1px solid ${tier.color}` }}>
-            <div style={{ background: tier.color, padding: "10px 14px", display: "flex", alignItems: "flex-start", gap: 8 }}>
+          <div
+            key={tier.label}
+            style={{
+              display: "grid",
+              gridTemplateRows: "subgrid",
+              gridRow: "span 2",
+              borderRadius: 8,
+              overflow: "hidden",
+              border: `1px solid ${tier.color}`,
+              minWidth: 0,
+            }}
+          >
+            <div style={{
+              background: tier.color,
+              padding: "10px 14px",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+              boxSizing: "border-box",
+              height: "100%",
+            }}>
               <span style={{ fontFamily: fonts.bold, fontSize: 14, color: colors.white, lineHeight: 1, flexShrink: 0, marginTop: 1 }}>{tier.icon}</span>
               <p style={{ fontFamily: fonts.bold, fontSize: 11, color: colors.white, margin: 0, lineHeight: 1.4 }}>{tier.label}</p>
             </div>
@@ -874,6 +904,12 @@ function Check1Body() {
           </div>
         ))}
       </div>
+      <style>{`
+        @media (max-width: 800px) {
+          .check1-tiers { grid-template-columns: 1fr !important; grid-template-rows: none !important; }
+          .check1-tiers > div { display: flex !important; flex-direction: column; grid-row: auto !important; }
+        }
+      `}</style>
 
       <CheckCallout text="If the purpose, information, reviewer or verification method is unclear—pause and seek guidance before proceeding." />
     </div>
@@ -1265,380 +1301,6 @@ function TheChecks() {
   );
 }
 
-// ── How to Use AI in Tax (flowchart → one question at a time) ─────────────────
-type AiTaxQ = "confidential" | "client" | "public";
-type AiTaxAnswer = "yes" | "no";
-type AiTaxOutcome = "ban" | "chat" | "chat-or-agent" | "chat-studio-or-agent";
-
-const AI_TAX_ORDER: AiTaxQ[] = ["confidential", "client", "public"];
-const AI_TAX_QUESTIONS: Record<AiTaxQ, { label: string; short: string }> = {
-  confidential: { label: "Is the data confidential?", short: "Confidential" },
-  client: { label: "Is the data client-related?", short: "Client-related" },
-  public: { label: "Is the data from a public source?", short: "Public source" },
-};
-const AI_TAX_OUTCOMES: Record<AiTaxOutcome, { title: string; hint: string; marker: string; Icon: typeof ShieldOff }> = {
-  ban: { title: "Do not use AI", hint: "Confidential data must not be entered into AI tools.", marker: colors.destructive, Icon: ShieldOff },
-  chat: { title: "Use Copilot Chat", hint: "This data can be used in Copilot Chat.", marker: colors.frameBlue, Icon: MessageSquare },
-  "chat-or-agent": { title: "Use Copilot Chat or Agent", hint: "Client-related data from a public source.", marker: colors.frameBlue, Icon: Bot },
-  "chat-studio-or-agent": { title: "Use Copilot Chat, Copilot Studio, or Agent", hint: "Client-related data that is not from a public source.", marker: colors.frameBlue, Icon: Bot },
-};
-
-function nextAiTaxStep(q: AiTaxQ, a: AiTaxAnswer): AiTaxQ | AiTaxOutcome {
-  if (q === "confidential") return a === "yes" ? "ban" : "client";
-  if (q === "client") return a === "no" ? "chat" : "public";
-  return a === "yes" ? "chat-or-agent" : "chat-studio-or-agent";
-}
-
-function deriveAiTax(answers: Partial<Record<AiTaxQ, AiTaxAnswer>>) {
-  const path: AiTaxQ[] = [];
-  for (const q of AI_TAX_ORDER) {
-    const a = answers[q];
-    if (!a) return { question: q as AiTaxQ | null, outcome: null as AiTaxOutcome | null, path };
-    path.push(q);
-    const nxt = nextAiTaxStep(q, a);
-    if (nxt === "confidential" || nxt === "client" || nxt === "public") continue;
-    return { question: null, outcome: nxt, path };
-  }
-  return { question: "confidential" as AiTaxQ | null, outcome: null, path };
-}
-
-type AiTaxMapNode =
-  | { kind: "q"; id: AiTaxQ; yes: AiTaxMapNode; no: AiTaxMapNode }
-  | { kind: "out"; id: AiTaxOutcome };
-
-const AI_TAX_TREE: AiTaxMapNode = {
-  kind: "q",
-  id: "confidential",
-  yes: { kind: "out", id: "ban" },
-  no: {
-    kind: "q",
-    id: "client",
-    no: { kind: "out", id: "chat" },
-    yes: {
-      kind: "q",
-      id: "public",
-      yes: { kind: "out", id: "chat-or-agent" },
-      no: { kind: "out", id: "chat-studio-or-agent" },
-    },
-  },
-};
-
-function yellowFocus(el: HTMLElement, on: boolean) {
-  el.style.outline = on ? `2px solid ${colors.yellow}` : "none";
-  el.style.outlineOffset = on ? "2px" : "0";
-}
-
-function MapNodeView({
-  node,
-  answers,
-  currentQ,
-  outcome,
-  onJump,
-  muted,
-}: {
-  node: AiTaxMapNode;
-  answers: Partial<Record<AiTaxQ, AiTaxAnswer>>;
-  currentQ: AiTaxQ | null;
-  outcome: AiTaxOutcome | null;
-  onJump: (q: AiTaxQ) => void;
-  muted: boolean;
-}) {
-  if (node.kind === "out") {
-    const o = AI_TAX_OUTCOMES[node.id];
-    const reached = outcome === node.id;
-    return (
-      <div
-        style={{
-          fontFamily: reached ? fonts.bold : fonts.regular,
-          fontSize: 13,
-          lineHeight: 1.4,
-          color: muted && !reached ? colors.gray01 : colors.offBlack,
-          borderLeft: reached ? `3px solid ${o.marker}` : "3px solid transparent",
-          paddingLeft: 8,
-        }}
-      >
-        {o.title}
-      </div>
-    );
-  }
-
-  const isCurrent = currentQ === node.id;
-  return (
-    <div style={{
-      borderLeft: isCurrent ? `3px solid ${colors.yellow}` : `1px solid ${colors.gray02}`,
-      paddingLeft: 12,
-      marginTop: 4,
-    }}>
-      <button
-        type="button"
-        onClick={() => onJump(node.id)}
-        aria-current={isCurrent ? "step" : undefined}
-        onFocus={(e) => yellowFocus(e.currentTarget, true)}
-        onBlur={(e) => yellowFocus(e.currentTarget, false)}
-        style={{
-          display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
-          background: "none", border: "none", padding: "4px 0", cursor: "pointer",
-          textAlign: "left", fontFamily: fonts.bold, fontSize: 13, lineHeight: 1.4,
-          color: muted && !isCurrent ? colors.gray01 : colors.offBlack,
-        }}
-      >
-        {AI_TAX_QUESTIONS[node.id].label}
-        {isCurrent && (
-          <span style={{
-            fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.04em",
-            textTransform: "uppercase", color: colors.eyebrowGoldDark,
-          }}>
-            You are here
-          </span>
-        )}
-      </button>
-      {(["yes", "no"] as const).map((a) => {
-        const chosen = answers[node.id];
-        const state = !chosen ? "open" : chosen === a ? "taken" : "not-taken";
-        const childMuted = muted || state === "not-taken";
-        return (
-          <div key={a} style={{ display: "flex", gap: 8, marginTop: 6, alignItems: "flex-start" }}>
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 4, flexShrink: 0, minWidth: 44, marginTop: 2,
-              fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.04em", textTransform: "uppercase",
-              color: state === "not-taken" ? colors.gray01 : colors.offBlack,
-            }}>
-              {state === "taken" && <Check size={12} strokeWidth={1.75} aria-hidden />}
-              {a === "yes" ? "Yes" : "No"}
-            </span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <MapNodeView
-                node={a === "yes" ? node.yes : node.no}
-                answers={answers}
-                currentQ={currentQ}
-                outcome={outcome}
-                onJump={onJump}
-                muted={childMuted}
-              />
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function HowToUseAiInTax() {
-  const [answers, setAnswers] = useState<Partial<Record<AiTaxQ, AiTaxAnswer>>>({});
-  const [mapOpen, setMapOpen] = useState(false);
-  const { question, outcome, path } = deriveAiTax(answers);
-  const lastQ = path[path.length - 1];
-
-  const choose = (a: AiTaxAnswer) => {
-    if (!question) return;
-    setAnswers((prev) => ({ ...prev, [question]: a }));
-  };
-  const rewindTo = (q: AiTaxQ) => {
-    const idx = AI_TAX_ORDER.indexOf(q);
-    setAnswers((prev) => {
-      const next = { ...prev };
-      AI_TAX_ORDER.slice(idx).forEach((k) => { delete next[k]; });
-      return next;
-    });
-  };
-
-  const onChoiceKeys = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-    e.preventDefault();
-    const buttons = Array.from(e.currentTarget.querySelectorAll("button"));
-    const i = buttons.indexOf(document.activeElement as HTMLButtonElement);
-    const dir = e.key === "ArrowRight" ? 1 : -1;
-    const next = buttons[(i + dir + buttons.length) % buttons.length];
-    next?.focus({ preventScroll: true });
-  };
-
-  return (
-    <div
-      role="region"
-      aria-labelledby="ai-tax-guide-title"
-      style={{ display: "flex", flexDirection: "column", gap: 20 }}
-    >
-      <EYEyebrow id="ai-tax-guide-title" style={{ color: colors.eyebrowGoldDark }}>
-        How to Use AI in Tax
-      </EYEyebrow>
-
-      <div aria-label="Your path so far" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
-        <span style={{
-          fontFamily: fonts.bold, fontSize: typeScale.caption.size, letterSpacing: typeScale.label.tracking,
-          textTransform: "uppercase", color: colors.gray01,
-        }}>
-          Your path
-        </span>
-        {path.length === 0 && (
-          <EYCaption style={{ color: colors.gray01 }}>Start here — one question at a time.</EYCaption>
-        )}
-        {path.map((q) => (
-          <button
-            key={q}
-            type="button"
-            onClick={() => rewindTo(q)}
-            aria-label={`Change answer: ${AI_TAX_QUESTIONS[q].short} ${answers[q] === "yes" ? "Yes" : "No"}`}
-            onFocus={(e) => yellowFocus(e.currentTarget, true)}
-            onBlur={(e) => yellowFocus(e.currentTarget, false)}
-            style={{
-              fontFamily: fonts.regular, fontSize: typeScale.caption.size, color: colors.offBlack,
-              background: colors.offWhite, border: `1px solid ${colors.gray02}`, borderRadius: 4,
-              padding: "4px 8px", cursor: "pointer",
-            }}
-          >
-            {AI_TAX_QUESTIONS[q].short}: {answers[q] === "yes" ? "Yes" : "No"}
-          </button>
-        ))}
-      </div>
-
-      <div
-        aria-live="polite"
-        aria-atomic="true"
-        style={{
-          borderLeft: `3px solid ${outcome ? AI_TAX_OUTCOMES[outcome].marker : colors.yellow}`,
-          background: colors.offWhite,
-          padding: spacing.cardPadding,
-          minHeight: 140,
-        }}
-      >
-        {question && (
-          <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
-            <legend style={{
-              fontFamily: fonts.bold, fontWeight: 700, fontSize: 20, letterSpacing: "-0.02em",
-              color: colors.offBlack, margin: "0 0 16px", lineHeight: 1.3,
-            }}>
-              {AI_TAX_QUESTIONS[question].label}
-            </legend>
-            <div role="group" aria-label="Yes or No" onKeyDown={onChoiceKeys} style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-              {(["yes", "no"] as const).map((a) => (
-                <EYButton
-                  key={a}
-                  type="button"
-                  variant="secondary"
-                  size="md"
-                  onClick={() => choose(a)}
-                  onFocus={(e) => yellowFocus(e.currentTarget, true)}
-                  onBlur={(e) => yellowFocus(e.currentTarget, false)}
-                >
-                  {a === "yes" ? "Yes" : "No"}
-                </EYButton>
-              ))}
-            </div>
-          </fieldset>
-        )}
-
-        {outcome && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.22 }}>
-            {(() => {
-              const o = AI_TAX_OUTCOMES[outcome];
-              return (
-                <>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
-                    <o.Icon size={20} strokeWidth={1.75} color={o.marker} aria-hidden />
-                    <div>
-                      <EYHeading level={3} style={{ color: colors.offBlack }}>{o.title}</EYHeading>
-                      <EYBody style={{ marginTop: 6, color: colors.gray01, maxWidth: "none" }}>{o.hint}</EYBody>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 16 }}>
-                    {lastQ && (
-                      <EYButton
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => rewindTo(lastQ)}
-                        onFocus={(e) => yellowFocus(e.currentTarget, true)}
-                        onBlur={(e) => yellowFocus(e.currentTarget, false)}
-                      >
-                        <Undo2 size={14} strokeWidth={1.75} aria-hidden />
-                        Change last answer
-                      </EYButton>
-                    )}
-                    <EYButton
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setAnswers({})}
-                      onFocus={(e) => yellowFocus(e.currentTarget, true)}
-                      onBlur={(e) => yellowFocus(e.currentTarget, false)}
-                    >
-                      <RotateCcw size={14} strokeWidth={1.75} aria-hidden />
-                      Start over
-                    </EYButton>
-                  </div>
-                </>
-              );
-            })()}
-          </motion.div>
-        )}
-      </div>
-
-      <div>
-        <button
-          type="button"
-          aria-expanded={mapOpen}
-          aria-controls="ai-tax-path-map"
-          onClick={() => setMapOpen((o) => !o)}
-          onFocus={(e) => yellowFocus(e.currentTarget, true)}
-          onBlur={(e) => yellowFocus(e.currentTarget, false)}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            background: "none", border: "none", padding: 0, cursor: "pointer",
-            fontFamily: fonts.bold, fontSize: 13, color: colors.offBlack,
-          }}
-        >
-          <ListTree size={16} strokeWidth={1.75} aria-hidden />
-          {mapOpen ? "Hide all Yes / No paths" : "See all Yes / No paths"}
-          <ChevronDown
-            size={16}
-            strokeWidth={1.75}
-            aria-hidden
-            style={{ transform: mapOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
-          />
-        </button>
-        {mapOpen && (
-          <div
-            id="ai-tax-path-map"
-            role="tree"
-            aria-label="All Yes and No paths"
-            style={{ marginTop: 12, padding: spacing.cardPadding, background: colors.offWhite }}
-          >
-            <div style={{
-              fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.04em",
-              textTransform: "uppercase", color: colors.gray01, marginBottom: 8,
-            }}>
-              Start
-            </div>
-            <MapNodeView
-              node={AI_TAX_TREE}
-              answers={answers}
-              currentQ={question}
-              outcome={outcome}
-              onJump={rewindTo}
-              muted={false}
-            />
-          </div>
-        )}
-      </div>
-
-      <p style={{
-        fontFamily: fonts.regular, fontSize: typeScale.caption.size, color: colors.gray01,
-        margin: 0, lineHeight: 1.6,
-      }}>
-        <span style={{ fontFamily: fonts.bold, color: colors.offBlack }}>Note: </span>
-        If you are using Copilot Chat, Copilot Studio, or Agent, you must still follow the{" "}
-        <a
-          href="#p4-checks"
-          style={{ fontFamily: fonts.bold, color: colors.offBlack, textUnderlineOffset: 3 }}
-        >
-          5 Checks
-        </a>
-        .
-      </p>
-    </div>
-  );
-}
-
 // ── Lead with governance (Figma 4009:16919 — comparison, not a quiz) ──────────
 // Copy from Figma. Dark slide 2-col lists adapted to EY light surfaces.
 const LEAD_GOVERNANCE_OUTCOMES = [
@@ -1732,14 +1394,16 @@ function GovernanceCompareCard({
         ...(isDontLead ? {} : { borderLeft: `6px solid ${edge}` }),
         borderRadius: 8,
         padding: 32,
-        display: "flex",
-        flexDirection: "column",
-        gap: 24,
+        display: "grid",
+        gridTemplateRows: "subgrid",
+        gridRow: "span 2",
+        rowGap: 24,
+        minWidth: 0,
         transition: "border-color 0.2s ease, box-shadow 0.2s ease",
         boxShadow: hovered ? "0 4px 16px rgba(46,46,56,0.10)" : "none",
       }}
     >
-      <header style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <header style={{ display: "flex", flexDirection: "column", gap: 8, justifyContent: "space-between", minHeight: 0 }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
           <span
             aria-hidden
@@ -1795,37 +1459,19 @@ function LeadWithGovernance() {
       <div style={contentRailStyle}>
         <div style={{ marginBottom: 40, textAlign: "center" }}>
           <EYEyebrow style={{ color: colors.gray01, marginBottom: 16 }}>
-            Strategy & governance in action
+            Lead with governance
           </EYEyebrow>
-          <EYHeading id="p4-lead-governance-title" level={2} style={{ color: colors.offBlack, marginBottom: 14 }}>
-            AI adoption should start with governance for innovation
+          <EYHeading id="p4-lead-governance-title" level={2} style={{ color: colors.offBlack, marginBottom: 0 }}>
+            Enterprise Governance
           </EYHeading>
-          <div
-            style={{
-              background: colors.offWhite,
-              border: `1px solid ${colors.gray02}`,
-              borderRadius: 8,
-              padding: spacing.cardPadding,
-              maxWidth: 720,
-              margin: "0 auto",
-              textAlign: "center",
-            }}
-          >
-            <EYBody style={{ color: colors.gray01, maxWidth: "none", margin: 0 }}>
-              By setting up the right governance framework for AI, an organization can{" "}
-              <span style={{ fontFamily: fonts.bold, fontWeight: 700, color: colors.offBlack }}>
-                amplify the positive outcomes
-              </span>{" "}
-              of innovation and{" "}
-              <span style={{ fontFamily: fonts.bold, fontWeight: 700, color: colors.offBlack }}>mitigate potential risks</span>, especially considering the rapid pace of technological innovation in this field.
-            </EYBody>
-          </div>
         </div>
 
         <div
+          className="gov-compare-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gridTemplateRows: "auto 1fr",
             gap: 32,
             alignItems: "stretch",
           }}
@@ -1851,6 +1497,12 @@ function LeadWithGovernance() {
             hierarchyRank={2}
           />
         </div>
+        <style>{`
+          @media (max-width: 800px) {
+            .gov-compare-grid { grid-template-columns: 1fr !important; grid-template-rows: none !important; }
+            .gov-compare-grid > article { display: flex !important; flex-direction: column; grid-row: auto !important; }
+          }
+        `}</style>
       </div>
     </section>
   );
@@ -2114,62 +1766,6 @@ export default function ClosureAiReinforcement({
         </section>
 
         <LeadWithGovernance />
-
-        {/* ── p4-org ────────────────────────────────────────────────────── */}
-        <section
-          id="p4-org"
-          style={{
-            background: colors.offWhite,
-            padding: spacing.sectionPadding,
-            scrollMarginTop: SUBNAV_SCROLL_MARGIN,
-          }}
-        >
-          <div style={contentRailStyle}>
-            {/* Header */}
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
-              <p style={{
-                fontFamily: fonts.bold, fontSize: 10, letterSpacing: "0.1em",
-                textTransform: "uppercase", color: colors.eyebrowGold, margin: "0 0 12px",
-              }}>
-                GOVERNANCE COMPANION
-              </p>
-              <h2 style={{
-                fontFamily: fonts.bold, fontSize: 32, color: colors.confidentBlack,
-                margin: "0 0 14px", lineHeight: 1.2,
-              }}>
-                Organisational governance companion
-              </h2>
-              <p style={{
-                fontFamily: fonts.regular, fontSize: 17, color: colors.gray01,
-                margin: "0 auto", maxWidth: 640, lineHeight: 1.6,
-              }}>
-                A responsible-AI checklist to keep AI use visible, owned, controlled and continually reassessed.
-              </p>
-            </div>
-
-            {/* Official responsible-AI checklists (Echo Aug 11 attachment) */}
-            <div
-              style={{
-                background: colors.white,
-                border: `1px solid ${colors.gray02}`,
-                borderRadius: 12,
-                padding: 16,
-                marginBottom: 36,
-                overflow: "hidden",
-              }}
-            >
-              <HowToUseAiInTax />
-            </div>
-
-            {/* Tagline — yellow fails on offWhite; use confidentBlack */}
-            <p style={{
-              fontFamily: fonts.bold, fontSize: 17, color: colors.confidentBlack,
-              textAlign: "center", margin: 0, lineHeight: 1.55,
-            }}>
-              Make governance practical: visible ownership, clear controls and regular reassessment.
-            </p>
-          </div>
-        </section>
       </main>
 
       {/* Journey progress — continue via Control Room trek CTA */}

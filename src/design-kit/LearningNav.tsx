@@ -353,7 +353,7 @@ export function ModuleHeader(props: ModuleHeaderProps) {
       {showSectionTabs && (
         <nav
           aria-label={`${pageTitle} sections`}
-          className="flex items-end gap-6 md:gap-8 overflow-x-auto px-4 sm:px-6 md:px-10 pt-2.5"
+          className="flex items-end gap-6 md:gap-8 overflow-x-auto px-4 sm:px-6 md:px-10 pt-2.5 pb-1"
           style={{
             background: colors.offWhite,
             borderBottom: "1px solid rgba(46,46,56,0.1)",
@@ -792,12 +792,13 @@ function TabCluster({
             border: "none",
             color: isActive ? colors.offBlack : colors.gray01,
             fontFamily: isActive ? fonts.bold : fonts.regular,
+            fontWeight: isActive ? 700 : 400,
             fontSize: 14,
             whiteSpace: "nowrap",
             textDecoration: "none",
             cursor: "pointer",
-            borderBottom: isActive ? `3px solid ${colors.yellow}` : "3px solid transparent",
-            transition: "color 0.15s, border-color 0.15s",
+            boxShadow: isActive ? `inset 0 -3px 0 ${colors.yellow}` : "inset 0 -3px 0 transparent",
+            transition: "color 0.15s, box-shadow 0.15s",
           };
           return onSectionClick ? (
             <button
@@ -827,9 +828,29 @@ function TabCluster({
   );
 }
 
+function sectionIdFromHash(sectionIds: string[]): string | null {
+  const hash = window.location.hash.replace(/^#/, "");
+  return hash && sectionIds.includes(hash) ? hash : null;
+}
+
 /** Highlights the section tab whose content is currently most visible under the sticky header. */
 function useScrollSpy(sectionIds: string[], scrollOffset: number): string | null {
-  const [activeId, setActiveId] = useState<string | null>(sectionIds[0] ?? null);
+  const [activeId, setActiveId] = useState<string | null>(
+    () => sectionIdFromHash(sectionIds) ?? sectionIds[0] ?? null
+  );
+  const pinnedUntil = useRef(0);
+
+  useEffect(() => {
+    const applyHash = () => {
+      const fromHash = sectionIdFromHash(sectionIds);
+      if (!fromHash) return;
+      pinnedUntil.current = Date.now() + 900;
+      setActiveId(fromHash);
+    };
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
+  }, [sectionIds.join(",")]);
 
   useEffect(() => {
     if (sectionIds.length === 0) return;
@@ -840,6 +861,7 @@ function useScrollSpy(sectionIds: string[], scrollOffset: number): string | null
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (Date.now() < pinnedUntil.current) return;
         const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length > 0) {
           const topMost = visible.reduce((a, b) =>

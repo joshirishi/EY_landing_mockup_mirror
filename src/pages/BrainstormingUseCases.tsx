@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle, QrCode, X } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, PlusCircle, QrCode, X } from "lucide-react";
 import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
+import { WorkshopLibraryShareActions } from "../components/WorkshopLibraryShareActions";
 import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
 import {
   EMPTY_USE_CASE_DRAFTS,
@@ -1097,6 +1098,7 @@ function WorkshopLibrarySection() {
               >
                 After the process maps and recommendation note, open a Prompt or Agent book on the shelf for worked examples.
               </p>
+              <WorkshopLibraryShareActions />
             </div>
           </div>
 
@@ -1367,29 +1369,15 @@ function PlaceholderSection({ id, label }: { id: string; label: string }) {
 
 // ── Quick Recall section ──────────────────────────────────────────────────────
 function QuickRecallSection() {
-  const [agentsRevealed, setAgentsRevealed] = useState(false);
-  const [btnDissolving, setBtnDissolving] = useState(false);
-  const [proCodeRevealed, setProCodeRevealed] = useState(false);
-  const [proCodeBtnDissolving, setProCodeBtnDissolving] = useState(false);
   const [openExample, setOpenExample] = useState<RecallExampleDetail | null>(null);
-
-  const reveal = () => {
-    setBtnDissolving(true);
-    setTimeout(() => setAgentsRevealed(true), 280);
-  };
-
-  const revealProCode = () => {
-    setProCodeBtnDissolving(true);
-    setTimeout(() => setProCodeRevealed(true), 280);
-  };
 
   const cardBase: React.CSSProperties = {
     background: colors.white,
     border: `1px solid ${colors.gray02}`,
     borderRadius: 10,
     padding: "clamp(20px, 2.5vw, 32px)",
-    flex: 1,
-    minWidth: 0,
+    flex: "1 0 260px",
+    minWidth: 260,
   };
 
   return (
@@ -1404,7 +1392,7 @@ function QuickRecallSection() {
       <div style={{ ...contentRailStyle }}>
 
         {/* Eyebrow + heading — centered per section pattern */}
-        <div style={{ textAlign: "center", marginBottom: 8 }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
         <p style={{
           fontFamily: fonts.bold,
           fontSize: typeScale.label.size,
@@ -1419,45 +1407,21 @@ function QuickRecallSection() {
           fontFamily: fonts.bold,
           fontSize: "clamp(22px, 3.5vw, 36px)",
           color: colors.offBlack,
-          margin: "0 0 8px",
+          margin: 0,
           letterSpacing: "-0.02em",
           lineHeight: 1.1,
         }}>
-          Prompt or M365 Agent? Start with the Nature of the Activity.
+          Prompt or M365 Agent?
         </h2>
         </div>
-        <p style={{
-          fontFamily: fonts.regular,
-          fontSize: "clamp(14px, 1.5vw, 16px)",
-          color: colors.gray01,
-          margin: "0 0 40px",
-          lineHeight: 1.5,
-          textAlign: "center",
-          maxWidth: 620,
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}>
-          {agentsRevealed ? (
-            <>
-              One tax process may contain both Prompt activities and Agent activities.
-              <br />
-              The right tool depends on what the activity demands — not on which technology sounds more&nbsp;advanced.
-            </>
-          ) : (
-            <>
-              One tax process may contain Prompt activities, Agent activities, or both.
-              <br />
-              Before brainstorming, recall the building blocks for each.
-            </>
-          )}
-        </p>
 
-        {/* Cards container — always side-by-side grid */}
+        {/* Cards — single row; scroll sideways on small screens */}
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+          display: "flex",
+          flexWrap: "nowrap",
           gap: "clamp(16px, 2vw, 24px)",
           alignItems: "stretch",
+          overflowX: "auto",
         }}>
 
           {/* ── Prompts card ── */}
@@ -1566,73 +1530,7 @@ function QuickRecallSection() {
             </ul>
           </div>
 
-          {/* ── Agents card: ghost/locked → revealed ── */}
-          {!agentsRevealed ? (
-            <div
-              style={{
-                ...cardBase,
-                borderTop: `3px solid ${colors.gray02}`,
-                border: `1px dashed ${colors.gray02}`,
-                borderTopStyle: "solid",
-                borderTopWidth: 3,
-                borderTopColor: colors.gray02,
-                background: colors.offWhite,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 16,
-                animation: btnDissolving
-                  ? "ey-fade-dissolve 280ms cubic-bezier(.4,0,.2,1) both"
-                  : "ey-slide-right 420ms cubic-bezier(.22,.68,0,1.05) 80ms both",
-                minHeight: 200,
-              }}
-            >
-              <div style={{
-                width: 44, height: 44, borderRadius: "50%",
-                background: colors.white, border: `1px solid ${colors.gray02}`,
-                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-              }}>
-                <Lock size={20} color={colors.gray01} strokeWidth={1.75} aria-hidden="true" />
-              </div>
-
-              <div style={{ textAlign: "center" }}>
-                <span style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 11,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: colors.gray01,
-                  background: colors.gray02,
-                  borderRadius: 4,
-                  padding: "3px 10px",
-                  display: "inline-block",
-                  marginBottom: 8,
-                }}>
-                  M365 Agent
-                </span>
-                <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, margin: 0 }}>
-                  A reusable assistant for a defined business scenario
-                </p>
-              </div>
-
-              <button
-                onClick={reveal}
-                style={{
-                  fontFamily: fonts.bold, fontSize: 13,
-                  color: colors.confidentBlack, background: colors.yellow,
-                  border: "none", borderRadius: 24, padding: "10px 24px",
-                  cursor: "pointer", letterSpacing: "-0.01em",
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  boxShadow: "0 2px 12px rgba(255,230,0,0.35)",
-                }}
-              >
-                Reveal M365 Agent
-                <ArrowRight size={15} aria-hidden="true" />
-              </button>
-            </div>
-          ) : (
-            /* Revealed agents card */
+          {/* ── Agents card ── */}
             <div
               className="ey-recall-agents"
               style={{
@@ -1729,74 +1627,8 @@ function QuickRecallSection() {
                 ))}
               </ul>
             </div>
-          )}
 
-          {/* ── Pro Code card: ghost/locked → revealed ── */}
-          {!proCodeRevealed ? (
-            <div
-              style={{
-                ...cardBase,
-                borderTop: `3px solid ${colors.gray02}`,
-                border: `1px dashed ${colors.gray02}`,
-                borderTopStyle: "solid",
-                borderTopWidth: 3,
-                borderTopColor: colors.gray02,
-                background: colors.offWhite,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 16,
-                animation: proCodeBtnDissolving
-                  ? "ey-fade-dissolve 280ms cubic-bezier(.4,0,.2,1) both"
-                  : "ey-slide-up 420ms cubic-bezier(.22,.68,0,1.05) 120ms both",
-                minHeight: 200,
-              }}
-            >
-              <div style={{
-                width: 44, height: 44, borderRadius: "50%",
-                background: colors.white, border: `1px solid ${colors.gray02}`,
-                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-              }}>
-                <Lock size={20} color={colors.gray01} strokeWidth={1.75} aria-hidden="true" />
-              </div>
-
-              <div style={{ textAlign: "center" }}>
-                <span style={{
-                  fontFamily: fonts.bold,
-                  fontSize: 11,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: colors.gray01,
-                  background: colors.gray02,
-                  borderRadius: 4,
-                  padding: "3px 10px",
-                  display: "inline-block",
-                  marginBottom: 8,
-                }}>
-                  Pro Code
-                </span>
-                <p style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.gray01, margin: 0 }}>
-                  Developer-built solutions for complex, scalable tax workflows
-                </p>
-              </div>
-
-              <button
-                onClick={revealProCode}
-                style={{
-                  fontFamily: fonts.bold, fontSize: 13,
-                  color: colors.confidentBlack, background: colors.yellow,
-                  border: "none", borderRadius: 24, padding: "10px 24px",
-                  cursor: "pointer", letterSpacing: "-0.01em",
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  boxShadow: "0 2px 12px rgba(255,230,0,0.35)",
-                }}
-              >
-                Reveal Pro Code
-                <ArrowRight size={15} aria-hidden="true" />
-              </button>
-            </div>
-          ) : (
+          {/* ── Pro Code card ── */}
           <div
             className="ey-recall-procode"
             style={{
@@ -1863,32 +1695,27 @@ function QuickRecallSection() {
               Examples will be added later.
             </p>
           </div>
-          )}
         </div>
 
-        {/* Post-reveal summary — verbatim from PDF slide 2 */}
-        {agentsRevealed && (
-          <div style={{
-            marginTop: 32,
-            display: "flex",
-            alignItems: "center",
-            gap: 16,
-            animation: "ey-hero-fade-up 400ms 200ms both",
+        <div style={{
+          marginTop: 32,
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+        }}>
+          <div style={{ flex: 1, height: 1, background: colors.gray02 }} />
+          <p style={{
+            fontFamily: fonts.bold,
+            fontSize: 14,
+            color: colors.offBlack,
+            margin: 0,
+            whiteSpace: "nowrap",
+            letterSpacing: "-0.01em",
           }}>
-            <div style={{ flex: 1, height: 1, background: colors.gray02 }} />
-            <p style={{
-              fontFamily: fonts.bold,
-              fontSize: 14,
-              color: colors.offBlack,
-              margin: 0,
-              whiteSpace: "nowrap",
-              letterSpacing: "-0.01em",
-            }}>
-              Prompts assist specific tasks. Agents support repeatable workflows.
-            </p>
-            <div style={{ flex: 1, height: 1, background: colors.gray02 }} />
-          </div>
-        )}
+            Prompts assist specific tasks. Agents support repeatable workflows.
+          </p>
+          <div style={{ flex: 1, height: 1, background: colors.gray02 }} />
+        </div>
       </div>
       {openExample && (
         <RecallExampleModal detail={openExample} onClose={() => setOpenExample(null)} />

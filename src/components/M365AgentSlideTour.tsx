@@ -28,7 +28,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { colors, fonts as F, spectrumCss, typeScale } from "../design-kit/tokens";
+import { colors, fonts as F, spectrumCss } from "../design-kit/tokens";
 
 const C = { ...colors, dark2: colors.offBlack };
 const line = `color-mix(in srgb, ${C.gray02} 50%, ${C.white})`;
@@ -77,21 +77,8 @@ function cardTransform(placement: Placement): CSSProperties {
 type SlideKind = "teach" | "landing" | "instructions" | "knowledge";
 type Slide = { label: string; kind: SlideKind; callouts: Callout[] };
 
-/** Four pages from M365_Copilot_Agents_Features_Overview — slide 5 journey comes later. */
+/** Product chrome first so the Agent section opens on the Microsoft-style scene. */
 const AGENT_TOUR_SLIDES: Slide[] = [
-  {
-    label: "What is an agent?",
-    kind: "teach",
-    callouts: [
-      {
-        title: "Chat vs agent",
-        body: "Chat answers broadly. Agents help deeply within a defined workflow.",
-        icon: Sparkles,
-        target: "chat-vs-agent",
-        placement: "top",
-      },
-    ],
-  },
   {
     label: "New Agent",
     kind: "landing",
@@ -130,6 +117,19 @@ const AGENT_TOUR_SLIDES: Slide[] = [
         icon: Search,
         target: "agent-store",
         placement: "right",
+      },
+    ],
+  },
+  {
+    label: "What is an agent?",
+    kind: "teach",
+    callouts: [
+      {
+        title: "Chat vs agent",
+        body: "Chat answers broadly. Agents help deeply within a defined workflow.",
+        icon: Sparkles,
+        target: "chat-vs-agent",
+        placement: "top",
       },
     ],
   },
@@ -860,6 +860,10 @@ function CalloutBox({
         opacity: active ? 1 : 0,
         pointerEvents: "none",
         transition: "opacity 0.4s ease",
+        background: "transparent",
+        backdropFilter: "none",
+        WebkitBackdropFilter: "none",
+        filter: "none",
       }}
     >
       {([
@@ -874,9 +878,10 @@ function CalloutBox({
           style={{
             position: "absolute",
             ...box,
-            background: `color-mix(in srgb, ${C.confidentBlack} 32%, transparent)`,
-            backdropFilter: "blur(2.5px)",
-            WebkitBackdropFilter: "blur(2.5px)",
+            background: `color-mix(in srgb, ${C.confidentBlack} 12%, transparent)`,
+            backdropFilter: "none",
+            WebkitBackdropFilter: "none",
+            filter: "none",
             pointerEvents: "none",
             opacity: showBlur ? 1 : 0,
             transition: "opacity 0.4s ease",
@@ -1096,28 +1101,6 @@ export function M365AgentSlideTour() {
       aria-roledescription="carousel"
       style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16, outline: "none" }}
     >
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontFamily: F.bold, fontSize: typeScale.label.size, fontWeight: 700, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: C.dark2 }}>
-            {slide.label}
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }} aria-hidden>
-          {AGENT_TOUR_SLIDES.map((s, i) => (
-            <span
-              key={s.label}
-              style={{
-                width: i === slideIndex ? 24 : 8,
-                height: 8,
-                borderRadius: 999,
-                background: i === slideIndex ? C.yellow : C.gray02,
-                transition: "width 0.2s ease",
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
       <div ref={setFrameEl} style={{ position: "relative", width: "100%" }}>
         <div
           style={{

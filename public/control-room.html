@@ -280,7 +280,19 @@ body{
   padding:14px 0;
 }
 .submit-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.submit-end{display:flex;align-items:center;gap:16px;margin-left:auto;min-width:0}
 .warn-msg{color:var(--amber);font-size:12px;font-family:var(--font-reg);min-height:18px}
+.btn-back{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--yellow);
+  font-family:var(--font-bold);font-size:14px;
+  padding:11px 20px;border-radius:6px;
+  border:1px solid rgba(255,230,0,.4);cursor:pointer;
+  transition:.2s;white-space:nowrap;letter-spacing:.01em;
+}
+.btn-back:hover{background:rgba(255,230,0,.06)}
+.btn-back:focus{outline:2px solid var(--yellow);outline-offset:2px}
+.btn-back svg{display:block;flex-shrink:0}
 .btn-submit{
   background:var(--yellow);
   color:var(--ink);
@@ -416,7 +428,7 @@ body{
   padding:12px 0;
   display:none;
 }
-.nav-strip.show{display:flex;justify-content:flex-end}
+.nav-strip.show{display:block}
 .btn-next{
   background:var(--yellow);
   color:var(--ink);
@@ -681,6 +693,27 @@ function esc(s) {
   return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
 
+function backButton(i) {
+  const label = i === 0 ? 'Back to start' : 'Back';
+  return `<button type="button" class="btn-back" onclick="goBack(${i})" aria-label="${label}">
+    <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M7.5 2.5L4 6l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    ${label}
+  </button>`;
+}
+
+function goBack(i) {
+  if (i <= 0) {
+    showScreen('intro');
+    current = 0;
+    updateProgress(0);
+    return;
+  }
+  document.getElementById(`card-${i}`).classList.remove('active');
+  current = i - 1;
+  document.getElementById(`card-${current}`).classList.add('active');
+  updateProgress(current);
+}
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -730,8 +763,11 @@ function render() {
       <div class="submit-strip" id="submitstrip-${i}">
         <div class="rail">
           <div class="submit-row">
-            <span class="warn-msg" id="warn-${i}"></span>
-            <button class="btn-submit" id="submitbtn-${i}" onclick="submitScenario(${i})">Submit committee decision</button>
+            ${backButton(i)}
+            <div class="submit-end">
+              <span class="warn-msg" id="warn-${i}"></span>
+              <button class="btn-submit" id="submitbtn-${i}" onclick="submitScenario(${i})">Submit committee decision</button>
+            </div>
           </div>
         </div>
       </div>
@@ -819,9 +855,12 @@ function submitScenario(i) {
 
   const navStrip = document.getElementById(`nav-${i}`);
   const navRail = navStrip.querySelector('.rail');
-  navRail.innerHTML = i < scenarios.length - 1
-    ? `<button class="btn-next" onclick="nextScenario(${i})">Next scenario →</button>`
-    : `<button class="btn-next" onclick="finish()">View committee score →</button>`;
+  navRail.innerHTML = `<div class="submit-row">
+    ${backButton(i)}
+    ${i < scenarios.length - 1
+      ? `<button class="btn-next" onclick="nextScenario(${i})">Next scenario →</button>`
+      : `<button class="btn-next" onclick="finish()">View committee score →</button>`}
+  </div>`;
   navStrip.classList.add('show');
 
   updateProgress(i + 1);

@@ -45,6 +45,7 @@ const TOKEN_BRIDGE = `
   --accent-green: ${colors.frameGreen};
   --accent-purple: ${colors.framePurple};
   --accent-orange: ${colors.frameOrange};
+  --accent-teal: ${colors.frameTeal};
 
   /* Dark-module tokens (design-kit) */
   --ey-on-dark: ${colors.onDark};

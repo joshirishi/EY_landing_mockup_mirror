@@ -71,8 +71,8 @@ export const MODULES: CurriculumModule[] = [
       { id: "rise-of-ai", label: "Understanding AI", group: "learn" },
       { id: "evolution", label: "Evolution", group: "learn" },
       { id: "terminology", label: "Gen AI Convo", group: "learn" },
-      { id: "genai-vs-agents", label: "GenAI vs Agents", group: "learn" },
       { id: "cheatsheet", label: "Thinking Partner", group: "learn" },
+      { id: "genai-vs-agents", label: "GenAI vs Agents", group: "learn" },
       { id: "quiz", label: "Quiz", group: "apply" },
     ],
   },
@@ -87,8 +87,8 @@ export const MODULES: CurriculumModule[] = [
       { id: "pipeline", label: "Prompt Basics", group: "learn" },
       { id: "elements", label: "Elements", group: "learn" },
       { id: "advanced", label: "Techniques", group: "learn" },
-      { id: "match-activity", label: "Activity", group: "apply" },
-      { id: "dos-donts", label: "Do's & Don'ts", group: "apply" },
+      { id: "match-activity", label: "Quiz", group: "apply" },
+      { id: "dos-donts", label: "Dos and Don'ts", group: "apply" },
       // "Cheat Sheet" tab hidden — links to RecapInNutshellSection in AiTaxPrompting.tsx, which is currently disabled.
       // { id: "recap", label: "Cheat Sheet", group: "apply" },
     ],
@@ -101,7 +101,9 @@ export const MODULES: CurriculumModule[] = [
     estimatedTime: "~60 min",
     supportsInPageNav: true,
     subModules: [
-      { id: "prompt-repository", label: "M365 Apps", group: "learn" },
+      { id: "prompt-repository", label: "M365 in MS Apps", group: "learn" },
+      // Agent is a Learn sibling of Apps — not a prompt-type pill in the repository.
+      { id: "m365-agent", label: "M365 Agent", group: "learn" },
       { id: "useful-links", label: "Useful Links", group: "apply" },
       { id: "security", label: "Security & Governance", group: "apply" },
     ],

@@ -42,6 +42,7 @@
   --accent-blue: #4696FF;
   --accent-orange: #FF7D1E;
   --accent-purple: #B400FF;
+  --accent-teal: #32FFFF;        /* frameTeal — nest / spectrum accent */
   --facebook-blue: #1877F2; /* chart comparison only — Facebook brand */
   --dropbox-blue: #0061FF; /* chart comparison only — Dropbox brand */
 
@@ -3468,8 +3469,8 @@ document.addEventListener('keydown', function(e) {
   width:56px;
   height:56px;
   border-radius:50%;
-  background:var(--ey-yellow-alpha-10);
-  border:1px solid var(--ey-yellow-alpha-12);
+  background:var(--confident-black);
+  border:1px solid var(--confident-black);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -3671,7 +3672,7 @@ document.addEventListener('keydown', function(e) {
   display:flex; align-items:flex-start; gap:6px; margin-top:10px;
 }
 .inside-tab-callout-text { color:var(--eyebrow-gold); font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; line-height:1.4; }
-.inside-tab-inner { background:var(--off-white); border-radius:8px; padding:12px; margin-bottom:10px; border:1px solid var(--card-border); }
+.inside-tab-inner { background:var(--off-white); border-radius:8px; padding:12px; margin-bottom:10px; border:1px solid var(--card-border); min-width:0; }
 .inside-tab-highlight { display:flex; align-items:center; gap:6px; padding:8px 10px; background:var(--off-white); border:1px solid var(--card-border); border-radius:8px; margin-bottom:10px; font-size:12px; font-weight:700; color:var(--ey-dark); }
 .inside-tab-highlight svg { flex-shrink:0; stroke:var(--ey-dark); }
 .inside-tab-prompt { font-size:12px; color:var(--text-secondary); font-style:italic; line-height:1.45; padding:6px 10px; background:var(--white); border-radius:6px; border-left:2px solid var(--card-border); margin-bottom:8px; }
@@ -3693,17 +3694,30 @@ document.addEventListener('keydown', function(e) {
 .tok-stat-row .tok-stat-arrow { font-size:14px; color:var(--text-secondary); }
 .tok-stat-row .tok-stat-words { color:var(--text-secondary); }
 .tok-stat-row .tok-stat-tokens { color:var(--accent-blue); font-weight:700; }
-.tok-groups { display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap; }
-.tok-group { display:flex; flex-direction:column; }
-.tok-group-chips { display:flex; gap:6px; justify-content:center; }
+/* One horizontal line — full sentence stays visible; scroll-x if the card is narrow. */
+.tok-groups {
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  overflow-y:hidden;
+  width:100%;
+  min-width:0;
+  padding-bottom:6px;
+  -webkit-overflow-scrolling:touch;
+}
+.tok-group { display:flex; flex-direction:column; flex:0 0 auto; }
+.tok-group-chips { display:flex; gap:3px; justify-content:center; }
+.tok-groups .inside-token-chip { padding:1px 4px; font-size:9px; border-radius:3px; white-space:nowrap; }
 /* Squared brace: two ticks dropping from the end chips, joined below,
    with a stem to the word label. Drawn with borders so it self-sizes. */
-.tok-brace { height:10px; margin:6px 9px 0; border-left:2px solid currentColor; border-right:2px solid currentColor; border-bottom:2px solid currentColor; border-radius:0 0 2px 2px; position:relative; }
-.tok-brace::after { content:''; position:absolute; left:50%; transform:translateX(-50%); top:100%; width:2px; height:8px; background:currentColor; border-radius:1px; }
+.tok-brace { height:6px; margin:3px 5px 0; border-left:2px solid currentColor; border-right:2px solid currentColor; border-bottom:2px solid currentColor; border-radius:0 0 2px 2px; position:relative; }
+.tok-brace::after { content:''; position:absolute; left:50%; transform:translateX(-50%); top:100%; width:2px; height:5px; background:currentColor; border-radius:1px; }
 /* Single-token group: one straight tick, no brace */
-.tok-brace--single { border:none; border-radius:1px; width:2px; height:18px; margin:6px auto 0; background:currentColor; }
+.tok-brace--single { border:none; border-radius:1px; width:2px; height:11px; margin:3px auto 0; background:currentColor; }
 .tok-brace--single::after { display:none; }
-.tok-group-word { margin-top:5px; text-align:center; font-size:11px; font-weight:600; line-height:1.3; }
+.tok-group-word { margin-top:2px; text-align:center; font-size:9px; font-weight:700; line-height:1.2; white-space:nowrap; }
 .tok-group .inside-token-chip { background:color-mix(in srgb, currentColor 14%, var(--white)); border-color:color-mix(in srgb, currentColor 32%, var(--white)); color:currentColor; }
 .tok-group--blue { color:#2563eb; }
 .tok-group--green { color:#16a34a; }
@@ -4172,9 +4186,10 @@ document.addEventListener('keydown', function(e) {
   display:flex;
   align-items:center;
   gap:8px;
+  overflow:visible;
 }
 .hall-news-stage .hall-news-viewport { flex:1 1 auto; min-width:0; }
-.hall-news-stage .hall-news-nav-btn { flex-shrink:0; }
+.hall-news-stage .hall-news-nav-btn { flex-shrink:0; align-self:center; }
 .hall-news-counter--overlay {
   position:absolute;
   left:50%;
@@ -4189,7 +4204,10 @@ document.addEventListener('keydown', function(e) {
 /* Embedded carousel inside hallucination reasoning card */
 .hall-news-embed {
   margin-bottom:16px;
-  padding:12px;
+  padding:12px 12px 16px;
+  min-height:280px;
+  box-sizing:border-box;
+  overflow:visible;
   background:var(--off-white);
   border:1px solid var(--card-border);
   border-radius:10px;
@@ -4203,29 +4221,27 @@ document.addEventListener('keydown', function(e) {
   color:var(--text-secondary);
   text-align:center;
 }
-.hall-news-viewport--embed { min-height:140px; max-height:160px; position:relative; }
+.hall-news-viewport--embed { min-height:220px; max-height:240px; position:relative; }
 .hall-news-slide--embed { padding:2px 4px; }
 .hall-news-clip--clickable {
   cursor:pointer;
   border-radius:6px;
-  transition:box-shadow 0.2s, transform 0.2s;
 }
-.hall-news-clip--clickable:hover,
 .hall-news-clip--clickable:focus-visible {
   outline:2px solid var(--ey-yellow);
   outline-offset:2px;
-  transform:translateY(-1px);
-  box-shadow:0 6px 16px rgba(46,46,56,0.12);
 }
-.hall-news-viewport--embed .hall-news-clip-img { max-height:140px; }
+.hall-news-viewport--embed .hall-news-clip-img { max-height:220px; }
 .hall-news-footer--embed { display:none; }
 .hall-news-nav-btn {
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:28px;
-  height:28px;
+  width:32px;
+  height:32px;
   padding:0;
+  overflow:visible;
+  line-height:0;
   border:1px solid var(--card-border);
   border-radius:6px;
   background:var(--white);
@@ -4233,6 +4249,11 @@ document.addEventListener('keydown', function(e) {
   cursor:pointer;
   font-family:inherit;
   transition:background 0.2s, border-color 0.2s;
+}
+.hall-news-nav-btn svg {
+  display:block;
+  overflow:visible;
+  flex-shrink:0;
 }
 .hall-news-nav-btn:hover,
 .hall-news-nav-btn:focus-visible {
@@ -4718,11 +4739,11 @@ function buildEmbeddedHallNews() {
   return '<div class="hall-news-embed" role="region" aria-label="Real-world AI hallucination headlines">' +
     '<p class="hall-news-embed-label">Real-world headlines — tap an article to browse</p>' +
     '<div class="hall-news-stage">' +
-      '<button type="button" class="hall-news-nav-btn" onclick="retreatNewsCarousel()" aria-label="Previous article"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>' +
+      '<button type="button" class="hall-news-nav-btn" onclick="retreatNewsCarousel()" aria-label="Previous article"><svg width="20" height="20" viewBox="-2 -2 28 28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" overflow="visible" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>' +
       '<div class="hall-news-viewport hall-news-viewport--embed" id="hall-news-viewport">' + slides +
         '<span class="hall-news-counter hall-news-counter--overlay" id="hall-news-counter" aria-live="polite" aria-label="News article 1 of ' + HALL_NEWS_CLIPS.length + '">1 of ' + HALL_NEWS_CLIPS.length + '</span>' +
       '</div>' +
-      '<button type="button" class="hall-news-nav-btn" onclick="advanceNewsCarousel()" aria-label="Next article"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>' +
+      '<button type="button" class="hall-news-nav-btn" onclick="advanceNewsCarousel()" aria-label="Next article"><svg width="20" height="20" viewBox="-2 -2 28 28" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" overflow="visible" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>' +
     '</div>' +
   '</div>';
 }
@@ -4965,13 +4986,21 @@ const TOKEN_GROUPS = [
   { word: 'the',          tokens: ['the'],              tone: 'green' },
   { word: 'GST',          tokens: ['G', 'ST'],          tone: 'blue' },
   { word: 'implications', tokens: ['impl', 'ications'], tone: 'orange' },
+  { word: 'for',          tokens: ['for'],              tone: 'green' },
+  { word: 'an',           tokens: ['an'],               tone: 'green' },
   { word: 'online',       tokens: ['online'],           tone: 'green' },
   { word: 'seller',       tokens: ['sell', 'er'],       tone: 'red' },
+  { word: 'selling',      tokens: ['sell', 'ing'],      tone: 'orange' },
+  { word: 'goods',        tokens: ['goods'],            tone: 'blue' },
+  { word: 'across',       tokens: ['ac', 'ross'],       tone: 'green' },
+  { word: 'multiple',     tokens: ['multi', 'ple'],     tone: 'orange' },
+  { word: 'Indian',       tokens: ['Indian'],           tone: 'red' },
+  { word: 'states',       tokens: ['states'],           tone: 'blue' },
 ];
 
 function buildTokenGroups() {
   var delay = 0.1;
-  var groups = TOKEN_GROUPS.map(function (g) {
+  return TOKEN_GROUPS.map(function (g) {
     var chips = g.tokens.map(function (t) {
       delay += 0.12;
       return '<span class="inside-token-chip" style="animation:tokenPop 0.4s ease-out ' + delay.toFixed(2) + 's both;">' + t + '</span>';
@@ -4982,7 +5011,6 @@ function buildTokenGroups() {
       '<div class="tok-group-word">' + g.word + '</div>' +
     '</div>';
   }).join('');
-  return groups + '<span class="tok-ellipsis" aria-label="and more tokens">&middot;&middot;&middot;</span>';
 }
 
 const INSIDE_TOKENS_HTML = `<div class="inside-tab-card">` +
@@ -4998,7 +5026,7 @@ const INSIDE_TOKENS_HTML = `<div class="inside-tab-card">` +
     <div class="inside-tab-stat">Your prompt &rarr; tokenized</div>
     <div class="inside-tab-prompt tok-prompt">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div>
     <div class="tok-groups">${buildTokenGroups()}</div>
-    <div class="tok-stat-row"><span class="tok-stat-words">16 words</span><span class="tok-stat-arrow">&rarr;</span><span class="tok-stat-tokens">~21 tokens</span></div>
+    <div class="tok-stat-row"><span class="tok-stat-words">14 words</span><span class="tok-stat-arrow">&rarr;</span><span class="tok-stat-tokens">~21 tokens</span></div>
   </div>
   <p class="inside-tab-body">Token count affects cost and context limits. Tax terms like &ldquo;GST&rdquo; and &ldquo;ITC&rdquo; may split across multiple tokens.</p>
   <div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('llm')">Next: LLM <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
@@ -5015,7 +5043,6 @@ const INSIDE_LLM_HTML = `<div class="inside-tab-card">` +
   `<div class="inside-tab-head-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span class="inside-tab-headline">Watch it predict</span></div>
   <div class="inside-tab-inner"><div class="inside-tab-prompt">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div class="llm-stream-line"><span style="font-weight:700;">GST</span> <span id="llm-stream-text"></span><span id="llm-stream-cursor" style="color:var(--text-secondary);animation:blink 1s infinite;">&#9612;</span></div></div>
   <div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>LLM = the brain behind the conversation</span></div>
-  <p class="inside-tab-body">The model generates fluent language but does not inherently know your firm&rsquo;s latest GST guidance &mdash; which is why the draft still needs grounding and review.</p>
   <div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="continueBeat()">Next: See the output <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
 </div>`;
 
@@ -5247,7 +5274,7 @@ function buildAskExplainerCardHtml() {
           '<span class="ask-explainer-card__chip-arrow">→</span>' +
           '<span class="ask-explainer-card__chip ask-explainer-card__chip--specific">Specific</span>' +
         '</div>' +
-        '<p class="ask-explainer-card__analogy-body">One gets there. One gets lost.</p>' +
+        '<p class="ask-explainer-card__analogy-body">One gets lost. One gets there.</p>' +
       '</div>' +
     '</div>' +
     '<div class="ask-explainer-card__takeaway">' +
@@ -7050,9 +7077,9 @@ const EVO_ERAS = [
     analogy: 'Like Listening to a Song and Recognising It Instantly — not because you memorized rules, but because your brain learned complex patterns.',
     examples: ['Face Unlock', 'Voice assistants', 'Photo recognition'],
     preview: 'Recognises complex patterns',
-    image: '/evo-dl.png',
+    image: '/evo-dl-neural.png',
     focus: '48% 40%',
-    dot: '#FF7D1E',
+    dot: '#32FFFF',
     parent: 1
   },
   {
@@ -7061,8 +7088,8 @@ const EVO_ERAS = [
     analogy: 'Like A Musician Composing a New Song — you ask for a relaxing melody, and it uses learned knowledge to create something new.',
     examples: ['ChatGPT drafting', 'Copilot presentations', 'AI image generation'],
     preview: 'Creates new content',
-    image: '/evo-gen.png',
-    focus: '76% 38%',
+    image: '/evo-dl.png',
+    focus: '80% 42%',
     dot: '#FF7D1E',
     parent: 2
   },
@@ -7072,7 +7099,7 @@ const EVO_ERAS = [
     analogy: 'Like a robot vacuum cleaner — you tell it what needs to be cleaned. It navigates, avoids obstacles, adjusts its route, learns the layout over time, and returns to recharge when needed.',
     examples: ['Travel Booking Assistant', 'Meeting Scheduling Assistant', 'Online Shopping Assistant'],
     preview: 'Acts towards an end goal',
-    image: '/evo-agentic.png',
+    image: '/evo-agent-bot.png',
     focus: '50% 34%',
     dot: '#B400FF',
     parent: 3

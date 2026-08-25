@@ -749,7 +749,7 @@ function ChatTourCanvas({ frameRef }: { frameRef: (el: HTMLDivElement | null) =>
   );
 }
 
-// ── Callout box with live blur ────────────────────────────────────────────────
+// ── Callout box (highlight ring + solid card, no backdrop blur) ───────────────
 
 function CalloutBox({
   callout,
@@ -788,18 +788,19 @@ function CalloutBox({
     <div
       role="note"
       aria-hidden={!active}
-      style={{ position: "absolute", inset: 0, zIndex: active ? 20 : 5, opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none", transition: "opacity 0.3s ease" }}
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: active ? 20 : 5,
+        opacity: active ? 1 : 0,
+        pointerEvents: active ? "auto" : "none",
+        transition: "opacity 0.3s ease",
+        background: "transparent",
+        backdropFilter: "none",
+        WebkitBackdropFilter: "none",
+        filter: "none",
+      }}
     >
-      {/* 4-panel blur overlay */}
-      {([
-        { top: 0, left: 0, right: 0, height: `${rect.top}%` },
-        { top: `${rect.top + rect.height}%`, left: 0, right: 0, bottom: 0 },
-        { top: `${rect.top}%`, left: 0, width: `${rect.left}%`, height: `${rect.height}%` },
-        { top: `${rect.top}%`, left: `${rect.left + rect.width}%`, right: 0, height: `${rect.height}%` },
-      ] as CSSProperties[]).map((box, i) => (
-        <div key={i} aria-hidden style={{ position: "absolute", ...box, background: `color-mix(in srgb, ${C.confidentBlack} 28%, transparent)`, backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)", pointerEvents: "none" }} />
-      ))}
-
       {/* Yellow border on focused element */}
       <span
         aria-hidden
