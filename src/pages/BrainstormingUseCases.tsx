@@ -1016,7 +1016,7 @@ function WorkshopLibrarySection() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        {/* 03 Reference card — header + bookshelf in one frame */}
+        {/* Deliverable 3 — dark header + bookshelf in one frame */}
         <div
           style={{
             background: colors.white,
@@ -1053,11 +1053,16 @@ function WorkshopLibrarySection() {
                 03
               </span>
             </div>
-            <div style={{ padding: "32px 36px 8px" }}>
+            <div
+              style={{
+                padding: "32px 36px 16px",
+                background: colors.eyBgCard,
+              }}
+            >
               <span
                 style={{
                   display: "inline-flex",
-                  border: `1px solid ${colors.offBlack}`,
+                  border: `1px solid ${colors.yellow}`,
                   borderRadius: 100,
                   padding: "3px 10px",
                   marginBottom: 14,
@@ -1065,16 +1070,16 @@ function WorkshopLibrarySection() {
                   fontSize: 10,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: colors.offBlack,
+                  color: colors.yellow,
                 }}
               >
-                Reference
+                Deliverable 3
               </span>
               <h2
                 style={{
                   fontFamily: fonts.bold,
                   fontSize: 20,
-                  color: colors.offBlack,
+                  color: colors.onDark,
                   margin: "0 0 10px",
                   lineHeight: 1.2,
                 }}
@@ -1085,12 +1090,12 @@ function WorkshopLibrarySection() {
                 style={{
                   fontFamily: fonts.regular,
                   fontSize: 14,
-                  color: colors.gray01,
+                  color: colors.onDarkMuted,
                   margin: 0,
                   lineHeight: 1.6,
                 }}
               >
-                After the two outputs, open a Prompt or Agent book on the shelf for examples — this is a reference, not a third deliverable.
+                After the process maps and recommendation note, open a Prompt or Agent book on the shelf for worked examples.
               </p>
             </div>
           </div>
@@ -1141,7 +1146,7 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
             lineHeight: 1.6, maxWidth: 600, textAlign: "center",
             marginLeft: "auto", marginRight: "auto",
           }}>
-            The workshop converts validated client inputs into two practical Phase 2 deliverables.
+            The workshop converts validated client inputs into three practical Phase 2 deliverables.
           </p>
 
           {/* Deliverable 1 — horizontal strip */}
