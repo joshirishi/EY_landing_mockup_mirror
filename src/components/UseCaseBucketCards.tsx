@@ -26,6 +26,7 @@ const cardBase: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   minHeight: 320,
+  height: "100%",
 };
 
 export function UseCaseBucketCards({
@@ -108,6 +109,7 @@ export function UseCaseBucketCards({
                   color: hintColor,
                   margin: "0 0 16px",
                   lineHeight: 1.45,
+                  minHeight: 38,
                 }}
               >
                 {bucket.hint}
@@ -123,7 +125,7 @@ export function UseCaseBucketCards({
                   borderRadius: 8,
                   padding: 14,
                   background: isEmpty ? wellBg : (light ? colors.offWhite : "rgba(255,255,255,0.04)"),
-                  minHeight: 180,
+                  minHeight: 200,
                 }}
               >
                 {isEmpty ? (

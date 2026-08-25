@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Lock, PlusCircle, QrCode, X } from "lucide-react";
 import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
 import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
 import {
@@ -11,6 +11,7 @@ import {
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
+import { AGENT_TEMPLATE_LIBRARY } from "../data/agent-template-library";
 import { PHASE2_LABEL, PHASE2_NUMBER } from "../design-kit/curriculum";
 import { colors, contentRailStyle, fonts, layout, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import heroImg from "../assets/images/GettyImages-2212662948.jpg";
@@ -24,10 +25,9 @@ import heroImg from "../assets/images/GettyImages-2212662948.jpg";
 const PHASE2_SECTIONS = [
   { id: "quick-recall", label: "Quick Recall", group: "learn" as const },
   { id: "problem-first", label: "Problem First", group: "learn" as const },
-  { id: "guided-examples", label: "Prompt Examples", group: "learn" as const },
-  { id: "workshop-library", label: "Library", group: "learn" as const },
   { id: "your-use-cases", label: "Your Use Cases", group: "apply" as const },
   { id: "deliverables", label: "Outputs", group: "apply" as const },
+  { id: "workshop-library", label: "Library", group: "apply" as const },
 ];
 
 // ── Quick Recall data — verbatim from PDF slide 2 ────────────────────────────
@@ -316,24 +316,22 @@ function ProblemFirstSection() {
           })}
         </div>
 
-        {/* Workshop prompt — appears after all 4 revealed */}
+        {/* Workshop strip — appears after all 4 revealed */}
         {promptVisible && (
           <div
             style={{
               marginTop: 8,
               background: colors.yellow,
               borderRadius: 10,
-              padding: "clamp(24px, 3vw, 36px)",
+              padding: "clamp(20px, 2.5vw, 32px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 24,
+              flexWrap: "wrap",
               animation: "ey-slide-up 420ms cubic-bezier(.22,.68,0,1.05) both",
             }}
           >
-            <p style={{
-              fontFamily: fonts.bold, fontSize: 10,
-              letterSpacing: "0.1em", textTransform: "uppercase",
-              color: colors.confidentBlack, margin: "0 0 12px", opacity: 0.6,
-            }}>
-              Workshop Prompt
-            </p>
             <p style={{
               fontFamily: fonts.bold,
               fontSize: "clamp(16px, 2vw, 20px)",
@@ -341,9 +339,37 @@ function ProblemFirstSection() {
               margin: 0,
               lineHeight: 1.45,
               letterSpacing: "-0.01em",
+              flex: "1 1 240px",
             }}>
-              Which tax processes consume the most effort today — and which individual activities create that effort?
+              Let&apos;s begin brainstorming?
             </p>
+            <div
+              aria-label="QR code placeholder"
+              style={{
+                width: 88,
+                height: 88,
+                flexShrink: 0,
+                background: colors.white,
+                border: `1px solid ${colors.confidentBlack}`,
+                borderRadius: 8,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
+              }}
+            >
+              <QrCode size={36} strokeWidth={1.75} color={colors.confidentBlack} aria-hidden />
+              <span style={{
+                fontFamily: fonts.bold,
+                fontSize: 10,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: colors.gray01,
+              }}>
+                QR
+              </span>
+            </div>
           </div>
         )}
       </div>
@@ -444,6 +470,171 @@ const GUIDED_EXAMPLES = [
     outcome: "Produces updated SOPs or a gap analysis highlighting required changes to align with current requirements.",
   },
 ];
+
+const RECALL_PROMPT_EXAMPLES = GUIDED_EXAMPLES.slice(0, 4);
+const RECALL_AGENT_EXAMPLES = AGENT_TEMPLATE_LIBRARY.slice(0, 4);
+
+type RecallExampleKind = "prompt" | "agent";
+
+type RecallExampleDetail = {
+  kind: RecallExampleKind;
+  name: string;
+  fields: { label: string; body: string }[];
+};
+
+function agentRecallFields(agent: (typeof AGENT_TEMPLATE_LIBRARY)[number]): RecallExampleDetail["fields"] {
+  const bodyFor = (sub: string) => agent.slides.find((s) => s.sub === sub)?.body ?? "";
+  return [
+    { label: "Purpose", body: bodyFor("Purpose") },
+    { label: "Actions", body: bodyFor("Actions") },
+    { label: "Outcome", body: bodyFor("Outcome") },
+  ];
+}
+
+/** Overlay with purpose / approach or actions / outcome for a Quick Recall example. */
+function RecallExampleModal({ detail, onClose }: { detail: RecallExampleDetail; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const isPrompt = detail.kind === "prompt";
+  const accent = isPrompt ? colors.yellow : colors.framePurple;
+  const badgeColor = isPrompt ? colors.confidentBlack : colors.white;
+
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      role="presentation"
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9998,
+        background: `color-mix(in srgb, ${colors.confidentBlack} 72%, transparent)`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 24,
+      }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="recall-example-title"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "min(560px, 100%)",
+          maxHeight: "88vh",
+          overflowY: "auto",
+          background: colors.white,
+          borderRadius: 10,
+          borderTop: `4px solid ${accent}`,
+          boxShadow: `0 20px 48px color-mix(in srgb, ${colors.confidentBlack} 28%, transparent)`,
+          padding: "24px 28px 28px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 18 }}>
+          <div>
+            <span
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: badgeColor,
+                background: isPrompt ? colors.yellow : colors.framePurple,
+                borderRadius: 4,
+                padding: "3px 10px",
+                display: "inline-block",
+                marginBottom: 10,
+              }}
+            >
+              {isPrompt ? "Prompt" : "M365 Agent"}
+            </span>
+            <h3
+              id="recall-example-title"
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: 22,
+                color: colors.offBlack,
+                margin: 0,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.2,
+              }}
+            >
+              {detail.name}
+            </h3>
+          </div>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Close example"
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              background: colors.offWhite,
+              border: `1px solid ${colors.gray02}`,
+              color: colors.offBlack,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <X size={18} strokeWidth={1.75} aria-hidden />
+          </button>
+        </div>
+
+        {detail.fields.map((field, i) => (
+          <div key={field.label} style={{ marginBottom: i === detail.fields.length - 1 ? 0 : 20 }}>
+            {i > 0 && <div style={{ height: 1, background: colors.gray02, marginBottom: 16 }} />}
+            <p
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: 10,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: colors.eyebrowGold,
+                margin: "0 0 8px",
+              }}
+            >
+              {field.label}
+            </p>
+            <p
+              style={{
+                fontFamily: fonts.regular,
+                fontSize: 14,
+                color: colors.offBlack,
+                margin: 0,
+                lineHeight: 1.6,
+              }}
+            >
+              {field.body}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // ── Your Use Cases — workshop buckets (Prompt / Agent / Pro Code) ─────────────
 function UseCaseBucketsSection() {
@@ -813,39 +1004,80 @@ function WorkshopLibrarySection() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <p style={{
-            fontFamily: fonts.bold,
-            fontSize: typeScale.label.size,
-            letterSpacing: typeScale.label.tracking,
-            textTransform: "uppercase",
-            color: colors.eyebrowGold,
-            margin: "0 0 12px",
-          }}>
-            Reference Libraries
-          </p>
-          <h2 style={{
-            fontFamily: fonts.bold,
-            fontSize: "clamp(22px, 3.5vw, 36px)",
-            color: colors.offBlack,
-            margin: "0 0 8px",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.1,
-          }}>
-            Workshop Reference Library
-          </h2>
-          <p style={{
-            fontFamily: fonts.regular,
-            fontSize: typeScale.body.size,
-            color: colors.gray01,
-            margin: 0,
-            lineHeight: 1.5,
-            maxWidth: 640,
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}>
-            Switch between the Prompt Template Library and the Agent Template Library, then open a book on the shelf.
-          </p>
+        {/* 03 Reference — same strip as Outputs 01/02; not a third deliverable */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "120px 1fr",
+            background: colors.white,
+            border: `1px solid ${colors.gray02}`,
+            borderRadius: 10,
+            overflow: "hidden",
+            marginBottom: 32,
+          }}
+        >
+          <div
+            style={{
+              background: colors.confidentBlack,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "32px 0",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: 56,
+                lineHeight: 1,
+                color: colors.onDark,
+                letterSpacing: "-0.04em",
+              }}
+            >
+              03
+            </span>
+          </div>
+          <div style={{ padding: "32px 36px" }}>
+            <span
+              style={{
+                display: "inline-flex",
+                border: `1px solid ${colors.offBlack}`,
+                borderRadius: 100,
+                padding: "3px 10px",
+                marginBottom: 14,
+                fontFamily: fonts.bold,
+                fontSize: 10,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: colors.offBlack,
+              }}
+            >
+              Reference
+            </span>
+            <h2
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: 20,
+                color: colors.offBlack,
+                margin: "0 0 10px",
+                lineHeight: 1.2,
+              }}
+            >
+              Workshop Reference Library
+            </h2>
+            <p
+              style={{
+                fontFamily: fonts.regular,
+                fontSize: 14,
+                color: colors.gray01,
+                margin: 0,
+                lineHeight: 1.6,
+              }}
+            >
+              After the two outputs, open a Prompt or Agent book on the shelf for examples — this is a reference, not a third deliverable.
+            </p>
+          </div>
         </div>
 
         <PromptBookshelfLibrary />
@@ -996,7 +1228,7 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
             border: `1px solid ${colors.gray02}`,
             borderRadius: 10,
             overflow: "hidden",
-            marginBottom: 36,
+            marginBottom: 0,
           }}>
             {/* Number column */}
             <div style={{
@@ -1077,6 +1309,8 @@ function DeliverablesSection({ onNavigate }: { onNavigate: (path: string) => voi
         </div>
       </section>
 
+      <WorkshopLibrarySection />
+
       {/* What's Next — Journey Map */}
       <AscentModuleProgressSection
         moduleKey="m2"
@@ -1114,6 +1348,7 @@ function QuickRecallSection() {
   const [btnDissolving, setBtnDissolving] = useState(false);
   const [proCodeRevealed, setProCodeRevealed] = useState(false);
   const [proCodeBtnDissolving, setProCodeBtnDissolving] = useState(false);
+  const [openExample, setOpenExample] = useState<RecallExampleDetail | null>(null);
 
   const reveal = () => {
     setBtnDissolving(true);
@@ -1264,6 +1499,48 @@ function QuickRecallSection() {
                 </li>
               ))}
             </ul>
+
+            <div style={{ height: 1, background: colors.gray02, margin: "16px 0" }} />
+            <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 10px" }}>
+              Examples
+            </p>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 7 }}>
+              {RECALL_PROMPT_EXAMPLES.map((ex) => (
+                <li key={ex.name} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: "50%",
+                    background: colors.yellow, flexShrink: 0, marginTop: 6,
+                  }} />
+                  <button
+                    type="button"
+                    onClick={() => setOpenExample({
+                      kind: "prompt",
+                      name: ex.name,
+                      fields: [
+                        { label: "Purpose", body: ex.purpose },
+                        { label: "Approach", body: ex.approach },
+                        { label: "Outcome", body: ex.outcome },
+                      ],
+                    })}
+                    style={{
+                      fontFamily: fonts.regular,
+                      fontSize: 13,
+                      color: colors.offBlack,
+                      lineHeight: 1.4,
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      textAlign: "left",
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 3,
+                    }}
+                  >
+                    {ex.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* ── Agents card: ghost/locked → revealed ── */}
@@ -1387,6 +1664,44 @@ function QuickRecallSection() {
                       background: colors.framePurple, flexShrink: 0, marginTop: 6,
                     }} />
                     <span style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.offBlack, lineHeight: 1.4 }}>{role}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div style={{ height: 1, background: colors.gray02, margin: "16px 0" }} />
+              <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 10px" }}>
+                Examples
+              </p>
+              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 7 }}>
+                {RECALL_AGENT_EXAMPLES.map((ex) => (
+                  <li key={ex.name} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                    <span style={{
+                      width: 6, height: 6, borderRadius: "50%",
+                      background: colors.framePurple, flexShrink: 0, marginTop: 6,
+                    }} />
+                    <button
+                      type="button"
+                      onClick={() => setOpenExample({
+                        kind: "agent",
+                        name: ex.name,
+                        fields: agentRecallFields(ex),
+                      })}
+                      style={{
+                        fontFamily: fonts.regular,
+                        fontSize: 13,
+                        color: colors.offBlack,
+                        lineHeight: 1.4,
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        textAlign: "left",
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        textUnderlineOffset: 3,
+                      }}
+                    >
+                      {ex.name}
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -1516,6 +1831,14 @@ function QuickRecallSection() {
                 </li>
               ))}
             </ul>
+
+            <div style={{ height: 1, background: colors.gray02, margin: "16px 0" }} />
+            <p style={{ fontFamily: fonts.bold, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: colors.gray01, margin: "0 0 10px" }}>
+              Examples
+            </p>
+            <p style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.gray01, margin: 0, lineHeight: 1.4 }}>
+              Examples will be added later.
+            </p>
           </div>
           )}
         </div>
@@ -1544,6 +1867,9 @@ function QuickRecallSection() {
           </div>
         )}
       </div>
+      {openExample && (
+        <RecallExampleModal detail={openExample} onClose={() => setOpenExample(null)} />
+      )}
     </section>
   );
 }
@@ -1780,9 +2106,7 @@ export default function BrainstormingUseCases({
 
         <ProblemFirstSection />
 
-        <GuidedExamplesSection />
-
-        <WorkshopLibrarySection />
+        {/* Guided Examples carousel hidden for now — Prompt details live in Quick Recall modals. */}
 
         <UseCaseBucketsSection />
 
