@@ -1004,83 +1004,89 @@ function WorkshopLibrarySection() {
       }}
     >
       <div style={{ ...contentRailStyle }}>
-        {/* 03 Reference — same strip as Outputs 01/02; not a third deliverable */}
+        {/* 03 Reference card — header + bookshelf in one frame */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "120px 1fr",
             background: colors.white,
             border: `1px solid ${colors.gray02}`,
             borderRadius: 10,
             overflow: "hidden",
-            marginBottom: 32,
           }}
         >
           <div
             style={{
-              background: colors.confidentBlack,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "32px 0",
+              display: "grid",
+              gridTemplateColumns: "120px 1fr",
             }}
           >
-            <span
+            <div
               style={{
-                fontFamily: fonts.bold,
-                fontSize: 56,
-                lineHeight: 1,
-                color: colors.onDark,
-                letterSpacing: "-0.04em",
+                background: colors.confidentBlack,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "32px 0",
               }}
             >
-              03
-            </span>
+              <span
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 56,
+                  lineHeight: 1,
+                  color: colors.onDark,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                03
+              </span>
+            </div>
+            <div style={{ padding: "32px 36px 8px" }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  border: `1px solid ${colors.offBlack}`,
+                  borderRadius: 100,
+                  padding: "3px 10px",
+                  marginBottom: 14,
+                  fontFamily: fonts.bold,
+                  fontSize: 10,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: colors.offBlack,
+                }}
+              >
+                Reference
+              </span>
+              <h2
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: 20,
+                  color: colors.offBlack,
+                  margin: "0 0 10px",
+                  lineHeight: 1.2,
+                }}
+              >
+                Workshop Reference Library
+              </h2>
+              <p
+                style={{
+                  fontFamily: fonts.regular,
+                  fontSize: 14,
+                  color: colors.gray01,
+                  margin: 0,
+                  lineHeight: 1.6,
+                }}
+              >
+                After the two outputs, open a Prompt or Agent book on the shelf for examples — this is a reference, not a third deliverable.
+              </p>
+            </div>
           </div>
-          <div style={{ padding: "32px 36px" }}>
-            <span
-              style={{
-                display: "inline-flex",
-                border: `1px solid ${colors.offBlack}`,
-                borderRadius: 100,
-                padding: "3px 10px",
-                marginBottom: 14,
-                fontFamily: fonts.bold,
-                fontSize: 10,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: colors.offBlack,
-              }}
-            >
-              Reference
-            </span>
-            <h2
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: 20,
-                color: colors.offBlack,
-                margin: "0 0 10px",
-                lineHeight: 1.2,
-              }}
-            >
-              Workshop Reference Library
-            </h2>
-            <p
-              style={{
-                fontFamily: fonts.regular,
-                fontSize: 14,
-                color: colors.gray01,
-                margin: 0,
-                lineHeight: 1.6,
-              }}
-            >
-              After the two outputs, open a Prompt or Agent book on the shelf for examples — this is a reference, not a third deliverable.
-            </p>
+
+          <div style={{ padding: "16px 16px 16px" }}>
+            <PromptBookshelfLibrary />
           </div>
         </div>
-
-        <PromptBookshelfLibrary />
       </div>
     </section>
   );
