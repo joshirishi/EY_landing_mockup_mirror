@@ -95,4 +95,26 @@ export function parseUseCaseEntries(raw: unknown): Record<UseCaseBucketId, strin
   return normalizeEntries(raw);
 }
 
+/** Move one idea between buckets, or reorder it inside the same bucket. */
+export function moveUseCaseEntry(
+  entries: Record<UseCaseBucketId, string[]>,
+  fromBucket: UseCaseBucketId,
+  fromIndex: number,
+  toBucket: UseCaseBucketId,
+  toIndex?: number,
+): Record<UseCaseBucketId, string[]> {
+  const next: Record<UseCaseBucketId, string[]> = {
+    prompt: [...entries.prompt],
+    agent: [...entries.agent],
+    procode: [...entries.procode],
+  };
+  if (fromIndex < 0 || fromIndex >= next[fromBucket].length) return entries;
+
+  const [item] = next[fromBucket].splice(fromIndex, 1);
+  const dest = toIndex === undefined ? next[toBucket].length : toIndex;
+  const insertAt = fromBucket === toBucket && dest > fromIndex ? dest - 1 : dest;
+  next[toBucket].splice(Math.max(0, Math.min(insertAt, next[toBucket].length)), 0, item);
+  return next;
+}
+
 export { isUseCaseBucketId };

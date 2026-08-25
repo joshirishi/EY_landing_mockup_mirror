@@ -1,10 +1,30 @@
-import type { CSSProperties } from "react";
-import { PlusCircle, X } from "lucide-react";
+import { useState, type CSSProperties, type DragEvent } from "react";
+import { GripVertical, PlusCircle, X } from "lucide-react";
 import {
   USE_CASE_BUCKETS,
   type UseCaseBucketId,
 } from "../data/use-case-buckets";
 import { colors, fonts } from "../design-kit/tokens";
+
+const DRAG_TYPE = "application/x-ey-use-case";
+
+type DragPayload = { bucketId: UseCaseBucketId; index: number };
+
+function readDragPayload(event: DragEvent): DragPayload | null {
+  const raw = event.dataTransfer.getData(DRAG_TYPE) || event.dataTransfer.getData("text/plain");
+  try {
+    const parsed = JSON.parse(raw) as DragPayload;
+    if (
+      (parsed.bucketId === "prompt" || parsed.bucketId === "agent" || parsed.bucketId === "procode")
+      && Number.isInteger(parsed.index)
+    ) {
+      return parsed;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 type Props = {
   entries: Record<UseCaseBucketId, string[]>;
@@ -13,6 +33,7 @@ type Props = {
   onDraftChange?: (bucketId: UseCaseBucketId, value: string) => void;
   onAdd?: (bucketId: UseCaseBucketId) => void;
   onRemove?: (bucketId: UseCaseBucketId, index: number) => void;
+  onMove?: (fromBucket: UseCaseBucketId, fromIndex: number, toBucket: UseCaseBucketId, toIndex?: number) => void;
   sectionId?: string;
   /** Dark cards on black sections; light cards on grey/white sections. */
   tone?: "dark" | "light";
@@ -36,9 +57,12 @@ export function UseCaseBucketCards({
   onDraftChange,
   onAdd,
   onRemove,
+  onMove,
   sectionId = "use-case-buckets",
   tone = "dark",
 }: Props) {
+  const [dropBucket, setDropBucket] = useState<UseCaseBucketId | null>(null);
+  const canDrag = Boolean(editable && onMove);
   const focusRing = `2px solid ${colors.yellow}`;
   const light = tone === "light";
   const cardBg = light ? colors.white : colors.eyBgCard;
@@ -116,15 +140,36 @@ export function UseCaseBucketCards({
               </p>
 
               <div
+                onDragOver={(event) => {
+                  if (!canDrag) return;
+                  event.preventDefault();
+                  event.dataTransfer.dropEffect = "move";
+                  setDropBucket(bucket.id);
+                }}
+                onDragLeave={(event) => {
+                  if (event.currentTarget.contains(event.relatedTarget as Node)) return;
+                  setDropBucket((current) => (current === bucket.id ? null : current));
+                }}
+                onDrop={(event) => {
+                  if (!canDrag || !onMove) return;
+                  event.preventDefault();
+                  setDropBucket(null);
+                  const payload = readDragPayload(event);
+                  if (!payload) return;
+                  if (payload.bucketId === bucket.id && isEmpty) return;
+                  onMove(payload.bucketId, payload.index, bucket.id);
+                }}
                 style={{
                   flex: 1,
                   display: "flex",
                   flexDirection: "column",
                   gap: 12,
-                  border: `1.5px dashed ${isEmpty ? wellEmptyBorder : `${bucket.accent}88`}`,
+                  border: `1.5px dashed ${dropBucket === bucket.id ? bucket.accent : (isEmpty ? wellEmptyBorder : `${bucket.accent}88`)}`,
                   borderRadius: 8,
                   padding: 14,
-                  background: isEmpty ? wellBg : (light ? colors.offWhite : "rgba(255,255,255,0.04)"),
+                  background: dropBucket === bucket.id
+                    ? colors.yellowAlpha10
+                    : (isEmpty ? wellBg : (light ? colors.offWhite : "rgba(255,255,255,0.04)")),
                   minHeight: 200,
                 }}
               >
@@ -159,6 +204,30 @@ export function UseCaseBucketCards({
                     {bucketEntries.map((entry, index) => (
                       <li
                         key={`${bucket.id}-${index}-${entry}`}
+                        draggable={canDrag}
+                        onDragStart={(event) => {
+                          if (!canDrag) return;
+                          event.dataTransfer.setData(DRAG_TYPE, JSON.stringify({ bucketId: bucket.id, index }));
+                          event.dataTransfer.setData("text/plain", JSON.stringify({ bucketId: bucket.id, index }));
+                          event.dataTransfer.effectAllowed = "move";
+                        }}
+                        onDragEnd={() => setDropBucket(null)}
+                        onDragOver={(event) => {
+                          if (!canDrag) return;
+                          event.preventDefault();
+                          event.stopPropagation();
+                          event.dataTransfer.dropEffect = "move";
+                          setDropBucket(bucket.id);
+                        }}
+                        onDrop={(event) => {
+                          if (!canDrag || !onMove) return;
+                          event.preventDefault();
+                          event.stopPropagation();
+                          setDropBucket(null);
+                          const payload = readDragPayload(event);
+                          if (!payload) return;
+                          onMove(payload.bucketId, payload.index, bucket.id, index);
+                        }}
                         style={{
                           display: "flex",
                           alignItems: "flex-start",
@@ -167,18 +236,29 @@ export function UseCaseBucketCards({
                           borderRadius: 6,
                           background: wellBg,
                           border: `1px solid ${itemBorder}`,
+                          cursor: canDrag ? "grab" : "default",
                         }}
                       >
-                        <span
-                          style={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: "50%",
-                            background: bucket.accent,
-                            flexShrink: 0,
-                            marginTop: 6,
-                          }}
-                        />
+                        {canDrag ? (
+                          <GripVertical
+                            size={14}
+                            strokeWidth={1.75}
+                            color={iconColor}
+                            aria-hidden
+                            style={{ flexShrink: 0, marginTop: 3 }}
+                          />
+                        ) : (
+                          <span
+                            style={{
+                              width: 6,
+                              height: 6,
+                              borderRadius: "50%",
+                              background: bucket.accent,
+                              flexShrink: 0,
+                              marginTop: 6,
+                            }}
+                          />
+                        )}
                         <span
                           style={{
                             flex: 1,

@@ -4,6 +4,7 @@ import { PromptBookshelfLibrary } from "../components/PromptBookshelfLibrary";
 import { UseCaseBucketCards } from "../components/UseCaseBucketCards";
 import {
   EMPTY_USE_CASE_DRAFTS,
+  moveUseCaseEntry,
   readStoredUseCaseEntries,
   type UseCaseBucketId,
   writeStoredUseCaseEntries,
@@ -659,6 +660,15 @@ function UseCaseBucketsSection() {
     }));
   };
 
+  const moveEntry = (
+    fromBucket: UseCaseBucketId,
+    fromIndex: number,
+    toBucket: UseCaseBucketId,
+    toIndex?: number,
+  ) => {
+    setEntries((prev) => moveUseCaseEntry(prev, fromBucket, fromIndex, toBucket, toIndex));
+  };
+
   return (
     <section
       id="your-use-cases"
@@ -703,6 +713,7 @@ function UseCaseBucketsSection() {
           }}>
             Use the same Prompt, M365 Agent and Pro Code buckets from Quick Recall.
             Add tax activities from your workshop discussion — one box per lever.
+            Drag an idea into another box if you change your mind.
           </p>
         </div>
 
@@ -714,6 +725,7 @@ function UseCaseBucketsSection() {
           onDraftChange={(bucketId, value) => setDrafts((prev) => ({ ...prev, [bucketId]: value }))}
           onAdd={addEntry}
           onRemove={removeEntry}
+          onMove={moveEntry}
         />
       </div>
     </section>
