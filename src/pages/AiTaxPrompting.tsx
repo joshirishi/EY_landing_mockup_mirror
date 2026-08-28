@@ -973,10 +973,14 @@ function TeamBriefingSection() {
   // 0 neither card · 1 weak · 2 weak + strong. Existing beat flow starts after both are open.
   const [shownBriefs, setShownBriefs] = useState<0 | 1 | 2>(0);
 
-  // Beat 2: missing chips only. Strong rows wait for the yellow CTA.
+  // Beat 2: missing chips stagger in. Chips stay visible once beat advances to 3.
   useEffect(() => {
-    if (beat !== 2) {
+    if (beat < 2) {
       setRevealedStep(0);
+      return;
+    }
+    if (beat > 2) {
+      setRevealedStep(missingItems.length);
       return;
     }
     setRevealedStep(0);
