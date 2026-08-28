@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   AlertTriangle, AlignLeft, Archive, ArrowRight,
-  BarChart3, Bold, BookOpen, Bot, Brain, Briefcase, Calculator, Calendar, Check, CheckCircle, ChevronDown, ChevronLeft,
+  BarChart3, Bold, BookOpen, Bot, Brain, Briefcase, Calculator, Calendar, Check, CheckCircle, CircleCheckBig, CircleX, ChevronDown, ChevronLeft,
   ChevronRight, CircleHelp, ClipboardList, Compass, Copy,
   CornerUpLeft, DollarSign, ExternalLink, FileText, FolderOpen, Info,
-  Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, LineChart, Link2,
+  Globe, Grid3x3, Hexagon, Image, Italic, LayoutTemplate, Lightbulb, LineChart, Link2,
   List, ListOrdered, Mail, Megaphone, Menu, MessagesSquare, Mic, Monitor, MoreHorizontal, PenLine,
   Pencil, Percent, Pin, Play, Plus, PlusSquare, Power, Rocket, Save, Search, Send, Settings, ShieldCheck, Sparkles,
   Target, Timer, Trash2, Type, Underline, Users, Video, X, XCircle, ZoomIn, ZoomOut,
@@ -14,7 +14,7 @@ import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "
 import { SiteHeader } from "../design-kit/SiteHeader";
 import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import { TabRail } from "../design-kit/TabRail";
-import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, typeScale } from "../design-kit/tokens";
+import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { M365ChatSlideTour } from "../components/M365ChatSlideTour";
 import { M365AgentSlideTour } from "../components/M365AgentSlideTour";
@@ -24,6 +24,10 @@ import {
   AGENT_COMMON_FAILURES,
   AGENT_SUMMARY_PARTS,
   AGENT_TECHNIQUE_PATTERNS,
+  parseTaxExample,
+  parseWhenToUse,
+  type AgentSummaryRow,
+  type AgentTechniqueItem,
 } from "../data/agent-best-practices";
 
 // Canonical token alias — keeps existing C.dark / C.dark2 references working
@@ -235,7 +239,7 @@ const SECTION_DATA: Record<TabId, {
   agent: {
     h2: "M365 Agent",
     useCases: [
-      { icon: Info,          title: "What",         body: "An M365 agent is a focused Copilot assistant for a tax workflow — it follows your instructions and approved sources, rather than answering every question in general chat." },
+      { icon: Info,          title: "What are agents",         body: "An M365 agent is a focused Copilot assistant for a tax workflow — it follows your instructions and approved sources, rather than answering every question in general chat." },
       { icon: Search,        title: "Retrieve Tax Knowledge",    body: "Locate historical positions, precedents and supporting materials across approved repositories." },
       { icon: FolderOpen,    title: "Organise Evidence",         body: "Gather and package issue-wise evidence from SharePoint, Teams and Outlook for audits and disputes." },
       { icon: ClipboardList, title: "Track Compliance",          body: "Monitor filing deadlines, action items and overdue obligations across engagements." },
@@ -2326,12 +2330,46 @@ function AgentProse({ children, style }: { children: ReactNode; style?: React.CS
   );
 }
 
-function AgentBulletList({ items }: { items: readonly string[] }) {
+function AgentBulletList({ items, style }: { items: readonly string[]; style?: React.CSSProperties }) {
   return (
-    <ul style={{ margin: "0 0 12px", paddingLeft: 20, display: "flex", flexDirection: "column", gap: 8 }}>
+    <ul
+      style={{
+        margin: "0 0 16px",
+        padding: 0,
+        listStyle: "none",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        ...style,
+      }}
+    >
       {items.map(item => (
-        <li key={item} style={{ fontFamily: F.regular, fontSize: 14, color: C.dark2, lineHeight: 1.6 }}>
-          <VerbatimInline text={item} />
+        <li
+          key={item}
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 10,
+            fontFamily: F.regular,
+            fontSize: 14,
+            color: C.dark2,
+            lineHeight: 1.6,
+          }}
+        >
+          <span
+            aria-hidden
+            style={{
+              width: 6,
+              height: 6,
+              marginTop: 8,
+              flexShrink: 0,
+              borderRadius: "50%",
+              background: C.offBlack,
+            }}
+          />
+          <span>
+            <VerbatimInline text={item} />
+          </span>
         </li>
       ))}
     </ul>
@@ -2902,23 +2940,266 @@ function AgentLabeledBlock({
   );
 }
 
-function AgentElementsTab() {
+/** Black + yellow stack — same pattern as the terminology “What is a prompt?” card. */
+function AgentSplitToneCard({
+  top,
+  bottom,
+}: {
+  top: { label: string; text: string; icon: LucideIcon };
+  bottom: { label: string; text: string; icon: LucideIcon };
+}) {
+  const labelStyle = (onYellow: boolean): React.CSSProperties => ({
+    margin: 0,
+    fontFamily: F.bold,
+    fontSize: 9,
+    fontWeight: 700,
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
+    color: onYellow ? C.offBlack : C.onDarkMuted,
+  });
+  const iconBox: React.CSSProperties = {
+    width: 24,
+    height: 24,
+    flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+  const headingRow: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    minWidth: 0,
+  };
+  const bodyStyle = (onYellow: boolean): React.CSSProperties => ({
+    margin: 0,
+    fontFamily: F.regular,
+    fontSize: 13,
+    lineHeight: 1.55,
+    whiteSpace: "pre-wrap",
+    color: onYellow ? C.offBlack : C.white,
+  });
+  const panelPad: React.CSSProperties = {
+    padding: "16px 18px 18px",
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+    textAlign: "left",
+    minWidth: 0,
+  };
+
+  const TopIcon = top.icon;
+  const BottomIcon = bottom.icon;
+
+  return (
+    <div
+      role="group"
+      aria-label={`${top.label} and ${bottom.label}`}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        borderRadius: 12,
+        overflow: "hidden",
+        marginTop: 8,
+      }}
+    >
+      <div style={{ ...panelPad, background: C.dark }}>
+        <div style={headingRow}>
+          <span style={iconBox} aria-hidden>
+            <TopIcon size={24} strokeWidth={1.75} />
+          </span>
+          <p style={labelStyle(false)}>{top.label}</p>
+        </div>
+        <p style={bodyStyle(false)}>{top.text}</p>
+      </div>
+      <div style={{ ...panelPad, background: C.yellow }}>
+        <div style={headingRow}>
+          <span style={iconBox} aria-hidden>
+            <BottomIcon size={24} strokeWidth={1.75} />
+          </span>
+          <p style={labelStyle(true)}>{bottom.label}</p>
+        </div>
+        <p style={bodyStyle(true)}>{bottom.text}</p>
+      </div>
+    </div>
+  );
+}
+
+function AgentWeakStrongCard({ weak, strong }: { weak: string; strong: string }) {
+  return (
+    <AgentSplitToneCard
+      top={{ label: "Weak instruction", text: weak, icon: CircleX }}
+      bottom={{ label: "Strong instruction", text: strong, icon: CircleCheckBig }}
+    />
+  );
+}
+
+const splitLabelStyle = (onYellow: boolean): React.CSSProperties => ({
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  margin: 0,
+  fontFamily: F.bold,
+  fontSize: 9,
+  fontWeight: 700,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
+  color: onYellow ? C.offBlack : C.onDarkMuted,
+});
+
+const TECHNIQUE_ICON = 18;
+const STATUS_ICON = 24;
+
+/** Techniques: When to use as scan bullets, Don’t vs Do, copy, raw workbook one click away. */
+function AgentTechniquePatternCard({ pattern }: { pattern: AgentTechniqueItem }) {
+  const [showRaw, setShowRaw] = useState(false);
+  const whenItems = parseWhenToUse(pattern.whenToUse);
+  const { dont, doLines } = parseTaxExample(pattern.taxExample);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {whenItems.length > 0 && (
+        <div
+          style={{
+            background: C.offWhite,
+            border: `1px solid ${C.gray02}`,
+            borderRadius: 12,
+            padding: "16px 18px",
+          }}
+        >
+          <p style={{ ...splitLabelStyle(false), color: C.gray01, marginBottom: 10 }}>
+            <CircleHelp size={TECHNIQUE_ICON} strokeWidth={1.75} aria-hidden />
+            When to use
+          </p>
+          <AgentBulletList items={whenItems} style={{ margin: 0 }} />
+        </div>
+      )}
+
+      <div
+        role="group"
+        aria-label="Don’t write this, then the instruction to copy"
+        style={{ borderRadius: 12, overflow: "hidden" }}
+      >
+        {dont && (
+          <div style={{ background: C.dark, padding: "14px 18px", display: "flex", flexDirection: "column", gap: 6 }}>
+            <p style={splitLabelStyle(false)}>
+              <CircleX size={STATUS_ICON} strokeWidth={1.75} aria-hidden />
+              Don’t write this
+            </p>
+            <p style={{ margin: 0, fontFamily: F.regular, fontSize: 13, lineHeight: 1.55, color: C.white }}>
+              {dont}
+            </p>
+          </div>
+        )}
+        <div style={{ background: C.yellow, padding: "16px 18px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
+          <p style={splitLabelStyle(true)}>
+            <CircleCheckBig size={STATUS_ICON} strokeWidth={1.75} aria-hidden />
+            Write this Instead
+          </p>
+          <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+            {doLines.map((line, i) => (
+              <li
+                key={`${i}-${line}`}
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 10,
+                  fontFamily: F.regular,
+                  fontSize: 13,
+                  lineHeight: 1.55,
+                  color: C.offBlack,
+                }}
+              >
+                <span
+                  aria-hidden
+                  style={{
+                    flexShrink: 0,
+                    minWidth: 18,
+                    fontFamily: F.bold,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: C.offBlack,
+                  }}
+                >
+                  {i + 1}.
+                </span>
+                <span>{line}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="button"
+          aria-expanded={showRaw}
+          onClick={() => setShowRaw(open => !open)}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            minHeight: 44,
+            padding: 0,
+            border: "none",
+            background: "transparent",
+            cursor: "pointer",
+            fontFamily: F.regular,
+            fontSize: 13,
+            fontWeight: 700,
+            color: C.gray01,
+          }}
+        >
+          <ChevronDown
+            size={16}
+            strokeWidth={1.75}
+            aria-hidden
+            style={{ transform: showRaw ? "rotate(180deg)" : "none", transition: "transform 150ms ease" }}
+          />
+          Show workbook wording
+        </button>
+        {showRaw && (
+          <pre
+            style={{
+              margin: "8px 0 0",
+              padding: "14px 16px",
+              borderRadius: 10,
+              background: C.offWhite,
+              border: `1px solid ${C.gray02}`,
+              fontFamily: F.regular,
+              fontSize: 12,
+              lineHeight: 1.55,
+              color: C.dark2,
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {`When to use\n${pattern.whenToUse.trim()}\n\nTax example\n${pattern.taxExample.trim()}`}
+          </pre>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AgentElementsTab({ openId }: { openId?: string } = {}) {
   const navItems: AgentBuilderSidebarItem[] = [
     ...AGENT_BEST_PRACTICES_SLIDES.map(s => ({
       id: `bp-${s.n}`,
       label: s.heading,
       badge: s.n,
-      group: "Practices",
+      group: "Agent Best Practices",
     })),
     ...AGENT_COMMON_FAILURES.map(f => ({
       id: `fail-${f.n}`,
       label: f.title,
       badge: f.n,
-      group: "If it goes wrong",
+      group: "Common Failures",
     })),
   ];
 
-  const [activeId, setActiveId] = useState(navItems[0]?.id ?? "bp-01");
+  const [activeId, setActiveId] = useState(
+    openId && navItems.some(item => item.id === openId) ? openId : (navItems[0]?.id ?? "bp-01"),
+  );
   const activeIndex = navItems.findIndex(item => item.id === activeId);
   const active = navItems[activeIndex] ?? navItems[0];
   const practice = AGENT_BEST_PRACTICES_SLIDES.find(s => active.id === `bp-${s.n}`);
@@ -2949,10 +3230,7 @@ function AgentElementsTab() {
                 ))}
               </div>
             ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14, marginTop: 8 }}>
-                <AgentLabeledBlock label="Weak instruction" text={practice.weak} tone="weak" />
-                <AgentLabeledBlock label="Strong instruction" text={practice.strong} tone="strong" />
-              </div>
+              <AgentWeakStrongCard weak={practice.weak} strong={practice.strong} />
             )}
           </>
         )}
@@ -2969,7 +3247,7 @@ function AgentElementsTab() {
   );
 }
 
-function AgentTechniquesTab() {
+function AgentTechniquesTab({ openId }: { openId?: string } = {}) {
   const navItems: AgentBuilderSidebarItem[] = [
     ...AGENT_TECHNIQUE_PATTERNS.map(p => ({
       id: `pat-${p.n}`,
@@ -2980,7 +3258,9 @@ function AgentTechniquesTab() {
     { id: "example", label: "IT agent full example", badge: "Ex", group: "Example" },
   ];
 
-  const [activeId, setActiveId] = useState(navItems[0]?.id ?? "pat-01");
+  const [activeId, setActiveId] = useState(
+    openId && navItems.some(item => item.id === openId) ? openId : (navItems[0]?.id ?? "pat-01"),
+  );
   const activeIndex = navItems.findIndex(item => item.id === activeId);
   const active = navItems[activeIndex] ?? navItems[0];
   const pattern = AGENT_TECHNIQUE_PATTERNS.find(p => active.id === `pat-${p.n}`);
@@ -2997,7 +3277,7 @@ function AgentTechniquesTab() {
         <AgentPanelHeader
           badge={active.badge}
           title={pattern?.name ?? active.label}
-          subtitle={active.id === "example" ? undefined : "Mailer question-summary and tax example"}
+          subtitle={active.id === "example" ? undefined : "When to use this pattern, plus a tax example"}
           counter={`${activeIndex + 1}/${navItems.length}`}
         />
         <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", minHeight: 0 }}>
@@ -3005,10 +3285,27 @@ function AgentTechniquesTab() {
             <FullWorkedExampleCard />
           ) : pattern ? (
             <>
-              {pattern.summary.split("\n").map(para => (
-                <AgentProse key={para}>{para}</AgentProse>
-              ))}
-              <AgentLabeledBlock label="Tax example" text={pattern.taxExample} tone="neutral" />
+              {pattern.summary.split("\n").map((para, i) =>
+                i === 0 ? (
+                  <h5
+                    key={para}
+                    style={{
+                      fontFamily: F.bold,
+                      fontSize: typeScale.subheading.size,
+                      fontWeight: 700,
+                      letterSpacing: typeScale.subheading.tracking,
+                      color: C.dark2,
+                      lineHeight: 1.3,
+                      margin: "0 0 12px",
+                    }}
+                  >
+                    {para}
+                  </h5>
+                ) : (
+                  <AgentProse key={para}>{para}</AgentProse>
+                ),
+              )}
+              <AgentTechniquePatternCard key={pattern.n} pattern={pattern} />
             </>
           ) : null}
         </div>
@@ -3018,7 +3315,203 @@ function AgentTechniquesTab() {
   );
 }
 
-function AgentSummaryTab() {
+/** Fold labels so Summary names can match Elements / Techniques even if wording differs slightly. */
+function foldGuideName(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function guideNamesMatch(a: string, b: string) {
+  const fa = foldGuideName(a);
+  const fb = foldGuideName(b);
+  if (fa === fb || fa.includes(fb) || fb.includes(fa)) return true;
+  const wa = fa.split(" ").filter(w => w.length > 2);
+  const wb = new Set(fb.split(" ").filter(w => w.length > 2));
+  if (wa.length === 0 || wb.size === 0) return false;
+  const hit = wa.filter(w => wb.has(w)).length;
+  const floor = Math.min(wa.length, wb.size);
+  return hit >= Math.min(3, floor) && hit / floor >= 0.6;
+}
+
+function findPracticeNavId(name: string) {
+  const hit = AGENT_BEST_PRACTICES_SLIDES.find(s => guideNamesMatch(name, s.heading));
+  return hit ? `bp-${hit.n}` : undefined;
+}
+
+function findPatternNavId(name: string) {
+  const hit = AGENT_TECHNIQUE_PATTERNS.find(p => guideNamesMatch(name, p.name));
+  return hit ? `pat-${hit.n}` : undefined;
+}
+
+const summaryEyebrow: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
+  margin: 0,
+  fontFamily: F.bold,
+  fontSize: 9,
+  fontWeight: 700,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
+  color: C.gray01,
+};
+
+/** One Summary row: practice (rank 1) → failure → pattern chips. */
+function AgentSummaryRelationCard({
+  row,
+  onOpenPractice,
+  onOpenPattern,
+}: {
+  row: AgentSummaryRow;
+  onOpenPractice?: (id: string) => void;
+  onOpenPattern?: (id: string) => void;
+}) {
+  const practiceId = findPracticeNavId(row.practice);
+  const practiceClickable = Boolean(practiceId && onOpenPractice);
+  const titleStyle: React.CSSProperties = {
+    margin: 0,
+    padding: 0,
+    border: "none",
+    background: "transparent",
+    textAlign: "left",
+    fontFamily: F.bold,
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: 1.3,
+    letterSpacing: "-0.01em",
+    color: C.offBlack,
+    cursor: practiceClickable ? "pointer" : "default",
+  };
+
+  return (
+    <article
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 14,
+        padding: "16px 18px 18px",
+        borderRadius: 12,
+        background: C.white,
+        border: `1px solid ${C.gray02}`,
+        borderLeft: `3px solid ${C.yellow}`,
+      }}
+    >
+      <div>
+        <p style={{ ...summaryEyebrow, marginBottom: 8 }}>
+          <Lightbulb size={16} strokeWidth={1.75} aria-hidden />
+          Best practice
+        </p>
+        {practiceClickable ? (
+          <button
+            type="button"
+            onClick={() => onOpenPractice?.(practiceId!)}
+            aria-label={`Open best practice: ${row.practice}`}
+            style={titleStyle}
+          >
+            {row.practice}
+          </button>
+        ) : (
+          <h3 style={titleStyle}>{row.practice}</h3>
+        )}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+          padding: "10px 12px",
+          borderRadius: 8,
+          background: C.offWhite,
+          borderLeft: `3px solid ${C.error}`,
+        }}
+      >
+        <p style={summaryEyebrow}>
+          <AlertTriangle size={16} strokeWidth={1.75} aria-hidden style={{ color: C.error }} />
+          Likely failure
+        </p>
+        <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 4 }}>
+          {row.failures.map(item => (
+            <li
+              key={item}
+              style={{
+                margin: 0,
+                fontFamily: F.regular,
+                fontSize: 13,
+                lineHeight: 1.5,
+                color: C.offBlack,
+              }}
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <p style={{ ...summaryEyebrow, marginBottom: 8 }}>
+          <BookOpen size={16} strokeWidth={1.75} aria-hidden />
+          Pattern
+        </p>
+        <ul
+          style={{
+            margin: 0,
+            padding: 0,
+            listStyle: "none",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+          }}
+        >
+          {row.patterns.map(item => {
+            const patternId = findPatternNavId(item);
+            const clickable = Boolean(patternId && onOpenPattern);
+            const chipStyle: React.CSSProperties = {
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              margin: 0,
+              padding: "7px 10px",
+              borderRadius: 8,
+              border: `1px solid ${C.gray02}`,
+              background: C.offWhite,
+              fontFamily: F.regular,
+              fontSize: 12,
+              lineHeight: 1.4,
+              color: C.offBlack,
+              cursor: clickable ? "pointer" : "default",
+              textAlign: "left",
+            };
+            return (
+              <li key={item} style={{ margin: 0 }}>
+                {clickable ? (
+                  <button
+                    type="button"
+                    onClick={() => onOpenPattern?.(patternId!)}
+                    aria-label={`Preview pattern: ${item}`}
+                    style={chipStyle}
+                  >
+                    {item}
+                    <ChevronRight size={14} strokeWidth={1.75} aria-hidden />
+                  </button>
+                ) : (
+                  <span style={chipStyle}>{item}</span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </article>
+  );
+}
+
+function AgentSummaryTab({
+  onOpenPractice,
+  onOpenPattern,
+}: {
+  onOpenPractice?: (id: string) => void;
+  onOpenPattern?: (id: string) => void;
+} = {}) {
   const navItems: AgentBuilderSidebarItem[] = AGENT_SUMMARY_PARTS.map(part => ({
     id: `sum-${part.n}`,
     label: part.question,
@@ -3029,14 +3522,6 @@ function AgentSummaryTab() {
   const [activeId, setActiveId] = useState(navItems[0]?.id ?? "sum-01");
   const activeIndex = navItems.findIndex(item => item.id === activeId);
   const part = AGENT_SUMMARY_PARTS.find(p => activeId === `sum-${p.n}`) ?? AGENT_SUMMARY_PARTS[0];
-
-  const cellStyle = {
-    fontFamily: F.regular,
-    fontSize: 13,
-    color: C.dark2,
-    lineHeight: 1.5,
-    margin: 0,
-  } as const;
 
   return (
     <AgentBuilderShell
@@ -3053,52 +3538,193 @@ function AgentSummaryTab() {
         counter={`${activeIndex + 1}/${navItems.length}`}
       />
       <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px", minHeight: 0 }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {part.rows.map(row => (
-            <div
+            <AgentSummaryRelationCard
               key={row.practice}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                gap: 12,
-                padding: 16,
-                borderRadius: 10,
-                background: C.offWhite,
-                border: `1px solid ${C.gray02}`,
-              }}
-            >
-              <div>
-                <p style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: C.gray01, margin: "0 0 8px" }}>
-                  Best practice
-                </p>
-                <p style={{ ...cellStyle, fontWeight: 700 }}>{row.practice}</p>
-              </div>
-              <div>
-                <p style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: C.gray01, margin: "0 0 8px" }}>
-                  Likely failure
-                </p>
-                <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
-                  {row.failures.map(item => (
-                    <li key={item} style={cellStyle}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p style={{ fontFamily: F.bold, fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: C.gray01, margin: "0 0 8px" }}>
-                  Pattern
-                </p>
-                <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
-                  {row.patterns.map(item => (
-                    <li key={item} style={cellStyle}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+              row={row}
+              onOpenPractice={onOpenPractice}
+              onOpenPattern={onOpenPattern}
+            />
           ))}
         </div>
       </div>
       <AgentPager items={navItems} activeIndex={Math.max(0, activeIndex)} onSelect={setActiveId} />
     </AgentBuilderShell>
+  );
+}
+
+const PEEK_FOCUSABLE =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/** Summary stay-put peek: technique card for one pattern, no Techniques tab jump. */
+function AgentPatternPeekSheet({
+  patternId,
+  onClose,
+}: {
+  patternId: string;
+  onClose: () => void;
+}) {
+  const pattern = AGENT_TECHNIQUE_PATTERNS.find(p => `pat-${p.n}` === patternId);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!pattern) {
+      onClose();
+    }
+  }, [pattern, onClose]);
+
+  useEffect(() => {
+    if (!pattern) return;
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !overlayRef.current) return;
+      const focusable = overlayRef.current.querySelectorAll<HTMLElement>(PEEK_FOCUSABLE);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      previousFocusRef.current?.focus?.();
+    };
+  }, [pattern, onClose]);
+
+  if (!pattern) return null;
+
+  return (
+    <div
+      ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 80,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: `24px var(--ey-content-inline-pad, 24px)`,
+        background: `color-mix(in srgb, ${C.confidentBlack} 62%, transparent)`,
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "min(760px, var(--ey-content-width), 100%)",
+          maxHeight: "min(90vh, 720px)",
+          height: "min(90vh, 680px)",
+          background: C.white,
+          borderRadius: 14,
+          border: `1px solid ${C.gray02}`,
+          borderTop: `4px solid ${C.yellow}`,
+          boxShadow: `0 24px 64px color-mix(in srgb, ${C.confidentBlack} 28%, transparent)`,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 12,
+            padding: "18px 20px",
+            background: C.offWhite,
+            borderBottom: `1px solid ${C.gray02}`,
+          }}
+        >
+          <span
+            aria-hidden
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 6,
+              flexShrink: 0,
+              background: C.yellow,
+              color: C.offBlack,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: F.bold,
+              fontSize: 12,
+              fontWeight: 700,
+            }}
+          >
+            {pattern.n}
+          </span>
+          <h2
+            id={titleId}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              margin: 0,
+              fontFamily: F.bold,
+              fontSize: 16,
+              fontWeight: 700,
+              lineHeight: 1.3,
+              letterSpacing: "-0.01em",
+              color: C.offBlack,
+            }}
+          >
+            {pattern.name}
+          </h2>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              flexShrink: 0,
+              minHeight: 44,
+              padding: "8px 12px",
+              borderRadius: 8,
+              border: `1px solid ${C.gray02}`,
+              background: C.white,
+              cursor: "pointer",
+              fontFamily: F.bold,
+              fontSize: 13,
+              fontWeight: 700,
+              color: C.offBlack,
+            }}
+          >
+            Close
+            <X size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        </div>
+        <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "24px 28px 28px", background: C.white }}>
+          <AgentTechniquePatternCard key={pattern.n} pattern={pattern} />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -3111,48 +3737,206 @@ type AgentHubTabId = (typeof AGENT_HUB_TABS)[number]["id"];
 
 export function AgentHubTabs({ variant = "hub" }: { variant?: "hub" | "rail" } = {}) {
   const [activeSubTab, setActiveSubTab] = useState<AgentHubTabId>("elements");
+  const [guideOpenId, setGuideOpenId] = useState<string | undefined>();
+  const [previewPatternId, setPreviewPatternId] = useState<string | null>(null);
 
-  return (
-    <div style={{ marginTop: variant === "rail" ? 0 : 32 }}>
-      {variant === "rail" ? (
-        <TabRail
-          tabs={[...AGENT_HUB_TABS]}
-          active={activeSubTab}
-          onChange={setActiveSubTab}
-        />
-      ) : (
-      <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <div style={{ display: "inline-flex", gap: 8, background: C.dark2, borderRadius: 12, padding: 8, flexWrap: "wrap", justifyContent: "center" }}>
-          {AGENT_HUB_TABS.map(t => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setActiveSubTab(t.id)}
-              style={{
-                padding: "9px 18px",
-                borderRadius: 8,
-                border: "none",
-                cursor: "pointer",
-                fontSize: 13,
-                fontFamily: F.regular,
-                fontWeight: 700,
-                whiteSpace: "nowrap",
-                background: activeSubTab === t.id ? C.yellow : "transparent",
-                color: activeSubTab === t.id ? C.dark2 : C.gray02,
-                boxShadow: activeSubTab === t.id ? "0 1px 6px rgba(0,0,0,0.25)" : "none",
-                transition: "background 0.15s, color 0.15s, box-shadow 0.15s",
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
+  const closePatternPeek = useCallback(() => setPreviewPatternId(null), []);
+
+  const selectHubTab = (id: AgentHubTabId) => {
+    setGuideOpenId(undefined);
+    setPreviewPatternId(null);
+    setActiveSubTab(id);
+  };
+
+  const openPractice = (id: string) => {
+    setPreviewPatternId(null);
+    setGuideOpenId(id);
+    setActiveSubTab("elements");
+  };
+
+  const openPattern = (id: string) => {
+    setPreviewPatternId(id);
+  };
+
+  const patternPeekSheet = previewPatternId ? (
+    <AgentPatternPeekSheet
+      key={previewPatternId}
+      patternId={previewPatternId}
+      onClose={closePatternPeek}
+    />
+  ) : null;
+
+  const fieldGuideTabs = (
+    <div
+      role="tablist"
+      aria-label="Instruction guide views"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        width: "min(520px, 100%)",
+        margin: 0,
+        padding: 5,
+        border: `1px solid ${C.gray02}`,
+        borderRadius: 12,
+        background: C.white,
+        boxShadow: `0 12px 30px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
+      }}
+    >
+      {AGENT_HUB_TABS.map(t => {
+        const selected = activeSubTab === t.id;
+        return (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={selected}
+            onClick={() => selectHubTab(t.id)}
+            style={{
+              position: "relative",
+              minHeight: 46,
+              padding: "10px 18px",
+              borderRadius: 8,
+              border: "none",
+              cursor: "pointer",
+              fontSize: 14,
+              fontFamily: selected ? F.bold : F.regular,
+              fontWeight: selected ? 700 : 400,
+              background: selected ? C.confidentBlack : "transparent",
+              color: selected ? C.white : C.gray01,
+              transition: "background 150ms ease, color 150ms ease",
+            }}
+          >
+            {t.label}
+            {selected && (
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  left: 18,
+                  right: 18,
+                  bottom: 6,
+                  height: 2,
+                  borderRadius: 2,
+                  background: C.yellow,
+                }}
+              />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  if (variant === "rail") {
+    return (
+      <div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <TabRail
+            tabs={[...AGENT_HUB_TABS]}
+            active={activeSubTab}
+            onChange={selectHubTab}
+          />
         </div>
+        <div style={{ marginTop: 16 }}>
+          {activeSubTab === "elements" && <AgentElementsTab openId={guideOpenId} />}
+          {activeSubTab === "techniques" && <AgentTechniquesTab openId={guideOpenId} />}
+          {activeSubTab === "summary" && (
+            <AgentSummaryTab onOpenPractice={openPractice} onOpenPattern={openPattern} />
+          )}
+        </div>
+        {patternPeekSheet}
       </div>
-      )}
+    );
+  }
 
-      {activeSubTab === "elements" && <AgentElementsTab />}
-      {activeSubTab === "techniques" && <AgentTechniquesTab />}
-      {activeSubTab === "summary" && <AgentSummaryTab />}
+  // Hub only: Field Guide chrome replaces the old yellow pills, not the agent tour above.
+  return (
+    <div className="page" style={{ marginTop: 32 }}>
+      <header
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: "14px 14px 0 0",
+          background: C.confidentBlack,
+          color: C.white,
+          textAlign: "left",
+        }}
+      >
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: "0 0 auto",
+            height: 4,
+            background: spectrumCss(1),
+          }}
+        />
+        <div style={{ padding: "36px 28px 56px" }}>
+          <p
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 9,
+              margin: "0 0 12px",
+              color: C.yellow,
+              fontFamily: F.bold,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}
+          >
+            <Lightbulb size={18} strokeWidth={1.75} aria-hidden />
+            Agent builder field guide
+          </p>
+          <h2
+            style={{
+              margin: "0 0 12px",
+              color: C.white,
+              fontFamily: F.bold,
+              fontSize: "clamp(26px, 3vw, 36px)",
+              fontWeight: 700,
+              lineHeight: 1.08,
+              letterSpacing: "-0.025em",
+            }}
+          >
+            Write instructions agents can follow
+          </h2>
+          <p
+            style={{
+              margin: 0,
+              maxWidth: 560,
+              color: C.onDarkMuted,
+              fontFamily: F.light,
+              fontSize: 15,
+              lineHeight: 1.6,
+            }}
+          >
+            Find a proven practice, understand the failure it prevents, and copy an instruction you can adapt. Every example is taken directly from the approved workbook.
+          </p>
+        </div>
+      </header>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: -28,
+          position: "relative",
+          zIndex: 2,
+        }}
+      >
+        {fieldGuideTabs}
+      </div>
+
+      <div style={{ marginTop: 20 }}>
+        {activeSubTab === "elements" && <AgentElementsTab openId={guideOpenId} />}
+        {activeSubTab === "techniques" && <AgentTechniquesTab openId={guideOpenId} />}
+        {activeSubTab === "summary" && (
+          <AgentSummaryTab onOpenPractice={openPractice} onOpenPattern={openPattern} />
+        )}
+      </div>
+      {patternPeekSheet}
     </div>
   );
 }

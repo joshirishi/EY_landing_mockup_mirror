@@ -35,7 +35,47 @@ export type AgentTechniqueItem = {
   name: string;
   summary: string;
   taxExample: string;
+  /** Pattern Summary sheet column D. */
+  whenToUse: string;
 };
+
+const WHEN_TO_USE_LABEL = /^(to:?|to prevent\s*:?|to follow:?|to encourage the agent to:?)$/i;
+
+/** Column D → scan bullets. Drops “To:” / “To prevent:” labels. */
+export function parseWhenToUse(raw: string): string[] {
+  return raw
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .filter(line => !WHEN_TO_USE_LABEL.test(line))
+    .map(line => line.replace(/^[-•]\s*/, "").trim())
+    .filter(Boolean);
+}
+
+function exampleLines(text: string): string[] {
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => line.replace(/^[-•]\s*/, "").replace(/^\d+\.\s*/, "").trim())
+    .filter(Boolean);
+}
+
+/** Column C → Don’t (weak one-liner) + Do (copyable steps). */
+export function parseTaxExample(raw: string): { dont?: string; doLines: string[] } {
+  const instead = raw.match(/Instead of writing:\s*([\s\S]*?)\s*Try:\s*([\s\S]*)/i);
+  if (instead) {
+    return { dont: instead[1].trim(), doLines: exampleLines(instead[2]) };
+  }
+  const rather = raw.match(/^([\s\S]+?)\n\s*Rather than\s+(.+)$/i);
+  if (rather) {
+    return {
+      dont: rather[2].trim().replace(/\.$/, ""),
+      doLines: exampleLines(rather[1].replace(/^Structure your instructions as:\s*/i, "")),
+    };
+  }
+  return { doLines: exampleLines(raw) };
+}
 
 function practice(
   n: string,
@@ -248,54 +288,63 @@ export const AGENT_TECHNIQUE_PATTERNS: readonly AgentTechniqueItem[] = [
     name: "Convert ambiguous multitask requests into deterministic workflows",
     summary: "Are you leaving Copilot to guess what to do next?\nStructured instructions help Copilot follow the intended workflow and deliver reliable outputs, resulting in more predictable outcomes.",
     taxExample: "Instead of writing:\nCalculate the tax impact.\nTry:\n1. Identify taxable income.\n2. Determine the applicable tax regime.\n3. Calculate tax liability.\n4. Present the outcome in a table.",
+    whenToUse: "To:\n - remove ambiguity\n - ensure stable repeatable behavious\n",
   },
   {
     n: "02",
     name: "Correct Parallel vs Sequential Structure",
     summary: "Are all your instructions meant to happen in the same order?\nSome tasks can run independently, while others depend on prior outputs. Clearly separating parallel and sequential steps helps Copilot execute workflows as intended.",
     taxExample: "Parallel steps — for tax research:\n• Extract relevant provisions from the Income-tax Act.\n• Identify applicable judicial precedents.\n• Gather relevant CBDT circulars.\n\nSequential steps — for summarizing:\n1. Explain the provisions under the Act.\n2. List the judicial precedents applicable.\n3. Provide references to the CBDT circulars.",
+    whenToUse: "To:\n - separate parallel and sequential logic\n - ensure workflows are run without adding or reordering steps\n",
   },
   {
     n: "03",
     name: "Explicit Decision Rules",
     summary: "Have you told Copilot what to do when conditions change?\nCopilot performs more consistently when decisions are defined using clear if/then rules instead of leaving them open to interpretation.",
     taxExample: "• If no judicial precedent exists, then rely on statutory provisions.\n• If conflicting precedents exist, then present the favorable view.\n• If a key fact is missing, then seek clarification before proceeding.",
+    whenToUse: "To:\n - prevent unintended model interpretation\n - enforce deterministic outcomes\n - to prevent agent  resolving ambiguous conditional logic on its own",
   },
   {
     n: "04",
     name: "Output Contract",
     summary: "Are you defining the output or hoping for the best?\nClearly specifying the required format, level of detail, and content helps Copilot produce outputs that meet expectations from the start.",
     taxExample: "Instead of writing:\nSummarize this litigation matter.\n\nTry:\nPrepare a 1-page brief covering facts, issue, tax position, risks, and supporting precedents. Exclude recommendations.",
+    whenToUse: "To prevent :\n - overly long responses\n - overly terse responses\n To follow:\n - precise format\n - specified level of detail\n - specific template\n - process requiring consistent formatting ",
   },
   {
     n: "05",
     name: "Clean Markdown Structure",
     summary: "Is Copilot missing steps or merging tasks unexpectedly?\nWell-structured instructions with clear headings, sections, and steps are easier for Copilot to interpret and follow accurately.",
     taxExample: "Structure your instructions as:\n• Data Collection\n• Analysis\n• Conclusions\n• Output Format\n\nRather than providing everything in a single paragraph.",
+    whenToUse: "To prevent:\n - merged steps\n - unintended hierarchy\n - collapsed sections",
   },
   {
     n: "06",
     name: "Self-Evaluation Gate",
     summary: "Have you asked Copilot to review its own work?\nAdding a self-check step encourages Copilot to verify completeness, identify gaps, and improve response quality before delivering the final output.",
     taxExample: "Before finalizing a tax position, ask Copilot to confirm:\n• All issues have been addressed.\n• Relevant provisions have been referenced.\n• Assumptions are clearly identified.\n• No requested section is missing.",
+    whenToUse: "To encourage the agent to:\n - validate completeness\n - verify alignment with instructions\n - correct omissions before responding",
   },
   {
     n: "07",
     name: "Steering Auto mode Reasoning",
     summary: "Does every task really need deep analysis?\nDifferent tasks require different levels of reasoning. Telling Copilot how much thinking a task requires helps balance speed and quality.",
     taxExample: "For extraction: Provide only the applicable section reference.\n\nFor tax planning: Evaluate alternatives, assess implications, and recommend the most suitable approach with supporting rationale.",
+    whenToUse: "To prevent:\n - over-explaining simple answers\n - under-explaining complex decisions",
   },
   {
     n: "08",
     name: "Literal Execution Header",
     summary: "Need Copilot to follow instructions exactly as written?\nWhen consistency is critical, instruct Copilot to execute instructions literally without making assumptions, adding context, or changing the workflow.",
     taxExample: "For a compliance checklist:\n• Do not infer missing information.\n• Do not add recommendations.\n• Follow the specified order.\n• Return only the requested output.",
+    whenToUse: "To:\n - observe reordering, added steps, or excessive reasoning in agent's responses\n - diagnose whether inference or instruction ambiguity is causing the problem",
   },
   {
     n: "09",
     name: "Evaluate and Improve Existing Instructions",
     summary: "When was the last time you reviewed your instructions?\nEven well-performing prompts and agents can become more effective through regular reviews. Evaluating instructions helps identify ambiguity, gaps, and opportunities for improvement.",
     taxExample: "Review a tax research agent to check whether it:\n• Cites retrieved sources.\n• Asks for clarification when information is missing.\n• Avoids unsupported conclusions.\n• Follows a defined output structure.",
+    whenToUse: "To:\n - audit existing agent behaving inconsistently\n - determine which parts of the instruction set are fragile or ambiguous\n - need a quick way to identify which issues are structural, stylistic, or safety related",
   },
 ];
 
