@@ -18,6 +18,7 @@ import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, typeSc
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { M365ChatSlideTour } from "../components/M365ChatSlideTour";
 import { M365AgentSlideTour } from "../components/M365AgentSlideTour";
+import { AGENT_HEX_SRC, AgentHexIcon } from "../components/AgentHexIcon";
 import {
   AGENT_BEST_PRACTICES_SLIDES,
   AGENT_COMMON_FAILURES,
@@ -59,7 +60,7 @@ const TABS = [
   { id: "outlook", label: "MS Outlook",       color: C.outlookBlue,appColor: C.outlookBlue,logo: "/pipeline/outlook.svg" },
   { id: "teams",   label: "MS Teams",         color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/teams.svg" },
   { id: "m365",    label: "MS Chat",          color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
-  { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/m365-agent-icon.svg" },
+  { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: AGENT_HEX_SRC },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 // Prompt-repository pills are app categories only. Agent lives in the Learn header.
@@ -98,7 +99,7 @@ const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSS
   { id: "m365",    label: "M365 Chat",   logo: "/pipeline/copilot-icon.svg",    pos: laptopOrbitPos(-90, "0s") },
   { id: "excel",   label: "Excel",       logo: "/pipeline/excel.svg",           pos: laptopOrbitPos(-90 + LAPTOP_ORBIT_STEP, "0.4s") },
   { id: "ppt",     label: "PowerPoint",  logo: "/pipeline/powerpoint.svg",      pos: laptopOrbitPos(-90 + LAPTOP_ORBIT_STEP * 2, "0.8s") },
-  { id: "agent",   label: "M365 Agent",  logo: "/pipeline/m365-agent-icon.svg", pos: laptopOrbitPos(-90 + LAPTOP_ORBIT_STEP * 3, "1.2s") },
+  { id: "agent",   label: "M365 Agent",  logo: AGENT_HEX_SRC, pos: laptopOrbitPos(-90 + LAPTOP_ORBIT_STEP * 3, "1.2s") },
   { id: "outlook", label: "Outlook",     logo: "/pipeline/outlook.svg",         pos: laptopOrbitPos(-90 + LAPTOP_ORBIT_STEP * 4, "1.6s") },
   { id: "teams",   label: "Teams",       logo: "/pipeline/teams.svg",           pos: laptopOrbitPos(-90 + LAPTOP_ORBIT_STEP * 5, "2s") },
   { id: "word",    label: "Word",        logo: "/pipeline/word.svg",            pos: laptopOrbitPos(-90 + LAPTOP_ORBIT_STEP * 6, "2.4s") },
@@ -215,9 +216,9 @@ const SECTION_DATA: Record<TabId, {
       { icon: Brain,     title: "Select a Model",         body: "Auto, GPT Quick, GPT Advanced, or Claude Opus — pick speed or depth for the task." },
       { icon: Settings,  title: "Personalize Responses",  body: "Custom instructions and saved memories so answers follow your tax style." },
       { icon: Save,      title: "Saved Prompts",          body: "Reuse GST and other templates with one click for consistent results." },
-      { icon: BarChart3, title: "Analyst Agent",          body: "Turn GST filings into trends, late-filing flags, and charts in minutes." },
-      { icon: Bot,       title: "Custom Agent",           body: "Build a specialist for Indian tax with your instructions and knowledge sources." },
-      { icon: Search,    title: "Researcher Agent",       body: "Deep briefing for complex meetings — tax, customs, and transfer pricing." },
+      { agentIcon: true, title: "Researcher Agent",       body: "Deep briefing for complex meetings — tax, customs, and transfer pricing.", group: "Agents" },
+      { agentIcon: true, title: "Analyst Agent",          body: "Turn GST filings into trends, late-filing flags, and charts in minutes.", group: "Agents" },
+      { agentIcon: true, title: "Custom Agent",           body: "Build a specialist for Indian tax with your instructions and knowledge sources.", group: "Agents" },
       { icon: Rocket,    title: "Create Content",         body: "Generate professional images, videos, surveys, and pages from a short brief." },
     ],
     panelSubtitle: "Ask cross-app questions and retrieve tax context across Microsoft 365.",
@@ -773,21 +774,151 @@ type AgentInstructionNavItem = {
   subtitle?: string;
 };
 
-// ── Pattern 2c: Use-case chips — horizontal row at top of Copilot scene
-function CopilotUseCasePanel({ useCases }: {
-  useCases: { icon: LucideIcon; title: string; body: string }[];
+// Prompt i highlights use-case i when both exist (5th suggestion has no pill).
+function promptToUseCaseIndex(promptIndex: number | null, useCaseCount: number): number | null {
+  if (promptIndex == null || promptIndex < 0 || promptIndex >= useCaseCount) return null;
+  return promptIndex;
+}
+
+type UseCaseChip = { icon?: LucideIcon; agentIcon?: boolean; title: string; body: string; group?: string };
+
+type UseCaseSegment =
+  | { kind: "chips"; indices: number[] }
+  | { kind: "group"; label: string; indices: number[] };
+
+function segmentUseCases(useCases: UseCaseChip[]): UseCaseSegment[] {
+  const segments: UseCaseSegment[] = [];
+  let i = 0;
+  while (i < useCases.length) {
+    const group = useCases[i].group;
+    if (!group) {
+      const indices: number[] = [];
+      while (i < useCases.length && !useCases[i].group) {
+        indices.push(i);
+        i += 1;
+      }
+      segments.push({ kind: "chips", indices });
+    } else {
+      const label = group;
+      const indices: number[] = [];
+      while (i < useCases.length && useCases[i].group === label) {
+        indices.push(i);
+        i += 1;
+      }
+      segments.push({ kind: "group", label, indices });
+    }
+  }
+  return segments;
+}
+
+function UseCaseChipButton({
+  useCase,
+  active,
+  onSelect,
+}: {
+  useCase: UseCaseChip;
+  active: boolean;
+  onSelect?: () => void;
 }) {
+  const Icon = useCase.icon;
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "stretch", justifyContent: "center", gap: 10 }}>
-      {useCases.map(uc => {
-        const Icon = uc.icon;
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onSelect}
+      className="copilot-usecase-chip"
+      style={{
+        display: "flex",
+        gap: 12,
+        alignItems: "center",
+        padding: spacing.cardPadding,
+        borderRadius: 14,
+        background: active ? C.yellowAlpha10 : C.white,
+        border: active ? `1px solid ${C.yellow}` : `0.75px solid ${C.gray02}`,
+        boxShadow: active ? `inset 3px 0 0 ${C.yellow}` : "none",
+        flex: "1 1 140px",
+        minWidth: 0,
+        cursor: onSelect ? "pointer" : "default",
+        textAlign: "left",
+      }}
+    >
+      {useCase.agentIcon ? (
+        <AgentHexIcon size={36} />
+      ) : (
+        <div style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
+          {Icon ? <Icon size={18} strokeWidth={1.75} aria-hidden /> : null}
+        </div>
+      )}
+      <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center" }}>
+        <p style={{ fontFamily: F.regular, fontWeight: typeScale.label.weight, fontSize: typeScale.label.size, color: C.dark2, margin: 0, lineHeight: 1.3 }}>{useCase.title}</p>
+      </div>
+    </button>
+  );
+}
+
+// ── Pattern 2c: Use-case chips — horizontal row at top of Copilot scene
+function CopilotUseCasePanel({ useCases, selectedIndex, onSelect }: {
+  useCases: UseCaseChip[];
+  selectedIndex: number | null;
+  onSelect?: (idx: number) => void;
+}) {
+  const segments = useMemo(() => segmentUseCases(useCases), [useCases]);
+
+  return (
+    <div className="copilot-scene-usecase" style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "stretch", justifyContent: "center", gap: 10 }}>
+      {segments.map(segment => {
+        if (segment.kind === "chips") {
+          return segment.indices.map(i => (
+            <UseCaseChipButton
+              key={useCases[i].title}
+              useCase={useCases[i]}
+              active={i === selectedIndex}
+              onSelect={onSelect ? () => onSelect(i) : undefined}
+            />
+          ));
+        }
+
+        const groupActive = segment.indices.some(i => i === selectedIndex);
         return (
-          <div key={uc.title} style={{ display: "flex", gap: 12, alignItems: "center", padding: spacing.cardPadding, borderRadius: 14, background: C.white, border: `0.75px solid ${C.gray02}`, flex: "1 1 140px", minWidth: 0 }}>
-            <div style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
-              <Icon size={18} strokeWidth={1.75} aria-hidden />
-            </div>
-            <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center" }}>
-              <p style={{ fontFamily: F.regular, fontWeight: typeScale.label.weight, fontSize: typeScale.label.size, color: C.dark2, margin: 0, lineHeight: 1.3 }}>{uc.title}</p>
+          <div
+            key={segment.label}
+            className="copilot-usecase-group"
+            role="group"
+            aria-label={segment.label}
+            style={{
+              flex: "1 1 100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              padding: spacing.cardPadding,
+              borderRadius: 14,
+              border: groupActive ? `1px solid ${C.yellow}` : `0.75px solid ${C.gray02}`,
+              background: groupActive ? C.yellowAlpha10 : C.offWhite,
+              boxShadow: groupActive ? `inset 3px 0 0 ${C.yellow}` : "none",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontFamily: F.bold,
+                fontSize: typeScale.label.size,
+                fontWeight: typeScale.label.weight,
+                letterSpacing: typeScale.label.tracking,
+                textTransform: "uppercase",
+                color: C.gray01,
+              }}
+            >
+              {segment.label}
+            </p>
+            <div className="copilot-usecase-group-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10 }}>
+              {segment.indices.map(i => (
+                <UseCaseChipButton
+                  key={useCases[i].title}
+                  useCase={useCases[i]}
+                  active={i === selectedIndex}
+                  onSelect={onSelect ? () => onSelect(i) : undefined}
+                />
+              ))}
             </div>
           </div>
         );
@@ -1558,16 +1689,28 @@ function CopilotAppMock({
 function CopilotScene({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
   const { activeIndex, typedText, select } = useTypingPrompt();
+  const [tourUseCase, setTourUseCase] = useState(0);
+  const highlightedUseCase = tabId === "m365"
+    ? tourUseCase
+    : promptToUseCaseIndex(activeIndex, d.useCases.length);
+  const hasPromptMock = tabId !== "m365" && tabId !== "agent";
 
   return (
     <>
       <div className="copilot-scene">
         <div className="copilot-scene-usecases">
-          <CopilotUseCasePanel useCases={d.useCases} />
+          <CopilotUseCasePanel
+            useCases={d.useCases}
+            selectedIndex={highlightedUseCase}
+            onSelect={hasPromptMock ? (idx => {
+              const prompt = d.prompts[idx];
+              if (prompt) select(idx, prompt.text);
+            }) : undefined}
+          />
         </div>
         {tabId === "m365" ? (
           <div className="copilot-scene-main copilot-scene-main--chat-tour">
-            <M365ChatSlideTour />
+            <M365ChatSlideTour onHighlightUseCase={setTourUseCase} />
           </div>
         ) : tabId === "agent" ? (
           <div className="copilot-scene-main copilot-scene-main--chat-tour">
@@ -1615,8 +1758,19 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
           max-width: none !important;
           align-items: center !important;
         }
+        .copilot-scene-usecases .copilot-usecase-group {
+          flex: 1 1 100% !important;
+          max-width: 100% !important;
+          align-items: stretch !important;
+        }
+        .copilot-scene-usecases .copilot-usecase-group-chips > .copilot-usecase-chip {
+          flex: 1 1 140px !important;
+        }
         @media (max-width: 480px) {
           .copilot-scene-usecases > * > * {
+            flex: 1 1 100% !important;
+          }
+          .copilot-scene-usecases .copilot-usecase-group-chips > .copilot-usecase-chip {
             flex: 1 1 100% !important;
           }
         }
@@ -3525,7 +3679,7 @@ export default function M365CopilotHub({
 
       {/* Agent is its own Learn section (header tab #m365-agent), not a repository pill. */}
       <section id="m365-agent" style={{ scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
-        <TabSection tabId="agent" />
+        <TabSection tabId="agent" surface="white" />
       </section>
 
       {/* ── Useful Links (Figma: useful-links-section-redesign) ─────────────── */}

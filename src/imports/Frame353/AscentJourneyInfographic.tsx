@@ -5,7 +5,7 @@
  * Fixed 1536×530 artboard, scales to container width via ResizeObserver.
  */
 
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { colors, fonts, typeScale } from "@/design-kit";
 
 const W = 1536;
@@ -136,8 +136,17 @@ const CALLOUTS = [
   { left: 685, top: 95, width: 145, quote: "I can now identify AI opportunities in tax workflows and know when to use prompts or agents." },
   // Upper-right callouts — wider x gaps + diagonal stagger so all seven can stay open.
   { left: 848, top: 125, width: 125, quote: "I can confidently design prompts and Agents to solve business and tax challenges." },
-  { left: 995, top: 38, width: 110, quote: "I can use AI responsibly while ensuring compliance and governance." },
-  { left: 1125, top: 10, width: 115, quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.", rounded: 4 },
+  // Last two: Figma 4178:1898 (1800→1536). Step 6 below the path; Peak wide + above.
+  { left: 1170, top: 298, width: 228, pin: true, quote: "I can use AI responsibly while ensuring compliance and governance." },
+  {
+    left: 1188,
+    top: 0,
+    width: 300,
+    pin: true,
+    rounded: 4,
+    quote: "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.",
+    highlights: ["I am an AI-enabled tax professional", "AI across the tax lifecycle"],
+  },
 ] as const;
 
 const STAGE_NODES = [
@@ -385,9 +394,11 @@ function resolveOpenCalloutLayout(
       height: estimateCalloutHeight(callout.quote, callout.width),
     };
     const marker = getMarkerBox(index, stageNodes);
-    const resolved = marker
-      ? placeCalloutNearMarker(desired, marker, obstacles)
-      : resolveCalloutBox(desired, obstacles);
+    const resolved = callout.pin
+      ? { ...desired, left: clampBoxLeft(desired.left, desired.width), top: Math.max(0, desired.top) }
+      : marker
+        ? placeCalloutNearMarker(desired, marker, obstacles)
+        : resolveCalloutBox(desired, obstacles);
 
     layout.set(index, resolved);
     obstacles.push(resolved);
@@ -508,13 +519,22 @@ const STAGE_TITLE_LABELS = [
   { title: "Building Solutions", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Embedding Confidence", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
   { title: "Embedding Confidence", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
-  { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
+  { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 98, labelWidth: 105 },
 ] as const;
 
 /** null = hidden; 0 = module 1.1 callout … 6 = summit callout. */
 type CalloutIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-export type AscentCalloutEntry = { left: number; top: number; width: number; quote: string; rounded?: number };
+export type AscentCalloutEntry = {
+  left: number;
+  top: number;
+  width: number;
+  quote: string;
+  rounded?: number;
+  /** Keep Figma placement — do not auto-slot around the marker. */
+  pin?: boolean;
+  highlights?: readonly string[];
+};
 export type AscentStageNodeEntry = { left: number; top: number; icon: string; alt: string };
 export type AscentStageTitleEntry = {
   title: string;
@@ -789,14 +809,38 @@ function JourneyMarkerButton({
   );
 }
 
+function renderQuotedText(quote: string, highlights?: readonly string[]) {
+  if (!highlights?.length) return quote;
+
+  const parts: ReactNode[] = [];
+  let remaining = quote;
+  let key = 0;
+
+  for (const phrase of highlights) {
+    const at = remaining.indexOf(phrase);
+    if (at < 0) continue;
+    if (at > 0) parts.push(remaining.slice(0, at));
+    parts.push(
+      <span key={`h-${key++}`} style={{ color: colors.yellow, fontSize: 13, fontFamily: fonts.regular }}>
+        {phrase}
+      </span>,
+    );
+    remaining = remaining.slice(at + phrase.length);
+  }
+  if (remaining) parts.push(remaining);
+  return parts.length ? parts : quote;
+}
+
 function CalloutBox({
   quote,
   width,
   rounded = 12,
+  highlights,
 }: {
   quote: string;
   width: number;
   rounded?: number;
+  highlights?: readonly string[];
 }) {
   return (
     <div
@@ -818,7 +862,7 @@ function CalloutBox({
         className="min-w-full text-[11px] leading-[15px]"
         style={{ fontFamily: fonts.regular, color: colors.white }}
       >
-        {quote}
+        {renderQuotedText(quote, highlights)}
       </p>
     </div>
   );
@@ -1461,6 +1505,7 @@ function AscentCanvas({
               quote={callout.quote}
               width={callout.width}
               rounded={"rounded" in callout ? callout.rounded : 12}
+              highlights={"highlights" in callout ? callout.highlights : undefined}
             />
           </div>
         );

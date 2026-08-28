@@ -14,7 +14,7 @@ import {
   Info,
   Link2,
   Mail,
-  Menu,
+  Grid3x3,
   MessagesSquare,
   Mic,
   MoreHorizontal,
@@ -28,14 +28,15 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { colors, fonts as F, spectrumCss } from "../design-kit/tokens";
+import { colors, fonts as F } from "../design-kit/tokens";
+import { CopilotPlusButton } from "./CopilotPlusMenu";
+import { AgentHexIcon, CopilotHex } from "./AgentHexIcon";
 
 const C = { ...colors, dark2: colors.offBlack };
 const line = `color-mix(in srgb, ${C.gray02} 50%, ${C.white})`;
 const FIGMA_W = 953;
 const FIGMA_H = 530;
 const REVEAL_MS = 3000;
-const COPILOT_HEX = "/reference-images/m365-chat-tour/copilot-hex.png";
 
 type TourPhase = "preview" | "focus" | "recap";
 
@@ -211,42 +212,25 @@ function useScaleToWidth(designWidth: number) {
   return { ref, scale };
 }
 
-function CopilotHex({ size }: { size: number }) {
-  return (
-    <img
-      src={COPILOT_HEX}
-      alt=""
-      width={size}
-      height={size}
-      style={{ width: size, height: size, objectFit: "contain", display: "block", flexShrink: 0 }}
-    />
-  );
-}
-
-function AgentDot({ color }: { color: string }) {
-  return (
-    <span aria-hidden style={{ width: 16, height: 16, borderRadius: "50%", background: color, flexShrink: 0 }} />
-  );
-}
-
 function NavRow({ icon, label, active }: { icon: ReactNode; label: string; active?: boolean }) {
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 12,
-        padding: active ? "10px 12px" : 8,
+        gap: 10,
+        padding: "8px 10px",
+        borderRadius: 6,
         width: "100%",
-        borderRadius: 8,
-        background: active ? `color-mix(in srgb, ${C.gray02} 28%, ${C.offWhite})` : "transparent",
+        background: active ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
+        cursor: "default",
       }}
     >
       <span style={{ width: 16, height: 16, display: "flex", flexShrink: 0 }}>{icon}</span>
       <span
         style={{
-          fontFamily: active ? F.bold : F.regular,
-          fontSize: 10,
+          fontFamily: F.regular,
+          fontSize: 13,
           color: C.dark2,
           whiteSpace: "nowrap",
           overflow: "hidden",
@@ -260,10 +244,21 @@ function NavRow({ icon, label, active }: { icon: ReactNode; label: string; activ
   );
 }
 
-const SIDEBAR_W = 194;
+function AgentRow({ label }: { label: string }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 10px", borderRadius: 6, width: "100%", cursor: "default" }}>
+      <AgentHexIcon size={18} />
+      <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+const SIDEBAR_W = 210;
 
 function AgentSidebar({ highlightNew = false }: { highlightNew?: boolean }) {
-  const icon = { size: 16, strokeWidth: 1.75, color: C.dark2 } as const;
+  const icon = { size: 16, strokeWidth: 1.5, color: "#424242" } as const;
   return (
     <div
       style={{
@@ -272,50 +267,52 @@ function AgentSidebar({ highlightNew = false }: { highlightNew?: boolean }) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: 20,
-        padding: "20px 14px",
-        borderRight: `1px solid ${line}`,
-        background: C.offWhite,
+        padding: "16px 12px",
+        borderRight: `1px solid #e5e5e5`,
+        background: C.white,
+        gap: 4,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <Menu size={16} strokeWidth={1.75} color={C.dark2} aria-hidden />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 6px", marginBottom: 8 }}>
+        <span style={{ width: 28, height: 28, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <CopilotHex size={22} />
+        </span>
         <span style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Bot size={16} strokeWidth={1.75} color={C.dark2} />
+          <Grid3x3 size={18} strokeWidth={1.5} color="#616161" aria-hidden />
         </span>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        <NavRow icon={<PenLine {...icon} />} label="New chat" />
-        <NavRow icon={<Search {...icon} />} label="Search" />
-        <NavRow icon={<BookOpen {...icon} />} label="Library" />
-      </div>
-      <div data-tour-id="agents-list" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        <p style={{ fontFamily: F.bold, fontSize: 11, fontWeight: 700, color: C.gray01, textTransform: "uppercase", margin: 0 }}>
+      <NavRow icon={<PenLine {...icon} />} label="New chat" />
+      <NavRow icon={<Search {...icon} />} label="Search" />
+      <NavRow icon={<BookOpen {...icon} />} label="Library" />
+      <div data-tour-id="agents-list" style={{ marginTop: 12, marginBottom: 2 }}>
+        <span style={{ display: "block", padding: "0 10px", marginBottom: 2, fontFamily: F.regular, fontSize: 11, fontWeight: 600, color: "#757575" }}>
           Agents
-        </p>
-        <NavRow icon={<AgentDot color={C.frameGreen} />} label="Researcher" />
-        <NavRow icon={<AgentDot color={C.framePurple} />} label="Analyst" />
-        <NavRow icon={<AgentDot color={C.frameBlue} />} label="Income Tax Laws check" />
-        <NavRow icon={<AgentDot color={C.frameMagenta} />} label="Labour Code Analyst" />
-        <NavRow
-          icon={
-            <span
-              style={{
-                width: 16,
-                height: 16,
-                borderRadius: 3,
-                background: spectrumCss(4, "135deg"),
-                display: "block",
-              }}
-            />
-          }
-          label="New agent"
-          active={highlightNew}
-        />
+        </span>
+        <AgentRow label="Researcher" />
+        <AgentRow label="Analyst" />
+        <AgentRow label="Income Tax Laws check" />
+        <AgentRow label="Labour Code Analyst" />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "6px 10px",
+            borderRadius: 6,
+            width: "100%",
+            cursor: "default",
+            background: highlightNew ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
+          }}
+        >
+          <AgentHexIcon size={18} />
+          <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
+            New agent
+          </span>
+        </div>
       </div>
-      <div data-tour-id="agent-store" style={{ display: "flex", alignItems: "center", gap: 8, padding: 8 }}>
-        <ChevronsRight size={14} strokeWidth={1.75} color={C.gray01} />
-        <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>More agents</span>
+      <div data-tour-id="agent-store" style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", marginTop: 4 }}>
+        <ChevronsRight size={14} strokeWidth={1.5} color={C.gray01} aria-hidden />
+        <span style={{ fontFamily: F.regular, fontSize: 13, color: C.gray01 }}>More agents</span>
       </div>
     </div>
   );
@@ -442,19 +439,21 @@ const TEMPLATES = [
   { title: "Advance Tax Reviewer", body: "Compares quarter computations and drafts a management note.", color: C.frameGreen },
 ] as const;
 
-function LandingCanvas({ onSkip }: { onSkip: () => void }) {
+function LandingCanvas({ onSkip, showPlusMenu }: { onSkip: () => void; showPlusMenu?: boolean }) {
   return (
     <ScaledFrame label="M365 Copilot after clicking New Agent">
       <AgentSidebar highlightNew />
-      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", padding: "20px 40px 28px" }}>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginBottom: 8 }}>
-          <ShieldCheck size={16} strokeWidth={1.75} color={C.success} aria-hidden />
-          <MoreHorizontal size={16} strokeWidth={1.75} color={C.gray01} aria-hidden />
+      <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "16px 40px 28px", background: C.white }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10, marginBottom: 8 }}>
+          <ShieldCheck size={18} strokeWidth={1.5} color="#107C10" aria-hidden />
+          <MoreHorizontal size={18} strokeWidth={1.5} color={C.gray01} aria-hidden />
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18 }}>
           <CopilotHex size={44} />
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <p style={{ margin: 0, fontFamily: F.regular, fontSize: 22, color: C.dark2 }}>Build your own specialist agent</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            <p style={{ margin: 0, fontFamily: F.regular, fontSize: 22, color: C.offBlack, textAlign: "center" }}>
+              Build your own specialist agent
+            </p>
             <button
               type="button"
               onClick={onSkip}
@@ -463,13 +462,13 @@ function LandingCanvas({ onSkip }: { onSkip: () => void }) {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 4,
-                padding: "4px 10px",
+                padding: "5px 12px",
                 borderRadius: 999,
                 border: `1px solid ${C.gray02}`,
                 background: C.white,
-                fontFamily: F.bold,
-                fontSize: 11,
-                color: C.dark2,
+                fontFamily: F.regular,
+                fontSize: 12,
+                color: C.offBlack,
                 cursor: "pointer",
               }}
             >
@@ -480,33 +479,41 @@ function LandingCanvas({ onSkip }: { onSkip: () => void }) {
             data-tour-id="describe"
             style={{
               width: "100%",
-              maxWidth: 640,
+              maxWidth: 560,
               display: "flex",
               alignItems: "center",
               gap: 10,
-              padding: "12px 16px",
-              borderRadius: 999,
+              padding: "13px 16px",
+              borderRadius: 28,
               border: `1px solid ${C.gray02}`,
               background: C.white,
+              boxShadow: `0 2px 8px color-mix(in srgb, ${C.confidentBlack} 6%, transparent)`,
             }}
           >
-            <span data-tour-id="upload" style={{ display: "inline-flex" }}>
-              <Plus size={16} strokeWidth={1.75} color={C.gray01} aria-hidden />
-            </span>
-            <span style={{ flex: 1, fontFamily: F.regular, fontSize: 13, color: C.gray01 }}>Message Agent Builder</span>
-            <Mic size={16} strokeWidth={1.75} color={C.gray01} aria-hidden />
+            <CopilotPlusButton plusTourId="upload" open={showPlusMenu} iconSize={18} iconColor={C.offBlack} />
+            <span style={{ flex: 1, fontFamily: F.regular, fontSize: 14, color: C.gray01 }}>Message Agent Builder</span>
+            <Mic size={18} strokeWidth={1.5} color={C.offBlack} aria-hidden />
           </div>
           <div style={{ display: "inline-flex", padding: 3, borderRadius: 999, background: C.offWhite, border: `1px solid ${C.gray02}` }}>
-            <span style={{ padding: "5px 14px", borderRadius: 999, background: C.dark2, color: C.white, fontFamily: F.bold, fontSize: 11 }}>
+            <span style={{ padding: "6px 14px", borderRadius: 999, background: C.offBlack, color: C.white, fontFamily: F.regular, fontSize: 12 }}>
               Templates
             </span>
-            <span style={{ padding: "5px 14px", fontFamily: F.regular, fontSize: 11, color: C.gray01 }}>My agents</span>
+            <span style={{ padding: "6px 14px", fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>My agents</span>
           </div>
-          <div data-tour-id="templates" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, width: "100%", maxWidth: 720 }}>
+          <div data-tour-id="templates" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, width: "100%", maxWidth: 640 }}>
             {TEMPLATES.map(t => (
-              <div key={t.title} style={{ border: `1px solid ${C.gray02}`, borderRadius: 12, padding: 12, background: C.white }}>
+              <div
+                key={t.title}
+                style={{
+                  border: `1px solid ${C.gray02}`,
+                  borderRadius: 12,
+                  padding: "12px 14px",
+                  background: C.white,
+                  minHeight: 96,
+                }}
+              >
                 <span aria-hidden style={{ width: 22, height: 22, borderRadius: 6, background: t.color, display: "block", marginBottom: 8 }} />
-                <p style={{ margin: "0 0 6px", fontFamily: F.bold, fontSize: 12, color: C.dark2 }}>{t.title}</p>
+                <p style={{ margin: "0 0 6px", fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.offBlack }}>{t.title}</p>
                 <p style={{ margin: 0, fontFamily: F.regular, fontSize: 11, color: C.gray01, lineHeight: 1.4 }}>{t.body}</p>
               </div>
             ))}
@@ -565,7 +572,7 @@ function BuilderChatPane() {
           border: `1px solid ${C.gray02}`,
         }}
       >
-        <Plus size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        <CopilotPlusButton iconSize={14} iconColor={C.gray01} />
         <span style={{ flex: 1, fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>Message Agent Builder</span>
         <Mic size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
       </div>
@@ -601,23 +608,7 @@ function InstructionsCanvas({ showModelMenu }: { showModelMenu: boolean }) {
       <ConfigureChrome>
         <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12, flex: 1, minHeight: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: C.frameBlue,
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: C.white,
-                fontFamily: F.bold,
-                fontSize: 12,
-                flexShrink: 0,
-              }}
-            >
-              {"</>"}
-            </span>
+            <AgentHexIcon size={36} />
             <div data-tour-id="agent-name" style={{ flex: 1, minWidth: 0 }}>
               <p style={{ margin: 0, fontFamily: F.bold, fontSize: 18, color: C.dark2, display: "flex", alignItems: "center", gap: 6 }}>
                 New Agent <PenLine size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
@@ -805,12 +796,13 @@ function cardAnchor(rect: CalloutRect, placement: Placement) {
   return { left: rect.left + rect.width / 2, top: rect.top + rect.height };
 }
 
+const CALLOUT_RING_SHADOW = `4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent)`;
+
 function CalloutBox({
   callout,
   active,
   stepNum,
   frame,
-  showBlur,
   onNext,
   isLast,
 }: {
@@ -818,7 +810,6 @@ function CalloutBox({
   active: boolean;
   stepNum: number;
   frame: HTMLElement | null;
-  showBlur: boolean;
   onNext: () => void;
   isLast: boolean;
 }) {
@@ -866,28 +857,6 @@ function CalloutBox({
         filter: "none",
       }}
     >
-      {([
-        { top: 0, left: 0, right: 0, height: `${rect.top}%` },
-        { top: `${rect.top + rect.height}%`, left: 0, right: 0, bottom: 0 },
-        { top: `${rect.top}%`, left: 0, width: `${rect.left}%`, height: `${rect.height}%` },
-        { top: `${rect.top}%`, left: `${rect.left + rect.width}%`, right: 0, height: `${rect.height}%` },
-      ] as CSSProperties[]).map((box, i) => (
-        <div
-          key={i}
-          aria-hidden
-          style={{
-            position: "absolute",
-            ...box,
-            background: `color-mix(in srgb, ${C.confidentBlack} 12%, transparent)`,
-            backdropFilter: "none",
-            WebkitBackdropFilter: "none",
-            filter: "none",
-            pointerEvents: "none",
-            opacity: showBlur ? 1 : 0,
-            transition: "opacity 0.4s ease",
-          }}
-        />
-      ))}
       <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible" }}>
         <line x1={edge.x} y1={edge.y} x2={anchor.left} y2={anchor.top} stroke={C.offBlack} strokeWidth={2} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
       </svg>
@@ -903,6 +872,7 @@ function CalloutBox({
           border: `2px solid ${C.yellow}`,
           borderRadius: 4,
           background: "transparent",
+          boxShadow: CALLOUT_RING_SHADOW,
           pointerEvents: "none",
         }}
       />
@@ -975,7 +945,10 @@ function SlideCanvas({
   onSkipLanding: () => void;
 }) {
   if (slide.kind === "teach") return <TeachCanvas />;
-  if (slide.kind === "landing") return <LandingCanvas onSkip={onSkipLanding} />;
+  if (slide.kind === "landing") {
+    const activeTarget = slide.callouts[calloutIndex]?.target;
+    return <LandingCanvas onSkip={onSkipLanding} showPlusMenu={activeTarget === "upload"} />;
+  }
   if (slide.kind === "instructions") return <InstructionsCanvas showModelMenu={calloutIndex === 2} />;
   return <KnowledgeCanvas />;
 }
@@ -1119,7 +1092,6 @@ export function M365AgentSlideTour() {
               key={`${slideIndex}-${c.title}`}
               callout={c}
               active={(phase === "focus" || (phase === "recap" && slide.kind === "landing")) && i === calloutIndex}
-              showBlur={phase === "focus" && i === calloutIndex}
               stepNum={i + 1}
               frame={frameEl}
               onNext={goNext}

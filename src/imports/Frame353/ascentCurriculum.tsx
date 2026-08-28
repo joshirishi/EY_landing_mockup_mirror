@@ -52,8 +52,15 @@ const CALLOUT_LAYOUT = [
   { left: 498, top: 115, width: 165 },
   { left: 685, top: 95, width: 145 },
   { left: 848, top: 125, width: 125 },
-  { left: 995, top: 38, width: 110 },
-  { left: 1125, top: 10, width: 115, rounded: 4 as const },
+  { left: 1170, top: 298, width: 228, pin: true as const },
+  {
+    left: 1188,
+    top: 0,
+    width: 300,
+    pin: true as const,
+    rounded: 4 as const,
+    highlights: ["I am an AI-enabled tax professional", "AI across the tax lifecycle"] as const,
+  },
 ] as const;
 
 const CURRICULUM_STAGE_NODES: readonly AscentStageNodeEntry[] = [
@@ -72,7 +79,7 @@ const CURRICULUM_STAGE_TITLES: readonly AscentStageTitleEntry[] = [
   { title: "Building Solutions", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Embedding Confidence", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
   { title: "Embedding Confidence", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
-  { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 152, labelWidth: 105 },
+  { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 98, labelWidth: 105 },
 ];
 
 /** Module-end / progress trek — confident completion quotes per marker. */
