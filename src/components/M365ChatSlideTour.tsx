@@ -27,6 +27,7 @@ import {
   Mic,
   MoreHorizontal,
   PenLine,
+  Play,
   Plus,
   RefreshCw,
   Rocket,
@@ -78,6 +79,8 @@ type Slide = {
 };
 
 const WORKFLOW_STEPS = 8;
+
+export type HowExploreAgentId = "new-agent" | "researcher" | "analyst";
 
 // ── Callout measurement (from rendered DOM — works across scale transforms) ───
 
@@ -431,12 +434,41 @@ function NavRow({ icon, label, tourId, active, onClick }: { icon: ReactNode; lab
   );
 }
 
-function AgentRow({ label, tourId }: { label: string; tourId?: string }) {
+function AgentRow({
+  label,
+  tourId,
+  active,
+  onClick,
+}: {
+  label: string;
+  tourId?: string;
+  active?: boolean;
+  onClick?: () => void;
+}) {
+  const shared: CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    padding: "6px 10px",
+    borderRadius: 6,
+    width: "100%",
+    cursor: onClick ? "pointer" : "default",
+    background: active ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
+    border: "none",
+    textAlign: "left",
+  };
+  if (onClick) {
+    return (
+      <button type="button" data-tour-id={tourId} onClick={e => { e.stopPropagation(); onClick(); }} style={shared}>
+        <AgentHexIcon size={18} />
+        <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
+          {label}
+        </span>
+      </button>
+    );
+  }
   return (
-    <div
-      data-tour-id={tourId}
-      style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 10px", borderRadius: 6, width: "100%", cursor: "default" }}
-    >
+    <div data-tour-id={tourId} style={shared}>
       <AgentHexIcon size={18} />
       <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
         {label}
@@ -453,13 +485,21 @@ const CHAT_SIDEBAR_W = 210;
 function ChatSidebar({
   prevChatsId,
   highlightNewAgent,
+  highlightResearcher,
+  highlightAnalyst,
   highlightNewChat,
   onNewChat,
+  exploreAgentId,
+  onExploreAgentSelect,
 }: {
   prevChatsId?: string;
   highlightNewAgent?: boolean;
+  highlightResearcher?: boolean;
+  highlightAnalyst?: boolean;
   highlightNewChat?: boolean;
   onNewChat?: () => void;
+  exploreAgentId?: HowExploreAgentId;
+  onExploreAgentSelect?: (id: HowExploreAgentId) => void;
 }) {
   const icon = { size: 16, strokeWidth: 1.5, color: "#424242" } as const;
   return (
@@ -497,26 +537,45 @@ function ChatSidebar({
           Agents
         </span>
       </div>
-      <AgentRow label="Researcher" tourId="researcher" />
-      <AgentRow label="Analyst" tourId="analyst" />
+      <AgentRow
+        label="Researcher"
+        tourId="researcher"
+        active={exploreAgentId ? exploreAgentId === "researcher" : highlightResearcher}
+        onClick={onExploreAgentSelect ? () => onExploreAgentSelect("researcher") : undefined}
+      />
+      <AgentRow
+        label="Analyst"
+        tourId="analyst"
+        active={exploreAgentId ? exploreAgentId === "analyst" : highlightAnalyst}
+        onClick={onExploreAgentSelect ? () => onExploreAgentSelect("analyst") : undefined}
+      />
       <AgentRow label="Income Tax Laws check" />
       <AgentRow label="Prompt Coach" />
-      <div
-        data-tour-id="new-agent"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          padding: "6px 10px",
-          borderRadius: 6,
-          width: "100%",
-          cursor: "default",
-          background: highlightNewAgent ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
-        }}
-      >
-        <AgentHexIcon size={18} />
-        <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap" }}>New agent</span>
-      </div>
+      {onExploreAgentSelect ? (
+        <AgentRow
+          label="New agent"
+          tourId="new-agent"
+          active={exploreAgentId === "new-agent"}
+          onClick={() => onExploreAgentSelect("new-agent")}
+        />
+      ) : (
+        <div
+          data-tour-id="new-agent"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "6px 10px",
+            borderRadius: 6,
+            width: "100%",
+            cursor: "default",
+            background: highlightNewAgent ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
+          }}
+        >
+          <AgentHexIcon size={18} />
+          <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap" }}>New agent</span>
+        </div>
+      )}
       <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px" }}>
         <ChevronsRight size={13} strokeWidth={1.5} color="#9e9e9e" />
         <span style={{ fontFamily: F.regular, fontSize: 12, color: "#9e9e9e" }}>More agents</span>
@@ -1673,7 +1732,10 @@ function AgentBuilderLandingCanvas({
             <MoreHorizontal size={18} strokeWidth={1.5} color={C.gray01} aria-hidden />
           </div>
 
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18 }}>
+          <div
+            data-tour-id="agent-detail-panel"
+            style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18 }}
+          >
             <CopilotHex size={44} />
             <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
               <p style={{ margin: 0, fontFamily: F.regular, fontSize: 22, color: C.offBlack, textAlign: "center" }}>
@@ -1888,13 +1950,27 @@ function ChatTourCanvas({
   knowledgeExpanded,
   showWhatsNew,
   onDismissWhatsNew,
+  agentName = "New Agent",
+  agentDescribe = "Describe your agent",
+  instructionsContent,
+  exploreAgentId,
+  onExploreAgentSelect,
+  configureOnly = false,
+  instructionsMinHeight,
 }: {
   frameRef: (el: HTMLDivElement | null) => void;
   knowledgeExpanded?: boolean;
   showWhatsNew?: boolean;
   onDismissWhatsNew?: () => void;
+  agentName?: string;
+  agentDescribe?: string;
+  instructionsContent?: ReactNode;
+  exploreAgentId?: HowExploreAgentId;
+  onExploreAgentSelect?: (id: HowExploreAgentId) => void;
+  /** What tab — show Configure panel only (no sidebar or centre chat). */
+  configureOnly?: boolean;
+  instructionsMinHeight?: number;
 }) {
-  const { ref, scale } = useScaleToWidth(FIGMA_W);
   const sources = [
     { name: "SharePoint", Icon: FileText },
     { name: "Teams", Icon: MessagesSquare },
@@ -1902,55 +1978,95 @@ function ChatTourCanvas({
     { name: "Web", Icon: Globe },
   ] as const;
   const connectors = ["Adobe Experience Manager", "Azure DevOps", "Custom Connector", "ServiceNow Catalog", "ServiceNow Knowledge"];
+  const designW = configureOnly ? 920 : FIGMA_W;
+  const designH = configureOnly ? 480 : FIGMA_H;
+  const { ref, scale } = useScaleToWidth(designW);
   return (
     <div
       ref={ref}
       role="img"
-      aria-label="Microsoft 365 Copilot Chat with Agent Builder configure"
-      style={{ width: "100%", aspectRatio: `${FIGMA_W} / ${FIGMA_H}`, position: "relative", overflow: "hidden", background: C.white }}
+      aria-label={configureOnly ? "Agent Builder configure panel" : "Microsoft 365 Copilot Chat with Agent Builder configure"}
+      style={{
+        width: "100%",
+        aspectRatio: configureOnly ? "920 / 480" : `${FIGMA_W} / ${FIGMA_H}`,
+        position: "relative",
+        overflow: "hidden",
+        background: C.white,
+      }}
     >
       <div
         ref={frameRef}
         aria-hidden
-        style={{ position: "absolute", top: 0, left: 0, width: FIGMA_W, height: FIGMA_H, transform: `scale(${scale})`, transformOrigin: "top left", display: "flex", background: C.white }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: designW,
+          height: designH,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          display: "flex",
+          background: C.white,
+        }}
       >
-        <ChatSidebar highlightNewAgent prevChatsId="prev-chats" />
+        {!configureOnly && (
+          <ChatSidebar
+            highlightNewAgent={exploreAgentId === "new-agent"}
+            highlightResearcher={exploreAgentId === "researcher"}
+            highlightAnalyst={exploreAgentId === "analyst"}
+            prevChatsId="prev-chats"
+            exploreAgentId={exploreAgentId}
+            onExploreAgentSelect={onExploreAgentSelect}
+          />
+        )}
 
-        {/* Centre — Agent Builder chat */}
-        <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "16px 28px 24px", background: C.white }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10, marginBottom: 8 }}>
-            <ShieldCheck size={18} strokeWidth={1.5} color="#107C10" aria-hidden />
-            <MoreHorizontal size={18} strokeWidth={1.5} color={C.gray01} aria-hidden />
-          </div>
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
-            <CopilotHex size={40} />
-            <p style={{ fontFamily: F.regular, fontSize: 20, color: C.offBlack, textAlign: "center", margin: 0 }}>
-              Build your own specialist agent
-            </p>
-            <div
-              style={{
-                width: "100%",
-                maxWidth: 480,
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "12px 16px",
-                borderRadius: 28,
-                border: `1px solid ${C.gray02}`,
-                background: C.white,
-              }}
-            >
-              <CopilotPlusButton iconSize={18} iconColor={C.offBlack} />
-              <span style={{ flex: 1, fontFamily: F.regular, fontSize: 14, color: C.gray01 }}>Message Agent Builder</span>
-              <Mic size={18} strokeWidth={1.5} color={C.offBlack} aria-hidden />
+        {!configureOnly && (
+          <>
+            <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "16px 28px 24px", background: C.white }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10, marginBottom: 8 }}>
+                <ShieldCheck size={18} strokeWidth={1.5} color="#107C10" aria-hidden />
+                <MoreHorizontal size={18} strokeWidth={1.5} color={C.gray01} aria-hidden />
+              </div>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
+                <CopilotHex size={40} />
+                <p style={{ fontFamily: F.regular, fontSize: 20, color: C.offBlack, textAlign: "center", margin: 0 }}>
+                  Build your own specialist agent
+                </p>
+                <div
+                  style={{
+                    width: "100%",
+                    maxWidth: 480,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "12px 16px",
+                    borderRadius: 28,
+                    border: `1px solid ${C.gray02}`,
+                    background: C.white,
+                  }}
+                >
+                  <CopilotPlusButton iconSize={18} iconColor={C.offBlack} />
+                  <span style={{ flex: 1, fontFamily: F.regular, fontSize: 14, color: C.gray01 }}>Message Agent Builder</span>
+                  <Mic size={18} strokeWidth={1.5} color={C.offBlack} aria-hidden />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
 
-        {/* Right Agent Builder configure panel */}
         <div
           data-tour-id="agent-builder"
-          style={{ width: 420, flexShrink: 0, height: "100%", display: "flex", flexDirection: "column", borderLeft: `1px solid ${C.gray02}`, background: C.white, minHeight: 0 }}
+          style={{
+            width: configureOnly ? "100%" : 420,
+            flex: configureOnly ? 1 : undefined,
+            flexShrink: configureOnly ? undefined : 0,
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            borderLeft: configureOnly ? "none" : `1px solid ${C.gray02}`,
+            background: C.white,
+            minHeight: 0,
+          }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderBottom: `1px solid ${C.gray02}`, flexShrink: 0 }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 8px", borderRadius: 999, border: `1px solid ${C.gray02}`, fontFamily: F.regular, fontSize: 11, color: C.offBlack }}>
@@ -1973,24 +2089,41 @@ function ChatTourCanvas({
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <AgentHexIcon size={36} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ margin: 0, fontFamily: F.bold, fontSize: 18, fontWeight: 700, color: C.offBlack, display: "flex", alignItems: "center", gap: 6 }}>
-                    New Agent <PenLine size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+                  <p
+                    data-tour-id="agent-name"
+                    style={{ margin: 0, fontFamily: F.bold, fontSize: 18, fontWeight: 700, color: C.offBlack, display: "flex", alignItems: "center", gap: 6 }}
+                  >
+                    {agentName} <PenLine size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
                   </p>
-                  <p style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>Describe your agent</p>
+                  <p data-tour-id="agent-describe" style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>
+                    {agentDescribe}
+                  </p>
                 </div>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>
                   Auto <ChevronDown size={12} strokeWidth={1.75} aria-hidden />
                 </span>
               </div>
-              <div style={{ border: `1px solid ${C.gray02}`, borderRadius: 12, padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+              <div
+                data-tour-id="agent-instructions-card"
+                style={{ border: `1px solid ${C.gray02}`, borderRadius: 12, padding: 14, display: "flex", flexDirection: "column", gap: 10 }}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.offBlack }}>Instructions</span>
                   <Info size={13} strokeWidth={1.75} color={C.gray01} aria-hidden />
                 </div>
-                <div style={{ minHeight: 72, border: `1px solid ${C.gray02}`, borderRadius: 8, padding: 12 }}>
-                  <p style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01, lineHeight: 1.5 }}>
-                    Describe what this agent should do, define its tone, and outline any rules or guidelines it must follow.
-                  </p>
+                <div
+                  style={{
+                    minHeight: instructionsMinHeight ?? (instructionsContent ? 140 : 72),
+                    border: `1px solid ${C.gray02}`,
+                    borderRadius: 8,
+                    padding: 12,
+                  }}
+                >
+                  {instructionsContent ?? (
+                    <p style={{ margin: 0, fontFamily: F.regular, fontSize: 12, color: C.gray01, lineHeight: 1.5 }}>
+                      Describe what this agent should do, define its tone, and outline any rules or guidelines it must follow.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -2442,18 +2575,674 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
             Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
           </button>
         )}
-        <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, flex: "1 1 100%", textAlign: "center" }}>
-          {skipGate
-            ? "Press Skip in the window, or Continue, to open Agent Builder"
-            : whatsNewGate
-              ? "What's new appears after a moment — press Got it, or Continue when ready"
-            : newChatGate
-              ? "Click New chat in the sidebar, or Continue, to open the app picker"
-              : plusMenuGate
-                ? "Tap + in the composer, or Continue, to open the menu"
-                : "Use arrow keys or Continue to walk the eight-step workflow"}
-        </span>
       </div>
+    </div>
+  );
+}
+
+const AGENT_BUILDER_SLIDE = CHAT_TOUR_SLIDES.find(s => s.kind === "builder")!;
+
+/** Agent Builder walkthrough — same UI as MS Chat Custom Agent (sidebar + configure panel). */
+export function M365AgentBuilderTour() {
+  const [calloutIndex, setCalloutIndex] = useState(0);
+  const [frameEl, setFrameEl] = useState<HTMLDivElement | null>(null);
+  const [whatsNewOpen, setWhatsNewOpen] = useState(false);
+  const tourRef = useRef<HTMLDivElement>(null);
+
+  const slide = AGENT_BUILDER_SLIDE;
+  const totalCallouts = slide.callouts.length;
+  const safeCalloutIndex = Math.min(calloutIndex, totalCallouts - 1);
+  const currentCallout = slide.callouts[safeCalloutIndex];
+
+  useEffect(() => {
+    if (currentCallout.target === "agent-got-it") {
+      setWhatsNewOpen(false);
+      const t = window.setTimeout(() => setWhatsNewOpen(true), 900);
+      return () => window.clearTimeout(t);
+    }
+    setWhatsNewOpen(false);
+  }, [currentCallout.target, safeCalloutIndex]);
+
+  const builderConfigure = BUILDER_CONFIGURE_TARGETS.has(currentCallout.target);
+  const isFirstCallout = safeCalloutIndex === 0;
+  const isLastCallout = safeCalloutIndex === totalCallouts - 1;
+  const tourComplete = isLastCallout;
+
+  const goNext = useCallback(() => {
+    setCalloutIndex(prev => (prev < totalCallouts - 1 ? prev + 1 : prev));
+  }, [totalCallouts]);
+
+  const handleDismissWhatsNew = useCallback(() => {
+    setWhatsNewOpen(false);
+    if (currentCallout.target === "agent-got-it") goNext();
+  }, [currentCallout.target, goNext]);
+
+  const goPrev = useCallback(() => {
+    setCalloutIndex(prev => (prev > 0 ? prev - 1 : 0));
+  }, []);
+
+  const restart = useCallback(() => {
+    setCalloutIndex(0);
+    setFrameEl(null);
+    tourRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!tourRef.current?.contains(document.activeElement) && document.activeElement !== document.body) return;
+      if (e.key === "ArrowRight" || e.key === "Enter") { e.preventDefault(); if (!tourComplete) goNext(); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); if (!isFirstCallout) goPrev(); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goNext, goPrev, tourComplete, isFirstCallout]);
+
+  const frameRefCb = useCallback((el: HTMLDivElement | null) => setFrameEl(el), []);
+
+  return (
+    <div
+      ref={tourRef}
+      tabIndex={0}
+      role="region"
+      aria-label="M365 Agent Builder workflow"
+      aria-roledescription="carousel"
+      style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16, outline: "none" }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          borderRadius: 16,
+          border: `1px solid ${C.gray02}`,
+          background: C.white,
+          boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
+        }}
+      >
+        {currentCallout.target === "new-agent" && (
+          <ChatMainCanvas key="builder-new-agent" frameRef={frameRefCb} highlightNewAgent />
+        )}
+        {currentCallout.target === "agent-skip" && (
+          <AgentBuilderLandingCanvas key="builder-landing" frameRef={frameRefCb} onSkip={goNext} />
+        )}
+        {builderConfigure && (
+          <ChatTourCanvas
+            key={`builder-configure-${currentCallout.target}`}
+            frameRef={frameRefCb}
+            knowledgeExpanded={currentCallout.target === "knowledge-sources"}
+            showWhatsNew={whatsNewOpen && currentCallout.target === "agent-got-it"}
+            onDismissWhatsNew={handleDismissWhatsNew}
+          />
+        )}
+        {slide.callouts.map((c, i) => (
+          <CalloutBox
+            key={`builder-${i}-${c.target}`}
+            callout={c}
+            active={i === safeCalloutIndex}
+            stepNum={i + 1}
+            frame={frameEl}
+            onNext={goNext}
+            isLast={tourComplete || i === totalCallouts - 1}
+          />
+        ))}
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "12px 0 0" }}>
+        <button type="button" onClick={goPrev} disabled={isFirstCallout} aria-label="Previous step" style={navBtnStyle(isFirstCallout)}>
+          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
+        </button>
+        {tourComplete ? (
+          <button type="button" onClick={restart} aria-label="Restart tour" style={primaryBtnStyle}>Restart tour</button>
+        ) : (
+          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
+            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function InstructionFocusRing({ frame, target }: { frame: HTMLDivElement | null; target: string }) {
+  const [rect, setRect] = useState<CalloutRect | null>(null);
+
+  useLayoutEffect(() => {
+    if (!frame) {
+      setRect(null);
+      return;
+    }
+    const update = () => setRect(measureTarget(frame, target));
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(frame);
+    const t1 = window.setTimeout(update, 80);
+    const t2 = window.setTimeout(update, 240);
+    return () => {
+      ro.disconnect();
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [frame, target]);
+
+  if (!rect) return null;
+
+  return (
+    <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 10 }}>
+      <div
+        style={{
+          position: "absolute",
+          left: `${rect.left}%`,
+          top: `${rect.top}%`,
+          width: `${rect.width}%`,
+          height: `${rect.height}%`,
+          boxSizing: "border-box",
+          border: `2px solid ${C.yellow}`,
+          borderRadius: pillHighlightRadius(target),
+          boxShadow: CALLOUT_RING_SHADOW,
+          transition: "left 0.25s ease, top 0.25s ease, width 0.25s ease, height 0.25s ease",
+        }}
+      />
+    </div>
+  );
+}
+
+export type AgentInstructionPreviewFocus = "purpose" | "detail" | "instructions" | "knowledge";
+
+const INSTRUCTION_FOCUS_TARGETS: Record<AgentInstructionPreviewFocus, string> = {
+  purpose: "agent-name",
+  detail: "agent-describe",
+  instructions: "agent-instructions-card",
+  knowledge: "knowledge-sources",
+};
+
+/** Live Agent Builder canvas for the What panel — highlights the active instruction component. */
+export function AgentBuilderInstructionPreview({ focus }: { focus: AgentInstructionPreviewFocus }) {
+  const [frameEl, setFrameEl] = useState<HTMLDivElement | null>(null);
+  const frameRefCb = useCallback((el: HTMLDivElement | null) => setFrameEl(el), []);
+  const highlightTarget = INSTRUCTION_FOCUS_TARGETS[focus];
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        borderRadius: 16,
+        border: `1px solid ${C.gray02}`,
+        background: C.white,
+        boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
+        overflow: "hidden",
+      }}
+    >
+      <ChatTourCanvas frameRef={frameRefCb} knowledgeExpanded={focus === "knowledge"} configureOnly />
+      <InstructionFocusRing frame={frameEl} target={highlightTarget} />
+    </div>
+  );
+}
+
+const HOW_AGENT_PROFILES: Record<
+  HowExploreAgentId,
+  { name: string; describe: string; intro: string; pointers: string[] }
+> = {
+  researcher: {
+    name: "Researcher",
+    describe: "Do the heavy lifting",
+    intro: "Let Copilot's Researcher agent do the heavy lifting:",
+    pointers: [
+      "Step-by-Step Reasoning",
+      "Source-Cited Reports",
+      "Market Intelligence",
+      "Knowledge Assistant",
+      "Fact to Case Law Analysis",
+    ],
+  },
+  analyst: {
+    name: "Analyst",
+    describe: "Navigate bulky data",
+    intro: "Let Copilot's Analyst agent navigate bulky data:",
+    pointers: [
+      "Assessment Patterns",
+      "Judgement Trends",
+      "Provision Shifts",
+      "GST Reconciliations",
+      "APA Computations",
+    ],
+  },
+  "new-agent": {
+    name: "New Agent",
+    describe: "Control reasoning through phrasing",
+    intro: "Not every task needs deep thinking — match instruction style to the job:",
+    pointers: [],
+  },
+};
+
+const NEW_AGENT_REASONING_LEVELS = [
+  {
+    label: "Deep reasoning",
+    body: "Analyze the current-quarter advance tax computation against the prior quarter. Evaluate changes in assumptions, forecast movements and tax adjustments. Justify the drivers of material variances and recommend follow-up actions.",
+  },
+  {
+    label: "Moderate reasoning",
+    body: "Summarize the key quarter-on-quarter movements in the advance tax computation and list the main reasons for the changes.",
+  },
+  {
+    label: "Fast & minimal reasoning",
+    body: "Provide the list of reasons for changes in the advance tax computation.",
+  },
+] as const;
+
+function AgentPointerInstructions({ intro, pointers }: { intro: string; pointers: string[] }) {
+  return (
+    <div>
+      <p style={{ margin: 0, fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.offBlack, lineHeight: 1.5 }}>
+        {intro}
+      </p>
+      <ul
+        style={{
+          margin: "10px 0 0",
+          paddingLeft: 18,
+          fontFamily: F.regular,
+          fontSize: 12,
+          color: C.gray01,
+          lineHeight: 1.55,
+        }}
+      >
+        {pointers.map(point => (
+          <li key={point} style={{ marginBottom: 6 }}>
+            {point}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function NewAgentReasoningInstructions({ intro }: { intro: string }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <p style={{ margin: 0, fontFamily: F.bold, fontSize: 12, fontWeight: 700, color: C.offBlack, lineHeight: 1.45 }}>
+        {intro}
+      </p>
+      {NEW_AGENT_REASONING_LEVELS.map(level => (
+        <div key={level.label}>
+          <p
+            style={{
+              margin: "0 0 4px",
+              fontFamily: F.bold,
+              fontSize: 11,
+              fontWeight: 700,
+              color: C.offBlack,
+              letterSpacing: "0.03em",
+            }}
+          >
+            {level.label}
+          </p>
+          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 11, color: C.gray01, lineHeight: 1.5 }}>
+            {level.body}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Drop in video URLs when ready — modal shows placeholder until set. */
+const HOW_AGENT_VIDEOS: Record<HowExploreAgentId, { buttonLabel: string; title: string; src?: string }> = {
+  researcher: {
+    buttonLabel: "See Researcher agent video",
+    title: "Researcher agent in action",
+  },
+  analyst: {
+    buttonLabel: "See Analyst agent video",
+    title: "Analyst agent in action",
+  },
+  "new-agent": {
+    buttonLabel: "See New agent video",
+    title: "Build a custom agent",
+  },
+};
+
+const howVideoBtnStyle: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "10px 18px",
+  borderRadius: 3,
+  border: "none",
+  background: C.yellow,
+  color: C.confidentBlack,
+  fontFamily: F.bold,
+  fontSize: 12,
+  fontWeight: 700,
+  cursor: "pointer",
+  letterSpacing: "0.03em",
+};
+
+function AgentHowVideoModal({
+  agentId,
+  onClose,
+}: {
+  agentId: HowExploreAgentId;
+  onClose: () => void;
+}) {
+  const video = HOW_AGENT_VIDEOS[agentId];
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="agent-how-video-title"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 200,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 24,
+        background: `color-mix(in srgb, ${C.confidentBlack} 55%, transparent)`,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          width: "min(880px, 100%)",
+          background: C.white,
+          borderRadius: 12,
+          overflow: "hidden",
+          boxShadow: `0 24px 48px color-mix(in srgb, ${C.confidentBlack} 22%, transparent)`,
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            padding: "16px 20px",
+            borderBottom: `1px solid ${C.gray02}`,
+          }}
+        >
+          <p id="agent-how-video-title" style={{ margin: 0, fontFamily: F.bold, fontSize: 16, fontWeight: 700, color: C.offBlack }}>
+            {video.title}
+          </p>
+          <button
+            type="button"
+            aria-label="Close video"
+            onClick={onClose}
+            style={{ border: "none", background: "transparent", cursor: "pointer", padding: 4, display: "flex" }}
+          >
+            <X size={18} strokeWidth={1.75} color={C.gray01} aria-hidden />
+          </button>
+        </div>
+        <div style={{ position: "relative", paddingBottom: "56.25%", background: C.offWhite }}>
+          {video.src ? (
+            <video
+              src={video.src}
+              controls
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", background: C.confidentBlack }}
+            />
+          ) : (
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                padding: 24,
+              }}
+            >
+              <Play size={40} strokeWidth={1.5} color={C.gray01} aria-hidden />
+              <p style={{ margin: 0, fontFamily: F.regular, fontSize: 14, color: C.gray01, textAlign: "center" }}>
+                Video coming soon
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const HOW_ONBOARDING_STEPS: {
+  agentId: HowExploreAgentId;
+  subtitle: string;
+  showInstructions: boolean;
+  callout: Omit<Callout, "workflowStep">;
+}[] = [
+  {
+    agentId: "researcher",
+    subtitle: "Select the Researcher agent in the sidebar.",
+    showInstructions: false,
+    callout: {
+      title: "Researcher agent",
+      body: "Start with Researcher in the sidebar — built for multi-step research with cited sources on Indian tax workflows.",
+      icon: Search,
+      target: "researcher",
+      placement: "right",
+    },
+  },
+  {
+    agentId: "researcher",
+    subtitle: "See how Researcher capabilities map to instructions.",
+    showInstructions: true,
+    callout: {
+      title: "How to use Researcher agent",
+      body: "Drive deep multistage research of your work data and web insights.",
+      icon: PenLine,
+      target: "agent-instructions-card",
+      placement: "left",
+      anchorY: 0.4,
+    },
+  },
+  {
+    agentId: "analyst",
+    subtitle: "Select the Analyst agent in the sidebar.",
+    showInstructions: false,
+    callout: {
+      title: "Analyst agent",
+      body: "Analyst navigates bulky tax data — GST filings, provision shifts, and APA computations — and surfaces patterns fast.",
+      icon: BarChart3,
+      target: "analyst",
+      placement: "right",
+    },
+  },
+  {
+    agentId: "analyst",
+    subtitle: "Encode Analyst focus areas as instruction pointers.",
+    showInstructions: true,
+    callout: {
+      title: "Write the instructions",
+      body: "List the analysis focus areas as instruction bullets so the agent knows what patterns, trends, and reconciliations to surface.",
+      icon: PenLine,
+      target: "agent-instructions-card",
+      placement: "left",
+      anchorY: 0.4,
+    },
+  },
+  {
+    agentId: "new-agent",
+    subtitle: "Select New agent to build your own specialist.",
+    showInstructions: false,
+    callout: {
+      title: "New agent",
+      body: "Choose New agent when you need a custom specialist — name it, describe its role, and set instructions for your team's workflows.",
+      icon: Bot,
+      target: "new-agent",
+      placement: "right",
+    },
+  },
+  {
+    agentId: "new-agent",
+    subtitle: "Control reasoning depth through phrasing.",
+    showInstructions: true,
+    callout: {
+      title: "Write the instructions",
+      body: "Phrasing sets how much reasoning the model applies — match deep, moderate, or minimal styles to the task. Not every job needs step-by-step thinking.",
+      icon: PenLine,
+      target: "agent-instructions-card",
+      placement: "left",
+      anchorY: 0.4,
+    },
+  },
+];
+
+/** How tab — guided onboarding through Researcher, Analyst, and New agent. */
+export function M365AgentHowExplorer() {
+  const [stepIndex, setStepIndex] = useState(0);
+  const [frameEl, setFrameEl] = useState<HTMLDivElement | null>(null);
+  const [videoAgentId, setVideoAgentId] = useState<HowExploreAgentId | null>(null);
+  const tourRef = useRef<HTMLDivElement>(null);
+  const frameRefCb = useCallback((el: HTMLDivElement | null) => setFrameEl(el), []);
+
+  const step = HOW_ONBOARDING_STEPS[stepIndex];
+  const profile = HOW_AGENT_PROFILES[step.agentId];
+  const videoMeta = HOW_AGENT_VIDEOS[step.agentId];
+  const totalSteps = HOW_ONBOARDING_STEPS.length;
+  const isFirst = stepIndex === 0;
+  const isLast = stepIndex === totalSteps - 1;
+
+  const goNext = useCallback(() => {
+    setStepIndex(i => Math.min(i + 1, totalSteps - 1));
+  }, [totalSteps]);
+
+  const goPrev = useCallback(() => {
+    setStepIndex(i => Math.max(i - 1, 0));
+  }, []);
+
+  const restart = useCallback(() => {
+    setStepIndex(0);
+    setFrameEl(null);
+    tourRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!tourRef.current?.contains(document.activeElement) && document.activeElement !== document.body) return;
+      if (e.key === "ArrowRight" || e.key === "Enter") { e.preventDefault(); if (!isLast) goNext(); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); if (!isFirst) goPrev(); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goNext, goPrev, isFirst, isLast]);
+
+  return (
+    <div
+      ref={tourRef}
+      tabIndex={0}
+      role="region"
+      aria-label="Agent types onboarding"
+      style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16, outline: "none" }}
+    >
+      <div style={{ textAlign: "center" }}>
+        <p
+          style={{
+            fontFamily: F.bold,
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: C.eyebrowGoldDark,
+            margin: "0 0 8px",
+          }}
+        >
+          Step {stepIndex + 1} of {totalSteps}
+        </p>
+        <p style={{ fontFamily: F.light, fontSize: 14, color: C.gray01, margin: 0 }}>
+          {step.subtitle}
+        </p>
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 14 }}>
+          {HOW_ONBOARDING_STEPS.map((s, i) => (
+            <span
+              key={s.agentId + i}
+              aria-hidden
+              style={{
+                width: i === stepIndex ? 28 : 8,
+                height: 8,
+                borderRadius: 999,
+                background: i === stepIndex ? C.yellow : i < stepIndex ? C.offBlack : C.gray02,
+                transition: "width 200ms ease, background 200ms ease",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          borderRadius: 16,
+          border: `1px solid ${C.gray02}`,
+          background: C.white,
+          boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
+          overflow: "hidden",
+        }}
+      >
+        <ChatTourCanvas
+          key={`how-step-${stepIndex}`}
+          agentName={profile.name}
+          agentDescribe={profile.describe}
+          instructionsContent={
+            step.showInstructions ? (
+              step.agentId === "new-agent" ? (
+                <NewAgentReasoningInstructions intro={profile.intro} />
+              ) : (
+                <AgentPointerInstructions intro={profile.intro} pointers={profile.pointers} />
+              )
+            ) : undefined
+          }
+          instructionsMinHeight={step.agentId === "new-agent" && step.showInstructions ? 260 : undefined}
+          exploreAgentId={step.agentId}
+          frameRef={frameRefCb}
+        />
+        <CalloutBox
+          callout={{ ...step.callout, workflowStep: stepIndex + 1 }}
+          active
+          stepNum={stepIndex + 1}
+          frame={frameEl}
+          onNext={goNext}
+          isLast={isLast}
+        />
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <button
+          type="button"
+          onClick={() => setVideoAgentId(step.agentId)}
+          style={howVideoBtnStyle}
+        >
+          <Play size={14} strokeWidth={1.75} aria-hidden />
+          {videoMeta.buttonLabel}
+        </button>
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "4px 0 0" }}>
+        <button type="button" onClick={goPrev} disabled={isFirst} aria-label="Previous step" style={navBtnStyle(isFirst)}>
+          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
+        </button>
+        {isLast ? (
+          <button type="button" onClick={restart} aria-label="Restart onboarding" style={primaryBtnStyle}>
+            Restart tour
+          </button>
+        ) : (
+          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
+            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        )}
+      </div>
+
+      {videoAgentId && <AgentHowVideoModal agentId={videoAgentId} onClose={() => setVideoAgentId(null)} />}
     </div>
   );
 }

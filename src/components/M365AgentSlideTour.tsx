@@ -49,6 +49,8 @@ type Callout = {
   /** Matches data-tour-id on the real control — highlight is measured live. */
   target: string;
   placement: Placement;
+  /** If the preferred side would sit off-canvas, use this instead of the opposite side. */
+  fallbackPlacement?: Placement;
 };
 
 function boxEdgePoint(rect: CalloutRect, anchorLeft: number, anchorTop: number) {
@@ -85,6 +87,27 @@ const AGENT_TOUR_SLIDES: Slide[] = [
     kind: "landing",
     callouts: [
       {
+        title: "Researcher agent",
+        body: "Prep a manufacturing client exploring global expansion — it pulls indirect tax, customs and transfer pricing, then returns a meeting-ready brief.",
+        icon: Search,
+        target: "researcher",
+        placement: "right",
+      },
+      {
+        title: "Analyst agent",
+        body: "Ask it to analyse 12 months of GST filings. It finds patterns, late filings and high-risk periods, then builds the charts — minutes, not hours.",
+        icon: BarChart3,
+        target: "analyst",
+        placement: "right",
+      },
+      {
+        title: "New agent",
+        body: "In the sidebar under Agents, choose New agent to start building a specialist for Indian tax workflows.",
+        icon: Bot,
+        target: "new-agent",
+        placement: "right",
+      },
+      {
         title: "All your agents",
         body: "Every agent you use or create is listed here — Researcher, Analyst, and your tax specialists.",
         icon: Bot,
@@ -102,8 +125,9 @@ const AGENT_TOUR_SLIDES: Slide[] = [
         title: "Upload work content",
         body: "Attach files from the plus menu so the agent starts with your approved tax material.",
         icon: Upload,
-        target: "upload",
-        placement: "right",
+        target: "upload-menu",
+        placement: "left",
+        fallbackPlacement: "bottom",
       },
       {
         title: "Sample templates",
@@ -244,9 +268,21 @@ function NavRow({ icon, label, active }: { icon: ReactNode; label: string; activ
   );
 }
 
-function AgentRow({ label }: { label: string }) {
+function AgentRow({ label, tourId, active }: { label: string; tourId?: string; active?: boolean }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 10px", borderRadius: 6, width: "100%", cursor: "default" }}>
+    <div
+      data-tour-id={tourId}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "6px 10px",
+        borderRadius: 6,
+        width: "100%",
+        cursor: "default",
+        background: active ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
+      }}
+    >
       <AgentHexIcon size={18} />
       <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
         {label}
@@ -257,7 +293,7 @@ function AgentRow({ label }: { label: string }) {
 
 const SIDEBAR_W = 210;
 
-function AgentSidebar({ highlightNew = false }: { highlightNew?: boolean }) {
+function AgentSidebar({ highlightId }: { highlightId?: string }) {
   const icon = { size: 16, strokeWidth: 1.5, color: "#424242" } as const;
   return (
     <div
@@ -288,11 +324,12 @@ function AgentSidebar({ highlightNew = false }: { highlightNew?: boolean }) {
         <span style={{ display: "block", padding: "0 10px", marginBottom: 2, fontFamily: F.regular, fontSize: 11, fontWeight: 600, color: "#757575" }}>
           Agents
         </span>
-        <AgentRow label="Researcher" />
-        <AgentRow label="Analyst" />
+        <AgentRow label="Researcher" tourId="researcher" active={highlightId === "researcher"} />
+        <AgentRow label="Analyst" tourId="analyst" active={highlightId === "analyst"} />
         <AgentRow label="Income Tax Laws check" />
         <AgentRow label="Labour Code Analyst" />
         <div
+          data-tour-id="new-agent"
           style={{
             display: "flex",
             alignItems: "center",
@@ -301,7 +338,7 @@ function AgentSidebar({ highlightNew = false }: { highlightNew?: boolean }) {
             borderRadius: 6,
             width: "100%",
             cursor: "default",
-            background: highlightNew ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
+            background: highlightId === "new-agent" ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
           }}
         >
           <AgentHexIcon size={18} />
@@ -439,10 +476,10 @@ const TEMPLATES = [
   { title: "Advance Tax Reviewer", body: "Compares quarter computations and drafts a management note.", color: C.frameGreen },
 ] as const;
 
-function LandingCanvas({ onSkip, showPlusMenu }: { onSkip: () => void; showPlusMenu?: boolean }) {
+function LandingCanvas({ onSkip, showPlusMenu, highlightId }: { onSkip: () => void; showPlusMenu?: boolean; highlightId?: string }) {
   return (
     <ScaledFrame label="M365 Copilot after clicking New Agent">
-      <AgentSidebar highlightNew />
+      <AgentSidebar highlightId={highlightId ?? "new-agent"} />
       <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "16px 40px 28px", background: C.white }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10, marginBottom: 8 }}>
           <ShieldCheck size={18} strokeWidth={1.5} color="#107C10" aria-hidden />
@@ -490,7 +527,7 @@ function LandingCanvas({ onSkip, showPlusMenu }: { onSkip: () => void; showPlusM
               boxShadow: `0 2px 8px color-mix(in srgb, ${C.confidentBlack} 6%, transparent)`,
             }}
           >
-            <CopilotPlusButton plusTourId="upload" open={showPlusMenu} iconSize={18} iconColor={C.offBlack} />
+            <CopilotPlusButton plusTourId="upload" menuTourId="upload-menu" open={showPlusMenu} iconSize={18} iconColor={C.offBlack} />
             <span style={{ flex: 1, fontFamily: F.regular, fontSize: 14, color: C.gray01 }}>Message Agent Builder</span>
             <Mic size={18} strokeWidth={1.5} color={C.offBlack} aria-hidden />
           </div>
@@ -796,6 +833,15 @@ function cardAnchor(rect: CalloutRect, placement: Placement) {
   return { left: rect.left + rect.width / 2, top: rect.top + rect.height };
 }
 
+/** Keep the card on-canvas. For the plus-menu step, never flip to the right (that is where the flyout sits). */
+function safePlacement(rect: CalloutRect, placement: Placement, fallback?: Placement): Placement {
+  if (placement === "top" && rect.top < 24) return fallback ?? "bottom";
+  if (placement === "bottom" && rect.top + rect.height > 76) return fallback ?? "top";
+  if (placement === "right" && rect.left + rect.width > 70) return fallback ?? "left";
+  if (placement === "left" && rect.left < (fallback === "bottom" ? 36 : 30)) return fallback ?? "right";
+  return placement;
+}
+
 const CALLOUT_RING_SHADOW = `4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent)`;
 
 function CalloutBox({
@@ -830,15 +876,18 @@ function CalloutBox({
     ro.observe(frame);
     const later = window.setTimeout(update, 80);
     const later2 = window.setTimeout(update, 220);
+    const later3 = window.setTimeout(update, 400);
     return () => {
       ro.disconnect();
       window.clearTimeout(later);
       window.clearTimeout(later2);
+      window.clearTimeout(later3);
     };
   }, [frame, callout.target, active]);
 
   if (!rect) return null;
-  const anchor = cardAnchor(rect, callout.placement);
+  const placement = safePlacement(rect, callout.placement, callout.fallbackPlacement);
+  const anchor = cardAnchor(rect, placement);
   const edge = boxEdgePoint(rect, anchor.left, anchor.top);
   return (
     <div
@@ -888,7 +937,7 @@ function CalloutBox({
           padding: "14px 16px",
           boxShadow: `0 12px 32px color-mix(in srgb, ${C.confidentBlack} 18%, transparent)`,
           pointerEvents: "auto",
-          ...cardTransform(callout.placement),
+          ...cardTransform(placement),
         }}
       >
         <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
@@ -947,19 +996,62 @@ function SlideCanvas({
   if (slide.kind === "teach") return <TeachCanvas />;
   if (slide.kind === "landing") {
     const activeTarget = slide.callouts[calloutIndex]?.target;
-    return <LandingCanvas onSkip={onSkipLanding} showPlusMenu={activeTarget === "upload"} />;
+    return <LandingCanvas onSkip={onSkipLanding} showPlusMenu={activeTarget === "upload-menu"} highlightId={activeTarget} />;
   }
   if (slide.kind === "instructions") return <InstructionsCanvas showModelMenu={calloutIndex === 2} />;
   return <KnowledgeCanvas />;
 }
 
-export function M365AgentSlideTour() {
+/** Chip indices on the M365 Agent CopilotScene (0 = What are agents, 5–7 = Agents group). */
+export function destinationForAgentUseCase(idx: number): { slide: number; callout: number } | null {
+  if (idx === 0) {
+    const slide = AGENT_TOUR_SLIDES.findIndex(s => s.kind === "teach");
+    return slide >= 0 ? { slide, callout: 0 } : null;
+  }
+  const landing = AGENT_TOUR_SLIDES.findIndex(s => s.kind === "landing");
+  if (landing < 0) return null;
+  const targets = AGENT_TOUR_SLIDES[landing].callouts;
+  const byTarget = (id: string) => {
+    const callout = targets.findIndex(c => c.target === id);
+    return callout >= 0 ? { slide: landing, callout } : null;
+  };
+  if (idx === 5) return byTarget("researcher");
+  if (idx === 6) return byTarget("analyst");
+  if (idx === 7) return byTarget("new-agent");
+  return null;
+}
+
+function agentTourUseCaseIndex(slideKind: SlideKind, target: string): number {
+  if (slideKind === "teach") return 0;
+  if (target === "researcher") return 5;
+  if (target === "analyst") return 6;
+  return 7;
+}
+
+export function M365AgentSlideTour({
+  onHighlightUseCase,
+  jump,
+}: {
+  onHighlightUseCase?: (index: number) => void;
+  jump?: { n: number; idx: number } | null;
+} = {}) {
   const [slideIndex, setSlideIndex] = useState(0);
   const [calloutIndex, setCalloutIndex] = useState(0);
   const [phase, setPhase] = useState<TourPhase>("focus");
   const tourRef = useRef<HTMLDivElement>(null);
   const enterModeRef = useRef<"preview" | "focus">("preview");
+  const appliedJumpN = useRef(0);
   const [frameEl, setFrameEl] = useState<HTMLDivElement | null>(null);
+
+  if (jump && jump.n !== appliedJumpN.current) {
+    const dest = destinationForAgentUseCase(jump.idx);
+    appliedJumpN.current = jump.n;
+    if (dest) {
+      enterModeRef.current = "focus";
+      setSlideIndex(dest.slide);
+      setCalloutIndex(dest.callout);
+    }
+  }
 
   const slide = AGENT_TOUR_SLIDES[slideIndex];
   const totalSlides = AGENT_TOUR_SLIDES.length;
@@ -982,6 +1074,12 @@ export function M365AgentSlideTour() {
     const next = AGENT_TOUR_SLIDES.findIndex(s => s.kind === "instructions");
     if (next >= 0) openSlide(next, 0, "preview");
   }, [openSlide]);
+
+  const currentTarget = slide.callouts[Math.min(calloutIndex, Math.max(0, totalCallouts - 1))]?.target ?? "";
+
+  useEffect(() => {
+    onHighlightUseCase?.(agentTourUseCaseIndex(slide.kind, currentTarget));
+  }, [slide.kind, currentTarget, onHighlightUseCase]);
 
   useEffect(() => {
     if (!hasFocusTour) {
@@ -1121,9 +1219,6 @@ export function M365AgentSlideTour() {
             <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
           </button>
         )}
-        <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01, flex: "1 1 100%", textAlign: "center" }}>
-          {skipGate ? "Press Skip in the window to open the next page" : "Use arrow keys or Continue to walk through each page"}
-        </span>
       </div>
     </div>
   );

@@ -16,8 +16,8 @@ import { SectionAnchorTitle } from "../design-kit/EYTypography";
 import { TabRail } from "../design-kit/TabRail";
 import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
-import { M365ChatSlideTour } from "../components/M365ChatSlideTour";
-import { M365AgentSlideTour } from "../components/M365AgentSlideTour";
+import { M365ChatSlideTour, M365AgentHowExplorer } from "../components/M365ChatSlideTour";
+import { AgentInstructionComponents } from "../components/AgentInstructionComponents";
 import { AGENT_HEX_SRC, AgentHexIcon } from "../components/AgentHexIcon";
 import {
   AGENT_BEST_PRACTICES_SLIDES,
@@ -70,6 +70,8 @@ type TabId = (typeof TABS)[number]["id"];
 // Prompt-repository pills are app categories only. Agent lives in the Learn header.
 const APP_TABS = TABS.filter((t) => t.id !== "agent");
 
+type UseCaseChip = { icon?: LucideIcon; agentIcon?: boolean; title: string; body: string; group?: string };
+
 // ── Real app display names — used in use-case tags, mock window titles, and
 // the "Ask Copilot in {App}" prompt-panel headers ────────────────────────────
 const APP_NAME: Record<TabId, string> = {
@@ -113,7 +115,7 @@ const LAPTOP_CORE_APPS: { id: TabId; label: string; logo: string; pos: React.CSS
 // "copilot scene" tax use-case & prompt content ported from copilot_dashboard.html ──
 const SECTION_DATA: Record<TabId, {
   h2: string;
-  useCases: { icon: LucideIcon; title: string; body: string }[];
+  useCases: UseCaseChip[];
   panelSubtitle: string;
   prompts: { label: string; text: string }[];
   screenshotSide: "left" | "right";
@@ -244,6 +246,9 @@ const SECTION_DATA: Record<TabId, {
       { icon: FolderOpen,    title: "Organise Evidence",         body: "Gather and package issue-wise evidence from SharePoint, Teams and Outlook for audits and disputes." },
       { icon: ClipboardList, title: "Track Compliance",          body: "Monitor filing deadlines, action items and overdue obligations across engagements." },
       { icon: Rocket,        title: "Automate Correspondence",   body: "Standardise recurring tax communications with approved templates and tone guidelines." },
+      { agentIcon: true, title: "Researcher Agent", body: "Deep briefing for complex meetings — tax, customs, and transfer pricing.", group: "Agents" },
+      { agentIcon: true, title: "Analyst Agent",    body: "Turn GST filings into trends, late-filing flags, and charts in minutes.", group: "Agents" },
+      { agentIcon: true, title: "Custom Agent",     body: "Build a specialist for Indian tax with your instructions and knowledge sources.", group: "Agents" },
     ],
     panelSubtitle: "Sample agent instructions for common tax workflow scenarios.",
     prompts: [
@@ -783,8 +788,6 @@ function promptToUseCaseIndex(promptIndex: number | null, useCaseCount: number):
   if (promptIndex == null || promptIndex < 0 || promptIndex >= useCaseCount) return null;
   return promptIndex;
 }
-
-type UseCaseChip = { icon?: LucideIcon; agentIcon?: boolean; title: string; body: string; group?: string };
 
 type UseCaseSegment =
   | { kind: "chips"; indices: number[] }
@@ -1697,7 +1700,7 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
   const highlightedUseCase = tabId === "m365"
     ? tourUseCase
     : promptToUseCaseIndex(activeIndex, d.useCases.length);
-  const hasPromptMock = tabId !== "m365" && tabId !== "agent";
+  const hasPromptMock = tabId !== "m365";
 
   return (
     <>
@@ -1715,10 +1718,6 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
         {tabId === "m365" ? (
           <div className="copilot-scene-main copilot-scene-main--chat-tour">
             <M365ChatSlideTour onHighlightUseCase={setTourUseCase} />
-          </div>
-        ) : tabId === "agent" ? (
-          <div className="copilot-scene-main copilot-scene-main--chat-tour">
-            <M365AgentSlideTour />
           </div>
         ) : (
           <div className="copilot-scene-main">
@@ -4016,10 +4015,18 @@ function LaptopStage({ onOpenApp }: { onOpenApp: (id: TabId) => void }) {
   );
 }
 
+const AGENT_VIEW_PILLS = [
+  { id: "what", label: "What" },
+  { id: "how", label: "How" },
+  { id: "drafting", label: "Effective Drafting" },
+] as const;
+type AgentViewId = (typeof AGENT_VIEW_PILLS)[number]["id"];
+
 // ── Full tab section ──────────────────────────────────────────────────────────
 function TabSection({ tabId, surface = "offWhite" }: { tabId: TabId; surface?: "offWhite" | "white" }) {
   const d = SECTION_DATA[tabId];
   const tabMeta = TABS.find(t => t.id === tabId)!;
+  const [agentView, setAgentView] = useState<AgentViewId>("what");
   // Default offWhite matches #prompt-repository. White is only for #m365-agent.
   const background = surface === "white" ? C.white : C.offWhite;
   return (
@@ -4034,9 +4041,20 @@ function TabSection({ tabId, surface = "offWhite" }: { tabId: TabId; surface?: "
         </p>
       </header>
 
-      <CopilotScene tabId={tabId} />
-
-      {tabId === "agent" && <AgentHubTabs />}
+      {tabId === "agent" ? (
+        <>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <TabRail tabs={[...AGENT_VIEW_PILLS]} active={agentView} onChange={setAgentView} />
+          </div>
+          {agentView === "what" && (
+            <AgentInstructionComponents />
+          )}
+          {agentView === "how" && <M365AgentHowExplorer />}
+          {agentView === "drafting" && <AgentHubTabs />}
+        </>
+      ) : (
+        <CopilotScene tabId={tabId} />
+      )}
       </div>
     </div>
   );
