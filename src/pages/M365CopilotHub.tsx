@@ -18,7 +18,7 @@ import { colors, contentInlinePad, contentRailStyle, fonts as F, spacing, spectr
 import { AscentModuleProgressSection } from "../imports/Frame353/ascentCurriculum";
 import { M365ChatSlideTour, M365AgentHowExplorer } from "../components/M365ChatSlideTour";
 import { AgentInstructionComponents } from "../components/AgentInstructionComponents";
-import { AGENT_HEX_SRC, AgentHexIcon } from "../components/AgentHexIcon";
+import { AGENT_HEX_SRC } from "../components/AgentHexIcon";
 import {
   AGENT_BEST_PRACTICES_SLIDES,
   AGENT_COMMON_FAILURES,
@@ -783,157 +783,6 @@ type AgentInstructionNavItem = {
   subtitle?: string;
 };
 
-// Prompt i highlights use-case i when both exist (5th suggestion has no pill).
-function promptToUseCaseIndex(promptIndex: number | null, useCaseCount: number): number | null {
-  if (promptIndex == null || promptIndex < 0 || promptIndex >= useCaseCount) return null;
-  return promptIndex;
-}
-
-type UseCaseSegment =
-  | { kind: "chips"; indices: number[] }
-  | { kind: "group"; label: string; indices: number[] };
-
-function segmentUseCases(useCases: UseCaseChip[]): UseCaseSegment[] {
-  const segments: UseCaseSegment[] = [];
-  let i = 0;
-  while (i < useCases.length) {
-    const group = useCases[i].group;
-    if (!group) {
-      const indices: number[] = [];
-      while (i < useCases.length && !useCases[i].group) {
-        indices.push(i);
-        i += 1;
-      }
-      segments.push({ kind: "chips", indices });
-    } else {
-      const label = group;
-      const indices: number[] = [];
-      while (i < useCases.length && useCases[i].group === label) {
-        indices.push(i);
-        i += 1;
-      }
-      segments.push({ kind: "group", label, indices });
-    }
-  }
-  return segments;
-}
-
-function UseCaseChipButton({
-  useCase,
-  active,
-  onSelect,
-}: {
-  useCase: UseCaseChip;
-  active: boolean;
-  onSelect?: () => void;
-}) {
-  const Icon = useCase.icon;
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onSelect}
-      className="copilot-usecase-chip"
-      style={{
-        display: "flex",
-        gap: 12,
-        alignItems: "center",
-        padding: spacing.cardPadding,
-        borderRadius: 14,
-        background: active ? C.yellowAlpha10 : C.white,
-        border: active ? `1px solid ${C.yellow}` : `0.75px solid ${C.gray02}`,
-        boxShadow: active ? `inset 3px 0 0 ${C.yellow}` : "none",
-        flex: "1 1 140px",
-        minWidth: 0,
-        cursor: onSelect ? "pointer" : "default",
-        textAlign: "left",
-      }}
-    >
-      {useCase.agentIcon ? (
-        <AgentHexIcon size={36} />
-      ) : (
-        <div style={{ width: 36, height: 36, minWidth: 36, borderRadius: 10, background: C.yellow, display: "flex", alignItems: "center", justifyContent: "center", color: C.dark2, flexShrink: 0 }}>
-          {Icon ? <Icon size={18} strokeWidth={1.75} aria-hidden /> : null}
-        </div>
-      )}
-      <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center" }}>
-        <p style={{ fontFamily: F.regular, fontWeight: typeScale.label.weight, fontSize: typeScale.label.size, color: C.dark2, margin: 0, lineHeight: 1.3 }}>{useCase.title}</p>
-      </div>
-    </button>
-  );
-}
-
-// ── Pattern 2c: Use-case chips — horizontal row at top of Copilot scene
-function CopilotUseCasePanel({ useCases, selectedIndex, onSelect }: {
-  useCases: UseCaseChip[];
-  selectedIndex: number | null;
-  onSelect?: (idx: number) => void;
-}) {
-  const segments = useMemo(() => segmentUseCases(useCases), [useCases]);
-
-  return (
-    <div className="copilot-scene-usecase" style={{ width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "stretch", justifyContent: "center", gap: 10 }}>
-      {segments.map(segment => {
-        if (segment.kind === "chips") {
-          return segment.indices.map(i => (
-            <UseCaseChipButton
-              key={useCases[i].title}
-              useCase={useCases[i]}
-              active={i === selectedIndex}
-              onSelect={onSelect ? () => onSelect(i) : undefined}
-            />
-          ));
-        }
-
-        const groupActive = segment.indices.some(i => i === selectedIndex);
-        return (
-          <div
-            key={segment.label}
-            className="copilot-usecase-group"
-            role="group"
-            aria-label={segment.label}
-            style={{
-              flex: "1 1 100%",
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              padding: spacing.cardPadding,
-              borderRadius: 14,
-              border: groupActive ? `1px solid ${C.yellow}` : `0.75px solid ${C.gray02}`,
-              background: groupActive ? C.yellowAlpha10 : C.offWhite,
-              boxShadow: groupActive ? `inset 3px 0 0 ${C.yellow}` : "none",
-            }}
-          >
-            <p
-              style={{
-                margin: 0,
-                fontFamily: F.bold,
-                fontSize: typeScale.label.size,
-                fontWeight: typeScale.label.weight,
-                letterSpacing: typeScale.label.tracking,
-                textTransform: "uppercase",
-                color: C.gray01,
-              }}
-            >
-              {segment.label}
-            </p>
-            <div className="copilot-usecase-group-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10 }}>
-              {segment.indices.map(i => (
-                <UseCaseChipButton
-                  key={useCases[i].title}
-                  useCase={useCases[i]}
-                  active={i === selectedIndex}
-                  onSelect={onSelect ? () => onSelect(i) : undefined}
-                />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 // ── Typing-reveal hook — ports the reference file's injectPrompt/typePrompt
 // character-by-character animation into a lightweight React hook ─────────────
 function useTypingPrompt() {
@@ -1696,28 +1545,13 @@ function CopilotAppMock({
 function CopilotScene({ tabId }: { tabId: TabId }) {
   const d = SECTION_DATA[tabId];
   const { activeIndex, typedText, select } = useTypingPrompt();
-  const [tourUseCase, setTourUseCase] = useState(0);
-  const highlightedUseCase = tabId === "m365"
-    ? tourUseCase
-    : promptToUseCaseIndex(activeIndex, d.useCases.length);
-  const hasPromptMock = tabId !== "m365";
 
   return (
     <>
       <div className="copilot-scene">
-        <div className="copilot-scene-usecases">
-          <CopilotUseCasePanel
-            useCases={d.useCases}
-            selectedIndex={highlightedUseCase}
-            onSelect={hasPromptMock ? (idx => {
-              const prompt = d.prompts[idx];
-              if (prompt) select(idx, prompt.text);
-            }) : undefined}
-          />
-        </div>
         {tabId === "m365" ? (
           <div className="copilot-scene-main copilot-scene-main--chat-tour">
-            <M365ChatSlideTour onHighlightUseCase={setTourUseCase} />
+            <M365ChatSlideTour />
           </div>
         ) : (
           <div className="copilot-scene-main">
@@ -1737,45 +1571,6 @@ function CopilotScene({ tabId }: { tabId: TabId }) {
           flex-direction: column;
           gap: 20px;
           width: 100%;
-        }
-        .copilot-scene-usecases {
-          width: 100%;
-        }
-        .copilot-scene-usecases > * {
-          flex: none !important;
-          max-height: none !important;
-          min-height: 0 !important;
-          width: 100% !important;
-          padding: 0 !important;
-          display: flex !important;
-          flex-direction: row !important;
-          flex-wrap: wrap !important;
-          align-items: stretch !important;
-          justify-content: center !important;
-          gap: 10px !important;
-          overflow: visible !important;
-        }
-        .copilot-scene-usecases > * > * {
-          flex: 1 1 140px !important;
-          min-width: 0;
-          max-width: none !important;
-          align-items: center !important;
-        }
-        .copilot-scene-usecases .copilot-usecase-group {
-          flex: 1 1 100% !important;
-          max-width: 100% !important;
-          align-items: stretch !important;
-        }
-        .copilot-scene-usecases .copilot-usecase-group-chips > .copilot-usecase-chip {
-          flex: 1 1 140px !important;
-        }
-        @media (max-width: 480px) {
-          .copilot-scene-usecases > * > * {
-            flex: 1 1 100% !important;
-          }
-          .copilot-scene-usecases .copilot-usecase-group-chips > .copilot-usecase-chip {
-            flex: 1 1 100% !important;
-          }
         }
         .copilot-scene-main {
           width: 100%;
@@ -1954,7 +1749,7 @@ function AgentBuilderShell({
                             cursor: "pointer",
                             textAlign: "left",
                             fontFamily: F.regular,
-                            background: active ? C.yellow + "33" : "transparent",
+                            background: active ? "rgba(255,230,0,0.2)" : "transparent",
                           }}
                           onFocus={e => { e.currentTarget.style.outline = focusRing; }}
                           onBlur={e => { e.currentTarget.style.outline = "none"; }}
@@ -1985,7 +1780,7 @@ function AgentBuilderShell({
                               flex: 1,
                               minWidth: 0,
                               fontSize: 12,
-                              fontWeight: active ? 700 : 400,
+                              fontWeight: 400,
                               color: active ? C.dark2 : C.gray01,
                               lineHeight: 1.35,
                             }}
@@ -3033,6 +2828,249 @@ function AgentWeakStrongCard({ weak, strong }: { weak: string; strong: string })
   );
 }
 
+/** Figma 4412:7179 — dark left rail bullets for Elements best-practice beats. */
+function AgentElementsDarkBullets({ items }: { items: readonly string[] }) {
+  return (
+    <div
+      style={{
+        flex: "0 0 47%",
+        maxWidth: "47%",
+        background: C.dark2,
+        padding: "24px 32px 36px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        gap: 24,
+        minHeight: 0,
+        overflowY: "auto",
+      }}
+    >
+      {items.map(item => (
+        <div key={item} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+          <span
+            aria-hidden
+            style={{
+              width: 12,
+              height: 12,
+              borderRadius: 12,
+              background: C.offWhite,
+              marginTop: 8,
+              flexShrink: 0,
+            }}
+          />
+          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 20, lineHeight: 1.25, color: C.offWhite }}>
+            {item}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function AgentInstructionPreviewCard({
+  label,
+  text,
+  tone,
+  highlightPulse,
+}: {
+  label: string;
+  text: string;
+  tone: "weak" | "strong";
+  highlightPulse?: boolean;
+}) {
+  const accent = tone === "weak" ? colors.error : colors.success;
+  const Icon = tone === "weak" ? CircleX : CircleCheckBig;
+  return (
+    <div
+      className={highlightPulse ? "agent-tech-strong-pulse" : undefined}
+      style={{
+        border: `1px solid ${C.gray02}`,
+        borderRadius: 12,
+        padding: 14,
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        background: C.white,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Icon size={24} strokeWidth={1.75} color={accent} aria-hidden />
+        <p
+          style={{
+            margin: 0,
+            fontFamily: F.bold,
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: accent,
+          }}
+        >
+          {label}
+        </p>
+      </div>
+      <p style={{ margin: 0, fontFamily: F.regular, fontSize: 13, lineHeight: 1.55, color: C.offBlack }}>
+        {text}
+      </p>
+    </div>
+  );
+}
+
+/** Figma 4412:7179 — Agent Builder configure mock with Instructions weak/strong cards. */
+function AgentBuilderConfigurePreview({ children }: { children: ReactNode }) {
+  return (
+    <div
+      style={{
+        flex: 1,
+        minWidth: 0,
+        display: "flex",
+        flexDirection: "column",
+        background: C.white,
+        borderLeft: `1px solid ${C.gray02}`,
+        minHeight: 0,
+      }}
+    >
+      <div
+        style={{
+          padding: "10px 14px",
+          borderBottom: `1px solid ${C.gray02}`,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          flexShrink: 0,
+        }}
+      >
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "3px 10px",
+            borderRadius: 999,
+            border: `1px solid ${C.gray02}`,
+            fontFamily: F.regular,
+            fontSize: 11,
+            color: C.offBlack,
+          }}
+        >
+          <img src={AGENT_HEX_SRC} alt="" width={14} height={14} style={{ display: "block" }} />
+          Agent Builder
+        </span>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            padding: "3px 10px",
+            borderRadius: 6,
+            border: `1px solid ${C.gray02}`,
+            fontFamily: F.regular,
+            fontSize: 11,
+            color: C.offBlack,
+          }}
+        >
+          Configure <ChevronDown size={12} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        </span>
+        <span style={{ flex: 1 }} />
+        <Plus size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        <MoreHorizontal size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+        <X size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "14px 16px", minHeight: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+          <img src={AGENT_HEX_SRC} alt="" width={44} height={44} style={{ display: "block", flexShrink: 0 }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p
+              style={{
+                margin: 0,
+                fontFamily: F.bold,
+                fontSize: 20,
+                fontWeight: 700,
+                color: C.offBlack,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              Agent <PenLine size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+            </p>
+          </div>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: F.regular, fontSize: 12, color: C.gray01, flexShrink: 0 }}>
+            Auto <ChevronDown size={12} strokeWidth={1.75} aria-hidden />
+          </span>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function AgentElementsSplitBody({ leftItems, right }: { leftItems: readonly string[]; right: ReactNode }) {
+  return (
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        minHeight: 0,
+        overflow: "hidden",
+        borderTop: `1px solid ${C.gray02}`,
+        background: C.white,
+      }}
+    >
+      <AgentElementsDarkBullets items={leftItems} />
+      <AgentBuilderConfigurePreview>{right}</AgentBuilderConfigurePreview>
+    </div>
+  );
+}
+
+function AgentElementsInstructionsPanel({
+  weak,
+  strong,
+  reasoningLevels,
+  strongLabel,
+  pulseStrong,
+}: {
+  weak?: string;
+  strong?: string;
+  reasoningLevels?: readonly { label: string; text: string }[];
+  strongLabel?: string;
+  pulseStrong?: boolean;
+}) {
+  return (
+    <div
+      style={{
+        border: `1px solid ${C.gray02}`,
+        borderRadius: 18,
+        padding: 16,
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <span style={{ fontFamily: F.bold, fontSize: 14, fontWeight: 700, color: C.offBlack }}>Instructions</span>
+        <Info size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {reasoningLevels?.map(level => (
+          <AgentInstructionPreviewCard key={level.label} label={level.label} text={level.text} tone="strong" />
+        ))}
+        {weak && (
+          <AgentInstructionPreviewCard label="Weak instruction" text={weak} tone="weak" />
+        )}
+        {strong && (
+          <AgentInstructionPreviewCard
+            label={strongLabel ?? (weak ? "Strong instruction" : "Example")}
+            text={strong}
+            tone="strong"
+            highlightPulse={pulseStrong}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 const splitLabelStyle = (onYellow: boolean): React.CSSProperties => ({
   display: "flex",
   alignItems: "center",
@@ -3218,31 +3256,180 @@ function AgentElementsTab({ openId }: { openId?: string } = {}) {
         subtitle={practice?.sub ?? "What happens, how to fix it, and a tax example"}
         counter={`${activeIndex + 1}/${navItems.length}`}
       />
-      <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", minHeight: 0 }}>
-        {practice && (
-          <>
-            <AgentBulletList items={practice.content} />
-            {practice.reasoningLevels ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
-                {practice.reasoningLevels.map(level => (
-                  <AgentLabeledBlock key={level.label} label={level.label} text={level.text} tone="neutral" />
-                ))}
-              </div>
-            ) : (
-              <AgentWeakStrongCard weak={practice.weak} strong={practice.strong} />
-            )}
-          </>
-        )}
-        {failure && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <AgentLabeledBlock label="What happens" text={failure.whatHappens} tone="weak" />
-            <AgentLabeledBlock label="Fix" text={failure.fix} tone="strong" />
-            <AgentLabeledBlock label="Example" text={failure.example} tone="neutral" />
-          </div>
-        )}
-      </div>
+      {practice && (
+        <AgentElementsSplitBody
+          leftItems={practice.content}
+          right={
+            <AgentElementsInstructionsPanel
+              weak={practice.reasoningLevels ? undefined : practice.weak}
+              strong={practice.reasoningLevels ? undefined : practice.strong}
+              reasoningLevels={practice.reasoningLevels}
+            />
+          }
+        />
+      )}
+      {failure && (
+        <AgentElementsSplitBody
+          leftItems={[failure.whatHappens, failure.fix]}
+          right={<AgentElementsInstructionsPanel strong={failure.example} />}
+        />
+      )}
       <AgentPager items={navItems} activeIndex={Math.max(0, activeIndex)} onSelect={setActiveId} />
     </AgentBuilderShell>
+  );
+}
+
+const TECHNIQUE_STEP_STYLES = `
+@keyframes agent-tech-strong-ring {
+  0% {
+    border-color: rgba(255, 230, 0, 0.85);
+    box-shadow: 0 0 0 0 rgba(255, 230, 0, 0.35);
+  }
+  100% {
+    border-color: ${C.gray02};
+    box-shadow: 0 0 0 8px rgba(255, 230, 0, 0);
+  }
+}
+.agent-tech-strong-pulse {
+  animation: agent-tech-strong-ring 300ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-tech-strong-pulse {
+    animation: none;
+  }
+}
+`;
+
+function useAgentTechniqueStepTransition(stepKey: string) {
+  const [visible, setVisible] = useState(true);
+  const [pulseStrong, setPulseStrong] = useState(false);
+  const prevKey = useRef(stepKey);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const reduceMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+
+  useEffect(() => {
+    if (stepKey === prevKey.current) return;
+    prevKey.current = stepKey;
+
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    setPulseStrong(false);
+
+    if (reduceMotion) {
+      setVisible(true);
+      return;
+    }
+
+    setVisible(false);
+    timers.current.push(
+      setTimeout(() => {
+        setVisible(true);
+        timers.current.push(
+          setTimeout(() => {
+            setPulseStrong(true);
+            timers.current.push(setTimeout(() => setPulseStrong(false), 300));
+          }, 250),
+        );
+      }, 250),
+    );
+  }, [stepKey, reduceMotion]);
+
+  const stepMotionStyle: React.CSSProperties = reduceMotion
+    ? { flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }
+    : {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(8px)",
+        transition: "opacity 250ms ease-out, transform 250ms ease-out",
+      };
+
+  return { stepMotionStyle, pulseStrong };
+}
+
+function AgentTechniqueSplitContent({
+  pattern,
+  pulseStrong,
+}: {
+  pattern: AgentTechniqueItem;
+  pulseStrong?: boolean;
+}) {
+  const whenItems = parseWhenToUse(pattern.whenToUse);
+  const summaryTail = pattern.summary.split("\n").filter(Boolean).slice(1);
+  const { dont, doLines } = parseTaxExample(pattern.taxExample);
+
+  return (
+    <AgentElementsSplitBody
+      leftItems={[...whenItems, ...summaryTail]}
+      right={
+        <AgentElementsInstructionsPanel
+          weak={dont}
+          strong={doLines.length > 0 ? doLines.join("\n") : undefined}
+          strongLabel={dont ? "This is the move" : undefined}
+          pulseStrong={pulseStrong}
+        />
+      }
+    />
+  );
+}
+
+function AgentTechniqueExampleSplitContent() {
+  return (
+    <AgentElementsSplitBody
+      leftItems={[
+        "Complete declarative-agent instruction set",
+        "Structured for Agent Builder → Configure → Instructions",
+        "Copy and adapt for your team's tax workflows",
+      ]}
+      right={
+        <div
+          style={{
+            border: `1px solid ${C.gray02}`,
+            borderRadius: 18,
+            padding: 16,
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontFamily: F.bold, fontSize: 14, fontWeight: 700, color: C.offBlack }}>Instructions</span>
+            <Info size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+          </div>
+          <div
+            style={{
+              background: C.dark2,
+              borderRadius: 12,
+              padding: "14px 16px",
+              border: `1px solid ${C.borderOnDark}`,
+              maxHeight: 360,
+              overflowY: "auto",
+            }}
+          >
+            <pre
+              style={{
+                fontFamily: F.regular,
+                fontSize: 12,
+                color: C.offWhite,
+                lineHeight: 1.65,
+                whiteSpace: "pre-wrap",
+                margin: 0,
+              }}
+            >
+              {IT_AGENT_FULL_EXAMPLE}
+            </pre>
+          </div>
+          <CopyButton text={IT_AGENT_FULL_EXAMPLE} label="Copy all" />
+        </div>
+      }
+    />
   );
 }
 
@@ -3263,9 +3450,11 @@ function AgentTechniquesTab({ openId }: { openId?: string } = {}) {
   const activeIndex = navItems.findIndex(item => item.id === activeId);
   const active = navItems[activeIndex] ?? navItems[0];
   const pattern = AGENT_TECHNIQUE_PATTERNS.find(p => active.id === `pat-${p.n}`);
+  const { stepMotionStyle, pulseStrong } = useAgentTechniqueStepTransition(activeId);
 
   return (
     <>
+      <style>{TECHNIQUE_STEP_STYLES}</style>
       <AgentBuilderShell
         fullPanel
         sidebarTitle="Techniques"
@@ -3276,36 +3465,18 @@ function AgentTechniquesTab({ openId }: { openId?: string } = {}) {
         <AgentPanelHeader
           badge={active.badge}
           title={pattern?.name ?? active.label}
-          subtitle={active.id === "example" ? undefined : "When to use this pattern, plus a tax example"}
+          subtitle={
+            active.id === "example"
+              ? "Full IT agent instruction set — copy into Agent Builder"
+              : pattern?.summary.split("\n")[0] ?? "When to use this pattern, plus a tax example"
+          }
           counter={`${activeIndex + 1}/${navItems.length}`}
         />
-        <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px 24px", minHeight: 0 }}>
+        <div style={stepMotionStyle}>
           {active.id === "example" ? (
-            <FullWorkedExampleCard />
+            <AgentTechniqueExampleSplitContent />
           ) : pattern ? (
-            <>
-              {pattern.summary.split("\n").map((para, i) =>
-                i === 0 ? (
-                  <h5
-                    key={para}
-                    style={{
-                      fontFamily: F.bold,
-                      fontSize: typeScale.subheading.size,
-                      fontWeight: 700,
-                      letterSpacing: typeScale.subheading.tracking,
-                      color: C.dark2,
-                      lineHeight: 1.3,
-                      margin: "0 0 12px",
-                    }}
-                  >
-                    {para}
-                  </h5>
-                ) : (
-                  <AgentProse key={para}>{para}</AgentProse>
-                ),
-              )}
-              <AgentTechniquePatternCard key={pattern.n} pattern={pattern} />
-            </>
+            <AgentTechniqueSplitContent pattern={pattern} pulseStrong={pulseStrong} />
           ) : null}
         </div>
         <AgentPager items={navItems} activeIndex={Math.max(0, activeIndex)} onSelect={setActiveId} />
@@ -4046,10 +4217,10 @@ function TabSection({ tabId, surface = "offWhite" }: { tabId: TabId; surface?: "
           <div style={{ display: "flex", justifyContent: "center" }}>
             <TabRail tabs={[...AGENT_VIEW_PILLS]} active={agentView} onChange={setAgentView} />
           </div>
-          {agentView === "what" && (
+          {agentView === "what" && <M365AgentHowExplorer />}
+          {agentView === "how" && (
             <AgentInstructionComponents />
           )}
-          {agentView === "how" && <M365AgentHowExplorer />}
           {agentView === "drafting" && <AgentHubTabs />}
         </>
       ) : (

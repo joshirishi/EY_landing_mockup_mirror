@@ -53,7 +53,7 @@ export function AgentInstructionComponents() {
             margin: "0 0 12px",
           }}
         >
-          Instruction Components
+          How to build an agent
         </h2>
         <p style={{ fontFamily: F.light, fontSize: typeScale.body.size, color: C.gray01, margin: 0 }}>
           Design the assistant like a repeatable tax process — not a generic chatbot. Select a component to see where it lives in Agent Builder.
