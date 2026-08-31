@@ -30,6 +30,7 @@ export type AgentFailureItem = {
   example: string;
 };
 
+/** Source: reference/assets/Agent Best Practices mailer content 2.xlsx — Pattern Summary sheet. */
 export type AgentTechniqueItem = {
   n: string;
   name: string;
@@ -57,8 +58,24 @@ function exampleLines(text: string): string[] {
     .split("\n")
     .map(line => line.trim())
     .filter(Boolean)
-    .map(line => line.replace(/^[-•]\s*/, "").replace(/^\d+\.\s*/, "").trim())
+    .map(line => line.replace(/^[-•]\s*/, "").replace(/^\d+\.[\s\t]*/, "").trim())
     .filter(Boolean);
+}
+
+/** Pattern Summary column B → headline question + supporting body. */
+export function parseSummaryParts(summary: string): { headline: string; body: string } {
+  const parts = summary.split("\n").map(line => line.trim()).filter(Boolean);
+  return { headline: parts[0] ?? "", body: parts.slice(1).join(" ") };
+}
+
+/** Pattern Summary column C → text shown in the Agent Builder Instructions preview. */
+export function formatTechniqueInstructionPreview(raw: string): string {
+  const { dont, doLines } = parseTaxExample(raw);
+  if (dont && doLines.length > 0) {
+    const steps = doLines.map((line, i) => `${i + 1}. ${line}`).join("\n");
+    return `${dont}\n${steps}`;
+  }
+  return raw.trim().replace(/\t/g, " ");
 }
 
 /** Column C → Don’t (weak one-liner) + Do (copyable steps). */

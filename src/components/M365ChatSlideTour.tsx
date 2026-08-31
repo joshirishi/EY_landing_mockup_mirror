@@ -2056,6 +2056,8 @@ function ChatTourCanvas({
   exploreVideoLabel,
   onExploreVideo,
   configureOnly = false,
+  hideSidebar = false,
+  highlightResearcherInSidebar = false,
   instructionsMinHeight,
 }: {
   frameRef: (el: HTMLDivElement | null) => void;
@@ -2070,6 +2072,10 @@ function ChatTourCanvas({
   onExploreVideo?: () => void;
   /** What tab — show Configure panel only (no sidebar or centre chat). */
   configureOnly?: boolean;
+  /** Instruction preview — hide sidebar for centre + configure layout. */
+  hideSidebar?: boolean;
+  /** Instruction preview — highlight Researcher in sidebar without explore layout. */
+  highlightResearcherInSidebar?: boolean;
   instructionsMinHeight?: number;
 }) {
   const sources = [
@@ -2112,10 +2118,10 @@ function ChatTourCanvas({
           background: C.white,
         }}
       >
-        {!configureOnly && (
+        {!configureOnly && !hideSidebar && (
           <ChatSidebar
             highlightNewAgent={exploreAgentId === "new-agent"}
-            highlightResearcher={exploreAgentId === "researcher"}
+            highlightResearcher={exploreAgentId === "researcher" || highlightResearcherInSidebar}
             highlightAnalyst={exploreAgentId === "analyst"}
             prevChatsId="prev-chats"
             exploreAgentId={exploreAgentId}
@@ -2152,30 +2158,34 @@ function ChatTourCanvas({
 
         {!configureOnly && !centerPromo && (
           <>
-            <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "16px 28px 24px", background: C.white }}>
+            <div style={{ flex: 1, minWidth: 0, height: "100%", display: "flex", flexDirection: "column", padding: "24px 42px 36px", background: C.white }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10, marginBottom: 8 }}>
                 <ShieldCheck size={18} strokeWidth={1.5} color="#107C10" aria-hidden />
                 <MoreHorizontal size={18} strokeWidth={1.5} color={C.gray01} aria-hidden />
               </div>
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
-                <CopilotHex size={40} />
-                <p style={{ fontFamily: F.regular, fontSize: 20, color: C.offBlack, textAlign: "center", margin: 0 }}>
+              <div
+                data-tour-id="agent-detail-panel"
+                style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}
+              >
+                <CopilotHex size={48} />
+                <p style={{ fontFamily: F.regular, fontSize: 22, color: C.offBlack, textAlign: "center", margin: 0, lineHeight: 1.35, maxWidth: 360 }}>
                   Build your own specialist agent
                 </p>
                 <div
+                  data-tour-id="agent-builder-composer"
                   style={{
                     width: "100%",
-                    maxWidth: 480,
+                    maxWidth: 360,
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
-                    padding: "12px 16px",
+                    padding: "10px 14px",
                     borderRadius: 28,
                     border: `1px solid ${C.gray02}`,
                     background: C.white,
                   }}
                 >
-                  <CopilotPlusButton iconSize={18} iconColor={C.offBlack} />
+                  <CopilotPlusButton iconSize={16} iconColor={C.offBlack} />
                   <span style={{ flex: 1, fontFamily: F.regular, fontSize: 14, color: C.gray01 }}>Message Agent Builder</span>
                   <Mic size={18} strokeWidth={1.5} color={C.offBlack} aria-hidden />
                 </div>
@@ -2416,7 +2426,7 @@ function ChatTourCanvas({
                 </div>
               </div>
             ) : (
-              <div style={{ border: `1px solid ${C.gray02}`, borderRadius: 12, padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+              <div data-tour-id="knowledge-sources" style={{ border: `1px solid ${C.gray02}`, borderRadius: 12, padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
                 <span style={{ fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.offBlack, display: "inline-flex", alignItems: "center", gap: 6 }}>
                   Knowledge <Info size={13} strokeWidth={1.75} color={C.gray01} aria-hidden />
                 </span>
@@ -2435,7 +2445,7 @@ const CALLOUT_RING_SHADOW = `4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 
 
 function pillHighlightRadius(target: string) {
   return target === "work-iq-main" || target === "auto-model" || target === "more-menu" || target === "saved-prompts-pill" || target === "agent-skip"
-    || target === "quick-pills-more" || target === "m365-apps-trigger"
+    || target === "quick-pills-more" || target === "m365-apps-trigger" || target === "agent-detail-panel"
     ? 12
     : 6;
 }
@@ -3100,7 +3110,7 @@ export type AgentInstructionPreviewFocus = "purpose" | "detail" | "instructions"
 
 const INSTRUCTION_FOCUS_TARGETS: Record<AgentInstructionPreviewFocus, string> = {
   purpose: "agent-name",
-  detail: "agent-describe",
+  detail: "agent-detail-panel",
   instructions: "agent-instructions-card",
   knowledge: "knowledge-sources",
 };
@@ -3110,6 +3120,8 @@ export function AgentBuilderInstructionPreview({ focus }: { focus: AgentInstruct
   const [frameEl, setFrameEl] = useState<HTMLDivElement | null>(null);
   const frameRefCb = useCallback((el: HTMLDivElement | null) => setFrameEl(el), []);
   const highlightTarget = INSTRUCTION_FOCUS_TARGETS[focus];
+  const usesFullCanvas = focus === "detail" || focus === "instructions" || focus === "knowledge";
+  const hideSidebar = focus === "detail";
 
   return (
     <div
@@ -3123,7 +3135,15 @@ export function AgentBuilderInstructionPreview({ focus }: { focus: AgentInstruct
         overflow: "hidden",
       }}
     >
-      <ChatTourCanvas frameRef={frameRefCb} knowledgeExpanded={focus === "knowledge"} configureOnly />
+      <ChatTourCanvas
+        frameRef={frameRefCb}
+        knowledgeExpanded={focus === "knowledge"}
+        configureOnly={!usesFullCanvas}
+        hideSidebar={hideSidebar}
+        highlightResearcherInSidebar={usesFullCanvas && !hideSidebar}
+        agentName={usesFullCanvas ? "Researcher" : "New Agent"}
+        agentDescribe={usesFullCanvas ? "Do the heavy lifting" : "Describe your agent"}
+      />
       <InstructionFocusRing frame={frameEl} target={highlightTarget} />
     </div>
   );

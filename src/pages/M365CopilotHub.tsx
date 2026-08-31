@@ -24,6 +24,8 @@ import {
   AGENT_COMMON_FAILURES,
   AGENT_SUMMARY_PARTS,
   AGENT_TECHNIQUE_PATTERNS,
+  formatTechniqueInstructionPreview,
+  parseSummaryParts,
   parseTaxExample,
   parseWhenToUse,
   type AgentSummaryRow,
@@ -2829,7 +2831,7 @@ function AgentWeakStrongCard({ weak, strong }: { weak: string; strong: string })
 }
 
 /** Figma 4412:7179 — dark left rail bullets for Elements best-practice beats. */
-function AgentElementsDarkBullets({ items }: { items: readonly string[] }) {
+function AgentElementsDarkBullets({ title, items }: { title?: string; items: readonly string[] }) {
   return (
     <div
       style={{
@@ -2839,12 +2841,17 @@ function AgentElementsDarkBullets({ items }: { items: readonly string[] }) {
         padding: "24px 32px 36px",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         gap: 24,
         minHeight: 0,
         overflowY: "auto",
       }}
     >
+      {title && (
+        <p style={{ margin: 0, fontFamily: F.regular, fontSize: 24, lineHeight: 1.25, color: C.offWhite }}>
+          {title}
+        </p>
+      )}
       {items.map(item => (
         <div key={item} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
           <span
@@ -2858,7 +2865,7 @@ function AgentElementsDarkBullets({ items }: { items: readonly string[] }) {
               flexShrink: 0,
             }}
           />
-          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 20, lineHeight: 1.25, color: C.offWhite }}>
+          <p style={{ margin: 0, fontFamily: F.light, fontSize: 20, fontWeight: 300, lineHeight: 1.25, color: C.offWhite }}>
             {item}
           </p>
         </div>
@@ -2909,7 +2916,16 @@ function AgentInstructionPreviewCard({
           {label}
         </p>
       </div>
-      <p style={{ margin: 0, fontFamily: F.regular, fontSize: 13, lineHeight: 1.55, color: C.offBlack }}>
+      <p
+        style={{
+          margin: 0,
+          fontFamily: F.regular,
+          fontSize: 13,
+          lineHeight: 1.55,
+          color: C.offBlack,
+          whiteSpace: "pre-line",
+        }}
+      >
         {text}
       </p>
     </div>
@@ -3005,7 +3021,15 @@ function AgentBuilderConfigurePreview({ children }: { children: ReactNode }) {
   );
 }
 
-function AgentElementsSplitBody({ leftItems, right }: { leftItems: readonly string[]; right: ReactNode }) {
+function AgentElementsSplitBody({
+  title,
+  leftItems,
+  right,
+}: {
+  title?: string;
+  leftItems: readonly string[];
+  right: ReactNode;
+}) {
   return (
     <div
       style={{
@@ -3017,7 +3041,7 @@ function AgentElementsSplitBody({ leftItems, right }: { leftItems: readonly stri
         background: C.white,
       }}
     >
-      <AgentElementsDarkBullets items={leftItems} />
+      <AgentElementsDarkBullets title={title} items={leftItems} />
       <AgentBuilderConfigurePreview>{right}</AgentBuilderConfigurePreview>
     </div>
   );
@@ -3253,11 +3277,11 @@ function AgentElementsTab({ openId }: { openId?: string } = {}) {
       <AgentPanelHeader
         badge={active.badge}
         title={practice?.heading ?? failure?.title ?? active.label}
-        subtitle={practice?.sub ?? "What happens, how to fix it, and a tax example"}
         counter={`${activeIndex + 1}/${navItems.length}`}
       />
       {practice && (
         <AgentElementsSplitBody
+          title={practice.sub}
           leftItems={practice.content}
           right={
             <AgentElementsInstructionsPanel
@@ -3270,6 +3294,7 @@ function AgentElementsTab({ openId }: { openId?: string } = {}) {
       )}
       {failure && (
         <AgentElementsSplitBody
+          title="What happens and how to fix it"
           leftItems={[failure.whatHappens, failure.fix]}
           right={<AgentElementsInstructionsPanel strong={failure.example} />}
         />
@@ -3282,12 +3307,14 @@ function AgentElementsTab({ openId }: { openId?: string } = {}) {
 const TECHNIQUE_STEP_STYLES = `
 @keyframes agent-tech-strong-ring {
   0% {
-    border-color: rgba(255, 230, 0, 0.85);
-    box-shadow: 0 0 0 0 rgba(255, 230, 0, 0.35);
+    border-color: ${C.yellow};
+    box-shadow: 0 0 0 0 rgba(255, 230, 0, 0.45);
+    background: rgba(255, 230, 0, 0.32);
   }
   100% {
-    border-color: ${C.gray02};
+    border-color: ${C.yellow};
     box-shadow: 0 0 0 8px rgba(255, 230, 0, 0);
+    background: rgba(255, 230, 0, 0.2);
   }
 }
 .agent-tech-strong-pulse {
@@ -3299,6 +3326,12 @@ const TECHNIQUE_STEP_STYLES = `
   }
 }
 `;
+
+/** Matches AgentBuilderShell active sidebar item (aria-current). */
+const TECHNIQUE_INSTRUCTIONS_HIGHLIGHT = {
+  background: "rgba(255,230,0,0.2)",
+  border: `1.5px solid ${C.yellow}`,
+} as const;
 
 function useAgentTechniqueStepTransition(stepKey: string) {
   const [visible, setVisible] = useState(true);
@@ -3354,6 +3387,182 @@ function useAgentTechniqueStepTransition(stepKey: string) {
   return { stepMotionStyle, pulseStrong };
 }
 
+/** Figma 4421:8439 — When to use card (Pattern Summary column D). */
+function AgentWhenToUseCard({ items }: { items: readonly string[] }) {
+  if (!items.length) return null;
+  return (
+    <div
+      style={{
+        background: C.offWhite,
+        border: `1.5px solid ${C.gray02}`,
+        borderRadius: 12,
+        padding: 18,
+        width: "100%",
+        flexShrink: 0,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <CircleHelp size={24} strokeWidth={1.75} color={C.offBlack} aria-hidden />
+        <span
+          style={{
+            fontFamily: F.bold,
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: C.offBlack,
+          }}
+        >
+          When to use
+        </span>
+      </div>
+      <ul
+        style={{
+          margin: 0,
+          paddingLeft: 20,
+          fontFamily: F.regular,
+          fontSize: 13,
+          lineHeight: 1.55,
+          color: C.offBlack,
+        }}
+      >
+        {items.map(item => (
+          <li key={item} style={{ marginBottom: 4 }}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function AgentTechniqueInstructionsPreview({
+  text,
+  pulseStrong,
+  footer,
+}: {
+  text: string;
+  pulseStrong?: boolean;
+  footer?: ReactNode;
+}) {
+  return (
+    <div
+      className={pulseStrong ? "agent-tech-strong-pulse" : undefined}
+      style={{
+        ...TECHNIQUE_INSTRUCTIONS_HIGHLIGHT,
+        borderRadius: 18,
+        padding: 16,
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span
+          style={{
+            width: 22,
+            height: 22,
+            borderRadius: 6,
+            flexShrink: 0,
+            background: C.yellow,
+            border: `1.5px solid ${C.yellow}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          aria-hidden
+        >
+          <ClipboardList size={12} strokeWidth={1.75} color={C.dark2} />
+        </span>
+        <span style={{ fontFamily: F.bold, fontSize: 14, fontWeight: 700, color: C.dark2 }}>Instructions</span>
+        <Info size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
+      </div>
+      <div
+        style={{
+          borderRadius: 12,
+          padding: 14,
+          background: C.white,
+          border: `1px solid ${C.gray02}`,
+          maxHeight: 320,
+          overflowY: "auto",
+        }}
+      >
+        <pre
+          style={{
+            margin: 0,
+            fontFamily: F.regular,
+            fontSize: 13,
+            lineHeight: 1.55,
+            color: C.offBlack,
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {text}
+        </pre>
+      </div>
+      {footer}
+    </div>
+  );
+}
+
+/** Figma 4421:8439 — dark summary rail + Agent Builder instructions preview. */
+function AgentTechniqueFigmaSplit({
+  headline,
+  body,
+  whenItems,
+  instructionText,
+  pulseStrong,
+  footer,
+}: {
+  headline: string;
+  body: string;
+  whenItems: readonly string[];
+  instructionText: string;
+  pulseStrong?: boolean;
+  footer?: ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        minHeight: 0,
+        overflow: "hidden",
+        borderTop: `1px solid ${C.gray02}`,
+        background: C.white,
+      }}
+    >
+      <div
+        style={{
+          flex: "0 0 47%",
+          maxWidth: "47%",
+          background: C.dark2,
+          padding: "24px 32px 36px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          gap: 24,
+          minHeight: 0,
+          overflowY: "auto",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 24, lineHeight: 1.25, color: C.offWhite }}>
+            {headline}
+          </p>
+          {body && (
+            <p style={{ margin: 0, fontFamily: F.light, fontSize: 20, lineHeight: 1.25, color: C.offWhite }}>
+              {body}
+            </p>
+          )}
+        </div>
+        <AgentWhenToUseCard items={whenItems} />
+      </div>
+      <AgentBuilderConfigurePreview>
+        <AgentTechniqueInstructionsPreview text={instructionText} pulseStrong={pulseStrong} footer={footer} />
+      </AgentBuilderConfigurePreview>
+    </div>
+  );
+}
+
 function AgentTechniqueSplitContent({
   pattern,
   pulseStrong,
@@ -3361,74 +3570,33 @@ function AgentTechniqueSplitContent({
   pattern: AgentTechniqueItem;
   pulseStrong?: boolean;
 }) {
+  const { headline, body } = parseSummaryParts(pattern.summary);
   const whenItems = parseWhenToUse(pattern.whenToUse);
-  const summaryTail = pattern.summary.split("\n").filter(Boolean).slice(1);
-  const { dont, doLines } = parseTaxExample(pattern.taxExample);
+  const instructionText = formatTechniqueInstructionPreview(pattern.taxExample);
 
   return (
-    <AgentElementsSplitBody
-      leftItems={[...whenItems, ...summaryTail]}
-      right={
-        <AgentElementsInstructionsPanel
-          weak={dont}
-          strong={doLines.length > 0 ? doLines.join("\n") : undefined}
-          strongLabel={dont ? "This is the move" : undefined}
-          pulseStrong={pulseStrong}
-        />
-      }
+    <AgentTechniqueFigmaSplit
+      headline={headline}
+      body={body}
+      whenItems={whenItems}
+      instructionText={instructionText}
+      pulseStrong={pulseStrong}
     />
   );
 }
 
 function AgentTechniqueExampleSplitContent() {
   return (
-    <AgentElementsSplitBody
-      leftItems={[
-        "Complete declarative-agent instruction set",
-        "Structured for Agent Builder → Configure → Instructions",
-        "Copy and adapt for your team's tax workflows",
+    <AgentTechniqueFigmaSplit
+      headline="IT agent full example"
+      body="Copy this declarative-agent instruction set into Agent Builder → Configure → Instructions and adapt it for your team's tax workflows."
+      whenItems={[
+        "Complete instruction set for an IT agent",
+        "Structured for Agent Builder configure panel",
+        "Copy and adapt for your tax workflows",
       ]}
-      right={
-        <div
-          style={{
-            border: `1px solid ${C.gray02}`,
-            borderRadius: 18,
-            padding: 16,
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ fontFamily: F.bold, fontSize: 14, fontWeight: 700, color: C.offBlack }}>Instructions</span>
-            <Info size={14} strokeWidth={1.75} color={C.gray01} aria-hidden />
-          </div>
-          <div
-            style={{
-              background: C.dark2,
-              borderRadius: 12,
-              padding: "14px 16px",
-              border: `1px solid ${C.borderOnDark}`,
-              maxHeight: 360,
-              overflowY: "auto",
-            }}
-          >
-            <pre
-              style={{
-                fontFamily: F.regular,
-                fontSize: 12,
-                color: C.offWhite,
-                lineHeight: 1.65,
-                whiteSpace: "pre-wrap",
-                margin: 0,
-              }}
-            >
-              {IT_AGENT_FULL_EXAMPLE}
-            </pre>
-          </div>
-          <CopyButton text={IT_AGENT_FULL_EXAMPLE} label="Copy all" />
-        </div>
-      }
+      instructionText={IT_AGENT_FULL_EXAMPLE}
+      footer={<CopyButton text={IT_AGENT_FULL_EXAMPLE} label="Copy all" />}
     />
   );
 }
@@ -3465,11 +3633,6 @@ function AgentTechniquesTab({ openId }: { openId?: string } = {}) {
         <AgentPanelHeader
           badge={active.badge}
           title={pattern?.name ?? active.label}
-          subtitle={
-            active.id === "example"
-              ? "Full IT agent instruction set — copy into Agent Builder"
-              : pattern?.summary.split("\n")[0] ?? "When to use this pattern, plus a tax example"
-          }
           counter={`${activeIndex + 1}/${navItems.length}`}
         />
         <div style={stepMotionStyle}>
@@ -3485,203 +3648,131 @@ function AgentTechniquesTab({ openId }: { openId?: string } = {}) {
   );
 }
 
-/** Fold labels so Summary names can match Elements / Techniques even if wording differs slightly. */
-function foldGuideName(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-}
+const SUMMARY_TABLE_COLUMNS = ["Best Practice", "Likely failure", "Pattern"] as const;
 
-function guideNamesMatch(a: string, b: string) {
-  const fa = foldGuideName(a);
-  const fb = foldGuideName(b);
-  if (fa === fb || fa.includes(fb) || fb.includes(fa)) return true;
-  const wa = fa.split(" ").filter(w => w.length > 2);
-  const wb = new Set(fb.split(" ").filter(w => w.length > 2));
-  if (wa.length === 0 || wb.size === 0) return false;
-  const hit = wa.filter(w => wb.has(w)).length;
-  const floor = Math.min(wa.length, wb.size);
-  return hit >= Math.min(3, floor) && hit / floor >= 0.6;
-}
-
-function findPracticeNavId(name: string) {
-  const hit = AGENT_BEST_PRACTICES_SLIDES.find(s => guideNamesMatch(name, s.heading));
-  return hit ? `bp-${hit.n}` : undefined;
-}
-
-function findPatternNavId(name: string) {
-  const hit = AGENT_TECHNIQUE_PATTERNS.find(p => guideNamesMatch(name, p.name));
-  return hit ? `pat-${hit.n}` : undefined;
-}
-
-const summaryEyebrow: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: 6,
-  margin: 0,
+const summaryThStyle: React.CSSProperties = {
+  position: "sticky",
+  top: 0,
+  zIndex: 1,
+  padding: "12px 16px",
+  textAlign: "left",
+  verticalAlign: "top",
   fontFamily: F.bold,
-  fontSize: 9,
+  fontSize: 11,
   fontWeight: 700,
-  letterSpacing: "0.1em",
+  letterSpacing: "0.06em",
   textTransform: "uppercase",
   color: C.gray01,
+  background: C.offWhite,
+  borderBottom: `2px solid ${C.gray02}`,
+  borderRight: `1px solid ${C.gray02}`,
 };
 
-/** One Summary row: practice (rank 1) → failure → pattern chips. */
-function AgentSummaryRelationCard({
-  row,
-  onOpenPractice,
-  onOpenPattern,
-}: {
-  row: AgentSummaryRow;
-  onOpenPractice?: (id: string) => void;
-  onOpenPattern?: (id: string) => void;
-}) {
-  const practiceId = findPracticeNavId(row.practice);
-  const practiceClickable = Boolean(practiceId && onOpenPractice);
-  const titleStyle: React.CSSProperties = {
-    margin: 0,
-    padding: 0,
-    border: "none",
-    background: "transparent",
-    textAlign: "left",
-    fontFamily: F.bold,
-    fontSize: 16,
-    fontWeight: 700,
-    lineHeight: 1.3,
-    letterSpacing: "-0.01em",
-    color: C.offBlack,
-    cursor: practiceClickable ? "pointer" : "default",
-  };
+const summaryTdBase: React.CSSProperties = {
+  padding: "16px",
+  verticalAlign: "top",
+  borderBottom: `1px solid ${C.gray02}`,
+  borderRight: `1px solid ${C.gray02}`,
+  lineHeight: 1.55,
+  color: C.offBlack,
+};
 
+function SummaryCellList({ items }: { items: readonly string[] }) {
+  if (items.length === 0) return null;
+  if (items.length === 1) {
+    return (
+      <span style={{ fontFamily: F.light, fontSize: 13, fontWeight: 300, lineHeight: 1.55, color: C.offBlack }}>
+        {items[0]}
+      </span>
+    );
+  }
   return (
-    <article
+    <ul
       style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 14,
-        padding: "16px 18px 18px",
-        borderRadius: 12,
-        background: C.white,
-        border: `1px solid ${C.gray02}`,
-        borderLeft: `3px solid ${C.yellow}`,
+        margin: 0,
+        paddingLeft: 18,
+        fontFamily: F.light,
+        fontSize: 13,
+        fontWeight: 300,
+        lineHeight: 1.55,
+        color: C.offBlack,
       }}
     >
-      <div>
-        <p style={{ ...summaryEyebrow, marginBottom: 8 }}>
-          <Lightbulb size={16} strokeWidth={1.75} aria-hidden />
-          Best practice
-        </p>
-        {practiceClickable ? (
-          <button
-            type="button"
-            onClick={() => onOpenPractice?.(practiceId!)}
-            aria-label={`Open best practice: ${row.practice}`}
-            style={titleStyle}
-          >
-            {row.practice}
-          </button>
-        ) : (
-          <h3 style={titleStyle}>{row.practice}</h3>
-        )}
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 6,
-          padding: "10px 12px",
-          borderRadius: 8,
-          background: C.offWhite,
-          borderLeft: `3px solid ${C.error}`,
-        }}
-      >
-        <p style={summaryEyebrow}>
-          <AlertTriangle size={16} strokeWidth={1.75} aria-hidden style={{ color: C.error }} />
-          Likely failure
-        </p>
-        <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 4 }}>
-          {row.failures.map(item => (
-            <li
-              key={item}
-              style={{
-                margin: 0,
-                fontFamily: F.regular,
-                fontSize: 13,
-                lineHeight: 1.5,
-                color: C.offBlack,
-              }}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div>
-        <p style={{ ...summaryEyebrow, marginBottom: 8 }}>
-          <BookOpen size={16} strokeWidth={1.75} aria-hidden />
-          Pattern
-        </p>
-        <ul
-          style={{
-            margin: 0,
-            padding: 0,
-            listStyle: "none",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 8,
-          }}
-        >
-          {row.patterns.map(item => {
-            const patternId = findPatternNavId(item);
-            const clickable = Boolean(patternId && onOpenPattern);
-            const chipStyle: React.CSSProperties = {
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              margin: 0,
-              padding: "7px 10px",
-              borderRadius: 8,
-              border: `1px solid ${C.gray02}`,
-              background: C.offWhite,
-              fontFamily: F.regular,
-              fontSize: 12,
-              lineHeight: 1.4,
-              color: C.offBlack,
-              cursor: clickable ? "pointer" : "default",
-              textAlign: "left",
-            };
-            return (
-              <li key={item} style={{ margin: 0 }}>
-                {clickable ? (
-                  <button
-                    type="button"
-                    onClick={() => onOpenPattern?.(patternId!)}
-                    aria-label={`Preview pattern: ${item}`}
-                    style={chipStyle}
-                  >
-                    {item}
-                    <ChevronRight size={14} strokeWidth={1.75} aria-hidden />
-                  </button>
-                ) : (
-                  <span style={chipStyle}>{item}</span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </article>
+      {items.map(item => (
+        <li key={item} style={{ marginBottom: 8 }}>
+          {item}
+        </li>
+      ))}
+    </ul>
   );
 }
 
-function AgentSummaryTab({
-  onOpenPractice,
-  onOpenPattern,
-}: {
-  onOpenPractice?: (id: string) => void;
-  onOpenPattern?: (id: string) => void;
-} = {}) {
+/** Summary sheet from xlsx — plain 3-column table per learner question. */
+function AgentSummaryPlainTable({ rows }: { rows: readonly AgentSummaryRow[] }) {
+  return (
+    <div style={{ overflowX: "auto", flex: 1, minHeight: 0 }}>
+      <table
+        style={{
+          width: "100%",
+          minWidth: 640,
+          tableLayout: "fixed",
+          borderCollapse: "collapse",
+          border: `1px solid ${C.gray02}`,
+          background: C.white,
+        }}
+      >
+        <colgroup>
+          <col style={{ width: "30%" }} />
+          <col style={{ width: "32%" }} />
+          <col style={{ width: "38%" }} />
+        </colgroup>
+        <thead>
+          <tr>
+            {SUMMARY_TABLE_COLUMNS.map((col, i) => (
+              <th
+                key={col}
+                scope="col"
+                style={{
+                  ...summaryThStyle,
+                  borderRight: i === SUMMARY_TABLE_COLUMNS.length - 1 ? "none" : summaryThStyle.borderRight,
+                }}
+              >
+                {col}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr
+              key={row.practice}
+              style={{ background: index % 2 === 0 ? C.white : C.offWhite }}
+            >
+              <td
+                style={{
+                  ...summaryTdBase,
+                  fontFamily: F.bold,
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                {row.practice}
+              </td>
+              <td style={summaryTdBase}>
+                <SummaryCellList items={row.failures} />
+              </td>
+              <td style={{ ...summaryTdBase, borderRight: "none" }}>
+                <SummaryCellList items={row.patterns} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function AgentSummaryTab() {
   const navItems: AgentBuilderSidebarItem[] = AGENT_SUMMARY_PARTS.map(part => ({
     id: `sum-${part.n}`,
     label: part.question,
@@ -3704,20 +3795,10 @@ function AgentSummaryTab({
       <AgentPanelHeader
         badge={part.n}
         title={part.question}
-        subtitle="Best practice, likely failure, and matching technique"
         counter={`${activeIndex + 1}/${navItems.length}`}
       />
-      <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px", minHeight: 0 }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {part.rows.map(row => (
-            <AgentSummaryRelationCard
-              key={row.practice}
-              row={row}
-              onOpenPractice={onOpenPractice}
-              onOpenPattern={onOpenPattern}
-            />
-          ))}
-        </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px", minHeight: 0, display: "flex", flexDirection: "column" }}>
+        <AgentSummaryPlainTable rows={part.rows} />
       </div>
       <AgentPager items={navItems} activeIndex={Math.max(0, activeIndex)} onSelect={setActiveId} />
     </AgentBuilderShell>
@@ -3918,16 +3999,6 @@ export function AgentHubTabs({ variant = "hub" }: { variant?: "hub" | "rail" } =
     setActiveSubTab(id);
   };
 
-  const openPractice = (id: string) => {
-    setPreviewPatternId(null);
-    setGuideOpenId(id);
-    setActiveSubTab("elements");
-  };
-
-  const openPattern = (id: string) => {
-    setPreviewPatternId(id);
-  };
-
   const patternPeekSheet = previewPatternId ? (
     <AgentPatternPeekSheet
       key={previewPatternId}
@@ -4011,7 +4082,7 @@ export function AgentHubTabs({ variant = "hub" }: { variant?: "hub" | "rail" } =
           {activeSubTab === "elements" && <AgentElementsTab openId={guideOpenId} />}
           {activeSubTab === "techniques" && <AgentTechniquesTab openId={guideOpenId} />}
           {activeSubTab === "summary" && (
-            <AgentSummaryTab onOpenPractice={openPractice} onOpenPattern={openPattern} />
+            <AgentSummaryTab />
           )}
         </div>
         {patternPeekSheet}
@@ -4103,7 +4174,7 @@ export function AgentHubTabs({ variant = "hub" }: { variant?: "hub" | "rail" } =
         {activeSubTab === "elements" && <AgentElementsTab openId={guideOpenId} />}
         {activeSubTab === "techniques" && <AgentTechniquesTab openId={guideOpenId} />}
         {activeSubTab === "summary" && (
-          <AgentSummaryTab onOpenPractice={openPractice} onOpenPattern={openPattern} />
+          <AgentSummaryTab />
         )}
       </div>
       {patternPeekSheet}
