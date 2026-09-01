@@ -2151,9 +2151,9 @@ function ChatTourCanvas({
             </div>
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 30, textAlign: "center" }}>
               <CopilotHex size={60} />
-              <p style={{ margin: 0, fontFamily: F.regular, fontSize: 20, lineHeight: 1.5, color: C.offWhite, maxWidth: 400 }}>
+              <p style={EXPLORE_CENTER_PROMO_TEXT}>
                 {centerPromo.prefix ?? "Use "}
-                <span style={{ fontFamily: F.bold, fontWeight: 700, color: C.yellow }}>{centerPromo.highlight}</span>
+                <span style={EXPLORE_CENTER_PROMO_HIGHLIGHT}>{centerPromo.highlight}</span>
                 {centerPromo.tail}
               </p>
             </div>
@@ -2300,7 +2300,7 @@ function ChatTourCanvas({
 
                 <div
                   data-tour-id="agent-instructions"
-                  style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}
+                  style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, justifyContent: "flex-start" }}
                 >
                   <div
                     data-tour-id="agent-instructions-card"
@@ -2308,11 +2308,10 @@ function ChatTourCanvas({
                       display: "flex",
                       flexDirection: "column",
                       gap: 6,
-                      flex: 1,
-                      minHeight: 0,
+                      flexShrink: 0,
+                      maxHeight: "100%",
                       overflowY: "auto",
                       overflowX: "hidden",
-                      paddingBottom: 12,
                     }}
                   >
                     {instructionsContent}
@@ -2320,13 +2319,12 @@ function ChatTourCanvas({
                   {exploreVideoLabel && onExploreVideo && (
                     <div
                       style={{
-                        background: C.confidentBlack,
-                        minHeight: 132,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                         flexShrink: 0,
-                        margin: "0 -16px",
+                        paddingTop: 12,
+                        paddingBottom: 8,
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100%",
                       }}
                     >
                       <button type="button" onClick={onExploreVideo} style={howVideoBtnStyle}>
@@ -3196,6 +3194,22 @@ const HOW_AGENT_PROFILES: Record<
       "Work Assistant",
     ],
   },
+};
+
+const EXPLORE_CENTER_PROMO_TEXT: CSSProperties = {
+  margin: 0,
+  fontFamily: F.light,
+  fontSize: 20,
+  fontWeight: 300,
+  lineHeight: 1.5,
+  color: C.offWhite,
+  maxWidth: 400,
+};
+
+const EXPLORE_CENTER_PROMO_HIGHLIGHT: CSSProperties = {
+  fontFamily: F.regular,
+  fontWeight: 400,
+  color: C.yellow,
 };
 
 const EXPLORE_AGENT_CENTER_PROMO: Record<HowExploreAgentId, { prefix?: string; highlight: string; tail: string }> = {

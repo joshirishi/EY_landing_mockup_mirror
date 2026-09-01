@@ -21,6 +21,10 @@ const ASSET = {
   iconCpu: "/ascent/icon-cpu.svg",
   iconTrendingUp: "/ascent/icon-trending-up.svg",
   iconShield: "/ascent/icon-shield.svg",
+  /** Figma 4404:6932 — Embedding Confidence marker glyph. */
+  iconShieldEmbedding: "/ascent/icon-shield-embedding.svg",
+  /** Figma 4337:1639 — Peak Performance full marker badge. */
+  iconPeakPerformance: "/ascent/icon-peak-performance.svg",
   bannerDot: "/ascent/banner-dot.svg",
   bannerLine: "/ascent/banner-line.svg",
   accentLine: "/ascent/accent-line.svg",
@@ -153,9 +157,9 @@ const STAGE_NODES = [
   { left: 359, top: 295, icon: ASSET.iconSearch, alt: "Laying the Foundation" },
   { left: 554, top: 260, icon: ASSET.iconCpu, alt: "Discovering Opportunities" },
   { left: 769, top: 240, icon: ASSET.iconTrendingUp, alt: "Building Solutions" },
-  { left: 1018, top: 227, icon: ASSET.iconSearch, alt: "Embedding Confidence" },
-  { left: 1164, top: 202, icon: ASSET.iconCpu, alt: "Embedding Confidence" },
-  { left: 1221, top: 94, icon: ASSET.iconShield, alt: "Peak Performance" },
+  { left: 1018, top: 227, icon: ASSET.iconShieldEmbedding, alt: "Embedding Confidence" },
+  { left: 1164, top: 202, icon: ASSET.iconCpu, alt: "Responsible Adoption" },
+  { left: 1221, top: 94, icon: ASSET.iconPeakPerformance, alt: "Peak Performance", iconFill: true },
 ] as const;
 
 /** Vertical gap between marker button bottom and its title label box. */
@@ -270,6 +274,8 @@ function resolveCalloutBox(desired: BoxRect, obstacles: BoxRect[]): BoxRect {
 const BASE_MARKER_BOX: BoxRect = { left: 156, top: 366, width: 46, height: 46 };
 /** StageNode renders at `size-10`. */
 const STAGE_MARKER_SIZE = 40;
+/** Peak badge SVG viewBox is ~3× the visible circle — scale so it matches size-10 peers. */
+const ICON_FILL_BADGE_SCALE = 142.437 / 47.4791;
 
 /**
  * Hit-box of the marker a callout belongs to. Callouts have to treat every
@@ -518,7 +524,7 @@ const STAGE_TITLE_LABELS = [
   { title: "Discovering Opportunities", markerTop: 260, markerSize: 40, calloutIndex: 2 },
   { title: "Building Solutions", markerTop: 240, markerSize: 40, calloutIndex: 3 },
   { title: "Embedding Confidence", markerTop: 227, markerSize: 40, calloutIndex: 4, labelLeft: 978, labelWidth: 120 },
-  { title: "Embedding Confidence", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 105 },
+  { title: "Responsible Adoption", markerTop: 202, markerSize: 40, calloutIndex: 5, labelLeft: 1132, labelTop: 250, labelWidth: 120 },
   { title: "Peak Performance", markerTop: 94, markerSize: 40, calloutIndex: 6, labelLeft: 1310, labelTop: 98, labelWidth: 105 },
 ] as const;
 
@@ -535,7 +541,14 @@ export type AscentCalloutEntry = {
   pin?: boolean;
   highlights?: readonly string[];
 };
-export type AscentStageNodeEntry = { left: number; top: number; icon: string; alt: string };
+export type AscentStageNodeEntry = {
+  left: number;
+  top: number;
+  icon: string;
+  alt: string;
+  /** When true, icon is the full Figma marker badge (circle + glow), not an inner glyph. */
+  iconFill?: boolean;
+};
 export type AscentStageTitleEntry = {
   title: string;
   markerTop: number;
@@ -742,6 +755,7 @@ function JourneyMarkerButton({
   isReached,
   isNext,
   isSubdued,
+  iconFill = false,
   onClick,
   ariaLabel,
   children,
@@ -752,19 +766,27 @@ function JourneyMarkerButton({
   isReached: boolean;
   isNext: boolean;
   isSubdued: boolean;
+  iconFill?: boolean;
   onClick: () => void;
   ariaLabel: string;
   children: React.ReactNode;
 }) {
   const [isHovered, setIsHovered] = useState(false);
-  const visual = getMarkerVisualStyles({
-    isActive,
-    isReached,
-    isHovered: isSubdued ? false : isHovered,
-    isNext,
-    isSubdued,
-  });
-  const showNextPulse = isNext && !isActive && !isSubdued;
+  const visual = iconFill
+    ? {
+        background: "transparent",
+        borderColor: "transparent",
+        boxShadow: "none",
+        transform: isActive ? "scale(1.06)" : isHovered && !isSubdued ? "scale(1.04)" : "scale(1)",
+      }
+    : getMarkerVisualStyles({
+        isActive,
+        isReached,
+        isHovered: isSubdued ? false : isHovered,
+        isNext,
+        isSubdued,
+      });
+  const showNextPulse = isNext && !isActive && !isSubdued && !iconFill;
 
   return (
     <button
@@ -782,7 +804,7 @@ function JourneyMarkerButton({
         if (!isSubdued) setIsHovered(true);
       }}
       onMouseLeave={() => setIsHovered(false)}
-      className={`absolute flex items-center justify-center border-2 border-solid transition-[background-color,border-color,box-shadow,transform,opacity] duration-[650ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${isSubdued ? "cursor-default" : "cursor-pointer"} ${shapeClassName}`}
+      className={`absolute flex items-center justify-center border-2 border-solid transition-[background-color,border-color,box-shadow,transform,opacity] duration-[650ms] ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${isSubdued ? "cursor-default" : "cursor-pointer"} ${iconFill ? "overflow-visible border-0" : ""} ${shapeClassName}`}
       style={{
         ...positionStyle,
         background: visual.background,
@@ -798,7 +820,7 @@ function JourneyMarkerButton({
         <span className="ascent-marker-next-pulse absolute inset-0 rounded-[inherit]" aria-hidden />
       ) : null}
       {children}
-      {isReached && !isActive ? (
+      {isReached && !isActive && !iconFill ? (
         <span
           className="absolute bottom-1 right-1 size-1.5 rounded-full"
           style={{ background: colors.yellow, boxShadow: "0 0 6px rgba(255, 230, 0, 0.55)" }}
@@ -964,6 +986,7 @@ function StageNode({
   top,
   icon,
   alt,
+  iconFill = false,
   isActive,
   isReached,
   isNext,
@@ -974,6 +997,7 @@ function StageNode({
   top: number;
   icon: string;
   alt: string;
+  iconFill?: boolean;
   isActive: boolean;
   isReached: boolean;
   isNext: boolean;
@@ -988,16 +1012,32 @@ function StageNode({
       isReached={isReached}
       isNext={isNext}
       isSubdued={isSubdued}
+      iconFill={iconFill}
       onClick={onClick}
       ariaLabel={alt}
     >
-      <div
-        className="relative size-[18px] shrink-0 overflow-clip"
-        style={{ opacity: isSubdued ? 0.55 : 1 }}
-        aria-hidden
-      >
-        <img alt="" className="absolute inset-0 block size-full max-w-none" src={icon} />
-      </div>
+      {iconFill ? (
+        <img
+          alt=""
+          className="absolute left-1/2 top-1/2 block max-w-none"
+          src={icon}
+          style={{
+            width: STAGE_MARKER_SIZE,
+            height: STAGE_MARKER_SIZE,
+            transform: `translate(-50%, -50%) scale(${ICON_FILL_BADGE_SCALE})`,
+            opacity: isSubdued ? 0.55 : 1,
+          }}
+          aria-hidden
+        />
+      ) : (
+        <div
+          className="relative size-[18px] shrink-0 overflow-clip"
+          style={{ opacity: isSubdued ? 0.55 : 1 }}
+          aria-hidden
+        >
+          <img alt="" className="absolute inset-0 block size-full max-w-none" src={icon} />
+        </div>
+      )}
     </JourneyMarkerButton>
   );
 }

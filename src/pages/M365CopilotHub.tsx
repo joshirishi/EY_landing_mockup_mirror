@@ -2831,43 +2831,60 @@ function AgentWeakStrongCard({ weak, strong }: { weak: string; strong: string })
 }
 
 /** Figma 4412:7179 — dark left rail bullets for Elements best-practice beats. */
+const AGENT_DARK_RAIL_TITLE: React.CSSProperties = {
+  margin: 0,
+  fontFamily: F.regular,
+  fontSize: 16,
+  lineHeight: 1.25,
+  letterSpacing: "-0.01em",
+  color: C.offWhite,
+};
+
+const AGENT_DARK_RAIL_BODY: React.CSSProperties = {
+  margin: 0,
+  fontFamily: F.light,
+  fontSize: 12,
+  fontWeight: 300,
+  lineHeight: 1.4,
+  letterSpacing: "-0.01em",
+  color: C.offWhite,
+};
+
+const AGENT_DARK_RAIL_PANEL: React.CSSProperties = {
+  flex: "0 0 47%",
+  maxWidth: "47%",
+  background: C.dark2,
+  padding: "20px 24px 28px",
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+  minHeight: 0,
+  overflowY: "auto",
+};
+
 function AgentElementsDarkBullets({ title, items }: { title?: string; items: readonly string[] }) {
   return (
     <div
       style={{
-        flex: "0 0 47%",
-        maxWidth: "47%",
-        background: C.dark2,
-        padding: "24px 32px 36px",
-        display: "flex",
-        flexDirection: "column",
+        ...AGENT_DARK_RAIL_PANEL,
         justifyContent: "flex-start",
-        gap: 24,
-        minHeight: 0,
-        overflowY: "auto",
       }}
     >
-      {title && (
-        <p style={{ margin: 0, fontFamily: F.regular, fontSize: 24, lineHeight: 1.25, color: C.offWhite }}>
-          {title}
-        </p>
-      )}
+      {title && <p style={AGENT_DARK_RAIL_TITLE}>{title}</p>}
       {items.map(item => (
-        <div key={item} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+        <div key={item} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
           <span
             aria-hidden
             style={{
-              width: 12,
-              height: 12,
-              borderRadius: 12,
+              width: 8,
+              height: 8,
+              borderRadius: 8,
               background: C.offWhite,
-              marginTop: 8,
+              marginTop: 5,
               flexShrink: 0,
             }}
           />
-          <p style={{ margin: 0, fontFamily: F.light, fontSize: 20, fontWeight: 300, lineHeight: 1.25, color: C.offWhite }}>
-            {item}
-          </p>
+          <p style={AGENT_DARK_RAIL_BODY}>{item}</p>
         </div>
       ))}
     </div>
@@ -3532,27 +3549,13 @@ function AgentTechniqueFigmaSplit({
     >
       <div
         style={{
-          flex: "0 0 47%",
-          maxWidth: "47%",
-          background: C.dark2,
-          padding: "24px 32px 36px",
-          display: "flex",
-          flexDirection: "column",
+          ...AGENT_DARK_RAIL_PANEL,
           justifyContent: "space-between",
-          gap: 24,
-          minHeight: 0,
-          overflowY: "auto",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <p style={{ margin: 0, fontFamily: F.regular, fontSize: 24, lineHeight: 1.25, color: C.offWhite }}>
-            {headline}
-          </p>
-          {body && (
-            <p style={{ margin: 0, fontFamily: F.light, fontSize: 20, lineHeight: 1.25, color: C.offWhite }}>
-              {body}
-            </p>
-          )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <p style={AGENT_DARK_RAIL_TITLE}>{headline}</p>
+          {body && <p style={AGENT_DARK_RAIL_BODY}>{body}</p>}
         </div>
         <AgentWhenToUseCard items={whenItems} />
       </div>
