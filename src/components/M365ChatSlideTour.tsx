@@ -67,7 +67,7 @@ type Callout = {
   anchorY?: number;
   /** Pin the annotation card inside the highlight (e.g. over a modal sidebar). */
   cardInset?: "left" | "right";
-  /** Shared 1–8 workflow number (Step 3 has 3a/3b/3c… sub-beats). */
+  /** Unique beat number shown on the callout and in Step X of Y. */
   workflowStep: number;
 };
 
@@ -79,9 +79,9 @@ type Slide = {
   callouts: Callout[];
 };
 
-const WORKFLOW_STEPS = 9;
+const WORKFLOW_STEPS = 15;
 
-/** Create → saved prompts → agents sidebar — builder beats live in Agent What section. */
+/** Last-night Create→agents tour — kept for reference; MS Chat uses CHAT_TOUR_SLIDES again. */
 const CHAT_AGENT_TOUR_SLIDES: Slide[] = [
   {
     label: "Create",
@@ -315,7 +315,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "plus-apps",
         placement: "top",
         anchorY: 0.5,
-        workflowStep: 2,
+        workflowStep: 3,
       },
       {
         title: "Add content and capabilities",
@@ -324,7 +324,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "plus-menu",
         placement: "right",
         anchorY: 0.38,
-        workflowStep: 2,
+        workflowStep: 4,
       },
       {
         title: "Open the more menu",
@@ -332,7 +332,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: MoreHorizontal,
         target: "more-menu",
         placement: "left",
-        workflowStep: 3,
+        workflowStep: 5,
       },
       {
         title: "Chat settings",
@@ -340,15 +340,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: Settings,
         target: "chat-settings-item",
         placement: "left",
-        workflowStep: 3,
-      },
-      {
-        title: "General settings",
-        body: "Settings open on General — about, terms, version and Light or Dark. Next, move to Personalization.",
-        icon: Settings,
-        target: "settings-general",
-        placement: "right",
-        workflowStep: 3,
+        workflowStep: 6,
       },
       {
         title: "Personalization",
@@ -356,7 +348,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: UserCog,
         target: "settings-personalization",
         placement: "right",
-        workflowStep: 3,
+        workflowStep: 7,
       },
       {
         title: "Custom instructions",
@@ -364,7 +356,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: Settings,
         target: "edit-instructions",
         placement: "bottom",
-        workflowStep: 3,
+        workflowStep: 8,
       },
       {
         title: "Write your instructions",
@@ -372,7 +364,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: PenLine,
         target: "custom-instructions-editor",
         placement: "left",
-        workflowStep: 3,
+        workflowStep: 9,
       },
       {
         title: "Save instructions",
@@ -380,16 +372,16 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: Save,
         target: "save-instructions",
         placement: "top",
-        workflowStep: 3,
+        workflowStep: 10,
       },
       {
         title: "Saved prompts",
-        body: "Back on the chat home, tap Saved Prompts to open your personal library — reuse GST templates and other favourites with one click.",
+        body: "Back on the chat home, tap the more button beside the quick pills to open your personal library — reuse GST templates and other favourites with one click.",
         icon: Save,
-        target: "saved-prompts-pill",
+        target: "quick-pills-more",
         placement: "top",
-        anchorY: 0.35,
-        workflowStep: 4,
+        anchorY: 0.4,
+        workflowStep: 11,
       },
       {
         title: "Prompt Lab",
@@ -399,74 +391,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         placement: "left",
         cardInset: "left",
         anchorY: 0.42,
-        workflowStep: 4,
-      },
-    ],
-  },
-  {
-    label: "Researcher Agent",
-    kind: "researcher",
-    callouts: [
-      {
-        title: "Researcher agent",
-        body: "Prep a manufacturing client exploring global expansion — it pulls indirect tax, customs and transfer pricing, then returns a meeting-ready brief.",
-        icon: Search,
-        target: "researcher",
-        placement: "right",
-        workflowStep: 5,
-      },
-    ],
-  },
-  {
-    label: "Analyst Agent",
-    kind: "analyst",
-    callouts: [
-      {
-        title: "Analyst agent",
-        body: "Ask it to analyse 12 months of GST filings. It finds patterns, late filings and high-risk periods, then builds the charts — minutes, not hours.",
-        icon: BarChart3,
-        target: "analyst",
-        placement: "right",
-        workflowStep: 6,
-      },
-    ],
-  },
-  {
-    label: "Custom Agent",
-    kind: "builder",
-    callouts: [
-      {
-        title: "New agent",
-        body: "In the sidebar under Agents, choose New agent to start building a specialist for Indian tax workflows.",
-        icon: Bot,
-        target: "new-agent",
-        placement: "right",
-        workflowStep: 7,
-      },
-      {
-        title: "Skip the chat",
-        body: "Agent Builder opens with a short chat. Press Skip to jump straight to the configure screen — name, instructions, and knowledge sources.",
-        icon: ChevronRight,
-        target: "agent-skip",
-        placement: "left",
-        anchorY: 0.35,
-        workflowStep: 7,
-      },
-      {
-        title: "Describe your agent",
-        body: "Name the agent, then write instructions — what it should do, the tone to use, and guardrails for Indian tax workflows.",
-        icon: PenLine,
-        target: "agent-instructions",
-        placement: "left",
-        workflowStep: 7,
-      },
-      {
-        title: "Knowledge sources",
-        body: "Add approved files, SharePoint, meetings, email, and websites so answers stay grounded in your source of truth.",
-        icon: BookOpen,
-        target: "knowledge-sources",
-        placement: "left",
-        workflowStep: 7,
+        workflowStep: 12,
       },
     ],
   },
@@ -475,21 +400,13 @@ const CHAT_TOUR_SLIDES: Slide[] = [
     kind: "create",
     callouts: [
       {
-        title: "New chat",
-        body: "Start from the sidebar — New chat opens the app picker and creation paths in Copilot.",
-        icon: PenLine,
-        target: "new-chat",
-        placement: "right",
-        workflowStep: 8,
-      },
-      {
         title: "M365 apps",
-        body: "The flyout appears as soon as you click New chat. Pick Create or jump into Word, Excel, Teams, and more.",
+        body: "Open the apps grid in the sidebar to jump into Word, Excel, Teams, Create, and more.",
         icon: Grid3x3,
         target: "m365-apps-flyout",
         placement: "right",
         anchorY: 0.35,
-        workflowStep: 8,
+        workflowStep: 13,
       },
       {
         title: "Create content",
@@ -498,7 +415,21 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "create-describe-input",
         placement: "right",
         anchorY: 0.45,
-        workflowStep: 8,
+        workflowStep: 14,
+      },
+    ],
+  },
+  {
+    label: "Agents in Copilot Chat",
+    kind: "agents-landing",
+    callouts: [
+      {
+        title: "All your agents",
+        body: "Every agent you use or create is listed here — Researcher, Analyst, and your tax specialists.",
+        icon: Bot,
+        target: "agents-list",
+        placement: "right",
+        workflowStep: 15,
       },
     ],
   },
@@ -2712,6 +2643,7 @@ const CHAT_HOME_TARGETS = new Set([
   "custom-instructions-editor",
   "save-instructions",
   "saved-prompts-pill",
+  "quick-pills-more",
   "prompt-lab-modal",
   "plus-apps",
   "plus-menu",
@@ -2737,11 +2669,78 @@ const primaryBtnStyle: CSSProperties = {
   border: "none", background: C.yellow, color: C.dark2, fontFamily: F.bold, fontSize: 14, fontWeight: 700, cursor: "pointer", marginLeft: "auto",
 };
 
+const TOUR_OVERLAY_NAV_SHADOW = `0 8px 24px color-mix(in srgb, ${C.confidentBlack} 24%, transparent)`;
+
+function TourOverlayNav({
+  onPrev,
+  onNext,
+  prevDisabled,
+  onRestart,
+  showRestart,
+  restartLabel = "Restart tour",
+}: {
+  onPrev: () => void;
+  onNext: () => void;
+  prevDisabled: boolean;
+  onRestart?: () => void;
+  showRestart?: boolean;
+  restartLabel?: string;
+}) {
+  return (
+    <div
+      aria-label="Tour navigation"
+      style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 12,
+        padding: "14px 16px",
+        pointerEvents: "none",
+        background: `linear-gradient(180deg, color-mix(in srgb, ${C.confidentBlack} 0%, transparent) 0%, color-mix(in srgb, ${C.confidentBlack} 42%, transparent) 100%)`,
+      }}
+    >
+      <button
+        type="button"
+        onClick={onPrev}
+        disabled={prevDisabled}
+        aria-label="Previous step"
+        style={{ ...navBtnStyle(prevDisabled), pointerEvents: "auto", boxShadow: TOUR_OVERLAY_NAV_SHADOW }}
+      >
+        <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
+      </button>
+      {showRestart ? (
+        <button
+          type="button"
+          onClick={onRestart}
+          aria-label={restartLabel}
+          style={{ ...primaryBtnStyle, marginLeft: 0, pointerEvents: "auto", boxShadow: TOUR_OVERLAY_NAV_SHADOW }}
+        >
+          {restartLabel}
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={onNext}
+          aria-label="Next step"
+          style={{ ...primaryBtnStyle, marginLeft: 0, pointerEvents: "auto", boxShadow: TOUR_OVERLAY_NAV_SHADOW }}
+        >
+          Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ── Main export ───────────────────────────────────────────────────────────────
 
-/** workflowStep 1–8 maps to the 8 Chat use-case pills. */
+/** workflowStep 1–15 maps across every MS Chat tour beat. */
 export function chatTourUseCaseIndex(workflowStep: number): number {
-  return Math.max(0, Math.min(7, workflowStep - 1));
+  return Math.max(0, Math.min(14, workflowStep - 1));
 }
 
 export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?: (index: number) => void } = {}) {
@@ -2751,8 +2750,8 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
   const [promptLabOpen, setPromptLabOpen] = useState(false);
   const tourRef = useRef<HTMLDivElement>(null);
 
-  const slide = CHAT_AGENT_TOUR_SLIDES[slideIndex];
-  const totalSlides = CHAT_AGENT_TOUR_SLIDES.length;
+  const slide = CHAT_TOUR_SLIDES[slideIndex];
+  const totalSlides = CHAT_TOUR_SLIDES.length;
   const totalCallouts = slide.callouts.length;
   const safeCalloutIndex = Math.min(calloutIndex, totalCallouts - 1);
   const currentCallout = slide.callouts[safeCalloutIndex];
@@ -2771,6 +2770,7 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
   const showChatHome = slide.kind === "personalization" && CHAT_HOME_TARGETS.has(currentCallout.target);
   const chatSettingsPane = showChatHome ? settingsPaneFor(currentCallout.target) : null;
   const highlightSavedPromptsPill = currentCallout.target === "saved-prompts-pill";
+  const highlightQuickPillsMore = currentCallout.target === "quick-pills-more";
   const tourPromptLabStep = currentCallout.target === "prompt-lab-modal";
   const skipGate = slide.kind === "builder" && currentCallout.target === "agent-skip";
   const newChatGate = slide.kind === "create" && currentCallout.target === "new-chat";
@@ -2804,7 +2804,7 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
         const prevSlide = slideIndex - 1;
         setSlideIndex(prevSlide);
         setFrameEl(null);
-        return CHAT_AGENT_TOUR_SLIDES[prevSlide].callouts.length - 1;
+        return CHAT_TOUR_SLIDES[prevSlide].callouts.length - 1;
       }
       return 0;
     });
@@ -2839,7 +2839,7 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
   }, [currentCallout.target, goNext]);
 
   return (
-    <div ref={tourRef} tabIndex={0} role="region" aria-label="M365 Copilot Chat create and agents workflow" aria-roledescription="carousel"
+    <div ref={tourRef} tabIndex={0} role="region" aria-label="M365 Copilot Chat guided tour" aria-roledescription="carousel"
       style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16, outline: "none" }}>
 
       {/* Header */}
@@ -2869,10 +2869,12 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
             showModelMenu={currentCallout.target === "auto-model"}
             settingsPane={chatSettingsPane}
             highlightSavedPromptsPill={highlightSavedPromptsPill}
+            highlightQuickPillsMore={highlightQuickPillsMore}
             showPlusMenu={forcePlusMenuOpen ? true : undefined}
             onPlusMenuOpen={plusMenuGate ? goNext : undefined}
             showPromptLab={promptLabOpen}
             onOpenSavedPrompts={() => setPromptLabOpen(true)}
+            onOpenQuickPillsMore={handleOpenQuickPillsMore}
             onClosePromptLab={() => setPromptLabOpen(false)}
           />
         )}
@@ -2951,26 +2953,57 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
         {slide.callouts.map((c, i) => (
           <CalloutBox key={`${slideIndex}-${i}-${c.target}`} callout={c} active={i === safeCalloutIndex} stepNum={c.workflowStep} frame={frameEl} onNext={goNext} isLast={tourComplete || (i === totalCallouts - 1 && isLastSlide)} />
         ))}
-      </div>
-
-      {/* Navigation */}
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "12px 0 0" }}>
-        <button type="button" onClick={goPrev} disabled={isFirstSlide && isFirstCallout} aria-label="Previous step" style={navBtnStyle(isFirstSlide && isFirstCallout)}>
-          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
-        </button>
-        {tourComplete ? (
-          <button type="button" onClick={restart} aria-label="Restart tour" style={primaryBtnStyle}>Restart tour</button>
-        ) : (
-          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
-            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
-          </button>
-        )}
+        <TourOverlayNav
+          onPrev={goPrev}
+          onNext={goNext}
+          prevDisabled={isFirstSlide && isFirstCallout}
+          showRestart={tourComplete}
+          onRestart={restart}
+        />
       </div>
     </div>
   );
 }
 
-const AGENT_BUILDER_SLIDE = CHAT_TOUR_SLIDES.find(s => s.kind === "builder")!;
+const AGENT_BUILDER_SLIDE: Slide = {
+  label: "Custom Agent",
+  kind: "builder",
+  callouts: [
+    {
+      title: "New agent",
+      body: "In the sidebar under Agents, choose New agent to start building a specialist for Indian tax workflows.",
+      icon: Bot,
+      target: "new-agent",
+      placement: "right",
+      workflowStep: 1,
+    },
+    {
+      title: "Skip the chat",
+      body: "Agent Builder opens with a short chat. Press Skip to jump straight to the configure screen — name, instructions, and knowledge sources.",
+      icon: ChevronRight,
+      target: "agent-skip",
+      placement: "left",
+      anchorY: 0.35,
+      workflowStep: 2,
+    },
+    {
+      title: "Describe your agent",
+      body: "Name the agent, then write instructions — what it should do, the tone to use, and guardrails for Indian tax workflows.",
+      icon: PenLine,
+      target: "agent-instructions",
+      placement: "left",
+      workflowStep: 3,
+    },
+    {
+      title: "Knowledge sources",
+      body: "Add approved files, SharePoint, meetings, email, and websites so answers stay grounded in your source of truth.",
+      icon: BookOpen,
+      target: "knowledge-sources",
+      placement: "left",
+      workflowStep: 4,
+    },
+  ],
+};
 
 /** Agent Builder walkthrough — same UI as MS Chat Custom Agent (sidebar + configure panel). */
 export function M365AgentBuilderTour() {
@@ -3057,19 +3090,13 @@ export function M365AgentBuilderTour() {
             isLast={tourComplete || i === totalCallouts - 1}
           />
         ))}
-      </div>
-
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "12px 0 0" }}>
-        <button type="button" onClick={goPrev} disabled={isFirstCallout} aria-label="Previous step" style={navBtnStyle(isFirstCallout)}>
-          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
-        </button>
-        {tourComplete ? (
-          <button type="button" onClick={restart} aria-label="Restart tour" style={primaryBtnStyle}>Restart tour</button>
-        ) : (
-          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
-            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
-          </button>
-        )}
+        <TourOverlayNav
+          onPrev={goPrev}
+          onNext={goNext}
+          prevDisabled={isFirstCallout}
+          showRestart={tourComplete}
+          onRestart={restart}
+        />
       </div>
     </div>
   );
@@ -3717,21 +3744,14 @@ export function M365AgentHowExplorer() {
           currentLabel={whatTourCurrentLabel(step)}
           onCurrentClick={isLast ? restart : goNext}
         />
-      </div>
-
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "4px 0 0" }}>
-        <button type="button" onClick={goPrev} disabled={isFirst} aria-label="Previous step" style={navBtnStyle(isFirst)}>
-          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
-        </button>
-        {isLast ? (
-          <button type="button" onClick={restart} aria-label="Restart onboarding" style={primaryBtnStyle}>
-            Restart tour
-          </button>
-        ) : (
-          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
-            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
-          </button>
-        )}
+        <TourOverlayNav
+          onPrev={goPrev}
+          onNext={goNext}
+          prevDisabled={isFirst}
+          showRestart={isLast}
+          onRestart={restart}
+          restartLabel="Restart tour"
+        />
       </div>
 
       {videoAgentId && <AgentHowVideoModal agentId={videoAgentId} onClose={() => setVideoAgentId(null)} />}
