@@ -2830,12 +2830,13 @@ function AgentWeakStrongCard({ weak, strong }: { weak: string; strong: string })
   );
 }
 
-/** Figma 4412:7179 — dark left rail bullets for Elements best-practice beats. */
+/** Figma 4412:7179 — dark left rail; type matches Agent How center promo hierarchy. */
 const AGENT_DARK_RAIL_TITLE: React.CSSProperties = {
   margin: 0,
-  fontFamily: F.regular,
-  fontSize: 16,
-  lineHeight: 1.25,
+  fontFamily: F.light,
+  fontSize: 20,
+  fontWeight: 300,
+  lineHeight: 1.5,
   letterSpacing: "-0.01em",
   color: C.offWhite,
 };
@@ -2843,9 +2844,9 @@ const AGENT_DARK_RAIL_TITLE: React.CSSProperties = {
 const AGENT_DARK_RAIL_BODY: React.CSSProperties = {
   margin: 0,
   fontFamily: F.light,
-  fontSize: 12,
+  fontSize: 16,
   fontWeight: 300,
-  lineHeight: 1.4,
+  lineHeight: 1.5,
   letterSpacing: "-0.01em",
   color: C.offWhite,
 };
@@ -2880,7 +2881,7 @@ function AgentElementsDarkBullets({ title, items }: { title?: string; items: rea
               height: 8,
               borderRadius: 8,
               background: C.offWhite,
-              marginTop: 5,
+              marginTop: 8,
               flexShrink: 0,
             }}
           />
