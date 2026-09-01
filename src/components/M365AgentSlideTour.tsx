@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { colors, fonts as F } from "../design-kit/tokens";
 import { CopilotPlusButton } from "./CopilotPlusMenu";
-import { AgentHexIcon, CopilotHex } from "./AgentHexIcon";
+import { AgentHexIcon, AgentIcon, CopilotHex, type AgentIconKind } from "./AgentHexIcon";
 
 const C = { ...colors, dark2: colors.offBlack };
 const line = `color-mix(in srgb, ${C.gray02} 50%, ${C.white})`;
@@ -268,7 +268,17 @@ function NavRow({ icon, label, active }: { icon: ReactNode; label: string; activ
   );
 }
 
-function AgentRow({ label, tourId, active }: { label: string; tourId?: string; active?: boolean }) {
+function AgentRow({
+  label,
+  tourId,
+  active,
+  iconKind = "generic",
+}: {
+  label: string;
+  tourId?: string;
+  active?: boolean;
+  iconKind?: AgentIconKind;
+}) {
   return (
     <div
       data-tour-id={tourId}
@@ -283,7 +293,7 @@ function AgentRow({ label, tourId, active }: { label: string; tourId?: string; a
         background: active ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
       }}
     >
-      <AgentHexIcon size={18} />
+      <AgentIcon kind={iconKind} size={18} />
       <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
         {label}
       </span>
@@ -324,10 +334,8 @@ function AgentSidebar({ highlightId }: { highlightId?: string }) {
         <span style={{ display: "block", padding: "0 10px", marginBottom: 2, fontFamily: F.regular, fontSize: 11, fontWeight: 600, color: "#757575" }}>
           Agents
         </span>
-        <AgentRow label="Researcher" tourId="researcher" active={highlightId === "researcher"} />
-        <AgentRow label="Analyst" tourId="analyst" active={highlightId === "analyst"} />
-        <AgentRow label="Income Tax Laws check" />
-        <AgentRow label="Labour Code Analyst" />
+        <AgentRow label="Researcher" tourId="researcher" iconKind="researcher" active={highlightId === "researcher"} />
+        <AgentRow label="Analyst" tourId="analyst" iconKind="analyst" active={highlightId === "analyst"} />
         <div
           data-tour-id="new-agent"
           style={{
@@ -341,7 +349,7 @@ function AgentSidebar({ highlightId }: { highlightId?: string }) {
             background: highlightId === "new-agent" ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
           }}
         >
-          <AgentHexIcon size={18} />
+          <AgentIcon kind="new-agent" size={18} />
           <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
             New agent
           </span>

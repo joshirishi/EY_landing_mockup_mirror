@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 import { colors, fonts as F, typeScale } from "../design-kit/tokens";
 import { CopilotPlusButton } from "./CopilotPlusMenu";
-import { AgentHexIcon, CopilotHex } from "./AgentHexIcon";
+import { AgentHexIcon, AgentIcon, CopilotHex, agentIconKind, type AgentIconKind } from "./AgentHexIcon";
 
 const C = { ...colors, dark2: colors.offBlack };
 const line = `color-mix(in srgb, ${C.gray02} 50%, ${C.white})`;
@@ -561,11 +561,13 @@ function AgentRow({
   tourId,
   active,
   onClick,
+  iconKind = "generic",
 }: {
   label: string;
   tourId?: string;
   active?: boolean;
   onClick?: () => void;
+  iconKind?: AgentIconKind;
 }) {
   const shared: CSSProperties = {
     display: "flex",
@@ -582,7 +584,7 @@ function AgentRow({
   if (onClick) {
     return (
       <button type="button" data-tour-id={tourId} onClick={e => { e.stopPropagation(); onClick(); }} style={shared}>
-        <AgentHexIcon size={18} />
+        <AgentIcon kind={iconKind} size={18} />
         <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
           {label}
         </span>
@@ -591,7 +593,7 @@ function AgentRow({
   }
   return (
     <div data-tour-id={tourId} style={shared}>
-      <AgentHexIcon size={18} />
+      <AgentIcon kind={iconKind} size={18} />
       <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
         {label}
       </span>
@@ -688,21 +690,22 @@ function ChatSidebar({
         <AgentRow
           label="Researcher"
           tourId="researcher"
+          iconKind="researcher"
           active={exploreAgentId ? exploreAgentId === "researcher" : highlightResearcher}
           onClick={onExploreAgentSelect ? () => onExploreAgentSelect("researcher") : undefined}
         />
         <AgentRow
           label="Analyst"
           tourId="analyst"
+          iconKind="analyst"
           active={exploreAgentId ? exploreAgentId === "analyst" : highlightAnalyst}
           onClick={onExploreAgentSelect ? () => onExploreAgentSelect("analyst") : undefined}
         />
-        <AgentRow label="Income Tax Laws check" />
-        <AgentRow label="Prompt Coach" />
         {onExploreAgentSelect ? (
           <AgentRow
             label="New agent"
             tourId="new-agent"
+            iconKind="new-agent"
             active={exploreAgentId === "new-agent"}
             onClick={() => onExploreAgentSelect("new-agent")}
           />
@@ -720,7 +723,7 @@ function ChatSidebar({
               background: highlightNewAgent ? `color-mix(in srgb, ${C.gray02} 40%, ${C.white})` : "transparent",
             }}
           >
-            <AgentHexIcon size={18} />
+            <AgentIcon kind="new-agent" size={18} />
             <span style={{ fontFamily: F.regular, fontSize: 13, color: C.dark2, whiteSpace: "nowrap" }}>New agent</span>
           </div>
         )}
@@ -2087,6 +2090,7 @@ function ChatTourCanvas({
   const connectors = ["Adobe Experience Manager", "Azure DevOps", "Custom Connector", "ServiceNow Catalog", "ServiceNow Knowledge"];
   const exploreLayout = !!exploreAgentId && (exploreAgentId === "researcher" || exploreAgentId === "analyst" || exploreAgentId === "new-agent");
   const centerPromo = exploreAgentId ? EXPLORE_AGENT_CENTER_PROMO[exploreAgentId] : null;
+  const panelIconKind = exploreAgentId ? agentIconKind(exploreAgentId) : "generic";
   const designW = configureOnly ? 920 : FIGMA_W;
   const designH = configureOnly ? 480 : FIGMA_H;
   const { ref, scale } = useScaleToWidth(designW);
@@ -2263,7 +2267,7 @@ function ChatTourCanvas({
                     borderBottom: exploreAgentId === "new-agent" ? "none" : `1px solid ${C.gray02}`,
                   }}
                 >
-                  <AgentHexIcon size={44} />
+                  <AgentIcon kind={panelIconKind} size={44} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p
                       data-tour-id="agent-name"
@@ -2344,7 +2348,7 @@ function ChatTourCanvas({
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-                <AgentHexIcon size={36} />
+                <AgentIcon kind={panelIconKind} size={36} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p
                     data-tour-id="agent-name"

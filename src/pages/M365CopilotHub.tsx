@@ -4322,11 +4322,13 @@ type SecurityChecklistItem = {
   num: string;
   title: string;
   body: string;
-  image: string;
+  image?: string;
   italicBody?: string;
+  /** When false, card is text-only (no infographic lightbox). */
+  hasInfographic?: boolean;
 };
 
-// ── Security checklist (4-step — click cell to open infographic lightbox) ────
+// ── Security checklist (4-step — cards 1–3 open infographic lightbox) ────────
 const SECURITY_CHECKLIST: SecurityChecklistItem[] = [
   {
     num: "1",
@@ -4351,7 +4353,7 @@ const SECURITY_CHECKLIST: SecurityChecklistItem[] = [
     title: "Quick Check Before You Use Copilot",
     body: "Ask yourself:",
     italicBody: "Would I be comfortable if M365 Copilot referenced this content in a colleague’s prompt?",
-    image: "/security/copilot1.png",
+    hasInfographic: false,
   },
 ];
 
@@ -4805,62 +4807,14 @@ export default function M365CopilotHub({
             Before you let Copilot loose on tax data, work through these four access and sharing checks.
           </p>
         </header>
-        {/* 4-step checklist — click a card to open its security infographic */}
+        {/* 4-step checklist — cards 1–3 open security infographic on click */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 26 }}>
-          {SECURITY_CHECKLIST.map((step) => (
-            <button
-              key={step.num}
-              type="button"
-              onClick={() => setSecurityLightbox(step)}
-              aria-label={`View ${step.title} infographic`}
-              style={{
-                background: C.dark2,
-                border: `1px solid ${C.borderOnDark}`,
-                borderRadius: 12,
-                padding: "24px 22px",
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-                cursor: "pointer",
-                textAlign: "left",
-                fontFamily: F.regular,
-                transition: "border-color 0.15s, transform 0.15s, box-shadow 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = C.yellowAlpha12;
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = `0 8px 24px color-mix(in srgb, ${C.dark} 35%, transparent)`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = C.borderOnDark;
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = C.yellowAlpha12;
-                e.currentTarget.style.outline = `2px solid ${C.yellow}`;
-                e.currentTarget.style.outlineOffset = "2px";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = C.borderOnDark;
-                e.currentTarget.style.outline = "none";
-              }}
-            >
-              <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: typeScale.h2.size, color: C.yellow, margin: 0, lineHeight: 1 }}>
-                {step.num}
-              </p>
-              <p
-                style={{
-                  fontFamily: F.regular,
-                  fontSize: 14,
-                  color: C.gray02,
-                  margin: 0,
-                  lineHeight: 1.6,
-                }}
-              >
-                {step.body}
-              </p>
-              {step.italicBody && (
+          {SECURITY_CHECKLIST.map((step) => {
+            const cardBody = (
+              <>
+                <p style={{ fontFamily: F.bold, fontWeight: 700, fontSize: typeScale.h2.size, color: C.yellow, margin: 0, lineHeight: 1 }}>
+                  {step.num}
+                </p>
                 <p
                   style={{
                     fontFamily: F.regular,
@@ -4868,14 +4822,82 @@ export default function M365CopilotHub({
                     color: C.gray02,
                     margin: 0,
                     lineHeight: 1.6,
-                    fontStyle: "italic",
                   }}
                 >
-                  {step.italicBody}
+                  {step.body}
                 </p>
-              )}
-            </button>
-          ))}
+                {step.italicBody && (
+                  <p
+                    style={{
+                      fontFamily: F.regular,
+                      fontSize: 14,
+                      color: C.gray02,
+                      margin: 0,
+                      lineHeight: 1.6,
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {step.italicBody}
+                  </p>
+                )}
+              </>
+            );
+
+            const cardStyle: React.CSSProperties = {
+              background: C.dark2,
+              border: `1px solid ${C.borderOnDark}`,
+              borderRadius: 12,
+              padding: "24px 22px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+              textAlign: "left",
+              fontFamily: F.regular,
+            };
+
+            if (step.hasInfographic === false) {
+              return (
+                <div key={step.num} style={cardStyle}>
+                  {cardBody}
+                </div>
+              );
+            }
+
+            return (
+              <button
+                key={step.num}
+                type="button"
+                onClick={() => setSecurityLightbox(step)}
+                aria-label={`View ${step.title} infographic`}
+                style={{
+                  ...cardStyle,
+                  cursor: "pointer",
+                  transition: "border-color 0.15s, transform 0.15s, box-shadow 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = C.yellowAlpha12;
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = `0 8px 24px color-mix(in srgb, ${C.dark} 35%, transparent)`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = C.borderOnDark;
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = C.yellowAlpha12;
+                  e.currentTarget.style.outline = `2px solid ${C.yellow}`;
+                  e.currentTarget.style.outlineOffset = "2px";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = C.borderOnDark;
+                  e.currentTarget.style.outline = "none";
+                }}
+              >
+                {cardBody}
+              </button>
+            );
+          })}
         </div>
         </div>
       </section>

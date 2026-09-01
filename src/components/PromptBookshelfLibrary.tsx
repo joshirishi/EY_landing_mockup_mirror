@@ -733,15 +733,15 @@ export function PromptBookshelfLibrary() {
             <div
               style={{
                 flex: 1,
+                minWidth: 0,
                 padding: "14px 20px",
                 display: "flex",
-                flexWrap: "wrap",
                 alignItems: "center",
                 justifyContent: "space-between",
-                gap: 8,
+                gap: 16,
               }}
             >
-              <div>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h3
                   id={`reading-title-${selected.id}`}
                   style={{
@@ -750,6 +750,9 @@ export function PromptBookshelfLibrary() {
                     color: colors.onDark,
                     margin: 0,
                     letterSpacing: typeScale.subheading.tracking,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {selected.name}
@@ -765,7 +768,18 @@ export function PromptBookshelfLibrary() {
                   {selected.category} · {libraryKind === "agent" ? "Agent" : "Template"} #{selected.id}
                 </p>
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 8,
+                  flexShrink: 0,
+                  marginLeft: "auto",
+                  maxWidth: "min(100%, 360px)",
+                }}
+              >
                 {selected.capabilities.map((cap) => (
                   <span
                     key={cap}

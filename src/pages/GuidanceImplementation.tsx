@@ -765,14 +765,16 @@ function Panel2() {
           </p>
         </div>
 
-        <TabRail
-          tabs={[
-            { id: "elements" as const, label: "Elements" },
-            { id: "techniques" as const, label: "Techniques" },
-          ]}
-          active={panelTab}
-          onChange={setPanelTab}
-        />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <TabRail
+            tabs={[
+              { id: "elements" as const, label: "Elements" },
+              { id: "techniques" as const, label: "Techniques" },
+            ]}
+            active={panelTab}
+            onChange={setPanelTab}
+          />
+        </div>
 
         {panelTab === "techniques" ? (
           <PromptTechniquesPanel />
