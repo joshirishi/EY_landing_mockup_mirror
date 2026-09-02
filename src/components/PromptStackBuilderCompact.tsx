@@ -91,7 +91,7 @@ function getPromptStrengthState(layers: number, total = 7): PromptStrengthState 
   if (layers <= 2) return { pct, label: "Weak — keep adding!", color: C.destructive };
   if (layers <= 4) return { pct, label: "Getting better...", color: C.accentOrange };
   if (layers <= 6) return { pct, label: "Strong prompt!", color: C.offBlack, Icon: Zap };
-  return { pct, label: "Client-ready!", color: C.success, Icon: Target };
+  return { pct, label: "Expertly crafted!", color: C.success, Icon: Target };
 }
 
 function PromptStrengthIndicator({ layers, total = PROMPT_STACK.length }: { layers: number; total?: number }) {

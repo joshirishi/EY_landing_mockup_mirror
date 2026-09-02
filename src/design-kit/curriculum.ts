@@ -61,7 +61,7 @@ export const PHASE2_NUMBER = 2;
 export const MODULES: CurriculumModule[] = [
   {
     id: "foundational",
-    title: "Foundational Concepts of AI",
+    title: "Fundamentals of AI",
     path: "/foundational",
     order: 1,
     estimatedTime: "~45 min",

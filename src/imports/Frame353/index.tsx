@@ -1238,8 +1238,8 @@ const PHASE_CARDS = [
     locked: false,
     completed: false,
     coverage: ["Advanced prompt engineering (hands-on)", "M365 Copilot Agent design (hands-on)", "Guided Prompt Library Development"],
-    deliverables: ["Library of Prompt and No-code Agent templates", "5-10 self-developed no-code agents"],
-    outcome: "Power users capable of building no-code agents independently",
+    deliverables: ["Self-developed Prompts", "5-10 self-developed No-code agents"],
+    outcome: "Power users capable of building No-code agents independently",
   },
   {
     week: "Week 6",
@@ -1821,7 +1821,7 @@ function Hero() {
   return (
     <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full min-w-0">
       <p className="font-['EYInterstate:Bold',sans-serif] font-bold leading-[1.15] relative shrink-0 text-[#2e2e38] text-[28px] sm:text-[36px] md:text-[48px] md:leading-[56px] w-full max-w-full">
-        Module 1 — Foundational Training
+        Foundational Workshop
       </p>
       <p className="font-['EYInterstate:Regular',sans-serif] font-normal leading-[24px] min-w-full relative shrink-0 text-[#747480] text-[16px] w-[min-content]">
         Select card below to begin
@@ -2024,7 +2024,7 @@ function CourseGrid({ onOpenFoundational, onOpenAiTaxPrompting, onOpenCopilotHub
         onNavigate={onOpenFoundational}
         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c4c4cd" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}
         activeIcon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1A24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>}
-        title="Foundational Concepts of AI"
+        title="Fundamentals of AI"
         description="Understanding AI fundamentals and their application in tax workflows."
         estimatedTime="~45 min"
       />

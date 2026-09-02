@@ -65,7 +65,7 @@ const TABS = [
   { id: "ppt",     label: "MS PowerPoint",    color: C.pptOrange,  appColor: C.pptOrange,  logo: "/pipeline/powerpoint.svg" },
   { id: "outlook", label: "MS Outlook",       color: C.outlookBlue,appColor: C.outlookBlue,logo: "/pipeline/outlook.svg" },
   { id: "teams",   label: "MS Teams",         color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/teams.svg" },
-  { id: "m365",    label: "MS Chat",          color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
+  { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
   { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: AGENT_HEX_SRC },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];

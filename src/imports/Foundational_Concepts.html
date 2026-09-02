@@ -2515,14 +2515,14 @@ document.getElementById('hero-video').addEventListener('ended', function() {
   <div class="velocity-header">
     <p class="section-anchor-title">Act Now</p>
     <h2>The AI Advantage Won't Wait</h2>
-    <p class="velocity-sub">The biggest risk today isn't using AI incorrectly — it's waiting too long to start.</p>
+    <p class="velocity-sub">The biggest risk today is not incorrect use of AI — it is waiting too long to start.</p>
   </div>
 
   <div class="velocity-card">
     <p class="velocity-chart-label">Time to reach 1 Million Users <span class="velocity-chart-label-sub">— since launch date</span></p>
 
     <div class="velocity-row">
-      <span class="velocity-label"><span class="velocity-app-name">Netflix</span><span class="velocity-launch-year">1997</span></span>
+      <span class="velocity-label"><span class="velocity-app-name">Netflix</span><span class="velocity-launch-year">1999</span></span>
       <div class="velocity-track">
         <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--red" style="width:100%;"><span class="velocity-value">3.5 years</span></div></div>
       </div>
@@ -2534,13 +2534,13 @@ document.getElementById('hero-video').addEventListener('ended', function() {
       </div>
     </div>
     <div class="velocity-row">
-      <span class="velocity-label"><span class="velocity-app-name">Dropbox</span><span class="velocity-launch-year">2007</span></span>
+      <span class="velocity-label"><span class="velocity-app-name">Dropbox</span><span class="velocity-launch-year">2008</span></span>
       <div class="velocity-track">
         <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--dropbox" style="width:40%;"><span class="velocity-value">7 months</span></div></div>
       </div>
     </div>
     <div class="velocity-row">
-      <span class="velocity-label"><span class="velocity-app-name">Spotify</span><span class="velocity-launch-year">2006</span></span>
+      <span class="velocity-label"><span class="velocity-app-name">Spotify</span><span class="velocity-launch-year">2008</span></span>
       <div class="velocity-track">
         <div class="velocity-bar-wrap"><div class="velocity-bar velocity-bar--green" style="width:28%; min-width:86px;"><span class="velocity-value">5 months</span></div></div>
       </div>
@@ -2565,12 +2565,6 @@ document.getElementById('hero-video').addEventListener('ended', function() {
       <p class="velocity-callout-body">ChatGPT became the fastest-growing consumer application in history</p>
     </div>
 
-    <p class="velocity-source">
-      Source: Statista, Time to One Million Users (2023); Economic Times summary of Statista data; OpenAI and industry reports on ChatGPT adoption.
-      <a href="https://www.statista.com/chart/29174/time-to-one-million-users/" target="_blank" rel="noopener noreferrer">statista.com</a> ·
-      <a href="https://economictimes.indiatimes.com/news/web-stories/threads-twitter-chatgpt-time-taken-to-get-1-million-users/slideshow/101575172.cms" target="_blank" rel="noopener noreferrer">economictimes.com</a> ·
-      <a href="https://explodingtopics.com/blog/chatgpt-users" target="_blank" rel="noopener noreferrer">explodingtopics.com</a>
-    </p>
   </div>
 </section>
 
@@ -3282,7 +3276,6 @@ document.addEventListener('keydown', function(e) {
         <span>Missed Opportunities</span>
       </span>
     </h2>
-    <p class="paths-sub">Two paths every tax function faces — wing it, or build foundations first</p>
   </div>
 
   <div class="paths-row">
@@ -3506,7 +3499,7 @@ document.addEventListener('keydown', function(e) {
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 6.4l1.05 2.55L15.6 10l-2.55 1.05L12 13.6l-1.05-2.55L8.4 10l2.55-1.05z" fill="var(--ey-yellow)" stroke="none"/></svg>
           </div>
           <h3 class="copilot-welcome__title">Welcome</h3>
-          <p class="copilot-welcome__sub">Follow a guided walkthrough of what happens inside every Gen AI conversation — from your prompt to the final answer.</p>
+          <p class="copilot-welcome__sub">Follow a guided walkthrough of what happens inside every Gen AI conversation.</p>
           <button type="button" class="copilot-welcome__cta" onclick="startDemo()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Start walkthrough
@@ -4870,12 +4863,6 @@ function openHitlComicModal() {
 }
 
 function buildHitlBeat() {
-  var checks = ['Validates the facts', 'Checks current legislation', 'Verifies interpretations', 'Applies professional judgment'];
-  var checkHtml = checks.map(function (label) {
-    return '<div class="hitl-check">' +
-      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>' +
-      '<span>' + label + '</span></div>';
-  }).join('');
   return '<div class="hitl-beat">' +
     '<div class="hitl-beat-head">' +
       '<span class="hitl-beat-title">Human in the Loop</span>' +
@@ -4884,12 +4871,10 @@ function buildHitlBeat() {
     buildTeachCard({
       label: 'What is Human in the Loop?',
       head: 'AI assists. Humans decide.',
-      body: 'The tax professional reviews the answer — then the draft is corrected before anyone relies on it.',
+      body: 'Tax professionals need to review the output generated',
       analogyTitle: 'Like GPS suggesting a route.',
       analogyBody: 'You are still responsible for driving the car.',
     }) +
-    '<p class="hitl-beat-kicker">The professional:</p>' +
-    '<div class="hitl-checklist-grid">' + checkHtml + '</div>' +
   '</div>';
 }
 
@@ -4897,9 +4882,9 @@ function buildHallucinationBeat() {
   return '<div class="hallucination-beat-card">' +
     buildEmbeddedHallNews() +
     buildTeachCard({
-      label: 'What is a hallucination?',
+      label: 'What is Hallucination?',
       head: 'A confident answer that may be wrong.',
-      body: 'The AI filled gaps with something that sounded plausible.',
+      body: 'AI filled gaps with something that sounded plausible.',
       analogyTitle: 'Like a student who doesn&rsquo;t know the answer.',
       analogyBody: 'They write something that sounds convincing anyway.',
     }) +
@@ -5034,7 +5019,7 @@ function resetDemo() {
       '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--ey-yellow)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 6.4l1.05 2.55L15.6 10l-2.55 1.05L12 13.6l-1.05-2.55L8.4 10l2.55-1.05z" fill="var(--ey-yellow)" stroke="none"/></svg>' +
     '</div>' +
     '<h3 class="copilot-welcome__title">Welcome</h3>' +
-    '<p class="copilot-welcome__sub">Follow a guided walkthrough of what happens inside every Gen AI conversation — from your prompt to the final answer.</p>' +
+    '<p class="copilot-welcome__sub">Follow a guided walkthrough of what happens inside every Gen AI conversation.</p>' +
     '<button type="button" class="copilot-welcome__cta" onclick="startDemo()">' +
       '<svg width="12" height="12" viewBox="0 0 24 24" fill="var(--ey-dark)" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start walkthrough' +
     '</button></div>';
@@ -5112,59 +5097,51 @@ function buildTokenGroups() {
 const INSIDE_TOKENS_HTML = `<div class="inside-tab-card">` +
   buildTeachCard({
     label: 'What is tokenization?',
-    head: 'AI doesn&rsquo;t read words like you.',
-    body: 'It breaks your sentence into small chunks called tokens &mdash; roughly &frac34; of a word each.',
+    head: 'AI does not read words like you.',
+    body: 'It breaks your sentence into small chunks called tokens.',
     analogyTitle: 'Like cutting a pizza into slices.',
-    analogyBody: 'You eat the slices, not the whole pie at once.',
+    analogyBody: 'You eat the slices, not the whole pizza at once.',
   }) +
-  `<div class="inside-tab-head-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg><span class="inside-tab-headline">Watch it split</span></div>
+  `<div class="inside-tab-head-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg><span class="inside-tab-headline">Watch it split</span></div>
   <div class="inside-tab-inner">
     <div class="inside-tab-stat">Your prompt &rarr; tokenized</div>
     <div class="inside-tab-prompt tok-prompt">&ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div>
     <div class="tok-groups">${buildTokenGroups()}</div>
-    <div class="tok-stat-row"><span class="tok-stat-words">14 words</span><span class="tok-stat-arrow">&rarr;</span><span class="tok-stat-tokens">~21 tokens</span></div>
   </div>
-  <p class="inside-tab-body">Token count affects cost and context limits. Tax terms like &ldquo;GST&rdquo; and &ldquo;ITC&rdquo; may split across multiple tokens.</p>
   <div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('llm')">Next: LLM <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
 </div>`;
 
 const INSIDE_LLM_HTML = `<div class="inside-tab-card">` +
   buildTeachCard({
     label: 'What is an LLM?',
-    head: 'The brain predicts one word at a time.',
-    body: 'Tokens enter a Large Language Model trained on enormous amounts of text. It predicts the next word to build your GST summary.',
+    head: 'The brain behind Generative AI.',
+    body: 'A Large Language Model (LLM) predicts the next token based on the context it receives, building responses one step at a time.',
     analogyTitle: 'Like autocomplete at scale.',
-    analogyBody: 'Your phone suggests the next word. An LLM does that for entire tax answers.',
+    analogyBody: 'Your phone predicts the next word. An LLM predicts entire sentences and conversations.',
   }) +
   `<div class="inside-tab-head-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4.5-3 6-1 1-1.5 2-1.5 3h-5c0-1-.5-2-1.5-3-1.5-1.5-3-3.5-3-6a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg><span class="inside-tab-headline">Watch it predict</span></div>
   <div class="inside-tab-inner"><div class="inside-tab-prompt">Prompt: &ldquo;Summarize the GST implications for an online seller selling goods across multiple Indian states&rdquo;</div><div class="llm-stream-line"><span style="font-weight:700;">GST</span> <span id="llm-stream-text"></span><span id="llm-stream-cursor" style="color:var(--text-secondary);animation:blink 1s infinite;">&#9612;</span></div></div>
-  <div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>LLM = the brain behind the conversation</span></div>
   <div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="continueBeat()">Next: See the output <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
 </div>`;
 
 const INSIDE_KNOWLEDGE_HTML = `<div class="inside-tab-card">` +
   buildTeachCard({
-    label: 'What is the knowledge layer?',
+    label: 'What is Knowledge Layer?',
     head: 'Where AI finds trusted information.',
-    body: 'The model understands your question. Now it needs organisation-specific sources &mdash; not just general internet knowledge.',
+    body: 'The model understands your question. Now it needs specific sources &mdash; not just generic knowledge.',
     analogyTitle: 'Like a tax library.',
-    analogyBody: 'Curated shelves of guidance the AI can pull from before drafting advice.',
+    analogyBody: 'Curated shelves of guidance AI can pull from before generating output.',
   }) +
-  `<div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg><span class="inside-tab-headline">What sits on those shelves</span></div>
-  <div class="inside-tab-inner"><div class="inside-tab-kicker">The knowledge layer contains</div><div class="inside-knowledge-list"><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Company documents</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Tax guidance &amp; GST circulars</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Policies &amp; SOPs</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><span>Knowledge repositories</span></div><div class="inside-knowledge-item"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Research material</span></div></div></div>
-  <div class="inside-tab-highlight"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Knowledge Layer = the library AI can consult</span></div>
-  <p class="inside-tab-body">Without this layer, Copilot may sound confident but cite outdated or generic tax guidance.</p>
-  <div class="inside-tab-solution"><button type="button" class="inside-tab-solution-btn" onclick="goToInsideTab('rag')" aria-label="See the RAG solution">Solution?</button></div>
-  <div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('rag')">Next: RAG <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
+  `<div class="inside-tab-next"><button type="button" class="inside-tab-next-btn" onclick="goToInsideTab('rag')">Next: RAG <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
 </div>`;
 
 const INSIDE_RAG_HTML = `<div class="inside-tab-card">` +
   buildTeachCard({
     label: 'What is RAG?',
-    head: 'Look it up, then write the answer.',
-    body: 'Retrieval Augmented Generation searches your knowledge layer first, then writes a GST answer grounded in what it found.',
-    analogyTitle: 'Like an open-book exam.',
-    analogyBody: 'The AI looks up trusted sources before answering, not from memory alone.',
+    head: 'AI looking up information before responding',
+    body: 'Retrieval Augmented Generation (RAG) searches your knowledge layer first, then generates response grounded in trusted information.',
+    analogyTitle: 'Like researching before replying.',
+    analogyBody: 'You find relevant information before giving an answer.',
   }) +
   `<div class="inside-tab-head-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="inside-tab-headline">How RAG works</span></div>
   <div class="inside-tab-inner"><div class="inside-tab-kicker" style="text-align:center;">How RAG works</div><div class="rag-flow-row"><span class="rag-node">Question</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Search Knowledge Layer</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Retrieve Relevant Information</span><svg class="rag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="rag-node">Generate Response</span></div></div>
@@ -5290,18 +5267,18 @@ function initLlmTypewriter() {
     function tick() {
       if (!document.getElementById('llm-stream-text')) return;
       if (wi >= words.length) {
-        window._llmTyper = null;
-        if (cursor) cursor.style.display = 'none';
+        window._llmTyper = setTimeout(function () {
+          if (!document.getElementById('llm-stream-text')) return;
+          el.textContent = '';
+          wi = 0;
+          if (cursor) cursor.style.display = 'inline';
+          window._llmTyper = setTimeout(tick, 780);
+        }, 1400);
         return;
       }
       el.textContent += (wi ? ' ' : '') + words[wi];
       var justWrote = words[wi];
       wi++;
-      if (wi >= words.length) {
-        window._llmTyper = null;
-        if (cursor) cursor.style.display = 'none';
-        return;
-      }
       window._llmTyper = setTimeout(tick, delayAfter(justWrote));
     }
     // Hold on the blinking cursor so the first word arrives after a thought
@@ -7162,30 +7139,30 @@ const EVO_ERAS = [
     analogy: 'Like Your Favourite Food Delivery App — at first it knows nothing about you. After many orders, it starts learning your preferences.',
     examples: ['Netflix recommendations', 'Amazon suggestions', 'Email spam filtering'],
     preview: 'Learns from experience',
-    image: '/evo-ml.png',
-    focus: '52% 46%',
+    image: '/evo-ml-portrait.png',
+    focus: '50% 50%',
     dot: '#00C864',
     parent: 0
   },
   {
-    year: '2006', short: 'DL', title: 'Deep Learning', tag: 'Neural Nets',
+    year: '2006', short: 'DL', title: 'Deep Learning', tag: 'Neural Network',
     desc: 'A type of machine learning that uses neural networks to recognize complex patterns in images, speech, and unstructured data.',
     analogy: 'Like Listening to a Song and Recognising It Instantly — not because you memorized rules, but because your brain learned complex patterns.',
     examples: ['Face Unlock', 'Voice assistants', 'Photo recognition'],
     preview: 'Recognises complex patterns',
-    image: '/evo-dl-neural.png',
-    focus: '48% 40%',
+    image: '/evo-dl-portrait.png',
+    focus: '50% 50%',
     dot: '#32FFFF',
     parent: 1
   },
   {
     year: '2017', yearLabel: '2017', short: 'Gen', title: 'Generative AI', tag: 'Content Creator',
     desc: 'AI that creates new content such as text, images, audio and code from natural language instructions.',
-    analogy: 'Like A Musician Composing a New Song — you ask for a relaxing melody, and it uses learned knowledge to create something new.',
+    analogy: 'Like a Musician Composing a New Song — you ask for a relaxing melody, and the musician draws on learned knowledge to create something new.',
     examples: ['ChatGPT drafting', 'Copilot presentations', 'AI image generation'],
     preview: 'Creates new content',
-    image: '/evo-dl.png',
-    focus: '80% 42%',
+    image: '/evo-gen-portrait.png',
+    focus: '50% 50%',
     dot: '#FF7D1E',
     parent: 2
   },
@@ -7195,8 +7172,8 @@ const EVO_ERAS = [
     analogy: 'Like a robot vacuum cleaner — you tell it what needs to be cleaned. It navigates, avoids obstacles, adjusts its route, learns the layout over time, and returns to recharge when needed.',
     examples: ['Travel Booking Assistant', 'Meeting Scheduling Assistant', 'Online Shopping Assistant'],
     preview: 'Acts towards an end goal',
-    image: '/evo-agent-bot.png',
-    focus: '50% 34%',
+    image: '/evo-agent-portrait.png',
+    focus: '50% 50%',
     dot: '#B400FF',
     parent: 3
   }
