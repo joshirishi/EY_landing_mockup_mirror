@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, Cpu, EyeOff, FileText, ListChecks, ListTree, Lock, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, X, XCircle, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle, ChevronRight, Copy, EyeOff, FileText, ListChecks, ListTree, Lock, Palette, Play, RotateCcw, Scale, Shield, Table2, Target, User, X, XCircle, Zap } from "lucide-react";
 import { colors as C, contentInlinePad, contentRailStyle, fonts as F, spacing, spectrumCss, typeScale } from "../design-kit/tokens";
 import { ModuleHeader, SUBNAV_SCROLL_MARGIN, useModuleSectionHashScroll } from "../design-kit/LearningNav";
 import { SiteHeader } from "../design-kit/SiteHeader";
@@ -384,12 +384,12 @@ const RECAP_CARDS: { icon: LucideIcon; name: string; color: string; bg: string; 
 ];
 
 const STRONG_BRIEF_FIELDS = [
-  { label: "User", value: "ABC Corp" },
-  { label: "Issue", value: "Royalty payments" },
-  { label: "Jurisdiction", value: "India" },
-  { label: "Output", value: "1-page memo" },
+  { label: "Payee", value: "ABC Inc" },
+  { label: "Subject", value: "Royalty payments" },
+  { label: "Issue", value: "Withholding tax" },
+  { label: "Jurisdiction", value: "USA" },
+  { label: "PAN", value: "Not Available" },
   { label: "Deadline", value: "Thursday" },
-  { label: "Audience", value: "User-ready" },
 ];
 
 /** Exercise 1 — Choose the Best Answer: 5 MCQs, sourced from the prompting exercise brief. */
@@ -1225,19 +1225,6 @@ function TeamBriefingSection() {
               >
                 Strong Brief
               </span>
-              <p
-                style={{
-                  margin: 0,
-                  maxWidth: 317,
-                  textAlign: "center",
-                  fontSize: 12,
-                  lineHeight: "18px",
-                  color: C.gray01,
-                  fontFamily: F.regular,
-                }}
-              >
-                A well-defined prompt that powers a repeatable AI Agent tailored to a specific tax workflow
-              </p>
               {tagsReady && (
                 <button
                   type="button"
@@ -2162,13 +2149,9 @@ function EightElementsWizard() {
     <section id="elements" style={{ background: s.bg, padding: `${spacing.sectionPaddingY} 0`, scrollMarginTop: SUBNAV_SCROLL_MARGIN }}>
       <div style={{ ...contentRailStyle, textAlign: "center" }}>
         <SectionAnchorTitle align="center">Elements</SectionAnchorTitle>
-        <h2 style={{ fontSize: 32, fontWeight: 700, color: s.heading, fontFamily: F.bold, letterSpacing: "-0.02em", margin: "0 0 12px", textAlign: "center" }}>
+        <h2 style={{ fontSize: 32, fontWeight: 700, color: s.heading, fontFamily: F.bold, letterSpacing: "-0.02em", margin: "0 0 40px", textAlign: "center" }}>
           Prompt like a Pro
         </h2>
-        <p style={{ fontSize: 16, color: s.body, fontFamily: F.light, lineHeight: "24px", margin: "0 auto 40px", maxWidth: 720, textAlign: "center" }}>
-          Each element is a lever — pick one from the list to explore what it is,<br />
-          why it matters, and how it changes a prompt.
-        </p>
         <EightElementsPane />
       </div>
     </section>
@@ -3319,6 +3302,152 @@ function AdvancedDecomposition() {
   );
 }
 
+/** Three core rules — one briefing stagger on first scroll-in. Respects reduced motion. */
+const CORE_RULES = [
+  { Icon: Target, text: "Specific input = Specific output." },
+  { Icon: EyeOff, text: "AI doesn't read your mind." },
+  { Icon: Zap, text: "Prompting is a skill, not a gift." },
+] as const;
+
+const CORE_RULE_STYLES = `
+@keyframes prompt-core-rule-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes prompt-core-rule-rail {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+.prompt-core-rules:not([data-in="true"]):not([data-reduce="true"]) .prompt-core-rule {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.prompt-core-rules:not([data-in="true"]):not([data-reduce="true"]) .prompt-core-rule-rail {
+  transform: scaleY(0);
+}
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule {
+  animation: prompt-core-rule-in 380ms ease-out both;
+}
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule-rail {
+  transform-origin: top;
+  animation: prompt-core-rule-rail 340ms ease-out both;
+}
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule:nth-child(1),
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule:nth-child(1) .prompt-core-rule-rail { animation-delay: 0ms; }
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule:nth-child(2),
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule:nth-child(2) .prompt-core-rule-rail { animation-delay: 220ms; }
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule:nth-child(3),
+.prompt-core-rules[data-in="true"]:not([data-reduce="true"]) .prompt-core-rule:nth-child(3) .prompt-core-rule-rail { animation-delay: 440ms; }
+.prompt-core-rules[data-reduce="true"] .prompt-core-rule-rail {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+@media (prefers-reduced-motion: reduce) {
+  .prompt-core-rule { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .prompt-core-rule-rail { animation: none !important; transform: scaleY(1) !important; }
+}
+`;
+
+function CoreRuleCards() {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [reduceMotion] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const el = rowRef.current;
+    if (!el) return;
+
+    // Page scrolls inside an overflow:auto shell, not the window — observe that root.
+    let scrollRoot: HTMLElement | null = el.parentElement;
+    while (scrollRoot && !["auto", "scroll"].includes(getComputedStyle(scrollRoot).overflowY)) {
+      scrollRoot = scrollRoot.parentElement;
+    }
+
+    const show = () => setInView(true);
+    const isVisible = () => {
+      const row = el.getBoundingClientRect();
+      const box = scrollRoot?.getBoundingClientRect() ?? { top: 0, bottom: window.innerHeight };
+      return row.bottom > box.top + 8 && row.top < box.bottom - 8;
+    };
+    if (isVisible()) {
+      show();
+      return;
+    }
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        show();
+        obs.disconnect();
+      },
+      { root: scrollRoot, threshold: 0.15 },
+    );
+    obs.observe(el);
+    const onScroll = () => {
+      if (!isVisible()) return;
+      show();
+      obs.disconnect();
+      scrollRoot?.removeEventListener("scroll", onScroll);
+    };
+    scrollRoot?.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      obs.disconnect();
+      scrollRoot?.removeEventListener("scroll", onScroll);
+    };
+  }, [reduceMotion]);
+
+  return (
+    <>
+      <div
+        ref={rowRef}
+        className="prompt-core-rules"
+        data-in={inView ? "true" : undefined}
+        data-reduce={reduceMotion ? "true" : undefined}
+        style={{ display: "flex", gap: 24, width: "100%", flexWrap: "wrap" }}
+      >
+        {CORE_RULES.map(({ Icon, text }) => (
+          <div
+            key={text}
+            className="prompt-core-rule"
+            style={{
+              flex: "1 1 240px",
+              background: C.confidentBlack,
+              border: `1px solid ${C.gray02}`,
+              borderRadius: 12,
+              padding: 20,
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <span
+              className="prompt-core-rule-rail"
+              aria-hidden
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: 3,
+                height: "100%",
+                background: C.yellow,
+                transformOrigin: "top",
+              }}
+            />
+            <Icon size={24} color={C.white} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+            <p style={{ margin: 0, fontSize: 14, color: C.white, fontFamily: F.regular, lineHeight: "21px" }}>{text}</p>
+          </div>
+        ))}
+      </div>
+      <style>{CORE_RULE_STYLES}</style>
+    </>
+  );
+}
+
 // ── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AiTaxPrompting({
@@ -3407,81 +3536,9 @@ export default function AiTaxPrompting({
             </p>
           </div>
 
-          {/* Flow diagram + core rules */}
+          {/* Core rules — briefing stagger on first view */}
           <div style={{ display: "flex", flexDirection: "column", gap: 32, width: "100%", alignItems: "center" }}>
-            <div style={{
-              background: C.confidentBlack, border: `1px solid ${C.gray02}`, borderRadius: 16,
-              padding: 32, width: "100%", display: "flex", alignItems: "center", justifyContent: "center",
-              gap: 24, flexWrap: "wrap",
-            }}>
-              {/* YOU */}
-              <div style={{
-                background: C.white, border: `1.5px solid ${C.gray02}`, borderRadius: 16,
-                width: 220, padding: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
-              }}>
-                <div style={{ background: C.info + "33", borderRadius: 100, padding: 12, display: "flex" }}>
-                  <User size={24} color={C.info} strokeWidth={2} />
-                </div>
-                <span style={{ fontSize: 15, color: C.offBlack, fontFamily: F.bold, lineHeight: "25.5px" }}>YOU</span>
-                <span style={{
-                  border: `1px solid ${C.gray02}`, borderRadius: 16, padding: "2px 8px",
-                  fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: "22.4px",
-                }}>Instruction</span>
-              </div>
-
-              <ArrowRight size={16} color={C.white} strokeWidth={2} />
-
-              {/* AI */}
-              <div style={{
-                background: C.yellow, border: `1.5px solid ${C.gray02}`, borderRadius: 16,
-                width: 220, padding: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
-              }}>
-                <div style={{ background: C.yellow, borderRadius: 100, padding: 12, display: "flex" }}>
-                  <Cpu size={24} color={C.offBlack} strokeWidth={2} />
-                </div>
-                <span style={{ fontSize: 15, color: C.offBlack, fontFamily: F.bold, lineHeight: "25.5px" }}>AI</span>
-                <span style={{
-                  border: `1px solid ${C.gray02}`, borderRadius: 16, padding: "2px 8px",
-                  fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: "22.4px",
-                  background: C.yellow,
-                }}>Processes</span>
-              </div>
-
-              <ArrowRight size={16} color={C.white} strokeWidth={2} />
-
-              {/* RESULT — light success surface so dark type stays WCAG-readable */}
-              <div style={{
-                background: C.white, border: `1.5px solid ${C.gray02}`, borderRadius: 16,
-                width: 220, padding: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
-              }}>
-                <div style={{ background: "rgba(0,200,100,0.12)", borderRadius: 100, padding: 12, display: "flex" }}>
-                  <CheckCircle size={24} color={C.success} strokeWidth={2} />
-                </div>
-                <span style={{ fontSize: 15, color: C.offBlack, fontFamily: F.bold, lineHeight: "25.5px" }}>RESULT</span>
-                <span style={{
-                  border: `1px solid rgba(0,200,100,0.35)`, borderRadius: 16, padding: "2px 8px",
-                  fontSize: 14, color: C.offBlack, fontFamily: F.regular, lineHeight: "22.4px",
-                  background: "rgba(0,200,100,0.10)",
-                }}>Output</span>
-              </div>
-            </div>
-
-            {/* Core rules row */}
-            <div style={{ display: "flex", gap: 24, width: "100%", flexWrap: "wrap" }}>
-              {[
-                { Icon: Target, text: "Specific input = Specific output." },
-                { Icon: EyeOff, text: "AI doesn't read your mind." },
-                { Icon: Zap, text: "Prompting is a skill, not a gift." },
-              ].map(({ Icon, text }) => (
-                <div key={text} style={{
-                  flex: "1 1 240px", background: C.confidentBlack, border: `1px solid ${C.gray02}`,
-                  borderRadius: 12, padding: 20, display: "flex", alignItems: "center", gap: 16,
-                }}>
-                  <Icon size={24} color={C.white} strokeWidth={2} style={{ flexShrink: 0 }} />
-                  <p style={{ margin: 0, fontSize: 14, color: C.white, fontFamily: F.regular, lineHeight: "21px" }}>{text}</p>
-                </div>
-              ))}
-            </div>
+            <CoreRuleCards />
           </div>
         </div>
       </section>
@@ -3509,7 +3566,7 @@ export default function AiTaxPrompting({
               margin: "0 0 32px",
             }}
           >
-            See It in Action
+            Importance of Prompt
           </h2>
 
           {/* 16:9 video container — max 800px, centered */}

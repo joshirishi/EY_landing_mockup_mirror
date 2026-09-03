@@ -291,6 +291,7 @@ const TOKEN_BRIDGE = `
    inner grids fill that rail (not the full viewport). */
 #module-content .rise-grid,
 #module-content .wrong-grid,
+#module-content .news-carousel,
 #module-content .gva-compare,
 #module-content .gva-band-cells,
 #module-content .gva-colheads,
@@ -449,6 +450,7 @@ const FC_SCRIPT_ATTR = "data-fc-lesson-script";
 
 type FcLessonWindow = Window & {
   initEvoExplorer?: () => void;
+  initSectionNewsCarousels?: () => void;
   __fcNavScrollHandler?: () => void;
 };
 
@@ -545,6 +547,7 @@ export default function FoundationalConcepts({
     // mode, so boot explorers that expose a window init (e.g. era tabs).
     const boot = window as FcLessonWindow;
     if (typeof boot.initEvoExplorer === "function") boot.initEvoExplorer();
+    if (typeof boot.initSectionNewsCarousels === "function") boot.initSectionNewsCarousels();
 
     return cleanupLessonScripts;
   }, [scripts]);

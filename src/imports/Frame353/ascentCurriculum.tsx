@@ -25,16 +25,13 @@ export const MODULE_COMPLETION_QUOTES: Record<AscentModuleKey, string> = {
 
 const STARTER_QUOTE = "Everyone is talking about AI, but I don't know where to start.";
 
-/** Hub landing (#phased-content) — trek quotes (Gayatri, 2 Sep 2026). Embedding Confidence is omitted on home. */
+/** Hub landing (#phased-content) — Priya trek-stage quotes (boxes 1–4); boxes 5+ use completion quotes. */
 const HUB_TREK_CALLOUTS: readonly string[] = [
   STARTER_QUOTE,
   "I understand AI concepts which can help me work towards atleast 20%++ efficiency gains.",
-  "I can clearly reimagine tax tasks via Prompt or M365 No-Code Agent",
-  "I have built 10 No-code agents assisting in my day-to-day Tax work",
+  "I have reimagined atleast 5-7 tax use cases via prompts and/or M365 Agents.",
+  "I have built 10 no-code agents assisting me in my day-to-day Tax workshops",
 ];
-
-const HUB_RESPONSIBLE_QUOTE =
-  "I not only use AI, but also use AI responsibly, ensuring compliance and governance";
 
 const SUMMIT_DEFAULT =
   "I am an AI-enabled tax professional. I can confidently and responsibly use AI across the tax lifecycle to deliver greater value.";
@@ -124,35 +121,16 @@ const DEFAULT_NEXT_STEP: Record<AscentModuleKey, string> = {
 
 /** Hub landing (/phased) — base camp open; no next-step pill (module-end treks keep it). */
 export function buildHubLandingProps(): AscentOverrides {
-  const full = buildCallouts();
-  // Home: drop Embedding Confidence (index 4) so Responsible + Peak shift down one slot.
-  // `pin` is dropped: markers are spaced along the path here, so the last two
-  // callouts must follow their circles instead of the old Figma coordinates.
-  const callouts: AscentCalloutEntry[] = [
-    ...full.slice(0, 4).map((callout, index) => ({
-      ...callout,
-      quote: HUB_TREK_CALLOUTS[index] ?? callout.quote,
-    })),
-    { ...full[5]!, quote: HUB_RESPONSIBLE_QUOTE, pin: false },
-    { ...full[6]!, pin: false },
-  ];
-  const stageNodes = CURRICULUM_STAGE_NODES.filter((_, index) => index !== 3);
-  // Pill offsets (labelLeft/labelTop) are dropped too — pills centre under the
-  // computed marker positions instead.
-  const stageTitleLabels: AscentStageTitleEntry[] = [
-    CURRICULUM_STAGE_TITLES[0]!,
-    CURRICULUM_STAGE_TITLES[1]!,
-    CURRICULUM_STAGE_TITLES[2]!,
-    CURRICULUM_STAGE_TITLES[3]!,
-    { title: CURRICULUM_STAGE_TITLES[5]!.title, markerTop: 202, markerSize: 40, calloutIndex: 4, labelWidth: 140 },
-    { title: CURRICULUM_STAGE_TITLES[6]!.title, markerTop: 94, markerSize: 40, calloutIndex: 5, labelWidth: 130 },
-  ];
+  const callouts = buildCallouts();
   return {
-    callouts,
-    stageNodes,
-    stageTitleLabels,
+    callouts: callouts.map((callout, index) => ({
+      ...callout,
+      quote:
+        index < HUB_TREK_CALLOUTS.length ? HUB_TREK_CALLOUTS[index]! : callout.quote,
+    })),
+    stageNodes: CURRICULUM_STAGE_NODES,
+    stageTitleLabels: CURRICULUM_STAGE_TITLES,
     defaultOpenCallouts: [0],
-    evenSpacing: true,
   };
 }
 

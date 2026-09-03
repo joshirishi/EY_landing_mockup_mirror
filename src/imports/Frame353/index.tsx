@@ -935,7 +935,7 @@ function TimelinePhase() {
         <div aria-hidden className="absolute border border-[#C4C4CD] border-solid inset-0 pointer-events-none rounded-[12px]" />
         <div className="flex flex-row items-center size-full">
           <div className="content-stretch flex gap-[16px] items-center p-[32px] relative size-full">
-            <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] h-full leading-[30px] min-w-px not-italic relative text-[#2e2e38] text-[24px]">Foundational Training Workshops</p>
+            <p className="[word-break:break-word] flex-[1_0_0] font-['EYInterstate:Bold',sans-serif] h-full leading-[30px] min-w-px not-italic relative text-[#2e2e38] text-[24px]">Foundational Workshop</p>
             <div className="bg-[#F6F6FA] content-stretch flex items-start px-[10px] py-[4px] relative rounded-[12px] shrink-0" data-name="Status-Indicator">
               <div aria-hidden className="absolute border border-[#ffe600] border-solid inset-0 pointer-events-none rounded-[12px]" />
               <p className="[word-break:break-word] font-['EYInterstate:Regular',sans-serif] leading-[20px] not-italic relative shrink-0 text-[#2e2e38] text-[14px] whitespace-nowrap">ACTIVE PHASE</p>
@@ -2383,7 +2383,7 @@ export default function Frame43() {
 // ── Interactive timeline replacing the static TimelineStack ──────────────────
 
 const PHASES = [
-  { week: "Week 1-2", number: 1, title: "Foundational Training Workshops", locked: false },
+  { week: "Week 1-2", number: 1, title: "Foundational Workshop", locked: false },
   { week: "Week 3-4", number: 2, title: "Brainstorming Tax Use Cases", locked: true },
   { week: "Week 5-6", number: 3, title: "Guidance in Prompts & AI Agents", locked: true },
   { week: "Week 8",   number: 4, title: "Governance & AI Reinforcement",   locked: true },
