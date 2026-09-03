@@ -44,17 +44,22 @@ const JOURNEY_PATH_LAYOUT = {
   svgInset: { top: 0.5256, right: 0.1442, bottom: 0.5285, left: 0.1434 },
 } as const;
 
+/** Artboard centers for module 1.1 + 6 stages (button center = left/top + half size). */
+const PROGRESS_MARKER_CENTERS = [
+  { x: 179, y: 389 }, // module 1.1 (156 + 23, 366 + 23)
+  { x: 379, y: 315 }, // stage 1 — module 1.2
+  { x: 574, y: 280 }, // stage 2 — module 1.3
+  { x: 789, y: 260 }, // stage 3 — phase 2
+  { x: 1038, y: 247 }, // stage 4 — phase 3
+  { x: 1184, y: 222 }, // stage 5 — phase 4 (path terminus)
+  { x: 1241, y: 114 }, // stage 6 — summit
+] as const;
+
 /** 0 = none (dim baseline only), 1 = module 1.1, 2–7 = stages 1–6 / full path. */
 type ProgressLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-/**
- * Full-path progress level for a trek of `markerCount` markers (base camp + stages).
- * Derived rather than fixed so a trek that drops a stage still lights the whole
- * path at its own final marker instead of stalling short of the summit.
- */
-function maxProgressFor(markerCount: number): ProgressLevel {
-  return Math.max(1, markerCount) as ProgressLevel;
-}
+/** Max progress level — full yellow path when user selects summit (level 7). */
+const DEFAULT_PROGRESS: ProgressLevel = 7;
 
 const PATH_REVEAL_MS = 650;
 
@@ -69,15 +74,14 @@ const PATH_REVEAL_MS = 650;
  *   level 1 (module 1.1) → stops[1]  (lit through the first span)
  *   level 2 (stage 1)   → stops[2]
  *   …
- *   level maxProgress   → the whole path
+ *   level 6 (summit)    → the whole path
  */
 function getLitLength(
   progressLevel: ProgressLevel,
   pathMetrics: { total: number; stops: number[] } | null,
-  maxProgress: ProgressLevel,
 ): number {
   if (progressLevel <= 0 || !pathMetrics) return 0;
-  if (progressLevel >= maxProgress) return pathMetrics.total;
+  if (progressLevel >= DEFAULT_PROGRESS) return pathMetrics.total;
   return pathMetrics.stops[progressLevel] ?? pathMetrics.total;
 }
 
@@ -87,49 +91,6 @@ function artboardToViewBox(ax: number, ay: number) {
   const svgTop =
     JOURNEY_PATH_LAYOUT.top - JOURNEY_PATH_LAYOUT.height * JOURNEY_PATH_LAYOUT.svgInset.top;
   return { x: ax - svgLeft, y: ay - svgTop };
-}
-
-/** Inverse of artboardToViewBox — the path SVG renders 1:1, so this is a pure offset. */
-function viewBoxToArtboard(vx: number, vy: number) {
-  const svgLeft =
-    JOURNEY_PATH_LAYOUT.left - JOURNEY_PATH_LAYOUT.width * JOURNEY_PATH_LAYOUT.svgInset.left;
-  const svgTop =
-    JOURNEY_PATH_LAYOUT.top - JOURNEY_PATH_LAYOUT.height * JOURNEY_PATH_LAYOUT.svgInset.top;
-  return { x: vx + svgLeft, y: vy + svgTop };
-}
-
-/**
- * Markers sit just above the trail rather than centred on it, matching the
- * original Figma placement where circles read as standing on the path.
- */
-const MARKER_PATH_LIFT = 26;
-
-/** Artboard centre for each marker, spaced at equal path-length intervals. */
-function evenlySpacedMarkerCenters(
-  path: SVGPathElement,
-  markerCount: number,
-): { x: number; y: number }[] {
-  const total = path.getTotalLength();
-  if (total <= 0 || markerCount < 1) return [];
-
-  return Array.from({ length: markerCount }, (_, index) => {
-    const t = markerCount === 1 ? 0 : index / (markerCount - 1);
-    const length = t * total;
-    const point = path.getPointAtLength(length);
-
-    // Lift along the upward path normal so the offset follows the slope.
-    const delta = Math.min(6, total / 100);
-    const before = path.getPointAtLength(Math.max(0, length - delta));
-    const after = path.getPointAtLength(Math.min(total, length + delta));
-    const tx = after.x - before.x;
-    const ty = after.y - before.y;
-    const tangentLength = Math.hypot(tx, ty) || 1;
-    const normalX = ty / tangentLength;
-    const normalY = -tx / tangentLength;
-    const lift = normalY <= 0 ? MARKER_PATH_LIFT : -MARKER_PATH_LIFT;
-
-    return viewBoxToArtboard(point.x + normalX * lift, point.y + normalY * lift);
-  });
 }
 
 /** Binary-search the closest path length to a viewBox point. */
@@ -325,9 +286,8 @@ const ICON_FILL_BADGE_SCALE = 142.437 / 47.4791;
 function getMarkerBox(
   index: CalloutIndex,
   stageNodes: readonly AscentStageNodeEntry[],
-  baseBox: BoxRect = BASE_MARKER_BOX,
 ): BoxRect | null {
-  if (index === 0) return baseBox;
+  if (index === 0) return BASE_MARKER_BOX;
   const node = stageNodes[index - 1];
   if (!node) return null;
   return {
@@ -410,16 +370,14 @@ function resolveOpenCalloutLayout(
   stageTitleLabels: readonly AscentStageTitleEntry[],
   openCallouts: ReadonlySet<CalloutIndex>,
   stageNodes: readonly AscentStageNodeEntry[],
-  baseBox: BoxRect = BASE_MARKER_BOX,
-  labelAnchor: LabelAnchor = NO_LABEL_ANCHOR,
 ): Map<CalloutIndex, BoxRect> {
   const layout = new Map<CalloutIndex, BoxRect>();
   const obstacles: BoxRect[] = [];
 
   // Every marker is an obstacle, not just the open ones — a callout must never
   // cover any circle on the path.
-  for (let i = 0; i < callouts.length; i++) {
-    const markerBox = getMarkerBox(i as CalloutIndex, stageNodes, baseBox);
+  for (let i = 0 as CalloutIndex; i <= 6; i = (i + 1) as CalloutIndex) {
+    const markerBox = getMarkerBox(i, stageNodes);
     if (markerBox) obstacles.push(markerBox);
   }
 
@@ -427,7 +385,7 @@ function resolveOpenCalloutLayout(
     const label = stageTitleLabels[index];
     const callout = callouts[index];
     if (label && callout) {
-      obstacles.push(getTitleLabelBox(label, callout, labelAnchor(index)));
+      obstacles.push(getTitleLabelBox(label, callout));
     }
   });
 
@@ -441,7 +399,7 @@ function resolveOpenCalloutLayout(
       width: callout.width,
       height: estimateCalloutHeight(callout.quote, callout.width),
     };
-    const marker = getMarkerBox(index, stageNodes, baseBox);
+    const marker = getMarkerBox(index, stageNodes);
     const resolved = callout.pin
       ? { ...desired, left: clampBoxLeft(desired.left, desired.width), top: Math.max(0, desired.top) }
       : marker
@@ -602,19 +560,10 @@ export type AscentStageTitleEntry = {
   labelWidth?: number;
 };
 
-function getTitleLabelBox(
-  label: AscentStageTitleEntry,
-  callout: AscentCalloutEntry,
-  /** When the marker position is computed at runtime, centre the pill under it. */
-  marker?: BoxRect | null,
-): BoxRect {
+function getTitleLabelBox(label: AscentStageTitleEntry, callout: AscentCalloutEntry): BoxRect {
   const width = label.labelWidth ?? callout.width;
-  const left = marker
-    ? marker.left + marker.width / 2 - width / 2
-    : label.labelLeft ?? callout.left;
-  const top = marker
-    ? marker.top + marker.height + TITLE_LABEL_GAP
-    : label.labelTop ?? label.markerTop + label.markerSize + TITLE_LABEL_GAP;
+  const left = label.labelLeft ?? callout.left;
+  const top = label.labelTop ?? label.markerTop + label.markerSize + TITLE_LABEL_GAP;
   return clampBox({
     left,
     top,
@@ -623,17 +572,11 @@ function getTitleLabelBox(
   });
 }
 
-/** Marker box a title pill anchors to, or null to keep the hand-tuned Figma pill position. */
-type LabelAnchor = (index: CalloutIndex) => BoxRect | null;
-
-const NO_LABEL_ANCHOR: LabelAnchor = () => null;
-
 function buildOpenOverlayObstacles(
   callouts: readonly AscentCalloutEntry[],
   stageTitleLabels: readonly AscentStageTitleEntry[],
   openCallouts: ReadonlySet<CalloutIndex>,
   calloutLayout?: Map<CalloutIndex, BoxRect>,
-  labelAnchor: LabelAnchor = NO_LABEL_ANCHOR,
 ): BoxRect[] {
   const obstacles: BoxRect[] = [];
 
@@ -655,7 +598,7 @@ function buildOpenOverlayObstacles(
     const label = stageTitleLabels[index];
     if (!label) return;
 
-    obstacles.push(getTitleLabelBox(label, callout, labelAnchor(index)));
+    obstacles.push(getTitleLabelBox(label, callout));
   });
 
   return obstacles;
@@ -693,19 +636,11 @@ export type AscentOverrides = {
    * When set, only the immediately next marker stays prominent; all later markers are subdued.
    */
   progressThrough?: CalloutIndex;
-  /**
-   * Space markers at equal path-length intervals instead of using the Figma
-   * coordinates. Keeps the trail evenly stepped when a stage is dropped.
-   */
-  evenSpacing?: boolean;
 };
 
 /** Marker at callout index i is reached when activeProgress >= i + 1. */
-function getNextCalloutIndex(
-  activeProgress: ProgressLevel,
-  maxProgress: ProgressLevel,
-): CalloutIndex | null {
-  if (activeProgress >= maxProgress) return null;
+function getNextCalloutIndex(activeProgress: ProgressLevel): CalloutIndex | null {
+  if (activeProgress >= DEFAULT_PROGRESS) return null;
   return activeProgress as CalloutIndex;
 }
 
@@ -1006,7 +941,6 @@ function StageTitleLabel({
 }
 
 function ModuleStartMarker({
-  box,
   isActive,
   isReached,
   isNext,
@@ -1014,7 +948,6 @@ function ModuleStartMarker({
   onClick,
   advancesJourney,
 }: {
-  box: BoxRect;
   isActive: boolean;
   isReached: boolean;
   isNext: boolean;
@@ -1025,7 +958,7 @@ function ModuleStartMarker({
   return (
     <JourneyMarkerButton
       shapeClassName="size-[46px] rounded-full"
-      positionStyle={{ left: box.left, top: box.top }}
+      positionStyle={{ left: 156, top: 366 }}
       isActive={isActive}
       isReached={isReached}
       isNext={isNext}
@@ -1134,16 +1067,7 @@ function HeaderTitleBlock() {
 }
 
 /** Figma node 3811:4139 — dashed ascending path with progressive yellow reveal. */
-function JourneyPath({
-  progressLevel,
-  maxProgress,
-  markerCenters,
-}: {
-  progressLevel: ProgressLevel;
-  maxProgress: ProgressLevel;
-  /** Artboard centres of the markers actually on this trek, in path order. */
-  markerCenters: readonly { x: number; y: number }[];
-}) {
+function JourneyPath({ progressLevel }: { progressLevel: ProgressLevel }) {
   const uid = useId().replace(/:/g, "");
   const glowFilterId = `${uid}-glow`;
   const revealMaskId = `${uid}-reveal`;
@@ -1155,9 +1079,7 @@ function JourneyPath({
     if (!path) return;
 
     const total = path.getTotalLength();
-    // Stops come from the markers this trek actually renders, so a trek that
-    // drops a stage has no leftover stop where that circle used to be.
-    const stops = markerCenters.map(({ x, y }) => {
+    const stops = PROGRESS_MARKER_CENTERS.map(({ x, y }) => {
       const { x: vx, y: vy } = artboardToViewBox(x, y);
       return closestPathLength(path, vx, vy);
     });
@@ -1168,13 +1090,10 @@ function JourneyPath({
     }
 
     setPathMetrics({ total, stops });
-  }, [markerCenters]);
+  }, []);
 
   const totalLength = pathMetrics?.total ?? 0;
-  const revealedLength = Math.min(
-    getLitLength(progressLevel, pathMetrics, maxProgress),
-    totalLength,
-  );
+  const revealedLength = Math.min(getLitLength(progressLevel, pathMetrics), totalLength);
 
   // The visible stroke carries the decorative "6 6" dashes, so its own dashoffset
   // could only slide that pattern along — it cannot clip the path. The reveal is
@@ -1349,19 +1268,14 @@ function JourneyPath({
   );
 }
 
-/**
- * Milestones reveal at a share of the trek rather than a fixed level, so a trek
- * with fewer markers still lights its final phrase at its own summit.
- */
 const BANNER_MILESTONES = [
-  { phrase: "From uncertainty to impact", revealAtShare: 2 / 7 },
-  { phrase: "From learning to leading", revealAtShare: 5 / 7 },
-  { phrase: "From user to AI-enabled tax professional", revealAtShare: 1 },
+  { phrase: "From uncertainty to impact", revealAt: 2 as ProgressLevel },
+  { phrase: "From learning to leading", revealAt: 5 as ProgressLevel },
+  {
+    phrase: "From user to AI-enabled tax professional",
+    revealAt: 7 as ProgressLevel,
+  },
 ] as const;
-
-function milestoneRevealLevel(share: number, maxProgress: ProgressLevel): ProgressLevel {
-  return Math.max(1, Math.ceil(share * maxProgress)) as ProgressLevel;
-}
 
 const milestonePhraseStyle: CSSProperties = {
   fontFamily: fonts.regular,
@@ -1417,13 +1331,7 @@ function MilestoneBox({
   );
 }
 
-function BottomBanner({
-  activeProgress,
-  maxProgress,
-}: {
-  activeProgress: ProgressLevel;
-  maxProgress: ProgressLevel;
-}) {
+function BottomBanner({ activeProgress }: { activeProgress: ProgressLevel }) {
   return (
     <div
       className="absolute left-0 flex w-full items-center px-6"
@@ -1438,10 +1346,8 @@ function BottomBanner({
           <MilestoneBox
             key={milestone.phrase}
             phrase={milestone.phrase}
-            isRevealed={
-              activeProgress >= milestoneRevealLevel(milestone.revealAtShare, maxProgress)
-            }
-            summitPulse={index === 2 && activeProgress >= maxProgress}
+            isRevealed={activeProgress >= milestone.revealAt}
+            summitPulse={index === 2 && activeProgress >= DEFAULT_PROGRESS}
           />
         ))}
       </div>
@@ -1461,92 +1367,14 @@ function AscentCanvas({
   onNextStepCta,
   onBaseCampCta,
   progressThrough,
-  evenSpacing = false,
 }: AscentOverrides = {}) {
   const callouts = calloutsOverride ?? CALLOUTS;
-  const figmaStageNodes = stageNodesOverride ?? STAGE_NODES;
+  const stageNodes = stageNodesOverride ?? STAGE_NODES;
   const stageTitleLabels = stageTitleLabelsOverride ?? STAGE_TITLE_LABELS;
-  const markerCount = figmaStageNodes.length + 1;
-  const maxProgress = maxProgressFor(markerCount);
-  const lastCalloutIndex = (markerCount - 1) as CalloutIndex;
-
-  /**
-   * Even spacing measures the real path geometry, so marker positions cannot be
-   * precomputed. Until the measurement lands, the Figma positions are used.
-   */
-  const measureRef = useRef<SVGPathElement>(null);
-  const [evenCenters, setEvenCenters] = useState<{ x: number; y: number }[] | null>(null);
-
-  useLayoutEffect(() => {
-    if (!evenSpacing) {
-      setEvenCenters(null);
-      return;
-    }
-    const path = measureRef.current;
-    if (!path) return;
-    setEvenCenters(evenlySpacedMarkerCenters(path, markerCount));
-  }, [evenSpacing, markerCount]);
-
-  const useEven = evenSpacing && evenCenters?.length === markerCount;
-
-  const baseBox: BoxRect = useMemo(() => {
-    const centre = useEven ? evenCenters![0] : null;
-    if (!centre) return BASE_MARKER_BOX;
-    return {
-      left: centre.x - BASE_MARKER_BOX.width / 2,
-      top: centre.y - BASE_MARKER_BOX.height / 2,
-      width: BASE_MARKER_BOX.width,
-      height: BASE_MARKER_BOX.height,
-    };
-  }, [useEven, evenCenters]);
-
-  const stageNodes: readonly AscentStageNodeEntry[] = useMemo(() => {
-    if (!useEven) return figmaStageNodes;
-    return figmaStageNodes.map((node, index) => {
-      const centre = evenCenters![index + 1]!;
-      return {
-        ...node,
-        left: centre.x - STAGE_MARKER_SIZE / 2,
-        top: centre.y - STAGE_MARKER_SIZE / 2,
-      };
-    });
-  }, [useEven, evenCenters, figmaStageNodes]);
-
-  /** Marker centres feeding the path reveal stops, in path order. */
-  const markerCenters = useMemo(
-    () =>
-      Array.from({ length: markerCount }, (_, index) => {
-        const box = getMarkerBox(index as CalloutIndex, stageNodes, baseBox);
-        return box
-          ? { x: box.left + box.width / 2, y: box.top + box.height / 2 }
-          : { x: 0, y: 0 };
-      }),
-    [markerCount, stageNodes, baseBox],
-  );
-
-  /** Flag keeps its original offset above whichever marker ends the trail. */
-  const summitFlag = useMemo(() => {
-    const summit = getMarkerBox(lastCalloutIndex, stageNodes, baseBox);
-    const left = summit?.left ?? 1221;
-    const top = (summit?.top ?? 94) - 54;
-    return { left, top: Math.max(ARTBOARD_SAFE.top, top) };
-  }, [lastCalloutIndex, stageNodes, baseBox]);
-
-  /** With computed markers the title pills follow the circles instead of Figma offsets. */
-  const labelAnchor: LabelAnchor = useMemo(
-    () =>
-      useEven ? (index) => getMarkerBox(index, stageNodes, baseBox) : NO_LABEL_ANCHOR,
-    [useEven, stageNodes, baseBox],
-  );
-
   /** Every marker the user has opened. Callouts persist until clicked again. */
   const [openCallouts, setOpenCallouts] = useState<ReadonlySet<CalloutIndex>>(
     () => {
-      if (defaultAllOpen) {
-        return new Set<CalloutIndex>(
-          Array.from({ length: markerCount }, (_, i) => i as CalloutIndex),
-        );
-      }
+      if (defaultAllOpen) return new Set<CalloutIndex>([0, 1, 2, 3, 4, 5, 6]);
       if (defaultOpenCallouts && defaultOpenCallouts.length > 0) {
         return new Set<CalloutIndex>(defaultOpenCallouts);
       }
@@ -1578,25 +1406,17 @@ function AscentCanvas({
       ? 0
       : ((Math.max(...openCallouts) + 1) as ProgressLevel);
 
-  const nextCalloutIndex = getNextCalloutIndex(activeProgress, maxProgress);
+  const nextCalloutIndex = getNextCalloutIndex(activeProgress);
   const moduleNextCalloutIndex =
-    progressThrough !== undefined && progressThrough < lastCalloutIndex
+    progressThrough !== undefined && progressThrough < 6
       ? ((progressThrough + 1) as CalloutIndex)
       : null;
   const ctaTargetCalloutIndex =
     progressThrough !== undefined ? moduleNextCalloutIndex : nextCalloutIndex;
 
   const openCalloutLayout = useMemo(
-    () =>
-      resolveOpenCalloutLayout(
-        callouts,
-        stageTitleLabels,
-        openCallouts,
-        stageNodes,
-        baseBox,
-        labelAnchor,
-      ),
-    [callouts, stageTitleLabels, openCallouts, stageNodes, baseBox, labelAnchor],
+    () => resolveOpenCalloutLayout(callouts, stageTitleLabels, openCallouts, stageNodes),
+    [callouts, stageTitleLabels, openCallouts, stageNodes],
   );
 
   /**
@@ -1611,7 +1431,7 @@ function AscentCanvas({
       endY: number;
     }[] = [];
     openCalloutLayout.forEach((box, index) => {
-      const marker = getMarkerBox(index, stageNodes, baseBox);
+      const marker = getMarkerBox(index, stageNodes);
       if (!marker) return;
       const mx = marker.left + marker.width / 2;
       const my = marker.top + marker.height / 2;
@@ -1629,7 +1449,7 @@ function AscentCanvas({
       });
     });
     return lines;
-  }, [openCalloutLayout, stageNodes, baseBox]);
+  }, [openCalloutLayout, stageNodes]);
 
   const baseCampState = getMarkerProgressState(
     0,
@@ -1694,27 +1514,10 @@ function AscentCanvas({
       </div>
 
       <HeaderTitleBlock />
-      <JourneyPath
-        progressLevel={activeProgress}
-        maxProgress={maxProgress}
-        markerCenters={markerCenters}
-      />
+      <JourneyPath progressLevel={activeProgress} />
 
-      {/* Hidden geometry twin — lets marker layout sample the same path the trail draws */}
-      <svg
-        aria-hidden
-        className="pointer-events-none absolute left-0 top-0"
-        style={{ width: 0, height: 0, visibility: "hidden" }}
-        viewBox={JOURNEY_PATH_LAYOUT.viewBox}
-      >
-        <path ref={measureRef} d={JOURNEY_PATH_D} fill="none" stroke="none" />
-      </svg>
-
-      {/* Summit flag — anchored above the final marker */}
-      <div
-        className="absolute"
-        style={{ left: summitFlag.left, top: summitFlag.top }}
-      >
+      {/* Summit flag — anchored to Phase 4 node center */}
+      <div className="absolute left-[1221px]" style={{ top: 40 }}>
         <img alt="" className="block h-16 w-auto" src={ASSET.flag} />
       </div>
 
@@ -1754,9 +1557,8 @@ function AscentCanvas({
         if (!openCallouts.has(calloutIndex)) return null;
 
         const callout = callouts[calloutIndex];
-        if (!callout) return null;
         const progressThreshold = (calloutIndex + 1) as ProgressLevel;
-        const labelBox = getTitleLabelBox(label, callout, labelAnchor(calloutIndex));
+        const labelBox = getTitleLabelBox(label, callout);
 
         return (
           <StageTitleLabel
@@ -1798,7 +1600,6 @@ function AscentCanvas({
       )}
 
       <ModuleStartMarker
-        box={baseBox}
         isActive={baseCampState.isActive}
         isReached={baseCampState.isReached}
         isNext={baseCampState.isNext}
@@ -1841,8 +1642,8 @@ function AscentCanvas({
         if (!ctaLabel || !ctaHandler) return null;
 
         const targetIndex: CalloutIndex =
-          ctaTargetCalloutIndex !== null ? ctaTargetCalloutIndex : lastCalloutIndex;
-        const markerBox = getMarkerBox(targetIndex, stageNodes, baseBox);
+          ctaTargetCalloutIndex !== null ? ctaTargetCalloutIndex : 6;
+        const markerBox = getMarkerBox(targetIndex, stageNodes);
         if (!markerBox) return null;
 
         const { width: ctaWidth, height: ctaHeight } = estimateCtaDimensions(ctaLabel);
@@ -1851,7 +1652,6 @@ function AscentCanvas({
           stageTitleLabels,
           openCallouts,
           openCalloutLayout,
-          labelAnchor,
         );
         const ctaBox = resolveInlineCtaBox(markerBox, ctaWidth, ctaHeight, obstacles);
 
@@ -1913,7 +1713,7 @@ function AscentCanvas({
         );
       })()}
 
-      <BottomBanner activeProgress={activeProgress} maxProgress={maxProgress} />
+      <BottomBanner activeProgress={activeProgress} />
     </div>
   );
 }

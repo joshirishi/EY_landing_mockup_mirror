@@ -67,7 +67,7 @@ type Callout = {
   anchorY?: number;
   /** Pin the annotation card inside the highlight (e.g. over a modal sidebar). */
   cardInset?: "left" | "right";
-  /** Unique beat number shown on the callout and in Step X of Y. */
+  /** Shared 1–8 workflow number (Step 3 has 3a/3b/3c… sub-beats). */
   workflowStep: number;
 };
 
@@ -78,6 +78,8 @@ type Slide = {
   kind: SlideKind;
   callouts: Callout[];
 };
+
+const WORKFLOW_STEPS = 6;
 
 /** Last-night Create→agents tour — kept for reference; MS Chat uses CHAT_TOUR_SLIDES again. */
 const CHAT_AGENT_TOUR_SLIDES: Slide[] = [
@@ -313,7 +315,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "plus-apps",
         placement: "top",
         anchorY: 0.5,
-        workflowStep: 3,
+        workflowStep: 2,
       },
       {
         title: "Add content and capabilities",
@@ -322,7 +324,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "plus-menu",
         placement: "right",
         anchorY: 0.38,
-        workflowStep: 4,
+        workflowStep: 2,
       },
       {
         title: "Open the more menu",
@@ -330,7 +332,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: MoreHorizontal,
         target: "more-menu",
         placement: "left",
-        workflowStep: 5,
+        workflowStep: 3,
       },
       {
         title: "Chat settings",
@@ -338,7 +340,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: Settings,
         target: "chat-settings-item",
         placement: "left",
-        workflowStep: 6,
+        workflowStep: 3,
       },
       {
         title: "Personalization",
@@ -346,7 +348,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: UserCog,
         target: "settings-personalization",
         placement: "right",
-        workflowStep: 7,
+        workflowStep: 3,
       },
       {
         title: "Custom instructions",
@@ -354,7 +356,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: Settings,
         target: "edit-instructions",
         placement: "bottom",
-        workflowStep: 8,
+        workflowStep: 3,
       },
       {
         title: "Write your instructions",
@@ -362,7 +364,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: PenLine,
         target: "custom-instructions-editor",
         placement: "left",
-        workflowStep: 9,
+        workflowStep: 3,
       },
       {
         title: "Save instructions",
@@ -370,7 +372,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: Save,
         target: "save-instructions",
         placement: "top",
-        workflowStep: 10,
+        workflowStep: 3,
       },
       {
         title: "Saved prompts",
@@ -379,7 +381,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "quick-pills-more",
         placement: "top",
         anchorY: 0.4,
-        workflowStep: 11,
+        workflowStep: 4,
       },
       {
         title: "Prompt Lab",
@@ -389,7 +391,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         placement: "left",
         cardInset: "left",
         anchorY: 0.42,
-        workflowStep: 12,
+        workflowStep: 4,
       },
     ],
   },
@@ -404,7 +406,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "m365-apps-flyout",
         placement: "right",
         anchorY: 0.35,
-        workflowStep: 13,
+        workflowStep: 5,
       },
       {
         title: "Create content",
@@ -413,7 +415,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         target: "create-describe-input",
         placement: "right",
         anchorY: 0.45,
-        workflowStep: 14,
+        workflowStep: 5,
       },
     ],
   },
@@ -427,7 +429,7 @@ const CHAT_TOUR_SLIDES: Slide[] = [
         icon: Bot,
         target: "agents-list",
         placement: "right",
-        workflowStep: 15,
+        workflowStep: 6,
       },
     ],
   },
@@ -2372,11 +2374,7 @@ function ChatTourCanvas({
   );
 }
 
-const CALLOUT_RING_SHADOW = [
-  // Continuous yellow edge (avoids 2px border anti-aliasing gaps on pill radii)
-  `0 0 0 2px ${C.yellow}`,
-  `4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent)`,
-].join(", ");
+const CALLOUT_RING_SHADOW = `4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent)`;
 
 function pillHighlightRadius(target: string) {
   return target === "work-iq-main" || target === "auto-model" || target === "more-menu" || target === "saved-prompts-pill" || target === "agent-skip"
@@ -2466,7 +2464,7 @@ function TourDualRingOverlay({
             width: `${currentRect.width}%`,
             height: `${currentRect.height}%`,
             boxSizing: "border-box",
-            border: "none",
+            border: `2px solid ${C.yellow}`,
             borderRadius: pillHighlightRadius(currentTarget),
             background: "transparent",
             boxShadow: CALLOUT_RING_SHADOW,
@@ -2573,7 +2571,7 @@ function CalloutBox({
           width: `${rect.width}%`,
           height: `${rect.height}%`,
           boxSizing: "border-box",
-          border: "none",
+          border: `2px solid ${C.yellow}`,
           borderRadius: pillHighlightRadius(callout.target),
           background: "transparent",
           boxShadow: CALLOUT_RING_SHADOW,
@@ -2671,100 +2669,11 @@ const primaryBtnStyle: CSSProperties = {
   border: "none", background: C.yellow, color: C.dark2, fontFamily: F.bold, fontSize: 14, fontWeight: 700, cursor: "pointer", marginLeft: "auto",
 };
 
-const TOUR_OVERLAY_NAV_SHADOW = `0 8px 24px color-mix(in srgb, ${C.confidentBlack} 24%, transparent)`;
-
-/** Outer shell: border + shadow. Keep overflow visible so callouts can hang outside. */
-const TOUR_FRAME_SHELL: CSSProperties = {
-  position: "relative",
-  width: "100%",
-  borderRadius: 16,
-  border: `1px solid color-mix(in srgb, ${C.offBlack} 22%, ${C.gray02})`,
-  background: C.white,
-  boxShadow: [
-    `0 0 0 1px color-mix(in srgb, ${C.offBlack} 10%, transparent)`,
-    `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
-  ].join(", "),
-};
-
-/** Inner clip: rounds canvas + nav without clipping callout cards on the outer shell. */
-const TOUR_FRAME_CLIP: CSSProperties = {
-  position: "relative",
-  width: "100%",
-  borderRadius: 16,
-  overflow: "hidden",
-  background: C.white,
-};
-
-function TourOverlayNav({
-  onPrev,
-  onNext,
-  prevDisabled,
-  onRestart,
-  showRestart,
-  restartLabel = "Restart tour",
-}: {
-  onPrev: () => void;
-  onNext: () => void;
-  prevDisabled: boolean;
-  onRestart?: () => void;
-  showRestart?: boolean;
-  restartLabel?: string;
-}) {
-  return (
-    <div
-      aria-label="Tour navigation"
-      style={{
-        position: "absolute",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 50,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 12,
-        padding: "14px 16px",
-        pointerEvents: "none",
-        background: `linear-gradient(180deg, color-mix(in srgb, ${C.confidentBlack} 0%, transparent) 0%, color-mix(in srgb, ${C.confidentBlack} 42%, transparent) 100%)`,
-      }}
-    >
-      <button
-        type="button"
-        onClick={onPrev}
-        disabled={prevDisabled}
-        aria-label="Previous step"
-        style={{ ...navBtnStyle(prevDisabled), pointerEvents: "auto", boxShadow: TOUR_OVERLAY_NAV_SHADOW }}
-      >
-        <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
-      </button>
-      {showRestart ? (
-        <button
-          type="button"
-          onClick={onRestart}
-          aria-label={restartLabel}
-          style={{ ...primaryBtnStyle, marginLeft: 0, pointerEvents: "auto", boxShadow: TOUR_OVERLAY_NAV_SHADOW }}
-        >
-          {restartLabel}
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={onNext}
-          aria-label="Next step"
-          style={{ ...primaryBtnStyle, marginLeft: 0, pointerEvents: "auto", boxShadow: TOUR_OVERLAY_NAV_SHADOW }}
-        >
-          Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
-        </button>
-      )}
-    </div>
-  );
-}
-
 // ── Main export ───────────────────────────────────────────────────────────────
 
-/** workflowStep 1–15 maps across every MS Chat tour beat. */
+/** workflowStep 1–6 maps to the Chat use-case pills. */
 export function chatTourUseCaseIndex(workflowStep: number): number {
-  return Math.max(0, Math.min(14, workflowStep - 1));
+  return Math.max(0, Math.min(5, workflowStep - 1));
 }
 
 export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?: (index: number) => void } = {}) {
@@ -2866,109 +2775,131 @@ export function M365ChatSlideTour({ onHighlightUseCase }: { onHighlightUseCase?:
     <div ref={tourRef} tabIndex={0} role="region" aria-label="M365 Copilot Chat guided tour" aria-roledescription="carousel"
       style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16, outline: "none" }}>
 
-      {/* Outer shell keeps overflow visible for callouts; inner clip rounds canvas + nav. */}
-      <div style={TOUR_FRAME_SHELL}>
-        <div style={TOUR_FRAME_CLIP}>
-          {showChatHome && (
-            <ChatMainCanvas
-              key={`setup-${currentCallout.target}`}
-              frameRef={frameRefCb}
-              showMoreMenu={currentCallout.target === "chat-settings-item"}
-              showModelMenu={currentCallout.target === "auto-model"}
-              settingsPane={chatSettingsPane}
-              highlightSavedPromptsPill={highlightSavedPromptsPill}
-              highlightQuickPillsMore={highlightQuickPillsMore}
-              showPlusMenu={forcePlusMenuOpen ? true : undefined}
-              onPlusMenuOpen={plusMenuGate ? goNext : undefined}
-              showPromptLab={promptLabOpen}
-              onOpenSavedPrompts={() => setPromptLabOpen(true)}
-              onOpenQuickPillsMore={handleOpenQuickPillsMore}
-              onClosePromptLab={() => setPromptLabOpen(false)}
-            />
-          )}
-          {slide.kind === "personalization" && !CHAT_HOME_TARGETS.has(currentCallout.target) && (
-            <PersonalizationCanvas key="personalization" frameRef={frameRefCb} showModelMenu={currentCallout.target === "auto-model"} />
-          )}
-          {slide.kind === "analyst" && (
-            <ChatMainCanvas
-              frameRef={frameRefCb}
-              showPromptLab={promptLabOpen}
-              onOpenSavedPrompts={() => setPromptLabOpen(true)}
-              onClosePromptLab={() => setPromptLabOpen(false)}
-            />
-          )}
-          {slide.kind === "builder" && currentCallout.target === "new-agent" && (
-            <ChatMainCanvas
-              key="builder-new-agent"
-              frameRef={frameRefCb}
-              highlightNewAgent
-              showPromptLab={promptLabOpen}
-              onOpenSavedPrompts={() => setPromptLabOpen(true)}
-              onClosePromptLab={() => setPromptLabOpen(false)}
-            />
-          )}
-          {slide.kind === "builder" && currentCallout.target === "agent-skip" && (
-            <AgentBuilderLandingCanvas key="builder-landing" frameRef={frameRefCb} onSkip={goNext} />
-          )}
-          {builderConfigure && (
-            <ChatTourCanvas
-              key={`builder-configure-${currentCallout.target}`}
-              frameRef={frameRefCb}
-              knowledgeExpanded={currentCallout.target === "knowledge-sources"}
-            />
-          )}
-          {slide.kind === "agents-landing" && (
-            <ChatMainCanvas
-              key={`agents-landing-${currentCallout.target}`}
-              frameRef={frameRefCb}
-              highlightResearcher={currentCallout.target === "researcher"}
-              highlightAnalyst={currentCallout.target === "analyst"}
-              highlightNewAgent={currentCallout.target === "new-agent"}
-              highlightQuickPillsMore={currentCallout.target === "quick-pills-more"}
-              showPromptLab={promptLabOpen}
-              onOpenSavedPrompts={() => setPromptLabOpen(true)}
-              onOpenQuickPillsMore={handleOpenQuickPillsMore}
-              onClosePromptLab={() => setPromptLabOpen(false)}
-            />
-          )}
-          {slide.kind === "researcher" && (
-            <ChatMainCanvas
-              frameRef={frameRefCb}
-              highlightResearcher
-              showPromptLab={promptLabOpen}
-              onOpenSavedPrompts={() => setPromptLabOpen(true)}
-              onClosePromptLab={() => setPromptLabOpen(false)}
-            />
-          )}
-          {slide.kind === "create" && currentCallout.target !== "create-describe-input" && (
-            <ChatMainCanvas
-              key={`create-${currentCallout.target}`}
-              frameRef={frameRefCb}
-              highlightNewChat={currentCallout.target === "new-chat"}
-              highlightM365AppsTrigger={currentCallout.target === "m365-apps-flyout"}
-              showM365AppsFlyout={currentCallout.target === "m365-apps-flyout"}
-              onNewChat={newChatGate ? goNext : undefined}
-              onM365AppsClick={currentCallout.target === "m365-apps-flyout" ? goNext : undefined}
-              showPromptLab={promptLabOpen}
-              onOpenSavedPrompts={() => setPromptLabOpen(true)}
-              onOpenQuickPillsMore={handleOpenQuickPillsMore}
-              onClosePromptLab={() => setPromptLabOpen(false)}
-            />
-          )}
-          {slide.kind === "create" && currentCallout.target === "create-describe-input" && (
-            <CreateContentCanvas key="create-studio" frameRef={frameRefCb} />
-          )}
-          <TourOverlayNav
-            onPrev={goPrev}
-            onNext={goNext}
-            prevDisabled={isFirstSlide && isFirstCallout}
-            showRestart={tourComplete}
-            onRestart={restart}
-          />
+      {/* Header */}
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontFamily: F.bold, fontSize: typeScale.label.size, fontWeight: 700, letterSpacing: typeScale.label.tracking, textTransform: "uppercase", color: C.dark2 }}>
+            {slide.label}
+          </span>
+          <span style={{ fontFamily: F.regular, fontSize: 12, color: C.gray01 }}>
+            Step {workflowStep} of {WORKFLOW_STEPS}
+          </span>
         </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }} aria-hidden>
+          {Array.from({ length: WORKFLOW_STEPS }, (_, i) => (
+            <span key={i} style={{ width: i + 1 === workflowStep ? 24 : 8, height: 8, borderRadius: 999, background: i + 1 === workflowStep ? C.yellow : C.gray02, transition: "width 0.2s ease" }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Canvas with callout overlays */}
+      <div style={{ position: "relative", width: "100%", borderRadius: 16, border: `1px solid ${C.gray02}`, background: C.white, boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)` }}>
+        {showChatHome && (
+          <ChatMainCanvas
+            key={`setup-${currentCallout.target}`}
+            frameRef={frameRefCb}
+            showMoreMenu={currentCallout.target === "chat-settings-item"}
+            showModelMenu={currentCallout.target === "auto-model"}
+            settingsPane={chatSettingsPane}
+            highlightSavedPromptsPill={highlightSavedPromptsPill}
+            highlightQuickPillsMore={highlightQuickPillsMore}
+            showPlusMenu={forcePlusMenuOpen ? true : undefined}
+            onPlusMenuOpen={plusMenuGate ? goNext : undefined}
+            showPromptLab={promptLabOpen}
+            onOpenSavedPrompts={() => setPromptLabOpen(true)}
+            onOpenQuickPillsMore={handleOpenQuickPillsMore}
+            onClosePromptLab={() => setPromptLabOpen(false)}
+          />
+        )}
+        {slide.kind === "personalization" && !CHAT_HOME_TARGETS.has(currentCallout.target) && (
+          <PersonalizationCanvas key="personalization" frameRef={frameRefCb} showModelMenu={currentCallout.target === "auto-model"} />
+        )}
+        {slide.kind === "analyst" && (
+          <ChatMainCanvas
+            frameRef={frameRefCb}
+            showPromptLab={promptLabOpen}
+            onOpenSavedPrompts={() => setPromptLabOpen(true)}
+            onClosePromptLab={() => setPromptLabOpen(false)}
+          />
+        )}
+        {slide.kind === "builder" && currentCallout.target === "new-agent" && (
+          <ChatMainCanvas
+            key="builder-new-agent"
+            frameRef={frameRefCb}
+            highlightNewAgent
+            showPromptLab={promptLabOpen}
+            onOpenSavedPrompts={() => setPromptLabOpen(true)}
+            onClosePromptLab={() => setPromptLabOpen(false)}
+          />
+        )}
+        {slide.kind === "builder" && currentCallout.target === "agent-skip" && (
+          <AgentBuilderLandingCanvas key="builder-landing" frameRef={frameRefCb} onSkip={goNext} />
+        )}
+        {builderConfigure && (
+          <ChatTourCanvas
+            key={`builder-configure-${currentCallout.target}`}
+            frameRef={frameRefCb}
+            knowledgeExpanded={currentCallout.target === "knowledge-sources"}
+          />
+        )}
+        {slide.kind === "agents-landing" && (
+          <ChatMainCanvas
+            key={`agents-landing-${currentCallout.target}`}
+            frameRef={frameRefCb}
+            highlightResearcher={currentCallout.target === "researcher"}
+            highlightAnalyst={currentCallout.target === "analyst"}
+            highlightNewAgent={currentCallout.target === "new-agent"}
+            highlightQuickPillsMore={currentCallout.target === "quick-pills-more"}
+            showPromptLab={promptLabOpen}
+            onOpenSavedPrompts={() => setPromptLabOpen(true)}
+            onOpenQuickPillsMore={handleOpenQuickPillsMore}
+            onClosePromptLab={() => setPromptLabOpen(false)}
+          />
+        )}
+        {slide.kind === "researcher" && (
+          <ChatMainCanvas
+            frameRef={frameRefCb}
+            highlightResearcher
+            showPromptLab={promptLabOpen}
+            onOpenSavedPrompts={() => setPromptLabOpen(true)}
+            onClosePromptLab={() => setPromptLabOpen(false)}
+          />
+        )}
+        {slide.kind === "create" && currentCallout.target !== "create-describe-input" && (
+          <ChatMainCanvas
+            key={`create-${currentCallout.target}`}
+            frameRef={frameRefCb}
+            highlightNewChat={currentCallout.target === "new-chat"}
+            highlightM365AppsTrigger={currentCallout.target === "m365-apps-flyout"}
+            showM365AppsFlyout={currentCallout.target === "m365-apps-flyout"}
+            onNewChat={newChatGate ? goNext : undefined}
+            onM365AppsClick={currentCallout.target === "m365-apps-flyout" ? goNext : undefined}
+            showPromptLab={promptLabOpen}
+            onOpenSavedPrompts={() => setPromptLabOpen(true)}
+            onOpenQuickPillsMore={handleOpenQuickPillsMore}
+            onClosePromptLab={() => setPromptLabOpen(false)}
+          />
+        )}
+        {slide.kind === "create" && currentCallout.target === "create-describe-input" && (
+          <CreateContentCanvas key="create-studio" frameRef={frameRefCb} />
+        )}
         {slide.callouts.map((c, i) => (
           <CalloutBox key={`${slideIndex}-${i}-${c.target}`} callout={c} active={i === safeCalloutIndex} stepNum={c.workflowStep} frame={frameEl} onNext={goNext} isLast={tourComplete || (i === totalCallouts - 1 && isLastSlide)} />
         ))}
+      </div>
+
+      {/* Navigation */}
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "12px 0 0" }}>
+        <button type="button" onClick={goPrev} disabled={isFirstSlide && isFirstCallout} aria-label="Previous step" style={navBtnStyle(isFirstSlide && isFirstCallout)}>
+          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
+        </button>
+        {tourComplete ? (
+          <button type="button" onClick={restart} aria-label="Restart tour" style={primaryBtnStyle}>Restart tour</button>
+        ) : (
+          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
+            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -3065,29 +2996,29 @@ export function M365AgentBuilderTour() {
       aria-roledescription="carousel"
       style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16, outline: "none" }}
     >
-      <div style={TOUR_FRAME_SHELL}>
-        <div style={TOUR_FRAME_CLIP}>
-          {currentCallout.target === "new-agent" && (
-            <ChatMainCanvas key="builder-new-agent" frameRef={frameRefCb} highlightNewAgent />
-          )}
-          {currentCallout.target === "agent-skip" && (
-            <AgentBuilderLandingCanvas key="builder-landing" frameRef={frameRefCb} onSkip={goNext} />
-          )}
-          {builderConfigure && (
-            <ChatTourCanvas
-              key={`builder-configure-${currentCallout.target}`}
-              frameRef={frameRefCb}
-              knowledgeExpanded={currentCallout.target === "knowledge-sources"}
-            />
-          )}
-          <TourOverlayNav
-            onPrev={goPrev}
-            onNext={goNext}
-            prevDisabled={isFirstCallout}
-            showRestart={tourComplete}
-            onRestart={restart}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          borderRadius: 16,
+          border: `1px solid ${C.gray02}`,
+          background: C.white,
+          boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
+        }}
+      >
+        {currentCallout.target === "new-agent" && (
+          <ChatMainCanvas key="builder-new-agent" frameRef={frameRefCb} highlightNewAgent />
+        )}
+        {currentCallout.target === "agent-skip" && (
+          <AgentBuilderLandingCanvas key="builder-landing" frameRef={frameRefCb} onSkip={goNext} />
+        )}
+        {builderConfigure && (
+          <ChatTourCanvas
+            key={`builder-configure-${currentCallout.target}`}
+            frameRef={frameRefCb}
+            knowledgeExpanded={currentCallout.target === "knowledge-sources"}
           />
-        </div>
+        )}
         {slide.callouts.map((c, i) => (
           <CalloutBox
             key={`builder-${i}-${c.target}`}
@@ -3099,6 +3030,19 @@ export function M365AgentBuilderTour() {
             isLast={tourComplete || i === totalCallouts - 1}
           />
         ))}
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "12px 0 0" }}>
+        <button type="button" onClick={goPrev} disabled={isFirstCallout} aria-label="Previous step" style={navBtnStyle(isFirstCallout)}>
+          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
+        </button>
+        {tourComplete ? (
+          <button type="button" onClick={restart} aria-label="Restart tour" style={primaryBtnStyle}>Restart tour</button>
+        ) : (
+          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
+            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -3127,7 +3071,7 @@ function InstructionFocusRing({ frame, target }: { frame: HTMLDivElement | null;
           width: `${rect.width}%`,
           height: `${rect.height}%`,
           boxSizing: "border-box",
-          border: "none",
+          border: `2px solid ${C.yellow}`,
           borderRadius: pillHighlightRadius(target),
           boxShadow: CALLOUT_RING_SHADOW,
           transition: "left 0.25s ease, top 0.25s ease, width 0.25s ease, height 0.25s ease",
@@ -3647,15 +3591,11 @@ export function M365AgentHowExplorer() {
       <style>{`
         @keyframes ey-tour-ring-pulse {
           0%, 100% {
-            box-shadow:
-              0 0 0 2px ${C.yellow},
-              4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent),
+            box-shadow: 4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent),
               0 0 0 0 color-mix(in srgb, ${C.yellow} 50%, transparent);
           }
           50% {
-            box-shadow:
-              0 0 0 2px ${C.yellow},
-              4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent),
+            box-shadow: 4px 4px 0 0 color-mix(in srgb, ${C.confidentBlack} 88%, transparent),
               0 0 0 10px color-mix(in srgb, ${C.yellow} 0%, transparent);
           }
         }
@@ -3695,61 +3635,76 @@ export function M365AgentHowExplorer() {
         </div>
       </div>
 
-      <div style={TOUR_FRAME_SHELL}>
-        <div style={TOUR_FRAME_CLIP}>
-          {step.phase === "plain" && step.view === "chat-home" && (
-            <ChatMainCanvas key={`plain-chat-${stepIndex}`} frameRef={frameRefCb} onExploreAgentSelect={goToAgent} />
-          )}
-          {step.phase === "spotlight" && (() => {
-            const profile = HOW_AGENT_PROFILES[step.agentId];
-            const videoMeta = HOW_AGENT_VIDEOS[step.agentId];
-            const isNewAgent = step.agentId === "new-agent";
-            return (
-              <ChatTourCanvas
-                key={`spotlight-${step.agentId}-${stepIndex}`}
-                frameRef={frameRefCb}
-                exploreAgentId={step.agentId}
-                onExploreAgentSelect={goToAgent}
-                agentName={isNewAgent ? profile.name : `${profile.name} Agent`}
-                agentDescribeNode={
-                  isNewAgent ? (
-                    <NewAgentExploreSubtitle />
-                  ) : (
-                    <AgentExploreSubtitle agentLabel={profile.name} tagline={profile.exploreTagline} />
-                  )
-                }
-                instructionsContent={<AgentInstructionBulletCards items={profile.pointers} compact />}
-                exploreVideoLabel={videoMeta.buttonLabel}
-                onExploreVideo={() => setVideoAgentId(step.agentId)}
-              />
-            );
-          })()}
-          {step.phase === "builder" && step.callout.target === "agent-skip" && (
-            <AgentBuilderLandingCanvas key={`builder-skip-${stepIndex}`} frameRef={frameRefCb} onSkip={goNext} />
-          )}
-          {step.phase === "builder" && step.callout.target !== "agent-skip" && (
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          borderRadius: 16,
+          border: `1px solid ${C.gray02}`,
+          background: C.white,
+          boxShadow: `0 16px 40px color-mix(in srgb, ${C.confidentBlack} 10%, transparent)`,
+          overflow: "hidden",
+        }}
+      >
+        {step.phase === "plain" && step.view === "chat-home" && (
+          <ChatMainCanvas key={`plain-chat-${stepIndex}`} frameRef={frameRefCb} onExploreAgentSelect={goToAgent} />
+        )}
+        {step.phase === "spotlight" && (() => {
+          const profile = HOW_AGENT_PROFILES[step.agentId];
+          const videoMeta = HOW_AGENT_VIDEOS[step.agentId];
+          const isNewAgent = step.agentId === "new-agent";
+          return (
             <ChatTourCanvas
-              key={`builder-configure-${stepIndex}-${step.callout.target}`}
+              key={`spotlight-${step.agentId}-${stepIndex}`}
               frameRef={frameRefCb}
-              knowledgeExpanded={step.callout.target === "knowledge-sources"}
+              exploreAgentId={step.agentId}
+              onExploreAgentSelect={goToAgent}
+              agentName={isNewAgent ? profile.name : `${profile.name} Agent`}
+              agentDescribeNode={
+                isNewAgent ? (
+                  <NewAgentExploreSubtitle />
+                ) : (
+                  <AgentExploreSubtitle agentLabel={profile.name} tagline={profile.exploreTagline} />
+                )
+              }
+              instructionsContent={<AgentInstructionBulletCards items={profile.pointers} compact />}
+              exploreVideoLabel={videoMeta.buttonLabel}
+              onExploreVideo={() => setVideoAgentId(step.agentId)}
             />
-          )}
-          <TourDualRingOverlay
-            frame={frameEl}
-            currentTarget={whatTourCurrentTarget(step)}
-            nextTarget={whatTourNextTarget(stepIndex)}
-            currentLabel={whatTourCurrentLabel(step)}
-            onCurrentClick={isLast ? restart : goNext}
+          );
+        })()}
+        {step.phase === "builder" && step.callout.target === "agent-skip" && (
+          <AgentBuilderLandingCanvas key={`builder-skip-${stepIndex}`} frameRef={frameRefCb} onSkip={goNext} />
+        )}
+        {step.phase === "builder" && step.callout.target !== "agent-skip" && (
+          <ChatTourCanvas
+            key={`builder-configure-${stepIndex}-${step.callout.target}`}
+            frameRef={frameRefCb}
+            knowledgeExpanded={step.callout.target === "knowledge-sources"}
           />
-          <TourOverlayNav
-            onPrev={goPrev}
-            onNext={goNext}
-            prevDisabled={isFirst}
-            showRestart={isLast}
-            onRestart={restart}
-            restartLabel="Restart tour"
-          />
-        </div>
+        )}
+        <TourDualRingOverlay
+          frame={frameEl}
+          currentTarget={whatTourCurrentTarget(step)}
+          nextTarget={whatTourNextTarget(stepIndex)}
+          currentLabel={whatTourCurrentLabel(step)}
+          onCurrentClick={isLast ? restart : goNext}
+        />
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "4px 0 0" }}>
+        <button type="button" onClick={goPrev} disabled={isFirst} aria-label="Previous step" style={navBtnStyle(isFirst)}>
+          <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> Previous
+        </button>
+        {isLast ? (
+          <button type="button" onClick={restart} aria-label="Restart onboarding" style={primaryBtnStyle}>
+            Restart tour
+          </button>
+        ) : (
+          <button type="button" onClick={goNext} aria-label="Next step" style={primaryBtnStyle}>
+            Continue <ChevronRight size={16} strokeWidth={1.75} aria-hidden />
+          </button>
+        )}
       </div>
 
       {videoAgentId && <AgentHowVideoModal agentId={videoAgentId} onClose={() => setVideoAgentId(null)} />}

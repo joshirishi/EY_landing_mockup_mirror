@@ -65,7 +65,7 @@ const TABS = [
   { id: "ppt",     label: "MS PowerPoint",    color: C.pptOrange,  appColor: C.pptOrange,  logo: "/pipeline/powerpoint.svg" },
   { id: "outlook", label: "MS Outlook",       color: C.outlookBlue,appColor: C.outlookBlue,logo: "/pipeline/outlook.svg" },
   { id: "teams",   label: "MS Teams",         color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/teams.svg" },
-  { id: "m365",    label: "M365 Chat",        color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
+  { id: "m365",    label: "MS Chat",          color: C.teamsViolet,appColor: C.teamsViolet,logo: "/pipeline/copilot-icon.svg" },
   { id: "agent",   label: "M365 Agent",       color: C.teamsViolet,appColor: C.teamsViolet,logo: AGENT_HEX_SRC },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
@@ -2830,13 +2830,12 @@ function AgentWeakStrongCard({ weak, strong }: { weak: string; strong: string })
   );
 }
 
-/** Figma 4412:7179 — dark left rail; type matches Agent How center promo hierarchy. */
+/** Figma 4412:7179 — dark left rail bullets for Elements best-practice beats. */
 const AGENT_DARK_RAIL_TITLE: React.CSSProperties = {
   margin: 0,
-  fontFamily: F.light,
-  fontSize: 20,
-  fontWeight: 300,
-  lineHeight: 1.5,
+  fontFamily: F.regular,
+  fontSize: 16,
+  lineHeight: 1.25,
   letterSpacing: "-0.01em",
   color: C.offWhite,
 };
@@ -2844,9 +2843,9 @@ const AGENT_DARK_RAIL_TITLE: React.CSSProperties = {
 const AGENT_DARK_RAIL_BODY: React.CSSProperties = {
   margin: 0,
   fontFamily: F.light,
-  fontSize: 16,
+  fontSize: 12,
   fontWeight: 300,
-  lineHeight: 1.5,
+  lineHeight: 1.4,
   letterSpacing: "-0.01em",
   color: C.offWhite,
 };
@@ -2881,7 +2880,7 @@ function AgentElementsDarkBullets({ title, items }: { title?: string; items: rea
               height: 8,
               borderRadius: 8,
               background: C.offWhite,
-              marginTop: 8,
+              marginTop: 5,
               flexShrink: 0,
             }}
           />
