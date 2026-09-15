@@ -24,7 +24,6 @@ import {
   AGENT_COMMON_FAILURES,
   AGENT_SUMMARY_PARTS,
   AGENT_TECHNIQUE_PATTERNS,
-  formatTechniqueInstructionPreview,
   parseSummaryParts,
   parseTaxExample,
   parseWhenToUse,
@@ -2834,19 +2833,19 @@ function AgentWeakStrongCard({ weak, strong }: { weak: string; strong: string })
 const AGENT_DARK_RAIL_TITLE: React.CSSProperties = {
   margin: 0,
   fontFamily: F.regular,
-  fontSize: 16,
+  fontSize: typeScale.subheading.size,
   lineHeight: 1.25,
-  letterSpacing: "-0.01em",
+  letterSpacing: typeScale.subheading.tracking,
   color: C.offWhite,
 };
 
 const AGENT_DARK_RAIL_BODY: React.CSSProperties = {
   margin: 0,
   fontFamily: F.light,
-  fontSize: 12,
-  fontWeight: 300,
+  fontSize: typeScale.body.size,
+  fontWeight: typeScale.body.weight,
   lineHeight: 1.4,
-  letterSpacing: "-0.01em",
+  letterSpacing: typeScale.body.tracking,
   color: C.offWhite,
 };
 
@@ -3451,15 +3450,45 @@ function AgentWhenToUseCard({ items }: { items: readonly string[] }) {
   );
 }
 
+function TechniqueTickBadge({ kind, label }: { kind: "ok" | "bad"; label: string }) {
+  const color = kind === "ok" ? C.success : C.destructive;
+  const Icon = kind === "ok" ? Check : X;
+  return (
+    <span
+      role="img"
+      aria-label={label}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 24,
+        height: 24,
+        borderRadius: "50%",
+        border: `1.5px solid ${color}`,
+        background: color + "14",
+        color,
+        flexShrink: 0,
+      }}
+    >
+      <Icon size={14} strokeWidth={2} aria-hidden />
+    </span>
+  );
+}
+
 function AgentTechniqueInstructionsPreview({
+  taxExample,
   text,
   pulseStrong,
   footer,
 }: {
-  text: string;
+  taxExample?: string;
+  text?: string;
   pulseStrong?: boolean;
   footer?: ReactNode;
 }) {
+  const parsed = taxExample ? parseTaxExample(taxExample) : null;
+  const showTickCross = Boolean(parsed?.dont && parsed.doLines.length > 0);
+
   return (
     <div
       className={pulseStrong ? "agent-tech-strong-pulse" : undefined}
@@ -3502,18 +3531,85 @@ function AgentTechniqueInstructionsPreview({
           overflowY: "auto",
         }}
       >
-        <pre
-          style={{
-            margin: 0,
-            fontFamily: F.regular,
-            fontSize: 13,
-            lineHeight: 1.55,
-            color: C.offBlack,
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {text}
-        </pre>
+        {showTickCross && parsed ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div>
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  margin: "0 0 8px",
+                  fontFamily: F.bold,
+                  fontSize: typeScale.label.size,
+                  fontWeight: 700,
+                  letterSpacing: typeScale.label.tracking,
+                  textTransform: "uppercase",
+                  color: C.destructive,
+                }}
+              >
+                <TechniqueTickBadge kind="bad" label="Instead of writing" />
+                Instead of writing
+              </p>
+              <p style={{ margin: 0, fontFamily: F.light, fontSize: typeScale.body.size, lineHeight: 1.55, fontStyle: "italic", color: C.destructive }}>
+                {parsed.dont}
+              </p>
+            </div>
+            <div>
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  margin: "0 0 8px",
+                  fontFamily: F.bold,
+                  fontSize: typeScale.label.size,
+                  fontWeight: 700,
+                  letterSpacing: typeScale.label.tracking,
+                  textTransform: "uppercase",
+                  color: C.success,
+                }}
+              >
+                <TechniqueTickBadge kind="ok" label="Try" />
+                Try
+              </p>
+              <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
+                {parsed.doLines.map((line, i) => (
+                  <li
+                    key={`${i}-${line}`}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 10,
+                      fontFamily: F.regular,
+                      fontSize: typeScale.body.size,
+                      lineHeight: 1.55,
+                      color: C.offBlack,
+                    }}
+                  >
+                    <span aria-hidden style={{ flexShrink: 0, minWidth: 18, fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.offBlack }}>
+                      {i + 1}.
+                    </span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        ) : (
+          <pre
+            style={{
+              margin: 0,
+              fontFamily: F.regular,
+              fontSize: typeScale.body.size,
+              lineHeight: 1.55,
+              color: C.offBlack,
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {text}
+          </pre>
+        )}
       </div>
       {footer}
     </div>
@@ -3525,6 +3621,7 @@ function AgentTechniqueFigmaSplit({
   headline,
   body,
   whenItems,
+  taxExample,
   instructionText,
   pulseStrong,
   footer,
@@ -3532,7 +3629,8 @@ function AgentTechniqueFigmaSplit({
   headline: string;
   body: string;
   whenItems: readonly string[];
-  instructionText: string;
+  taxExample?: string;
+  instructionText?: string;
   pulseStrong?: boolean;
   footer?: ReactNode;
 }) {
@@ -3560,7 +3658,12 @@ function AgentTechniqueFigmaSplit({
         <AgentWhenToUseCard items={whenItems} />
       </div>
       <AgentBuilderConfigurePreview>
-        <AgentTechniqueInstructionsPreview text={instructionText} pulseStrong={pulseStrong} footer={footer} />
+        <AgentTechniqueInstructionsPreview
+          taxExample={taxExample}
+          text={instructionText}
+          pulseStrong={pulseStrong}
+          footer={footer}
+        />
       </AgentBuilderConfigurePreview>
     </div>
   );
@@ -3575,14 +3678,13 @@ function AgentTechniqueSplitContent({
 }) {
   const { headline, body } = parseSummaryParts(pattern.summary);
   const whenItems = parseWhenToUse(pattern.whenToUse);
-  const instructionText = formatTechniqueInstructionPreview(pattern.taxExample);
 
   return (
     <AgentTechniqueFigmaSplit
       headline={headline}
       body={body}
       whenItems={whenItems}
-      instructionText={instructionText}
+      taxExample={pattern.taxExample}
       pulseStrong={pulseStrong}
     />
   );
