@@ -24,6 +24,7 @@ import {
   AGENT_COMMON_FAILURES,
   AGENT_SUMMARY_PARTS,
   AGENT_TECHNIQUE_PATTERNS,
+  formatTechniqueInstructionPreview,
   parseSummaryParts,
   parseTaxExample,
   parseWhenToUse,
@@ -3450,13 +3451,11 @@ function AgentWhenToUseCard({ items }: { items: readonly string[] }) {
   );
 }
 
-function TechniqueTickBadge({ kind, label }: { kind: "ok" | "bad"; label: string }) {
-  const color = kind === "ok" ? C.success : C.destructive;
-  const Icon = kind === "ok" ? Check : X;
+function TechniqueTickBadge() {
   return (
     <span
       role="img"
-      aria-label={label}
+      aria-label="Try"
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -3464,13 +3463,13 @@ function TechniqueTickBadge({ kind, label }: { kind: "ok" | "bad"; label: string
         width: 24,
         height: 24,
         borderRadius: "50%",
-        border: `1.5px solid ${color}`,
-        background: color + "14",
-        color,
+        border: `1.5px solid ${C.success}`,
+        background: C.success + "14",
+        color: C.success,
         flexShrink: 0,
       }}
     >
-      <Icon size={14} strokeWidth={2} aria-hidden />
+      <Check size={14} strokeWidth={2} aria-hidden />
     </span>
   );
 }
@@ -3487,7 +3486,16 @@ function AgentTechniqueInstructionsPreview({
   footer?: ReactNode;
 }) {
   const parsed = taxExample ? parseTaxExample(taxExample) : null;
-  const showTickCross = Boolean(parsed?.dont && parsed.doLines.length > 0);
+  const showTick = Boolean(parsed?.dont && parsed.doLines.length > 0);
+  const previewText = text ?? (taxExample ? formatTechniqueInstructionPreview(taxExample) : "");
+  const preStyle: React.CSSProperties = {
+    margin: 0,
+    fontFamily: F.regular,
+    fontSize: 13,
+    lineHeight: 1.55,
+    color: C.offBlack,
+    whiteSpace: "pre-wrap",
+  };
 
   return (
     <div
@@ -3531,84 +3539,18 @@ function AgentTechniqueInstructionsPreview({
           overflowY: "auto",
         }}
       >
-        {showTickCross && parsed ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div>
-              <p
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  margin: "0 0 8px",
-                  fontFamily: F.bold,
-                  fontSize: typeScale.label.size,
-                  fontWeight: 700,
-                  letterSpacing: typeScale.label.tracking,
-                  textTransform: "uppercase",
-                  color: C.destructive,
-                }}
-              >
-                <TechniqueTickBadge kind="bad" label="Instead of writing" />
-                Instead of writing
-              </p>
-              <p style={{ margin: 0, fontFamily: F.light, fontSize: typeScale.body.size, lineHeight: 1.55, fontStyle: "italic", color: C.destructive }}>
-                {parsed.dont}
-              </p>
-            </div>
-            <div>
-              <p
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  margin: "0 0 8px",
-                  fontFamily: F.bold,
-                  fontSize: typeScale.label.size,
-                  fontWeight: 700,
-                  letterSpacing: typeScale.label.tracking,
-                  textTransform: "uppercase",
-                  color: C.success,
-                }}
-              >
-                <TechniqueTickBadge kind="ok" label="Try" />
-                Try
-              </p>
-              <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
-                {parsed.doLines.map((line, i) => (
-                  <li
-                    key={`${i}-${line}`}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 10,
-                      fontFamily: F.regular,
-                      fontSize: typeScale.body.size,
-                      lineHeight: 1.55,
-                      color: C.offBlack,
-                    }}
-                  >
-                    <span aria-hidden style={{ flexShrink: 0, minWidth: 18, fontFamily: F.bold, fontSize: 13, fontWeight: 700, color: C.offBlack }}>
-                      {i + 1}.
-                    </span>
-                    <span>{line}</span>
-                  </li>
-                ))}
-              </ol>
+        {showTick && parsed ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <p style={preStyle}>{parsed.dont}</p>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <TechniqueTickBadge />
+              <pre style={preStyle}>
+                {parsed.doLines.map((line, i) => `${i + 1}. ${line}`).join("\n")}
+              </pre>
             </div>
           </div>
         ) : (
-          <pre
-            style={{
-              margin: 0,
-              fontFamily: F.regular,
-              fontSize: typeScale.body.size,
-              lineHeight: 1.55,
-              color: C.offBlack,
-              whiteSpace: "pre-wrap",
-            }}
-          >
-            {text}
-          </pre>
+          <pre style={preStyle}>{previewText}</pre>
         )}
       </div>
       {footer}
@@ -3685,6 +3627,7 @@ function AgentTechniqueSplitContent({
       body={body}
       whenItems={whenItems}
       taxExample={pattern.taxExample}
+      instructionText={formatTechniqueInstructionPreview(pattern.taxExample)}
       pulseStrong={pulseStrong}
     />
   );

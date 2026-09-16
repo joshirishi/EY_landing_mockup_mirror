@@ -34,7 +34,7 @@ The experience is branded, progressive, and interactive: learners click through 
 
 | Route | Page | Status |
 |-------|------|--------|
-| `/` | Phased engagement overview (4-phase journey) — app landing | Live |
+| `/` | Phased engagement overview (4-phase journey) — app landing. Every visit starts on a blank **session setup** form (client, session, date, duration, facilitator, location, participants, online/in person) before the hub unlocks | Live |
 | `/phased` | Redirects to `/` | Live |
 | `/phase1` | Phase 1 course card hub — unlocks the three live modules | Live |
 

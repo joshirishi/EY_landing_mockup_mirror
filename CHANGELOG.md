@@ -1,8 +1,22 @@
 # Changelog
 
-All notable updates to **EY.ai Tax Labs** from **25 August 2026** through **15 September 2026**.
+All notable updates to **EY.ai Tax Labs** from **25 August 2026** through **16 September 2026**.
 
 Format: grouped by date, then by module or area. Echo reviewer notes from Gayatri (and team) are called out where they drove a change.
+
+---
+
+## 16 September 2026
+
+### Session setup gate
+
+- Every visit starts on a blank session setup form before the landing page can be used: client name, session name, date, duration, facilitator, location, participant count, and online / in person. Previous answers are not kept.
+- Facilitator and location are dropdowns. A small **Change session** control (top right) lets a facilitator update the current visit only.
+
+### Module 4 Report Card
+
+- New `/report-card` page: Motif DS cards, metrics, chips, and progress bars with the HTML report-card copy unchanged.
+- Home Phase 4 card now opens the Report Card. Closure stays on the Guidance Implementation trek button; Control Room stays on the Closure trek button.
 
 ---
 
@@ -153,8 +167,8 @@ Format: grouped by date, then by module or area. Echo reviewer notes from Gayatr
 |------|--------|
 | **Source repo** | `joshirishi/EY_landing_mockup` |
 | **Branch** | `feature/phases-2-3-4-content-updates` |
-| **Tip commit (4 Sep)** | `3c3aac3` |
-| **Client handover repo** | `joshirishi/EY_tax_labs_handover` @ `808e921` (clean snapshot, no Echo SDK) |
+| **Tip commit (16 Sep)** | `feature/phases-2-3-4-content-updates` |
+| **Client handover repo** | `joshirishi/EY_tax_labs_handover` (clean snapshot, no Echo SDK) |
 
 ---
 
