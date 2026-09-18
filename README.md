@@ -46,6 +46,12 @@ The experience is branded, progressive, and interactive: learners click through 
 | 2 | **AI Tax Prompting** | `/ai-tax-prompting` | ~30 min | Prompt pipeline, 7 Elements tabs, weak vs strong prompts, stack builder, techniques, MCQ + match activities, golden rules |
 | 3 | **M365 Copilot Dashboard** | `/copilot-hub` | ~60 min | App tabs with sample prompts, laptop-stage demo, use-case cards, useful EY links, security & governance |
 
+### Session close-out
+
+| Route | Page | Highlights |
+|-------|------|------------|
+| `/report-card` | **AI Tax Excellence Report Card** | Editable participation totals, knowledge and process outcomes, responsible-use assessment, and a dedicated A4 print/PDF layout |
+
 ### Coming soon (in curriculum nav, not yet routed)
 
 | Module | Route | Status |
@@ -59,6 +65,7 @@ The experience is branded, progressive, and interactive: learners click through 
 - **Module header & in-page nav** — sticky sub-navigation with hash-based section scrolling (`LearningNav`, `ModuleHeader`)
 - **HTML lesson embeds** — Foundational Concepts renders from `src/imports/Foundational_Concepts.html` into the React page with a token bridge so EY styling stays consistent
 - **Native React modules** — AI Tax Prompting and M365 Copilot Hub are fully React pages with interactive widgets (tabs, activities, walkthroughs)
+- **Print-ready session report** — `/report-card` keeps the interactive screen experience and switches to a compact, light A4 portrait layout for printing or PDF export
 - **Phased layout system** — fluid, production-width layouts (no canvas zoom-shrink) for `/` (phased landing) and `/phase1`
 - **EY design kit** — shared tokens, typography, buttons, cards, headers, footers, and "What's Next" progression blocks
 - **Echo feedback SDK** — in-app comment FAB for stakeholder review (see [Echo feedback](#echo-feedback))
@@ -174,6 +181,7 @@ Phase 1 is labeled **"Phase 1: Foundational Training Workshops"** in the app. In
 | `/foundational` | `FoundationalConcepts` | Module 1 — HTML lesson embed |
 | `/ai-tax-prompting` | `AiTaxPrompting` | Module 2 — native React |
 | `/copilot-hub` | `M365CopilotHub` | Module 3 — native React |
+| `/report-card` | `ReportCard` | Session close-out report with dedicated A4 print/PDF layout |
 
 Section deep-links use hash anchors (e.g. `/foundational#cheatsheet`, `/ai-tax-prompting#match-activity`).
 
