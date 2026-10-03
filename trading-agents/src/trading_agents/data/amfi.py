@@ -12,6 +12,7 @@ from decimal import Decimal, InvalidOperation
 
 import polars as pl
 
+
 def parse_nav_all(text: str) -> pl.DataFrame:
     rows: list[tuple[str, str, str, str, Decimal, date]] = []
     for line in text.splitlines():

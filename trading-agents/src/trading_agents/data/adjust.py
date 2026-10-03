@@ -20,13 +20,22 @@ def adjust_prices(
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
     """Return (adjusted bars, log). bars need symbol, date and OHLC columns plus traded_value."""
     if actions.is_empty():
-        return bars, pl.DataFrame(schema={"symbol": pl.String, "ex_date": pl.Date, "factor": pl.Float64})
+        return bars, pl.DataFrame(
+            schema={"symbol": pl.String, "ex_date": pl.Date, "factor": pl.Float64}
+        )
     known = actions.filter(pl.col("known_at") <= as_of).select("symbol", "ex_date", "factor")
     joined = bars.join(known, on="symbol", how="left").with_columns(
-        pl.when(pl.col("date") < pl.col("ex_date")).then(pl.col("factor")).otherwise(1.0).alias("_f")
+        pl.when(pl.col("date") < pl.col("ex_date"))
+        .then(pl.col("factor"))
+        .otherwise(1.0)
+        .alias("_f")
     )
     cum = joined.group_by("symbol", "date").agg(pl.col("_f").product().alias("cum_factor"))
     out = bars.join(cum, on=["symbol", "date"]).with_columns(
-        *[(pl.col(c) / pl.col("cum_factor")).alias(c) for c in ("open", "high", "low", "close") if c in bars.columns]
+        *[
+            (pl.col(c) / pl.col("cum_factor")).alias(c)
+            for c in ("open", "high", "low", "close")
+            if c in bars.columns
+        ]
     )
     return out.drop("cum_factor"), known.sort("symbol", "ex_date")
